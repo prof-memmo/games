@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof. Memmo - Giochi e Materiali</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html" style="color: var(--color-primary);">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 6rem; min-height: 80vh; background-color: var(--color-bg-alt);">
+        <!-- Sezione Giochi -->
+        <section class="games section-padding" id="giochi">
+            <div class="container reveal">
+                <div class="section-header text-center">
+                    <div class="section-badge badge-center">In Evidenza</div>
+                    <h2>Travel Agency</h2>
+                    <p>Sfide progettate per stimolare l'intelligenza e la cooperazione.</p>
+                </div>
+
+                <div class="game-showcase">
+                    <div class="game-card-large">
+                        <div class="game-visual">
+                            <div class="canva-globe-spinner">
+                                <i class="ph-duotone ph-globe-hemisphere-west"></i>
+                            </div>
+                            <div class="flight-path">
+                                <i class="ph-fill ph-airplane-tilt"></i>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <div style="text-align: center;">
+                                <img src="loghi/travelagency.png" alt="Travel Agency Logo" class="game-logo-img" style="margin: 0 auto 1.5rem auto; display: block;">
+                            </div>
+                            <p class="game-desc">Un coinvolgente gioco di simulazione in cui i giocatori diventano delle vere e proprie agenzie di viaggio. Creano pacchetti turistici su misura, gestiscono il budget assegnato e devono convincere un cliente esigente per aggiudicarsi la vittoria.</p>
+                            
+                            <div class="competences">
+                                <h4>Competenze sviluppate:</h4>
+                                <div class="tags">
+                                    <span class="tag"><i class="ph ph-brain"></i> Creatività</span>
+                                    <span class="tag"><i class="ph ph-users-three"></i> Collaborazione</span>
+                                    <span class="tag"><i class="ph ph-lightbulb"></i> Problem solving</span>
+                                    <span class="tag"><i class="ph ph-globe"></i> Geografia</span>
+                                </div>
+                            </div>
+
+                            <div class="game-actions">
+                                <a href="travel-agency.html" class="btn btn-primary">Scopri il gioco</a>
+                                <a href="travel-agency.html" class="btn btn-outline">Scarica le schede</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subjects-preview mt-12 text-center reveal" style="background: white; border-radius: var(--border-radius-lg); padding: 4rem; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 2.25rem; margin-bottom: 1.5rem; font-weight: 700;">Un mondo di discipline da giocare</h3>
+                    <p class="lead" style="max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.8;">
+                        Troverai giochi, attività e materiali dedicati a diverse materie scolastiche: <br><strong style="color: var(--color-text-dark);">Storia, Geografia, Letteratura, Laboratorio di scrittura, Riflessione sulla lingua e Materia alternativa alla religione</strong>.<br> Ognuno è pensato per trasformare l'ora di lezione in una sfida appassionante.
+                    </p>
+                    <a href="archivio-giochi.html" class="btn btn-primary" style="font-size: 1.25rem; padding: 1rem 2.5rem; border-radius: 100px; box-shadow: var(--shadow-md);">
+                        Scopri tutti i giochi e i materiali <i class="ph-bold ph-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <p>&copy; 2026 Prof. Memmo. Tutti i diritti riservati.</p>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

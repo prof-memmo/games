@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof. Memmo - Contatti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+
+                <li><a href="contatti.html" class="btn btn-outline" style="background-color: var(--color-primary); color: white;">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 6rem; min-height: 80vh; background-color: var(--color-bg-alt);">
+        <!-- Sezione Contatti -->
+        <section class="contact section-padding" id="contatti">
+            <div class="container reveal">
+                <div class="contact-card">
+                    <div class="contact-info">
+                        <h2>Mettiamoci in contatto</h2>
+                        <p>Hai domande, vuoi provare un gioco nella tua classe o proporre una collaborazione? Scrivimi!</p>
+                        
+                        <div class="contact-details mt-8">
+                            <a href="mailto:prof.memmo@gmail.com" class="contact-link">
+                                <div class="contact-icon"><i class="ph ph-envelope-simple"></i></div>
+                                <span>prof.memmo@gmail.com</span>
+                            </a>
+                        </div>
+
+                        <div class="contact-request-box mt-8">
+                            <div class="contact-request-icon">
+                                <i class="ph-duotone ph-package"></i>
+                            </div>
+                            <div>
+                                <h4>Vuoi un gioco o un materiale?</h4>
+                                <p>Puoi richiedere giochi specifici o materiali didattici direttamente tramite questo modulo. Descrivimi cosa stai cercando e ti risponderò al più presto!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form-wrapper">
+                        <form class="contact-form" onsubmit="event.preventDefault(); alert('Funzione demo - Messaggio inviato!');">
+                            <div class="form-group">
+                                <label for="name">Nome</label>
+                                <input type="text" id="name" required placeholder="Il tuo nome">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" required placeholder="La tua email">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Messaggio</label>
+                                <textarea id="message" rows="4" required placeholder="Come posso aiutarti?"></textarea>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="terms-checkbox" required>
+                                <label for="terms-checkbox" class="checkbox-label">
+                                    Ho almeno 16 anni o sono sotto la supervisione di un adulto. Accetto la <a href="javascript:void(0)" data-legal="privacy">Privacy Policy</a> e i <a href="javascript:void(0)" data-legal="terms">Termini e Condizioni</a>.
+                                </label>
+                            </div>
+                            <button type="submit" id="submit-btn" class="btn btn-primary w-full">Invia Messaggio</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <p>&copy; 2026 Prof. Memmo. Tutti i diritti riservati.</p>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Modal per Accettazione Termini e Privacy -->
+    <div class="modal-overlay" id="legal-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <i class="ph-duotone ph-shield-check"></i>
+                <h3>Passaggio Finale</h3>
+            </div>
+            <div class="modal-body">
+                <p>Per completare l'invio, ti chiediamo di consultare brevemente i documenti legali del sito.</p>
+                <div class="legal-links-check">
+                    <a href="javascript:void(0)" data-legal="privacy" class="modal-link" id="link-privacy">
+                        <span><i class="ph ph-file-text"></i> Privacy Policy</span>
+                        <i class="ph ph-circle status-icon"></i>
+                    </a>
+                    <a href="javascript:void(0)" data-legal="terms" class="modal-link" id="link-terms">
+                        <span><i class="ph ph-scroll"></i> Termini e Condizioni</span>
+                        <i class="ph ph-circle status-icon"></i>
+                    </a>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--color-text-light);">Il pulsante si attiverà dopo aver cliccato entrambi i link sopra.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="close-modal">Annulla</button>
+                <button type="button" class="btn btn-primary btn-disabled" id="confirm-legal">Ho capito</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Agency - Prof. Memmo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .version-card {
+            background: white; 
+            border-radius: var(--border-radius-lg); 
+            padding: 2.5rem 2rem; 
+            box-shadow: var(--shadow-md); 
+            display: flex; 
+            flex-direction: column;
+            transition: var(--transition-bounce);
+        }
+        .version-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        .emoji-icon {
+            font-size: 4rem; 
+            text-align: center; 
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        .version-title {
+            text-align: center; 
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        .version-subtitle {
+            text-align: center; 
+            margin-bottom: 1.5rem; 
+            font-weight: 700; 
+            color: var(--color-text-light); 
+            font-size: 0.85rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .version-desc {
+            flex-grow: 1; 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            color: var(--color-text-base);
+            line-height: 1.6;
+        }
+        .buttons-container {
+            display: flex; 
+            flex-direction: column; 
+            gap: 1rem;
+        }
+        .btn-download {
+            width: 100%; 
+            text-align: center; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html" style="color: var(--color-primary);">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
+        <div class="container">
+            
+            <!-- Hero Gioco -->
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
+                <img src="loghi/travelagency.png" alt="Travel Agency Logo" style="max-height: 150px; margin-bottom: 2rem; object-fit: contain;">
+                <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; color: var(--color-secondary);">Travel Agency</h1>
+                <p class="lead" style="max-width: 800px; margin: 0 auto; color: var(--color-text-base);">
+                    I giocatori diventano agenti di viaggio e creano pacchetti turistici per clienti esigenti, gestendo un budget e scoprendo luoghi, culture e tradizioni in giro per il mondo. Un'esperienza immersiva per imparare la geografia giocando!
+                </p>
+            </div>
+
+            <!-- Versioni -->
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Scegli la tua Edizione</h2>
+                <p style="color: var(--color-text-light);">Scarica i materiali di supporto gratuiti per le tue stampe.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
+                
+                <!-- Explore Europe -->
+                <div class="version-card" style="border-top: 8px solid #3b82f6;">
+                    <div class="emoji-icon">🇪🇺</div>
+                    <h3 class="version-title">Travel Agency<br><span style="color: #3b82f6;">Explore Europe</span></h3>
+                    <div class="version-subtitle">Target: Seconda di Primo Grado</div>
+                    <p class="version-desc">
+                        Focalizzato sui paesi e le capitali europee. Un viaggio educativo nel Vecchio Continente per scoprire culture e attrazioni, calcolando spese e organizzando gli spostamenti!
+                    </p>
+                    <div class="buttons-container">
+                        <a href="contenuti%20aggiuntivi/travel-agency/carta-agenzia.pdf" download="Carta agenzia.pdf" target="_blank" class="btn btn-primary btn-download" style="background-color: #3b82f6; border-color: #3b82f6;"><i class="ph ph-download-simple"></i> Carta agenzia</a>
+                        <a href="contenuti%20aggiuntivi/travel-agency/programma-viaggio.pdf" download="Programma di viaggio.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #3b82f6; color: #3b82f6;"><i class="ph ph-download-simple"></i> Programma di viaggio</a>
+                        <a href="contenuti%20aggiuntivi/travel-agency/scheda-territorio.pdf" download="Scheda territorio.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #3b82f6; color: #3b82f6;"><i class="ph ph-download-simple"></i> Scheda territorio</a>
+                    </div>
+                </div>
+
+                <!-- Around the World -->
+                <div class="version-card" style="border-top: 8px solid var(--color-primary);">
+                    <div class="emoji-icon">🌍</div>
+                    <h3 class="version-title">Travel Agency<br><span style="color: var(--color-primary);">Around the World</span></h3>
+                    <div class="version-subtitle">Target: Terza di Primo Grado</div>
+                    <p class="version-desc">
+                        Espandi i confini! Una sfida globale per organizzare viaggi intercontinentali, affrontando fusi orari, valute mondiali e destinazioni esotiche su misura per i tuoi viaggiatori.
+                    </p>
+                    <div class="buttons-container">
+                        <a href="contenuti%20aggiuntivi/travel-agency/carta-agenzia.pdf" download="Carta agenzia.pdf" target="_blank" class="btn btn-primary btn-download"><i class="ph ph-download-simple"></i> Carta agenzia</a>
+                        <a href="contenuti%20aggiuntivi/travel-agency/programma-viaggio.pdf" download="Programma di viaggio.pdf" target="_blank" class="btn btn-outline btn-download"><i class="ph ph-download-simple"></i> Programma di viaggio</a>
+                        <a href="contenuti%20aggiuntivi/travel-agency/scheda-territorio.pdf" download="Scheda territorio.pdf" target="_blank" class="btn btn-outline btn-download"><i class="ph ph-download-simple"></i> Scheda territorio</a>
+                    </div>
+                </div>
+
+                <!-- For Friends -->
+                <div class="version-card" style="border-top: 8px solid #f59e0b;">
+                    <div class="emoji-icon">💼</div>
+                    <h3 class="version-title">Travel Agency<br><span style="color: #f59e0b;">For Friends</span></h3>
+                    <div class="version-subtitle">Target: Adulti e Party</div>
+                    <p class="version-desc">
+                        La versione party game! Non palesemente didattica ma ricca di colpi di scena, richieste surreali dei clienti e imprevisti esilaranti perfetta per le serate tra amici.
+                    </p>
+                    <div class="buttons-container">
+                        <a href="contenuti%20aggiuntivi/travel-agency/scheda-budget.pdf" download="Scheda budget.pdf" target="_blank" class="btn btn-primary btn-download" style="background-color: #f59e0b; border-color: #f59e0b;"><i class="ph ph-download-simple"></i> Scheda budget</a>
+                        <a href="contenuti%20aggiuntivi/travel-agency/taccuino-viaggiatore.pdf" download="Taccuino del viaggiatore.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #f59e0b; color: #f59e0b;"><i class="ph ph-download-simple"></i> Taccuino del viaggiatore</a>
+                        <a href="contenuti%20aggiuntivi/travel-agency/programma-viaggio.pdf" download="Programma di viaggio.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #f59e0b; color: #f59e0b;"><i class="ph ph-download-simple"></i> Programma di viaggio</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Torna Indietro -->
+            <div style="text-align: center; margin-top: 5rem;">
+                <a href="archivio-giochi.html" class="btn btn-outline"><i class="ph ph-arrow-left" style="margin-right: 0.5rem;"></i> Torna all'Archivio Giochi</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <p>&copy; 2026 Prof. Memmo. Tutti i diritti riservati.</p>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

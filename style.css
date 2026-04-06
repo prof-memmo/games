@@ -913,6 +913,26 @@ input:focus, textarea:focus {
     height: 270px;
   }
 }
+
+@media (max-width: 576px) {
+  .contact-info, .contact-form-wrapper {
+    padding: 1.5rem 1rem;
+  }
+  .contact-request-box {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  .contact-details {
+    display: flex;
+    justify-content: center;
+  }
+  .contact-card {
+    border-radius: 12px;
+  }
+}
 /* Checkbox Custom Styling */
 .checkbox-group {
   margin: 1.5rem 0;

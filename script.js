@@ -251,8 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmAcceptanceBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Invio...';
                 confirmAcceptanceBtn.classList.add('btn-disabled');
 
-                // Invio a Formspree (il codice 'XXX' andrà sostituito con quello vero)
-                const formspreeCode = "CODICE_FORMSPREE"; 
+                // Invio a Formspree
+                const formspreeCode = "mykbldve"; 
                 if (formspreeCode === "CODICE_FORMSPREE") {
                     console.warn("Inserisci il codice Formspree per inviare i messaggi!");
                 } else {

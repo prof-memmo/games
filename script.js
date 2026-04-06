@@ -251,15 +251,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmAcceptanceBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Invio...';
                 confirmAcceptanceBtn.classList.add('btn-disabled');
 
-                // Invia a Firebase
-                if (window.saveContactMessage) {
-                    await window.saveContactMessage(nameInput, emailInput, messageInput);
+                // Invio a Formspree (il codice 'XXX' andrà sostituito con quello vero)
+                const formspreeCode = "CODICE_FORMSPREE"; 
+                if (formspreeCode === "CODICE_FORMSPREE") {
+                    console.warn("Inserisci il codice Formspree per inviare i messaggi!");
                 } else {
-                    console.error("Firebase non inizializzato");
+                    try {
+                        const response = await fetch("https://formspree.io/f/" + formspreeCode, {
+                            method: "POST",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                Nome: nameInput,
+                                Email: emailInput,
+                                Messaggio: messageInput
+                            })
+                        });
+                        if (!response.ok) {
+                            console.error("Errore Formspree");
+                        }
+                    } catch(err) {
+                        console.error(err);
+                    }
                 }
 
                 acceptanceModal.classList.remove('active');
-                alert('Grazie! Il tuo messaggio è stato inviato correttamente.');
+                alert('Grazie! Il tuo messaggio è stato inviato correttamente. Ti risponderò via email.');
                 contactForm.reset();
                 
                 // Reset state

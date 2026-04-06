@@ -56,7 +56,7 @@
                     </div>
                     
                     <div class="contact-form-wrapper">
-                        <form class="contact-form" onsubmit="event.preventDefault(); alert('Funzione demo - Messaggio inviato!');">
+                        <form class="contact-form">
                             <div class="form-group">
                                 <label for="name">Nome</label>
                                 <input type="text" id="name" required placeholder="Il tuo nome">
@@ -124,6 +124,38 @@
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBhGKJ2Hmd-lr0oPgDAK3IjTEcwMvwafGg",
+            authDomain: "prof-memmo-games.firebaseapp.com",
+            projectId: "prof-memmo-games",
+            storageBucket: "prof-memmo-games.firebasestorage.app",
+            messagingSenderId: "757010874548",
+            appId: "1:757010874548:web:53d88b9f9450260e5e97e1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Funzione globale che viene richiamata da script.js
+        window.saveContactMessage = async function(name, email, message) {
+            try {
+                await addDoc(collection(db, "richieste_contatto"), {
+                    nome: name,
+                    email: email,
+                    messaggio: message,
+                    data_invio: serverTimestamp()
+                });
+                return true;
+            } catch (error) {
+                console.error("Errore nell'invio a Firebase:", error);
+                return false;
+            }
+        };
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

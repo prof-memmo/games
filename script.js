@@ -240,14 +240,32 @@ document.addEventListener('DOMContentLoaded', () => {
             acceptanceModal.classList.remove('active');
         });
 
-        confirmAcceptanceBtn.addEventListener('click', () => {
+        confirmAcceptanceBtn.addEventListener('click', async () => {
             if (privacyAccepted && termsAccepted) {
+                const nameInput = document.getElementById('name').value;
+                const emailInput = document.getElementById('email').value;
+                const messageInput = document.getElementById('message').value;
+
+                // UI loading state
+                const originalText = confirmAcceptanceBtn.innerHTML;
+                confirmAcceptanceBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Invio...';
+                confirmAcceptanceBtn.classList.add('btn-disabled');
+
+                // Invia a Firebase
+                if (window.saveContactMessage) {
+                    await window.saveContactMessage(nameInput, emailInput, messageInput);
+                } else {
+                    console.error("Firebase non inizializzato");
+                }
+
                 acceptanceModal.classList.remove('active');
                 alert('Grazie! Il tuo messaggio è stato inviato correttamente.');
                 contactForm.reset();
+                
                 // Reset state
                 privacyAccepted = false;
                 termsAccepted = false;
+                confirmAcceptanceBtn.innerHTML = originalText;
                 confirmAcceptanceBtn.classList.add('btn-disabled');
                 linkPrivacy.classList.remove('visited');
                 linkTerms.classList.remove('visited');

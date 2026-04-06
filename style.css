@@ -72,7 +72,14 @@ ul {
   list-style: none;
 }
 
-p {
+p:not(.hero p, .why-it-works p, .footer p, .text-center p, .section-header p) {
+  margin-bottom: 1rem;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.hero p, .why-it-works p, .footer p, .text-center p, .section-header p {
   margin-bottom: 1rem;
 }
 

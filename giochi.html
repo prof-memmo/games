@@ -9,6 +9,115 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            align-items: center;
+        }
+        .filter-btn {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.1);
+            color: var(--color-text-base);
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--border-radius-pill);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition-base);
+            font-family: var(--font-family-base);
+            font-size: 1rem;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        .sort-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-bg-alt);
+            border: none;
+            color: var(--color-text-dark);
+            padding: 0.6rem 1.5rem;
+            border-radius: var(--border-radius-pill);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition-base);
+        }
+        .sort-btn:hover {
+            background: #e2e8f0;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+            gap: 2rem;
+            justify-content: center;
+        }
+        .game-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-bounce);
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        .game-card-img {
+            height: 200px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 1.5rem;
+        }
+        .game-card-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .game-card-content {
+            padding: 2rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card-cat {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        .game-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        .game-card p {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .game-card .btn-outline {
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -32,54 +141,83 @@
         <!-- Sezione Giochi -->
         <section class="games" style="padding-top: 2rem; padding-bottom: 6rem;" id="giochi">
             <div class="container fade-in-up">
-                <div class="section-header text-center" style="margin-bottom: 2rem;">
-                    <div class="section-badge badge-center">In Evidenza</div>
-                    <h2>Travel Agency</h2>
-                    <p>Sfide progettate per stimolare l'intelligenza e la cooperazione.</p>
+
+                <div class="section-header text-center mt-12" style="margin-bottom: 3rem;">
+                    <h2>Archivio Giochi e Materiali</h2>
+                    <p class="lead" style="max-width: 600px; margin: 1rem auto 0;">Esplora e filtra i materiali didattici per scoprire subito la prossima attività speciale per la tua classe.</p>
                 </div>
 
-                <div class="game-showcase">
-                    <div class="game-card-large">
-                        <div class="game-visual">
-                            <div class="canva-globe-spinner">
-                                <i class="ph-duotone ph-globe-hemisphere-west"></i>
-                            </div>
-                            <div class="flight-path">
-                                <i class="ph-fill ph-airplane-tilt"></i>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <div style="text-align: center;">
-                                <img src="loghi/travelagency.png" alt="Travel Agency Logo" class="game-logo-img" style="margin: 0 auto 1.5rem auto; display: block;">
-                            </div>
-                            <p class="game-desc">Un coinvolgente gioco di simulazione in cui i giocatori diventano delle vere e proprie agenzie di viaggio. Creano pacchetti turistici su misura, gestiscono il budget assegnato e devono convincere un cliente esigente per aggiudicarsi la vittoria.</p>
-                            
-                            <div class="competences">
-                                <h4>Competenze sviluppate:</h4>
-                                <div class="tags">
-                                    <span class="tag"><i class="ph ph-brain"></i> Creatività</span>
-                                    <span class="tag"><i class="ph ph-users-three"></i> Collaborazione</span>
-                                    <span class="tag"><i class="ph ph-lightbulb"></i> Problem solving</span>
-                                    <span class="tag"><i class="ph ph-globe"></i> Geografia</span>
-                                </div>
-                            </div>
-
-                            <div class="game-actions">
-                                <a href="travel-agency.html" class="btn btn-primary">Scopri il gioco</a>
-                                <a href="travel-agency.html" class="btn btn-outline">Scarica le schede</a>
-                            </div>
-                        </div>
+                <!-- Controlli Filtro e Ordine -->
+                <div style="background: white; padding: 2rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 3rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="filter-bar" id="filter-bar">
+                        <button class="filter-btn active" data-filter="tutti">Tutti</button>
+                        <button class="filter-btn" data-filter="storia">Storia</button>
+                        <button class="filter-btn" data-filter="geografia">Geografia</button>
+                        <button class="filter-btn" data-filter="letteratura">Letteratura</button>
+                        <button class="filter-btn" data-filter="scrittura">Laboratorio di scrittura</button>
+                        <button class="filter-btn" data-filter="lingua">Riflessione sulla lingua</button>
+                        <button class="filter-btn" data-filter="religione">Materia alternativa alla religione</button>
+                    </div>
+                    <div style="display: flex; justify-content: center; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
+                        <button class="sort-btn" id="sort-btn" data-order="asc">
+                            <i class="ph-bold ph-sort-ascending"></i> Ordina A - Z
+                        </button>
                     </div>
                 </div>
 
-                <div class="subjects-preview mt-12 text-center reveal" style="background: white; border-radius: var(--border-radius-lg); padding: 4rem; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05);">
-                    <h3 style="font-size: 2.25rem; margin-bottom: 1.5rem; font-weight: 700;">Un mondo di discipline da giocare</h3>
-                    <p class="lead" style="max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.8;">
-                        Troverai giochi, attività e materiali dedicati a diverse materie scolastiche: <br><strong style="color: var(--color-text-dark);">Storia, Geografia, Letteratura, Laboratorio di scrittura, Riflessione sulla lingua e Materia alternativa alla religione</strong>.<br> Ognuno è pensato per trasformare l'ora di lezione in una sfida appassionante.
-                    </p>
-                    <a href="archivio-giochi.html" class="btn btn-primary" style="font-size: 1.25rem; padding: 1rem 2.5rem; border-radius: 100px; box-shadow: var(--shadow-md);">
-                        Scopri tutti i giochi e i materiali <i class="ph-bold ph-arrow-right"></i>
-                    </a>
+                <!-- Griglia dei Giochi -->
+                <div class="games-grid" id="games-grid">
+                    
+                    <!-- Travel Agency -->
+                    <div class="game-card item" data-materia="geografia" data-title="Travel Agency">
+                        <div class="game-card-img"><img src="loghi/travelagency.png" alt="Travel Agency Logo"></div>
+                        <div class="game-card-content">
+                            <div class="game-card-cat">Geografia</div>
+                            <h3>Travel Agency</h3>
+                            <p>I giocatori diventano agenzie di viaggio e creano pacchetti turistici per clienti esigenti gestendo un budget.</p>
+                            <a href="travel-agency.html" class="btn btn-primary">Vedi dettagli</a>
+                        </div>
+                    </div>
+
+                    <!-- La Roulette -->
+                    <div class="game-card item" data-materia="geografia" data-title="La Roulette">
+                        <div class="game-card-img"><img src="loghi/la-roulette.png" alt="La Roulette Logo"></div>
+                        <div class="game-card-content">
+                            <div class="game-card-cat">Geografia</div>
+                            <h3>La Roulette</h3>
+                            <p>Sfida a squadre per esplorare in modo casuale e interattivo diverse destinazioni del mondo.</p>
+                            <a href="#" class="btn btn-outline wip-link">Vedi dettagli</a>
+                        </div>
+                    </div>
+
+                    <!-- Fantaletteratura -->
+                    <div class="game-card item" data-materia="letteratura" data-title="Fantaletteratura">
+                        <div class="game-card-img"><img src="loghi/fantaletteratura.png" alt="Fantaletteratura Logo"></div>
+                        <div class="game-card-content">
+                            <div class="game-card-cat">Letteratura</div>
+                            <h3>Fantaletteratura</h3>
+                            <p>Costruisci la tua squadra di autori e generi letterari sfidandoti in un fanta-campionato culturale.</p>
+                            <a href="https://prof-memmo.github.io/fantaletteratura/" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Gioco online</a>
+                        </div>
+                    </div>
+
+                    <!-- Ops! -->
+                    <div class="game-card item" data-materia="storia" data-title="Ops!">
+                        <div class="game-card-img"><img src="loghi/opslogo.png" alt="Ops! Logo"></div>
+                        <div class="game-card-content">
+                            <div class="game-card-cat">Storia</div>
+                            <h3>Ops!</h3>
+                            <p>Riscopri gli imprevisti storici e gli "errori" che hanno cambiato i destini del nostro passato.</p>
+                            <a href="#" class="btn btn-outline wip-link">Vedi dettagli</a>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Nessun Risultato State -->
+                <div id="no-results" style="display: none; text-align: center; padding: 4rem; color: var(--color-text-light);">
+                    <i class="ph-duotone ph-magnifying-glass" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>Nessun gioco trovato per questa categoria.</p>
                 </div>
             </div>
         </section>
@@ -98,6 +236,101 @@
             </div>
         </div>
     </footer>
+    <!-- Modal: Sito in costruzione -->
+    <div class="wip-modal-overlay" id="wip-modal">
+        <div class="wip-modal">
+            <div class="wip-modal-emoji">🚧</div>
+            <h3>Stiamo lavorando!</h3>
+            <p>Il sito è in fase di sviluppo — abbi un po' di pazienza! 😊<br>Tanti nuovi contenuti stanno arrivando e sicuramente anche quello che stai cercando!<br><strong>Riprova più tardi.</strong></p>
+            <button class="btn btn-primary" id="wip-close">Ok, torno dopo!</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const items = Array.from(document.querySelectorAll('.item'));
+            const sortBtn = document.getElementById('sort-btn');
+            const grid = document.getElementById('games-grid');
+            const noResults = document.getElementById('no-results');
+
+            if (filterBtns.length > 0) {
+                // Logica Filtro
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // Aggiorna stato active
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        const filter = btn.getAttribute('data-filter');
+                        let count = 0;
+
+                        items.forEach(item => {
+                            if (filter === 'tutti' || item.getAttribute('data-materia') === filter) {
+                                item.style.display = 'flex';
+                                count++;
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+
+                        if(count === 0) {
+                            noResults.style.display = 'block';
+                        } else {
+                            noResults.style.display = 'none';
+                        }
+                    });
+                });
+
+                // Logica Ordinamento Alfabetico
+                sortBtn.addEventListener('click', () => {
+                    const currentOrder = sortBtn.getAttribute('data-order');
+                    const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+                    
+                    sortBtn.setAttribute('data-order', newOrder);
+                    sortBtn.innerHTML = newOrder === 'asc' 
+                        ? '<i class="ph-bold ph-sort-ascending"></i> Ordina A - Z' 
+                        : '<i class="ph-bold ph-sort-descending"></i> Ordina Z - A';
+
+                    items.sort((a, b) => {
+                        const titleA = a.getAttribute('data-title').toLowerCase();
+                        const titleB = b.getAttribute('data-title').toLowerCase();
+                        
+                        if (newOrder === 'asc') {
+                            return titleA.localeCompare(titleB);
+                        } else {
+                            return titleB.localeCompare(titleA);
+                        }
+                    });
+
+                    // Riunisci gli item nella grid
+                    items.forEach(item => grid.appendChild(item));
+                });
+            }
+        });
+        
+        // Under Construction modal
+        const wipModal = document.getElementById('wip-modal');
+        if (wipModal) {
+            document.querySelectorAll('.wip-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    wipModal.classList.add('active');
+                });
+            });
+            const wipClose = document.getElementById('wip-close');
+            if (wipClose) {
+                wipClose.addEventListener('click', () => {
+                    wipModal.classList.remove('active');
+                });
+            }
+            wipModal.addEventListener('click', (e) => {
+                if (e.target === wipModal) {
+                    wipModal.classList.remove('active');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

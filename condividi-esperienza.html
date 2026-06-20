@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof. Memmo - Condividi la tua esperienza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="condividi.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="condividi-esperienza.html" style="color: var(--color-primary);">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main style="background-color: var(--color-bg-alt); min-height: 80vh;">
+        <section class="feedback-container fade-in-up">
+            <div class="feedback-header">
+                <h1>Condividi la tua esperienza</h1>
+                <p>Hai provato uno dei miei materiali o giochi in classe? Mi piacerebbe tantissimo sapere com'è andata! Il tuo feedback è prezioso per migliorare le proposte didattiche.</p>
+            </div>
+
+            <div class="feedback-form-card">
+                <!-- Alert per messaggi di stato -->
+                <div id="alertSuccess" class="alert alert-success">
+                    <i class="ph-fill ph-check-circle"></i> Grazie per aver condiviso la tua esperienza! Il tuo feedback è stato inviato con successo.
+                </div>
+                <div id="alertError" class="alert alert-error">
+                    Si è verificato un errore durante l'invio. Riprova più tardi.
+                </div>
+
+                <form id="feedbackForm" class="contact-form">
+                    
+                    <h3 class="form-section-title">Informazioni Personali</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nome">Nome <span class="optional-label">(Facoltativo)</span></label>
+                            <input type="text" id="nome" name="Nome" placeholder="Come ti chiami?">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="optional-label">(Facoltativa)</span></label>
+                            <input type="email" id="email" name="Email" placeholder="La tua email">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ordine">Ordine di scuola *</label>
+                            <select id="ordine" name="Ordine di scuola" required>
+                                <option value="" disabled selected>Seleziona un'opzione</option>
+                                <option value="Primaria">Primaria</option>
+                                <option value="Secondaria di primo grado">Secondaria di primo grado</option>
+                                <option value="Secondaria di secondo grado">Secondaria di secondo grado</option>
+                                <option value="CPIA">CPIA</option>
+                                <option value="Altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="materia">Materia insegnata <span class="optional-label">(Facoltativa)</span></label>
+                            <input type="text" id="materia" name="Materia" placeholder="Es. Italiano, Storia, ecc.">
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title">Dettagli dell'Attività</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gioco">Gioco o materiale utilizzato *</label>
+                            <select id="gioco" name="Materiale utilizzato" required>
+                                <option value="" disabled selected>Scegli dal catalogo</option>
+                                <option value="Travel Agency">Travel Agency</option>
+                                <option value="La Roulette">La Roulette</option>
+                                <option value="Fantaletteratura">Fantaletteratura</option>
+                                <option value="Palestra di Grammatica">Palestra di Grammatica</option>
+                                <option value="Ops!">Ops!</option>
+                                <option value="Altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="classe">Classe utilizzata *</label>
+                            <input type="text" id="classe" name="Classe" required placeholder="Es. 3A, seconda media...">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="utilizzo">Come hai utilizzato il materiale? *</label>
+                        <textarea id="utilizzo" name="Uso materiale" required placeholder="Descrivi brevemente come hai impostato la lezione..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reazione">Come hanno reagito gli studenti? *</label>
+                        <textarea id="reazione" name="Reazione studenti" required placeholder="Si sono divertiti? Hanno partecipato?"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="punti_forti">Cosa ha funzionato meglio? *</label>
+                            <textarea id="punti_forti" name="Punti forti" required placeholder="Cosa ti è piaciuto di più?"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="difficolta">Hai incontrato difficoltà? *</label>
+                            <textarea id="difficolta" name="Difficoltà" required placeholder="Cosa non ha funzionato o è stato ostico?"></textarea>
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title">Valutazione e Privacy</h3>
+                    
+                    <div class="form-group">
+                        <label>Consiglieresti questo materiale ad altri docenti? *</label>
+                        <div class="rating-scale">
+                            <label class="rating-option">
+                                <span>1</span>
+                                <input type="radio" name="Valutazione" value="1" required>
+                            </label>
+                            <label class="rating-option">
+                                <span>2</span>
+                                <input type="radio" name="Valutazione" value="2">
+                            </label>
+                            <label class="rating-option">
+                                <span>3</span>
+                                <input type="radio" name="Valutazione" value="3">
+                            </label>
+                            <label class="rating-option">
+                                <span>4</span>
+                                <input type="radio" name="Valutazione" value="4">
+                            </label>
+                            <label class="rating-option">
+                                <span>5</span>
+                                <input type="radio" name="Valutazione" value="5">
+                            </label>
+                        </div>
+                        <div class="rating-labels">
+                            <span>Per niente</span>
+                            <span>Assolutamente sì</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-8">
+                        <label>Posso pubblicare la tua testimonianza? *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="Pubblicazione" value="Sì con nome" required> Sì con nome
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="Pubblicazione" value="Sì in forma anonima"> Sì in forma anonima
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="Pubblicazione" value="No"> No, il feedback è solo per te
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note">Note aggiuntive <span class="optional-label">(Facoltativo)</span></label>
+                        <textarea id="note" name="Note" rows="2" placeholder="Qualsiasi altra cosa tu voglia aggiungere..."></textarea>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn btn-primary btn-submit">
+                        <span class="btn-text">Invia Esperienza <i class="ph ph-paper-plane-tilt"></i></span>
+                        <div class="spinner"></div>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <p>&copy; 2026 Prof. Memmo. Tutti i diritti riservati.</p>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="condividi.js"></script>
+</body>
+</html>

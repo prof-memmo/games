@@ -79,7 +79,7 @@
 
                     <h3 class="form-section-title">Dettagli dell'Attività</h3>
                     <div class="form-row">
-                        <div class="form-group">
+                        <div class="form-group" style="position: relative;">
                             <label for="gioco">Gioco o materiale utilizzato *</label>
                             <select id="gioco" name="Materiale utilizzato" required>
                                 <option value="" disabled selected>Scegli dal catalogo</option>
@@ -90,10 +90,11 @@
                                 <option value="Ops!">Ops!</option>
                                 <option value="Altro">Altro</option>
                             </select>
+                            <input type="text" id="gioco_altro" name="gioco_altro" placeholder="Specifica quale materiale..." style="display: none; margin-top: 0.5rem; width: 100%;">
                         </div>
                         <div class="form-group">
                             <label for="classe">Classe utilizzata *</label>
-                            <input type="text" id="classe" name="Classe" required placeholder="Es. 3A, seconda media...">
+                            <input type="text" id="classe" name="Classe" required placeholder="Es. 3A">
                         </div>
                     </div>
 

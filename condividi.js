@@ -5,6 +5,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSubmit = document.getElementById('submitBtn');
     const alertSuccess = document.getElementById('alertSuccess');
     const alertError = document.getElementById('alertError');
+    const selectGioco = document.getElementById('gioco');
+    const inputGiocoAltro = document.getElementById('gioco_altro');
+
+    // Mostra nascondi campo "Altro" per il Gioco
+    if (selectGioco && inputGiocoAltro) {
+        selectGioco.addEventListener('change', (e) => {
+            if (e.target.value === 'Altro') {
+                inputGiocoAltro.style.display = 'block';
+                inputGiocoAltro.required = true;
+            } else {
+                inputGiocoAltro.style.display = 'none';
+                inputGiocoAltro.required = false;
+                inputGiocoAltro.value = '';
+            }
+        });
+    }
 
     // SOSTITUISCI QUESTO URL CON QUELLO FORNITO DA GOOGLE APPS SCRIPT
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzG4UYa6QdLimSB8AO40Qut51ot1vv8IyFUlKdSNTl3n-nkdBY1_QWptbhMKLrUWf57vg/exec';
@@ -30,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Raccogli i dati del form
             const formData = new FormData(form);
+
+            // Se il materiale selezionato è "Altro", sostituisci il valore con quello digitato
+            if (formData.get('Materiale utilizzato') === 'Altro') {
+                formData.set('Materiale utilizzato', formData.get('gioco_altro') || 'Altro');
+            }
+            formData.delete('gioco_altro');
 
             try {
                 // Invia i dati tramite POST all'Apps Script

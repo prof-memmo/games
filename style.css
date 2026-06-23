@@ -787,7 +787,7 @@ input:focus, textarea:focus {
 .footer {
   background: var(--color-accent); /* Sfondo giallo chiaro */
   color: var(--color-text-dark); /* Testo nero/scuro per massima leggibilità sul giallo */
-  padding: 4rem 0 2rem;
+  padding: 1rem 0;
 }
 
 .footer-logo {
@@ -1141,6 +1141,8 @@ input:focus, textarea:focus {
 
 .modal-body { padding: 2rem; }
 .modal-body p { color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6; }
+
+
 
 .legal-links-check {
   background: var(--color-bg-alt);

@@ -1296,3 +1296,32 @@ input:focus, textarea:focus {
   font-size: 1.05rem;
   padding: 0.875rem 2.25rem;
 }
+
+/* =============================================
+   Game Meta Card
+   ============================================= */
+.game-meta-card {
+  background: var(--color-bg-alt);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: flex-start;
+  color: var(--color-text-base);
+  line-height: 1.4;
+}
+
+.meta-item span {
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin-right: 0.4rem;
+  min-width: 85px;
+}

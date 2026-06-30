@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il mio quaderno alternativo - Prof. Memmo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .version-card {
+            background: white; 
+            border-radius: var(--border-radius-lg); 
+            padding: 2.5rem 2rem; 
+            box-shadow: var(--shadow-md); 
+            display: flex; 
+            flex-direction: column;
+            transition: var(--transition-bounce);
+        }
+        .version-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        .number-badge {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem auto;
+            color: white;
+            font-family: var(--font-family-heading);
+            flex-shrink: 0;
+        }
+        .version-title {
+            text-align: center; 
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            line-height: 1.3;
+        }
+        .version-subtitle {
+            text-align: center; 
+            margin-bottom: 1.5rem; 
+            font-weight: 700; 
+            color: var(--color-text-light); 
+            font-size: 0.8rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+        .version-desc {
+            flex-grow: 1; 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            color: var(--color-text-base);
+            line-height: 1.6;
+        }
+        .buttons-container {
+            display: flex; 
+            flex-direction: column; 
+            gap: 1rem;
+        }
+        .btn-download {
+            width: 100%; 
+            text-align: center; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .coming-soon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            background: var(--color-bg-alt);
+            border-radius: var(--border-radius-pill);
+            padding: 0.3rem 0.9rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html" style="color: var(--color-primary);">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
+        <div class="container">
+            
+            <!-- Hero -->
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
+                <img src="loghi/Logo - Il mio quaderno alternativo.png" alt="Il mio quaderno alternativo Logo" style="max-height: 160px; max-width: 100%; margin: 0 auto 2rem auto; display: block; object-fit: contain;">
+                <p class="lead" style="max-width: 800px; margin: 0 auto; color: var(--color-text-base);">
+                    Un percorso alternativo pensato per gli studenti che non si avvalgono dell'insegnamento della religione cattolica. Quaderni strutturati per esplorare temi etici, filosofici e civici in modo attivo e creativo.
+                </p>
+            </div>
+
+            <!-- Intestazione schede -->
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Scegli il tuo Quaderno</h2>
+                <p style="color: var(--color-text-light);">Scarica i materiali gratuiti per la tua classe.</p>
+            </div>
+            
+            <!-- Griglia schede -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 2.5rem;">
+                
+                <!-- Scheda 1 — materiali disponibili -->
+                <div class="version-card" style="border-top: 8px solid #7c3aed;">
+                    <div class="number-badge" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">1</div>
+                    <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #7c3aed;">Classe Prima</span></h3>
+                    <div class="version-subtitle">Materia alternativa alla religione</div>
+                    <p class="version-desc">
+                        Il percorso per le classi prime. Attività guidate per riflettere su identità, valori, convivenza civile e scoperta di sé attraverso domande aperte e laboratori creativi.
+                    </p>
+                    <div class="buttons-container">
+                        <a href="contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf" 
+                           download="Il mio quaderno alternativo - Classe Prima.pdf" 
+                           target="_blank" 
+                           class="btn btn-primary btn-download" 
+                           style="background-color: #7c3aed; border-color: #7c3aed;">
+                            <i class="ph ph-download-simple"></i> Scarica il Quaderno
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Scheda 2 — in arrivo -->
+                <div class="version-card" style="border-top: 8px solid #0891b2; opacity: 0.85;">
+                    <div class="number-badge" style="background: linear-gradient(135deg, #0891b2, #22d3ee);">2</div>
+                    <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #0891b2;">Classe Seconda</span></h3>
+                    <div class="version-subtitle">Materia alternativa alla religione</div>
+                    <div style="text-align:center; margin-bottom: 1rem;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
+                    <p class="version-desc">
+                        Il percorso per le classi seconde è in fase di elaborazione. Verranno introdotti nuovi temi legati all'etica delle relazioni, alla cittadinanza attiva e al dialogo interculturale.
+                    </p>
+                    <div class="buttons-container">
+                        <button class="btn btn-outline btn-download wip-link" style="border-color: #0891b2; color: #0891b2;">
+                            <i class="ph ph-clock"></i> Stiamo lavorando…
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scheda 3 — in arrivo -->
+                <div class="version-card" style="border-top: 8px solid #b45309; opacity: 0.85;">
+                    <div class="number-badge" style="background: linear-gradient(135deg, #b45309, #f59e0b);">3</div>
+                    <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #b45309;">Classe Terza</span></h3>
+                    <div class="version-subtitle">Materia alternativa alla religione</div>
+                    <div style="text-align:center; margin-bottom: 1rem;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
+                    <p class="version-desc">
+                        Il percorso per le classi terze sarà dedicato a grandi temi: libertà, giustizia, ambiente, futuro. Un quaderno per chiudere il ciclo con riflessioni profonde e mature.
+                    </p>
+                    <div class="buttons-container">
+                        <button class="btn btn-outline btn-download wip-link" style="border-color: #b45309; color: #b45309;">
+                            <i class="ph ph-clock"></i> Stiamo lavorando…
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Torna Indietro -->
+            <div style="text-align: center; margin-top: 5rem;">
+                <a href="giochi.html" class="btn btn-outline"><i class="ph ph-arrow-left" style="margin-right: 0.5rem;"></i> Torna a Giochi e Materiali</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin: 15px 0;">
+    <img src="assets/patamu.png" alt="Patamu Logo" style="height: 80px; object-fit: contain;">
+    <p style="text-align: left; font-size: 0.8rem; line-height: 1.4; margin: 0; max-width: 800px; color: inherit;">
+        &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0).
+    </p>
+</div>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal: Stiamo lavorando -->
+    <div class="wip-modal-overlay" id="wip-modal">
+        <div class="wip-modal">
+            <div class="wip-modal-emoji">🚧</div>
+            <h3>Stiamo lavorando!</h3>
+            <p>Il sito è in fase di sviluppo — abbi un po' di pazienza! 😊<br>Tanti nuovi contenuti stanno arrivando e sicuramente anche quello che stai cercando!<br><strong>Riprova più tardi.</strong></p>
+            <button class="btn btn-primary" id="wip-close">Ok, torno dopo!</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // WIP modal
+        const wipModal = document.getElementById('wip-modal');
+        if (wipModal) {
+            document.querySelectorAll('.wip-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    wipModal.classList.add('active');
+                });
+            });
+            const wipClose = document.getElementById('wip-close');
+            if (wipClose) {
+                wipClose.addEventListener('click', () => {
+                    wipModal.classList.remove('active');
+                });
+            }
+            wipModal.addEventListener('click', (e) => {
+                if (e.target === wipModal) {
+                    wipModal.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -159,6 +159,7 @@
                         <button class="filter-btn" data-filter="scrittura">Laboratorio di scrittura</button>
                         <button class="filter-btn" data-filter="lingua">Riflessione sulla lingua</button>
                         <button class="filter-btn" data-filter="religione">Materia alternativa alla religione</button>
+                        <button class="filter-btn" data-filter="online">Giochi online</button>
                     </div>
                     <div style="display: flex; justify-content: center; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
                         <button class="sort-btn" id="sort-btn" data-order="asc">
@@ -171,10 +172,13 @@
                 <div class="games-grid" id="games-grid">
 
                     <!-- Fantaletteratura -->
-                    <div class="game-card item" data-materia="letteratura" data-title="Fantaletteratura">
+                    <div class="game-card item" data-materia="letteratura" data-type="online" data-title="Fantaletteratura">
                         <div class="game-card-img"><img src="loghi/fantaletteratura.png" alt="Fantaletteratura Logo"></div>
                         <div class="game-card-content">
-                            <div class="game-card-cat">Letteratura</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <div class="game-card-cat" style="margin-bottom: 0;">Letteratura</div>
+                                <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Gioco Online</span>
+                            </div>
                             <h3>Fantaletteratura</h3>
                             <p>Costruisci la tua squadra di autori e generi letterari sfidandoti in un fanta-campionato culturale.</p>
                             <div class="game-meta-card">
@@ -185,7 +189,7 @@
                                 <div class="meta-item"><span>👶 Classe/Età:</span> Sec. di 1° grado</div>
                                 <div class="meta-item"><span>🏫 Uso:</span> Classe, Casa</div>
                             </div>
-                            <a href="https://prof-memmo.github.io/fantaletteratura/" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Gioco online</a>
+                            <a href="fantaletteratura-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
                         </div>
                     </div>
 
@@ -209,10 +213,13 @@
                     </div>
 
                     <!-- La rotta degli eroi -->
-                    <div class="game-card item" data-materia="mito_epica" data-title="La rotta degli eroi">
+                    <div class="game-card item" data-materia="mito_epica" data-type="online" data-title="La rotta degli eroi">
                         <div class="game-card-img"><img src="loghi/la-rotta-degli-eroi-logo.png" alt="La rotta degli eroi Logo"></div>
                         <div class="game-card-content">
-                            <div class="game-card-cat">Mito ed epica</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <div class="game-card-cat" style="margin-bottom: 0;">Mito ed epica</div>
+                                <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Gioco Online</span>
+                            </div>
                             <h3>La rotta degli eroi</h3>
                             <p>Affronta le missioni, accumula dracme e costruisci la tua base nel mondo epico e mitologico.</p>
                             <div class="game-meta-card">
@@ -223,7 +230,7 @@
                                 <div class="meta-item"><span>👶 Classe/Età:</span> Classi prime (11-12 anni)</div>
                                 <div class="meta-item"><span>🏫 Uso:</span> Classe, Casa</div>
                             </div>
-                            <a href="https://prof-memmo.github.io/la-rotta-degli-eroi/" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Gioco online</a>
+                            <a href="rotta-eroi-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
                         </div>
                     </div>
 
@@ -266,10 +273,13 @@
                     </div>
 
                     <!-- Palestra di Riflessione -->
-                    <div class="game-card item" data-materia="lingua" data-title="Palestra di Riflessione">
+                    <div class="game-card item" data-materia="lingua" data-type="online" data-title="Palestra di Riflessione">
                         <div class="game-card-img"><img src="loghi/palestra-logo.png" alt="Palestra di Riflessione Logo"></div>
                         <div class="game-card-content">
-                            <div class="game-card-cat">Riflessione sulla lingua</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <div class="game-card-cat" style="margin-bottom: 0;">Riflessione sulla lingua</div>
+                                <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Gioco Online</span>
+                            </div>
                             <h3>Palestra di Riflessione</h3>
                             <p>Un allenamento completo per la lingua: percorsi personalizzati per studenti, docenti e amici della palestra.</p>
                             <div class="game-meta-card">
@@ -280,7 +290,7 @@
                                 <div class="meta-item"><span>👶 Classe/Età:</span> Sec. di 1° grado</div>
                                 <div class="meta-item"><span>🏫 Uso:</span> Recupero, Laboratorio, Casa</div>
                             </div>
-                            <a href="https://prof-memmo.github.io/palestra-di-riflessione/" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Gioco online</a>
+                            <a href="palestra-riflessione-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
                         </div>
                     </div>
 
@@ -363,7 +373,8 @@
                         let count = 0;
 
                         items.forEach(item => {
-                            if (filter === 'tutti' || item.getAttribute('data-materia') === filter) {
+                            const isOnline = item.getAttribute('data-type') === 'online';
+                            if (filter === 'tutti' || item.getAttribute('data-materia') === filter || (filter === 'online' && isOnline)) {
                                 item.style.display = 'flex';
                                 count++;
                             } else {

@@ -36,7 +36,7 @@
                 <div class="contact-card">
                     <div class="contact-info">
                         <h2>Mettiamoci in contatto</h2>
-                        <p>Hai domande, vuoi provare un gioco nella tua classe o proporre una collaborazione? Scrivimi!</p>
+                        <p>Hai domande o vuoi proporre una collaborazione? Scrivimi e ti risponderò al più presto!</p>
                         
                         <div class="contact-details mt-8">
                             <a href="mailto:prof.memmo@gmail.com" class="contact-link">
@@ -52,16 +52,7 @@
                             </a>
                         </div>
 
-                        <div class="contact-request-box mt-8">
-                            <div class="contact-request-icon">
-                                <i class="ph-duotone ph-package"></i>
-                            </div>
-                            <div>
-                                <h4>Vuoi un gioco o un materiale?</h4>
-                                <p>Puoi richiedere giochi specifici o materiali didattici direttamente tramite questo modulo. Descrivimi cosa stai cercando e ti risponderò al più presto!</p>
-                            </div>
                         </div>
-                    </div>
                     
                     <div class="contact-form-wrapper">
                         <form class="contact-form">
@@ -72,6 +63,15 @@
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" required placeholder="La tua email">
+                            </div>
+                            <div class="form-group">
+                                <label for="topic">Tipologia della comunicazione</label>
+                                <select id="topic" name="topic" required style="width: 100%; padding: 0.875rem 1rem; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-family: var(--font-family-base); font-size: 1rem; background-color: white;">
+                                    <option value="" disabled selected>Seleziona un'opzione...</option>
+                                    <option value="Richiesta di informazioni">Richiesta di informazioni</option>
+                                    <option value="Opinioni">Opinioni</option>
+                                    <option value="Altro">Altro</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="message">Messaggio</label>

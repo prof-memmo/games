@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (privacyAccepted && termsAccepted) {
                 const nameInput = document.getElementById('name').value;
                 const emailInput = document.getElementById('email').value;
+                const topicInput = document.getElementById('topic').value;
                 const messageInput = document.getElementById('message').value;
 
                 // UI loading state
@@ -266,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             body: JSON.stringify({
                                 Nome: nameInput,
                                 Email: emailInput,
+                                Motivo: topicInput,
                                 Messaggio: messageInput
                             })
                         });

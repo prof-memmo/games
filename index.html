@@ -58,6 +58,19 @@
         </div>
     </header>
 
+    <!-- Sezione Esperienze (Carosello Dinamico) -->
+    <section class="experiences-preview" style="padding: 4rem 0; background-color: var(--color-bg-alt); text-align: center;">
+        <div class="container">
+            <h2 style="margin-bottom: 2rem; color: var(--color-primary);"><i class="ph-duotone ph-quotes"></i> Dicono dei giochi...</h2>
+            
+            <div id="experiences-carousel" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory;">
+                <div style="width: 100%; color: var(--color-text-light);"><i class="ph ph-spinner ph-spin"></i> Caricamento esperienze...</div>
+            </div>
+            
+            <a href="condividi-esperienza.html" class="btn btn-outline" style="margin-top: 1rem;"><i class="ph ph-pencil-simple"></i> Condividi la tua esperienza</a>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content text-center">
@@ -79,6 +92,57 @@
         </div>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        if(typeof firebase !== 'undefined') {
+            try {
+                const db = firebase.firestore();
+                const snapshot = await db.collection("hub_esperienze")
+                                        .where("status", "==", "approved")
+                                        .get();
+                                        
+                const carousel = document.getElementById("experiences-carousel");
+                carousel.innerHTML = ""; // svuota caricamento
+                
+                if (snapshot.empty) {
+                    carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    let authorText = data.nome || "Un docente";
+                    if(data.pubblicazione === "Sì in forma anonima") authorText = "Docente anonimo";
+                    if(data.pubblicazione === "No") return; // Sicurezza extra
+
+                    const card = document.createElement("div");
+                    card.style.cssText = "min-width: 300px; max-width: 350px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); scroll-snap-align: center; text-align: left; flex: 0 0 auto;";
+                    
+                    let stars = "";
+                    const rating = parseInt(data.valutazione) || 5;
+                    for(let i=0; i<5; i++) {
+                        stars += i < rating ? '<i class="ph-fill ph-star" style="color:#f59e0b;"></i>' : '<i class="ph ph-star" style="color:#d1d5db;"></i>';
+                    }
+
+                    card.innerHTML = `
+                        <div style="margin-bottom: 15px;">${stars}</div>
+                        <p style="font-style: italic; color: var(--color-text); margin-bottom: 20px; font-size: 1rem;">"${data.esperienza}"</p>
+                        <div style="display: flex; flex-direction: column; border-top: 1px solid #eee; padding-top: 15px;">
+                            <strong style="color: var(--color-primary);">${authorText}</strong>
+                            <span style="font-size: 0.85rem; color: var(--color-text-light);">${data.gioco || ''}</span>
+                        </div>
+                    `;
+                    carousel.appendChild(card);
+                });
+            } catch(e) {
+                console.error("Errore recupero esperienze:", e);
+                document.getElementById("experiences-carousel").innerHTML = '<p>Impossibile caricare le recensioni.</p>';
+            }
+        }
+      });
+    </script>
 </body>
 </html>

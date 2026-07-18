@@ -22,8 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // SOSTITUISCI QUESTO URL CON QUELLO FORNITO DA GOOGLE APPS SCRIPT
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzG4UYa6QdLimSB8AO40Qut51ot1vv8IyFUlKdSNTl3n-nkdBY1_QWptbhMKLrUWf57vg/exec';
+    // Inizializzazione Firebase Hub
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-n2m-kYEuzGXPMKclZTggf4Y5Zm8_cdM",
+      authDomain: "prof-memmo-hub.firebaseapp.com",
+      projectId: "prof-memmo-hub",
+      storageBucket: "prof-memmo-hub.firebasestorage.app",
+      messagingSenderId: "839149485689",
+      appId: "1:839149485689:web:04ee4fa6237d94d0b71ea8"
+    };
+    
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -32,14 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Nascondi gli alert precedenti
             alertSuccess.style.display = 'none';
             alertError.style.display = 'none';
-
-            // Verifica che l'URL dello script sia stato impostato
-            if (SCRIPT_URL === 'INSERISCI_QUI_IL_TUO_URL_SCRIPT_GOOGLE') {
-                alertError.textContent = 'Errore di configurazione: Manca l\'URL di Google Apps Script. Contattare l\'amministratore.';
-                alertError.style.display = 'block';
-                return;
-            }
-
+            
             // Attiva stato di caricamento
             btnSubmit.disabled = true;
             btnSubmit.classList.add('loading');
@@ -54,13 +59,24 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.delete('gioco_altro');
 
             try {
-                // Invia i dati tramite POST all'Apps Script
-                // Google Apps Script a volte ha problemi con il CORS su POST diretti da browser,
-                // ma usando fetch con no-cors e FormData funziona perfettamente per l'inserimento.
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
+                // Salva su Firebase
+                await db.collection("hub_esperienze").add({
+                    nome: formData.get('Nome') || "Anonimo",
+                    email: formData.get('Email') || "",
+                    ordine_scuola: formData.get('Ordine di scuola') || "",
+                    materia: formData.get('Materia') || "",
+                    gioco: formData.get('Materiale utilizzato') || "",
+                    classe: formData.get('Classe') || "",
+                    uso_materiale: formData.get('Uso materiale') || "",
+                    reazione_studenti: formData.get('Reazione studenti') || "",
+                    punti_forti: formData.get('Punti forti') || "",
+                    difficolta: formData.get('Difficoltà') || "",
+                    valutazione: formData.get('Valutazione') || "",
+                    pubblicazione: formData.get('Pubblicazione') || "",
+                    note: formData.get('Note') || "",
+                    esperienza: formData.get('Uso materiale'), // per riassunto veloce
+                    status: "pending",
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
                 // Mostra successo

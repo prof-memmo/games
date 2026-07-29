@@ -482,7 +482,8 @@
                                 'palestra di riflessione': 'palestra-riflessione-dettagli.html',
                                 'travel agency': 'travel-agency.html',
                                 'il mio quaderno alternativo': 'quaderno-alternativo.html',
-                                'la corte della commedia': 'corte-commedia-dettagli.html'
+                                'la corte della commedia': 'corte-commedia-dettagli.html',
+                                'ops!': 'https://prof-memmo.github.io/ops/'
                             };
                             if (linkMap[title]) {
                                 btn.href = linkMap[title];
@@ -494,11 +495,12 @@
         }
 
         // Under Construction modal (Event Delegation)
-        document.body.addEventListener('click', (e) => {
+        document.addEventListener('click', (e) => {
             const wipLink = e.target.closest('.wip-link');
             if (wipLink) {
                 e.preventDefault();
-                document.getElementById('wip-modal').classList.add('active');
+                const modal = document.getElementById('wip-modal');
+                if (modal) modal.classList.add('active');
             }
         });
         document.getElementById('wip-close').addEventListener('click', () => {

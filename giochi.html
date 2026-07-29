@@ -483,7 +483,8 @@
 
         // Under Construction modal (Event Delegation)
         document.body.addEventListener('click', (e) => {
-            if (e.target.classList.contains('wip-link')) {
+            const wipLink = e.target.closest('.wip-link');
+            if (wipLink) {
                 e.preventDefault();
                 document.getElementById('wip-modal').classList.add('active');
             }

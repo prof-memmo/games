@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Corte della Commedia - Prof. Memmo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background: #000;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border: 2px dashed rgba(255,255,255,0.2);
+        }
+        .video-placeholder-content {
+            z-index: 2;
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .storyboard-alert {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: var(--border-radius-base);
+            margin-top: 1rem;
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html" style="color: var(--color-primary);">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
+        <div class="container">
+            
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
+                <span style="display: inline-block; background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 2.5rem; letter-spacing: 0.05em;">Gioco Online</span>
+                
+                <div class="game-detail-grid">
+                    <div class="game-detail-left">
+                        <img src="loghi/corte-commedia-logo.png" alt="La Corte della Commedia Logo" class="game-detail-logo" style="max-height: 200px; width: auto;">
+                        
+                        <div class="game-meta-card" style="margin: 0; max-width: 100%;">
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>📚 Materia:</span> Letteratura</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👥 Giocatori:</span> Squadre / Singoli</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>⏱️ Durata:</span> Intero anno scolastico</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🎯 Obiettivi:</span> Gamification, analisi testo</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👶 Classe/Età:</span> Sec. di 1° grado</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Classe, Casa</div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-detail-right">
+                        <p class="lead">
+                            <strong>La Corte della Commedia</strong> è un'esperienza immersiva che trasforma la tua classe in un vero e proprio Tribunale Dantesco. Gli studenti, divisi in squadre (Avvocati Difensori e Pubblica Accusa), ricevono dei "Fascicoli Processuali" in formato PDF o cartaceo, contenenti le testimonianze, i fatti e i capi d'accusa dei personaggi più celebri della Divina Commedia (come Paolo e Francesca, Farinata degli Uberti o Ulisse).
+                        </p>
+                        <p class="lead">
+                            Dopo un'attenta analisi del testo e la preparazione di vere e proprie arringhe, si sfideranno in un dibattito formale di fronte al resto della classe o a una giuria. La piattaforma digitale aiuta il docente a gestire i tempi, le prove e i verdetti finali in maniera spettacolare, favorendo lo sviluppo del <strong>pensiero critico</strong>, l'espressione orale (public speaking) e una profonda <strong>empatia e comprensione del testo dantesco</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <a href="https://prof-memmo.github.io/la-corte-della-commedia/" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem; box-shadow: var(--shadow-md);"><i class="ph-bold ph-play" style="margin-right: 0.5rem;"></i> Vai al Gioco Online</a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 5rem;">
+                <a href="archivio-giochi.html" class="btn btn-outline"><i class="ph ph-arrow-left" style="margin-right: 0.5rem;"></i> Torna all'Archivio Giochi</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin: 15px 0;">
+                <img src="assets/patamu.png" alt="Patamu Logo" style="height: 80px; object-fit: contain;">
+                <p style="text-align: left; font-size: 0.8rem; line-height: 1.4; margin: 0; max-width: 800px; color: inherit;">
+                    &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0).
+                </p>
+            </div>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

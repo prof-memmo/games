@@ -247,6 +247,27 @@
                     </div>
                 </div>
 
+                <!-- La corte della commedia -->
+                <div class="game-card item" data-materia="letteratura" data-type="online" data-title="La corte della commedia">
+                    <div class="game-card-img"><img src="loghi/corte-commedia-logo.png" alt="La corte della commedia Logo"></div>
+                    <div class="game-card-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <div class="game-card-cat" style="margin-bottom: 0;">Letteratura</div>
+                            <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Gioco Online</span>
+                        </div>
+                        <h3>La corte della commedia</h3>
+                        <p>Esplora il mondo teatrale di Goldoni gestendo la tua compagnia in una sfida all'ultimo copione.</p>
+                        <div class="game-meta-card">
+                            <div class="meta-item"><span>📚 Materia:</span> Letteratura / Teatro</div>
+                            <div class="meta-item"><span>👥 Giocatori:</span> Squadre</div>
+                            <div class="meta-item"><span>⏱️ Durata:</span> Intero anno scolastico</div>
+                            <div class="meta-item"><span>🎯 Obiettivi:</span> Gamification, teatro</div>
+                            <div class="meta-item"><span>👶 Classe/Età:</span> Sec. di 1° grado</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Classe, Casa</div>
+                        </div>
+                        <a href="#" class="btn btn-primary wip-link" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
+                    </div>
+                </div>
 
                 <!-- La rotta degli eroi -->
                 <div class="game-card item" data-materia="mito_epica" data-type="online" data-title="La rotta degli eroi">
@@ -271,7 +292,7 @@
                 </div>
                 <!-- Ops! -->
                 <div class="game-card item" data-materia="storia" data-title="Ops!">
-                    <div class="game-card-img"><img src="loghi/Ops logo.png" alt="Ops! Logo"></div>
+                    <div class="game-card-img"><img src="loghi/ops-logo-scritte.png" alt="Ops! Logo"></div>
                     <div class="game-card-content">
                         <div class="game-card-cat">Storia</div>
                         <h3>Ops!</h3>
@@ -348,6 +369,8 @@
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -405,17 +428,71 @@
                         return titleB.localeCompare(titleA);
                     }
                 });
-
                 // Riunisci gli item nella grid
                 items.forEach(item => grid.appendChild(item));
             });
         });
-        // Under Construction modal
-        document.querySelectorAll('.wip-link').forEach(link => {
-            link.addEventListener('click', (e) => {
+
+        // Integrazione Firebase per stato giochi
+        const titleToIdMap = {
+            'fantaletteratura': 'fantaletteratura',
+            'la rotta degli eroi': 'la-rotta-degli-eroi',
+            'palestra di riflessione': 'palestra-di-riflessione',
+            'ops!': 'ops',
+            'la corte della commedia': 'la-corte-della-commedia',
+            'travel agency': 'travel-agency',
+            'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
+            'la roulette': 'la-roulette'
+        };
+
+        if (typeof firebase !== 'undefined') {
+            const db = firebase.firestore();
+            db.collection('games_status').onSnapshot(snapshot => {
+                const statusMap = {};
+                snapshot.forEach(doc => {
+                    statusMap[doc.id] = doc.data();
+                });
+
+                document.querySelectorAll('.game-card').forEach(card => {
+                    const title = card.getAttribute('data-title')?.toLowerCase();
+                    if (!title) return;
+                    const gameId = titleToIdMap[title];
+                    if (gameId && statusMap[gameId]) {
+                        const status = statusMap[gameId];
+                        const btn = card.querySelector('.btn');
+                        if (!status.isActive) {
+                            btn.classList.add('wip-link');
+                            btn.classList.remove('btn-primary');
+                            btn.classList.add('btn-outline');
+                            btn.href = "#";
+                        } else {
+                            btn.classList.remove('wip-link');
+                            btn.classList.remove('btn-outline');
+                            btn.classList.add('btn-primary');
+                            // Ripristina l'href in base al titolo
+                            const linkMap = {
+                                'fantaletteratura': 'fantaletteratura-dettagli.html',
+                                'la rotta degli eroi': 'rotta-eroi-dettagli.html',
+                                'palestra di riflessione': 'palestra-riflessione-dettagli.html',
+                                'travel agency': 'travel-agency.html',
+                                'il mio quaderno alternativo': 'quaderno-alternativo.html',
+                                'la corte della commedia': 'corte-commedia-dettagli.html'
+                            };
+                            if (linkMap[title]) {
+                                btn.href = linkMap[title];
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        // Under Construction modal (Event Delegation)
+        document.body.addEventListener('click', (e) => {
+            if (e.target.classList.contains('wip-link')) {
                 e.preventDefault();
                 document.getElementById('wip-modal').classList.add('active');
-            });
+            }
         });
         document.getElementById('wip-close').addEventListener('click', () => {
             document.getElementById('wip-modal').classList.remove('active');

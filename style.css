@@ -1326,6 +1326,18 @@ input:focus, textarea:focus {
   min-width: 85px;
 }
 
+.game-meta-card.two-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem 2rem;
+}
+
+@media (min-width: 768px) {
+  .game-meta-card.two-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 /* =============================================
    Layout Scheda Dettagli (2 Colonne)
    ============================================= */

@@ -49,6 +49,9 @@ body {
   line-height: 1.6;
   font-size: 16px;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -860,6 +863,14 @@ input:focus, textarea:focus {
 }
 
 @media (max-width: 768px) {
+  /* Layout piatto per app-friendly view */
+  .game-card-large, .feature-card, .phil-box, .contact-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 10px 5px !important;
+  }
+
   .nav-links {
     position: absolute;
     top: 5rem;

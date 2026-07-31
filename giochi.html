@@ -488,6 +488,28 @@
                                 btn.href = linkMap[title];
                             }
                         }
+                        
+                        // Aggiornamento testuale dei campi (se presenti nel DB)
+                        if (status.shortDescription) {
+                            const descP = card.querySelector('p');
+                            if (descP) descP.innerText = status.shortDescription;
+                        }
+                        
+                        const metaItems = card.querySelectorAll('.meta-item');
+                        if (metaItems.length >= 6) {
+                            if (status.materia) metaItems[0].innerHTML = `<span>📚 Materia:</span> ${status.materia}`;
+                            if (status.giocatori) metaItems[1].innerHTML = `<span>👥 Giocatori:</span> ${status.giocatori}`;
+                            if (status.durata) metaItems[2].innerHTML = `<span>⏱️ Durata:</span> ${status.durata}`;
+                            if (status.obiettivi) metaItems[3].innerHTML = `<span>🎯 Obiettivi:</span> ${status.obiettivi}`;
+                            if (status.classe) metaItems[4].innerHTML = `<span>👶 Classe/Età:</span> ${status.classe}`;
+                            if (status.uso) metaItems[5].innerHTML = `<span>🏫 Uso:</span> ${status.uso}`;
+                        }
+                        
+                        // Aggiorna anche la label in alto
+                        if (status.materia) {
+                            const catLabel = card.querySelector('.game-card-cat');
+                            if (catLabel) catLabel.innerText = status.materia;
+                        }
                     }
                 });
             });

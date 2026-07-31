@@ -324,4 +324,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Gestione dati dinamici per le pagine di dettaglio
+    const mainEl = document.querySelector('main[data-game-id]');
+    if (mainEl && typeof firebase !== 'undefined') {
+        const gameId = mainEl.getAttribute('data-game-id');
+        const db = firebase.firestore();
+        db.collection('games_status').doc(gameId).onSnapshot(doc => {
+            if (doc.exists) {
+                const status = doc.data();
+                
+                // Aggiorna descrizione estesa
+                if (status.longDescription) {
+                    const descP = document.querySelector('.game-detail-right p.lead');
+                    if (descP) {
+                        // Preserviamo eventuali tag <strong> iniziali se necessario, o sostituiamo tutto
+                        // Sostituiamo tutto con il testo aggiornato, renderizzato come HTML per supportare grassetti e a capo
+                        descP.innerHTML = status.longDescription.replace(/\n/g, '<br>');
+                    }
+                }
+                
+                // Aggiorna la game-meta-card
+                const metaItems = document.querySelectorAll('.game-detail-left .game-meta-card .meta-item');
+                if (metaItems.length >= 6) {
+                    if (status.materia) metaItems[0].innerHTML = `<span>📚 Materia:</span> ${status.materia}`;
+                    if (status.giocatori) metaItems[1].innerHTML = `<span>👥 Giocatori:</span> ${status.giocatori}`;
+                    if (status.durata) metaItems[2].innerHTML = `<span>⏱️ Durata:</span> ${status.durata}`;
+                    if (status.obiettivi) metaItems[3].innerHTML = `<span>🎯 Obiettivi:</span> ${status.obiettivi}`;
+                    if (status.classe) metaItems[4].innerHTML = `<span>👶 Classe/Età:</span> ${status.classe}`;
+                    if (status.uso) metaItems[5].innerHTML = `<span>🏫 Uso:</span> ${status.uso}`;
+                }
+            }
+        });
+    }
 });

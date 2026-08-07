@@ -1,16 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Inizializzazione Firebase Hub
-    const firebaseConfig = {
-      apiKey: "AIzaSyD-n2m-kYEuzGXPMKclZTggf4Y5Zm8_cdM",
-      authDomain: "prof-memmo-hub.firebaseapp.com",
-      projectId: "prof-memmo-hub",
-      storageBucket: "prof-memmo-hub.firebasestorage.app",
-      messagingSenderId: "839149485689",
-      appId: "1:839149485689:web:04ee4fa6237d94d0b71ea8"
-    };
-    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+
 
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -293,19 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Salvataggio parallelo nel Cruscotto (Firebase)
-                if (typeof firebase !== 'undefined') {
-                    try {
-                        await firebase.firestore().collection("hub_posta").add({
-                            nome: nameInput,
-                            email: emailInput,
-                            topic: topicInput,
-                            messaggio: messageInput,
-                            site_origin: "prof-memmo-games",
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    } catch(e) {
-                        console.error("Errore salvataggio posta su Hub:", e);
-                    }
+                if (window.HubDB) {
+                    await window.HubDB.saveContactMessage(nameInput, emailInput, topicInput, messageInput);
                 }
 
                 acceptanceModal.classList.remove('active');

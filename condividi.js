@@ -22,20 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Inizializzazione Firebase Hub
-    const firebaseConfig = {
-      apiKey: "AIzaSyD-n2m-kYEuzGXPMKclZTggf4Y5Zm8_cdM",
-      authDomain: "prof-memmo-hub.firebaseapp.com",
-      projectId: "prof-memmo-hub",
-      storageBucket: "prof-memmo-hub.firebasestorage.app",
-      messagingSenderId: "839149485689",
-      appId: "1:839149485689:web:04ee4fa6237d94d0b71ea8"
-    };
-    
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
+
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -60,24 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // Salva su Firebase
-                await db.collection("hub_esperienze").add({
-                    nome: formData.get('Nome') || "Anonimo",
-                    email: formData.get('Email') || "",
-                    ordine_scuola: formData.get('Ordine di scuola') || "",
-                    materia: formData.get('Materia') || "",
-                    gioco: formData.get('Materiale utilizzato') || "",
-                    classe: formData.get('Classe') || "",
-                    uso_materiale: formData.get('Uso materiale') || "",
-                    reazione_studenti: formData.get('Reazione studenti') || "",
-                    punti_forti: formData.get('Punti forti') || "",
-                    difficolta: formData.get('Difficoltà') || "",
-                    valutazione: formData.get('Valutazione') || "",
-                    pubblicazione: formData.get('Pubblicazione') || "",
-                    note: formData.get('Note') || "",
-                    esperienza: formData.get('Uso materiale'), // per riassunto veloce
-                    status: "pending",
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                if (window.HubDB) {
+                    await window.HubDB.saveFeedback({
+                        nome: formData.get('Nome') || "Anonimo",
+                        email: formData.get('Email') || "",
+                        ordine_scuola: formData.get('Ordine di scuola') || "",
+                        materia: formData.get('Materia') || "",
+                        gioco: formData.get('Materiale utilizzato') || "",
+                        classe: formData.get('Classe') || "",
+                        uso_materiale: formData.get('Uso materiale') || "",
+                        reazione_studenti: formData.get('Reazione studenti') || "",
+                        punti_forti: formData.get('Punti forti') || "",
+                        difficolta: formData.get('Difficoltà') || "",
+                        valutazione: formData.get('Valutazione') || "",
+                        pubblicazione: formData.get('Pubblicazione') || "",
+                        note: formData.get('Note') || "",
+                        esperienza: formData.get('Uso materiale'), // per riassunto veloce
+                        status: "pending"
+                    });
+                }
 
                 // Mostra successo
                 alertSuccess.style.display = 'block';

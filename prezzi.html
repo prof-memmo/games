@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prezzi e Piani - Prof. Memmo</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Stili Base Vetrina -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs per controllo visibilità (se l'utente atterra direttamente) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <style>
+        /* SUNO-LIKE PREMIUM DARK THEME FOR PRICING */
+        :root {
+            --bg-dark: #0a0a0b;
+            --bg-card: rgba(20, 20, 22, 0.7);
+            --border-glow: rgba(255, 255, 255, 0.1);
+            --accent-glow: rgba(99, 102, 241, 0.5);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --gradient-primary: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+        }
+
+        body.pricing-page {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+        }
+
+        .pricing-header {
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pricing-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .pricing-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 8rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--border-glow);
+            transition: all 0.4s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .pricing-card.popular {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+        
+        @media(max-width: 1100px){
+            .pricing-card.popular { transform: scale(1); }
+        }
+
+        .pricing-card.popular::before {
+            background: var(--gradient-primary);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 1rem; right: 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        .plan-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .plan-price span {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .plan-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            min-height: 3em;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: #d4d4d8;
+            line-height: 1.4;
+        }
+        
+        .plan-features li.negative {
+            color: #71717a;
+        }
+
+        .plan-features li i {
+            color: #10b981;
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .plan-features li.negative i {
+            color: #ef4444;
+        }
+
+        .btn-subscribe {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border-glow);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .btn-subscribe:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .pricing-card.popular .btn-subscribe {
+            background: var(--gradient-primary);
+            border: none;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .pricing-card.popular .btn-subscribe:hover {
+            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Overlay "Non attivo" */
+        #coming-soon-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+    </style>
+</head>
+<body class="pricing-page">
+
+    <!-- Overlay Nascosto se Monetizzazione è OFF -->
+    <div id="coming-soon-overlay">
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 3rem; margin-bottom: 1rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">In arrivo ad Agosto 2027</h1>
+        <p style="font-size: 1.2rem; color: #a1a1aa; max-width: 500px; line-height: 1.6; margin-bottom: 2rem;">Il sistema di abbonamenti e l'accesso alle Versioni Complete non è ancora attivo. Sarà disponibile a breve!</p>
+        <a href="index.html" class="btn-subscribe" style="max-width: 200px;">Torna alla Home</a>
+    </div>
+
+    <!-- Navigation (Semplificata per mantenere il look premium) -->
+    <nav style="padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <a href="index.html" style="text-decoration: none; color: white; display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem;">
+            <img src="favicon.png" alt="Logo" style="width: 32px; height: 32px; filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));">
+            Prof. Memmo
+        </a>
+        <a href="index.html" style="color: #a1a1aa; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; padding: 8px 16px; border-radius: 8px; background: rgba(255,255,255,0.05);">Torna alla Home</a>
+    </nav>
+
+    <div class="pricing-header">
+        <h1>Scegli il tuo piano.</h1>
+        <p>Sblocca il pieno potenziale della didattica ludica. Passa alle versioni complete per accedere a tutte le funzionalità avanzate, tornei e strumenti di gestione.</p>
+    </div>
+
+    <div class="pricing-grid">
+        
+        <!-- CARD BASE -->
+        <div class="pricing-card">
+            <div class="plan-name">Versione Base</div>
+            <div class="plan-desc">Gratuita e accessibile per esplorare le dinamiche fondamentali dei giochi.</div>
+            <div class="plan-price">€0<span>/anno</span></div>
+            
+            <ul class="plan-features">
+                <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Max 4 squadre, una sola classe)</li>
+                <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione (Attività fondamentali)</li>
+                <li class="negative"><i class="ph-fill ph-x-circle"></i> FantaLetteratura: Tornei interni e missioni personalizzate</li>
+                <li class="negative"><i class="ph-fill ph-x-circle"></i> Palestra: Analisi logica, periodo, testi B1/B2, test cultura gen.</li>
+            </ul>
+            
+            <button class="btn-subscribe">Inizia Gratis</button>
+        </div>
+
+        <!-- CARD VIANDANTE -->
+        <div class="pricing-card">
+            <div class="plan-name">Piano Viandante</div>
+            <div class="plan-desc">Perfetto per docenti che vogliono più giochi e più storie da esplorare.</div>
+            <div class="plan-price">€9.99<span>/anno</span></div>
+            
+            <ul class="plan-features">
+                <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Versione Base)</li>
+                <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione (Versione Base)</li>
+                <li><i class="ph-fill ph-check-circle"></i> <strong>La Rotta degli Eroi</strong></li>
+                <li><i class="ph-fill ph-check-circle"></i> <strong>La Corte dei Dannati</strong></li>
+                <li><i class="ph-fill ph-check-circle"></i> Accesso ai futuri giochi narrativi</li>
+                <li class="negative"><i class="ph-fill ph-x-circle"></i> Strumenti docente (creazione classi, tornei, dashboard)</li>
+            </ul>
+            
+            <button class="btn-subscribe">Scegli Viandante</button>
+        </div>
+
+        <!-- CARD DOCENTE -->
+        <div class="pricing-card popular">
+            <div class="popular-badge">Consigliato</div>
+            <div class="plan-name">Docente Didattico</div>
+            <div class="plan-desc">Gli strumenti definitivi per gestire le tue classi e la didattica.</div>
+            <div class="plan-price">€19.99<span>/anno</span></div>
+            
+            <ul class="plan-features">
+                <li><i class="ph-fill ph-check-circle"></i> <strong>FantaLetteratura (Completo)</strong>: Tornei, missioni</li>
+                <li><i class="ph-fill ph-check-circle"></i> <strong>Palestra (Completa)</strong>: Analisi logica, testi B2</li>
+                <li><i class="ph-fill ph-check-circle"></i> Gestione Classi e Studenti</li>
+                <li><i class="ph-fill ph-check-circle"></i> Codici Classe privati</li>
+                <li><i class="ph-fill ph-check-circle"></i> Strumenti Docente e Dashboard avanzata</li>
+                <li class="negative"><i class="ph-fill ph-x-circle"></i> Non include La Rotta degli Eroi o Travel Agency</li>
+            </ul>
+            
+            <button class="btn-subscribe">Scegli Docente</button>
+        </div>
+
+        <!-- CARD ECOSISTEMA -->
+        <div class="pricing-card" style="border-color: rgba(99, 102, 241, 0.4);">
+            <div class="plan-name" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ecosistema Completo</div>
+            <div class="plan-desc">L'esperienza totale. Accesso illimitato a tutti i contenuti e strumenti.</div>
+            <div class="plan-price">€24.99<span>/anno</span></div>
+            
+            <ul class="plan-features">
+                <li><i class="ph-fill ph-check-circle"></i> <strong>Tutto il piano Docente Completo Didattico</strong></li>
+                <li><i class="ph-fill ph-check-circle"></i> <strong>La Rotta degli Eroi</strong></li>
+                <li><i class="ph-fill ph-check-circle"></i> <strong>Travel Agency C.</strong></li>
+                <li><i class="ph-fill ph-check-circle"></i> Tutti i futuri giochi completi in anteprima</li>
+                <li><i class="ph-fill ph-check-circle"></i> Assistenza dedicata</li>
+            </ul>
+            
+            <button class="btn-subscribe" style="border-color: rgba(99, 102, 241, 0.5);">Ottieni Tutto</button>
+        </div>
+
+    </div>
+
+    <!-- Script controllo visibilità tramite Firebase -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase !== 'undefined') {
+                const db = firebase.firestore();
+                db.collection('ecosistema_settings').doc('monetizzazione').onSnapshot(doc => {
+                    const data = doc.data();
+                    if (!data || !data.isActive) {
+                        // Monetizzazione OFF, nascondi e mostra overlay
+                        document.getElementById('coming-soon-overlay').style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        // Monetizzazione ON
+                        document.getElementById('coming-soon-overlay').style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                }, error => {
+                    console.error("Errore lettura monetizzazione:", error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

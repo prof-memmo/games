@@ -336,3 +336,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Ascoltatore globale per Monetizzazione (aggiunge link Prezzi e Piani)
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof firebase !== 'undefined') {
+        const db = firebase.firestore();
+        db.collection('ecosistema_settings').doc('monetizzazione').onSnapshot(doc => {
+            const data = doc.data();
+            const navLinksUl = document.querySelector('.nav-links');
+            if (navLinksUl) {
+                let prezziLi = document.getElementById('nav-prezzi-piani');
+                if (data && data.isActive) {
+                    if (!prezziLi) {
+                        prezziLi = document.createElement('li');
+                        prezziLi.id = 'nav-prezzi-piani';
+                        prezziLi.innerHTML = '<a href="prezzi.html" style="color: #8b5cf6; font-weight: bold;"><i class="ph-bold ph-star"></i> Prezzi e Piani</a>';
+                        // Inserisci prima di "Condividi Esperienza" o alla fine
+                        if (navLinksUl.lastElementChild) {
+                            navLinksUl.insertBefore(prezziLi, navLinksUl.lastElementChild);
+                        } else {
+                            navLinksUl.appendChild(prezziLi);
+                        }
+                    }
+                } else {
+                    if (prezziLi) {
+                        prezziLi.remove();
+                    }
+                }
+            }
+        });
+    }
+});

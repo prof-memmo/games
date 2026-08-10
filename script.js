@@ -337,16 +337,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Ascoltatore globale per Monetizzazione (aggiunge link Prezzi e Piani)
+// Ascoltatore globale per Ecosistema (Monetizzazione e Sostieni)
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof firebase !== 'undefined') {
         const db = firebase.firestore();
-        db.collection('ecosistema_settings').doc('monetizzazione').onSnapshot(doc => {
+        db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
             const data = doc.data();
+            
+            // 1. Gestione Prezzi e Piani nel Menu
             const navLinksUl = document.querySelector('.nav-links');
             if (navLinksUl) {
                 let prezziLi = document.getElementById('nav-prezzi-piani');
-                if (data && data.isActive) {
+                if (data && data.monetizzazione) {
                     if (!prezziLi) {
                         prezziLi = document.createElement('li');
                         prezziLi.id = 'nav-prezzi-piani';
@@ -361,6 +363,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     if (prezziLi) {
                         prezziLi.remove();
+                    }
+                }
+            }
+
+            // 2. Gestione Bottone Sostieni (Solo su pagine specifiche)
+            const isContatti = window.location.pathname.includes('contatti.html');
+            const isCondividi = window.location.pathname.includes('condividi-esperienza.html');
+            
+            if (isContatti || isCondividi) {
+                let sostieniContainer = document.getElementById('sostieni-container-hook');
+                if (!sostieniContainer) {
+                    // Crea un hook all'inizio del main se non esiste
+                    const main = document.querySelector('main');
+                    if (main) {
+                        sostieniContainer = document.createElement('div');
+                        sostieniContainer.id = 'sostieni-container-hook';
+                        sostieniContainer.style.textAlign = 'center';
+                        sostieniContainer.style.margin = '2rem 0';
+                        main.insertBefore(sostieniContainer, main.firstChild);
+                    }
+                }
+
+                if (sostieniContainer) {
+                    if (data && data.sostieni_il_progetto) {
+                        sostieniContainer.innerHTML = `
+                            <a href="sostieni.html" class="btn" style="background: linear-gradient(135deg, #ef4444, #f43f5e); color: white; border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
+                                <i class="ph-fill ph-heart"></i> Sostieni Prof. Memmo
+                            </a>
+                        `;
+                    } else {
+                        sostieniContainer.innerHTML = '';
                     }
                 }
             }

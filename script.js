@@ -194,6 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let termsAccepted = false;
 
     const openLegalModal = (type) => {
+        if (typeof openSharedModal === 'function') {
+            openSharedModal(type === 'terms' ? 'termini' : type);
+            return;
+        }
         if (!legalData[type]) return;
         currentLegalType = type;
         modalTitle.innerHTML = legalData[type].title;

@@ -20,15 +20,15 @@
     <script src="js/firebase-init.js"></script>
 
     <style>
-        /* SUNO-LIKE PREMIUM DARK THEME FOR PRICING */
+        /* SUNO-LIKE PREMIUM THEME FOR PRICING (ADATTATO AL SITO CHIARO) */
         :root {
-            --bg-dark: #0a0a0b;
-            --bg-card: rgba(20, 20, 22, 0.7);
-            --border-glow: rgba(255, 255, 255, 0.1);
-            --accent-glow: rgba(99, 102, 241, 0.5);
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --gradient-primary: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            --bg-dark: #f8fafc;
+            --bg-card: #ffffff;
+            --border-glow: #e2e8f0;
+            --accent-glow: rgba(37, 99, 235, 0.2);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --gradient-primary: linear-gradient(135deg, #2563eb, #059669);
         }
 
         body.pricing-page {
@@ -106,13 +106,13 @@
 
         .pricing-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(255,255,255,0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
 
         .pricing-card.popular {
-            border-color: rgba(168, 85, 247, 0.4);
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
+            border-color: rgba(37, 99, 235, 0.4);
+            box-shadow: 0 0 40px rgba(37, 99, 235, 0.15);
             transform: scale(1.05);
             z-index: 2;
         }
@@ -183,12 +183,12 @@
             gap: 12px;
             margin-bottom: 1rem;
             font-size: 0.95rem;
-            color: #d4d4d8;
+            color: #334155;
             line-height: 1.4;
         }
         
         .plan-features li.negative {
-            color: #71717a;
+            color: #94a3b8;
         }
 
         .plan-features li i {
@@ -213,23 +213,24 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border: 1px solid var(--border-glow);
-            background: rgba(255,255,255,0.05);
-            color: white;
+            background: #f1f5f9;
+            color: var(--text-primary);
             box-sizing: border-box;
         }
 
         .btn-subscribe:hover {
-            background: rgba(255,255,255,0.1);
+            background: #e2e8f0;
         }
 
         .pricing-card.popular .btn-subscribe {
             background: var(--gradient-primary);
             border: none;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            color: white;
         }
 
         .pricing-card.popular .btn-subscribe:hover {
-            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.6);
             transform: translateY(-2px);
         }
 
@@ -294,7 +295,7 @@
         <!-- CARD VIANDANTE -->
         <div class="pricing-card">
             <div class="plan-name">Piano Viandante</div>
-            <div class="plan-desc">Perfetto per docenti che vogliono più giochi e più storie da esplorare.</div>
+            <div class="plan-desc">Perfetto per appassionati e giocatori che vogliono esplorare i giochi e le storie.</div>
             <div class="plan-price">€9.99<span>/anno</span></div>
             
             <ul class="plan-features">

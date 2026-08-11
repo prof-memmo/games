@@ -407,6 +407,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (sostieniLi) sostieniLi.remove();
                 }
             }
+            
+            // 2. Gestione Visibilità Esperienze
+            const sezioneEsperienze = document.getElementById('sezione-esperienze');
+            if (sezioneEsperienze) {
+                if (data && data.esperienze) {
+                    sezioneEsperienze.style.display = 'block';
+                } else {
+                    sezioneEsperienze.style.display = 'none';
+                }
+            }
 
             // 2. Gestione Bottone Sostieni (Solo su pagine specifiche)
             const isContatti = window.location.pathname.includes('contatti.html');

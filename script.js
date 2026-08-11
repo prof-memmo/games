@@ -347,13 +347,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // 1. Gestione Prezzi e Piani nel Menu
             const navLinksUl = document.querySelector('.nav-links');
             if (navLinksUl) {
+                // Gestione Prezzi
                 let prezziLi = document.getElementById('nav-prezzi-piani');
                 if (data && data.monetizzazione) {
                     if (!prezziLi) {
                         prezziLi = document.createElement('li');
                         prezziLi.id = 'nav-prezzi-piani';
                         prezziLi.innerHTML = '<a href="prezzi.html" style="color: #8b5cf6; font-weight: bold;"><i class="ph-bold ph-star"></i> Prezzi e Piani</a>';
-                        // Inserisci prima di "Condividi Esperienza" o alla fine
                         if (navLinksUl.lastElementChild) {
                             navLinksUl.insertBefore(prezziLi, navLinksUl.lastElementChild);
                         } else {
@@ -361,9 +361,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 } else {
-                    if (prezziLi) {
-                        prezziLi.remove();
+                    if (prezziLi) prezziLi.remove();
+                }
+
+                // Gestione Sostieni
+                let sostieniLi = document.getElementById('nav-sostieni');
+                if (data && data.sostieni_il_progetto) {
+                    if (!sostieniLi) {
+                        sostieniLi = document.createElement('li');
+                        sostieniLi.id = 'nav-sostieni';
+                        sostieniLi.innerHTML = '<a href="sostieni.html" style="color: #ef4444; font-weight: bold;"><i class="ph-fill ph-heart"></i> Sostieni il Progetto</a>';
+                        if (navLinksUl.lastElementChild) {
+                            navLinksUl.insertBefore(sostieniLi, navLinksUl.lastElementChild);
+                        } else {
+                            navLinksUl.appendChild(sostieniLi);
+                        }
                     }
+                } else {
+                    if (sostieniLi) sostieniLi.remove();
                 }
             }
 

@@ -61,6 +61,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sitename Correction (Global)
     const siteTitle = "Prof. Memmo - Games&Co.";
     
+    // ----------------------------------------------------
+    // CARICAMENTO IMPOSTAZIONI VETRINA DA HUB CENTRALE
+    // ----------------------------------------------------
+    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+        const db = firebase.firestore();
+        db.collection('vetrina').doc('settings').onSnapshot((doc) => {
+            const banner = document.getElementById('vetrina-banner');
+            if (doc.exists) {
+                const data = doc.data();
+                if (data.isActive === false) {
+                    if (banner) banner.style.display = 'none';
+                } else {
+                    if (banner) banner.style.display = 'flex'; // Ripristina layout flex
+                    
+                    const titleEl = document.getElementById('vetrina-title');
+                    const descEl = document.getElementById('vetrina-desc');
+                    const imgEl = document.getElementById('vetrina-img');
+                    
+                    if (titleEl && data.titolo) titleEl.innerHTML = data.titolo;
+                    if (descEl && data.descrizione) descEl.innerHTML = data.descrizione;
+                    if (imgEl && data.imageUrl) imgEl.src = data.imageUrl;
+                }
+            }
+        });
+    }
+    
     // Legal Content Data
     const legalData = {
         privacy: {

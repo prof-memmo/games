@@ -33,7 +33,7 @@
                 <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
                 <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
             </ul>
-            <div class="menu-toggle">
+            <div class="menu-toggle" onclick="(function(btn){var nav=document.querySelector('.nav-links');var icon=btn.querySelector('i');nav.classList.toggle('active');if(nav.classList.contains('active')){icon.className='ph ph-x';}else{icon.className='ph ph-list';}})(this)" style="cursor:pointer; position:relative; z-index:1002;">
                 <i class="ph ph-list"></i>
             </div>
         </div>

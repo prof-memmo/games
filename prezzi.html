@@ -281,9 +281,14 @@
         </div>
     </nav>
 
-    <div class="pricing-header">
+    <div class="pricing-header" style="padding-bottom: 2rem;">
         <h1 id="page-main-title">Come Funziona</h1>
-        <p id="page-main-desc"><strong style="color: var(--color-primary);">Prima Edizione 2026.</strong> Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</p>
+        <div id="vetrina-banner-page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; margin-top: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center; background: rgba(37,99,235,0.05); padding: 25px; border-radius: 20px; border: 1px solid rgba(37,99,235,0.15);">
+            <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width: 130px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
+            <p id="page-main-desc" style="margin: 0; font-size: 1.1rem; color: #334155; line-height: 1.6;">
+                <strong id="vetrina-title-page" style="color: var(--color-primary);">Prima Edizione 2026.</strong> <span id="vetrina-desc-page">Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</span>
+            </p>
+        </div>
     </div>
 
     <!-- VISTA 1: COME FUNZIONA (QUANDO MONETIZZAZIONE È OFF) -->
@@ -466,30 +471,46 @@
     <!-- Script Menu Mobile -->
     <script src="script.js"></script>
 
-    <!-- Script controllo visibilità tramite Firebase -->
+    <!-- Script controllo visibilità e testi tramite Firebase -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase !== 'undefined') {
                 const db = firebase.firestore();
+                
+                // 1. Sincronizzazione Banner Vetrina (Titolo "Prima Edizione...", descrizione, Immagine Cornucopia)
+                db.collection('hub_settings').doc('vetrina').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const vData = doc.data();
+                        const titleEl = document.getElementById('vetrina-title-page');
+                        const descEl = document.getElementById('vetrina-desc-page');
+                        const imgEl = document.getElementById('vetrina-img-page');
+
+                        if (titleEl && vData.titolo) titleEl.textContent = vData.titolo + ' ';
+                        if (descEl && vData.descrizione) descEl.textContent = vData.descrizione;
+                        if (imgEl && vData.immagineUrl) imgEl.src = vData.immagineUrl;
+                    }
+                });
+
+                // 2. Sincronizzazione Modalità Monetizzazione OFF (Come Funziona) / ON (Prezzi e Piani)
                 db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                     const data = doc.data();
                     const viewHow = document.getElementById('view-how-it-works');
                     const viewPiani = document.getElementById('view-monetizzazione-active');
                     const pageTitle = document.getElementById('page-main-title');
-                    const pageDesc = document.getElementById('page-main-desc');
+                    const bannerPage = document.getElementById('vetrina-banner-page');
 
                     if (!data || !data.monetizzazione) {
                         // Monetizzazione OFF -> Mostra vista "Come Funziona"
                         if (viewHow) viewHow.style.display = 'block';
                         if (viewPiani) viewPiani.style.display = 'none';
                         if (pageTitle) pageTitle.textContent = 'Come Funziona';
-                        if (pageDesc) pageDesc.innerHTML = '<strong style="color: var(--color-primary);">Prima Edizione 2026.</strong> Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l\'apprendimento come una grande avventura in classe.';
+                        if (bannerPage) bannerPage.style.display = 'flex';
                     } else {
                         // Monetizzazione ON -> Mostra vista "Prezzi e Piani"
                         if (viewHow) viewHow.style.display = 'none';
                         if (viewPiani) viewPiani.style.display = 'block';
                         if (pageTitle) pageTitle.textContent = 'Prezzi e Piani';
-                        if (pageDesc) pageDesc.textContent = 'Sblocca il pieno potenziale della didattica ludica. Passa alle versioni complete per accedere a tutte le funzionalità avanzate, tornei e strumenti di gestione.';
+                        if (bannerPage) bannerPage.style.display = 'none';
                     }
                 }, error => {
                     console.error("Errore lettura monetizzazione:", error);

@@ -4,25 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
-    const menuIcon = menuToggle.querySelector('i');
-
-    menuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        if (navLinks.classList.contains('active')) {
-            menuIcon.classList.replace('ph-list', 'ph-x');
-        } else {
-            menuIcon.classList.replace('ph-x', 'ph-list');
-        }
-    });
-
-    // Close mobile menu when clicking a link
-    const navItems = document.querySelectorAll('.nav-links a');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            menuIcon.classList.replace('ph-x', 'ph-list');
+    if (menuToggle && navLinks) {
+        const menuIcon = menuToggle.querySelector('i');
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+            if (menuIcon) {
+                if (navLinks.classList.contains('active')) {
+                    menuIcon.className = 'ph ph-x';
+                } else {
+                    menuIcon.className = 'ph ph-list';
+                }
+            }
         });
-    });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                if (menuIcon) menuIcon.className = 'ph ph-list';
+            });
+        });
+    }
 
     // Intersection Observer for scroll animations
     const revealElements = document.querySelectorAll('.reveal');

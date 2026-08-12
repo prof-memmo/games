@@ -491,15 +491,19 @@
                     }
                 });
 
-                // 2. Sincronizzazione Modalità Monetizzazione OFF (Come Funziona) / ON (Prezzi e Piani)
+                // 2. Sincronizzazione Modalità Monetizzazione OFF (Come Funziona) / ON (Prezzi e Piani) e Controllo Massimale Fiscale
                 db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
-                    const data = doc.data();
+                    const data = doc.data() || {};
                     const viewHow = document.getElementById('view-how-it-works');
                     const viewPiani = document.getElementById('view-monetizzazione-active');
                     const pageTitle = document.getElementById('page-main-title');
                     const bannerPage = document.getElementById('vetrina-banner-page');
 
-                    if (!data || !data.monetizzazione) {
+                    const massimale = data.massimale_incassi || 4500;
+                    const totaleIncassato = data.totale_incassato_anno || 0;
+                    const isLimitReached = totaleIncassato >= massimale;
+
+                    if (!data.monetizzazione) {
                         // Monetizzazione OFF -> Mostra vista "Come Funziona"
                         if (viewHow) viewHow.style.display = 'block';
                         if (viewPiani) viewPiani.style.display = 'none';
@@ -511,9 +515,37 @@
                         if (viewPiani) viewPiani.style.display = 'block';
                         if (pageTitle) pageTitle.textContent = 'Prezzi e Piani';
                         if (bannerPage) bannerPage.style.display = 'none';
+
+                        // Se il limite incassi è raggiunto, mostra avviso sui pulsanti a pagamento
+                        document.querySelectorAll('.pricing-card').forEach((card) => {
+                            const btn = card.querySelector('.btn-subscribe');
+                            const isBase = card.querySelector('.plan-name') && card.querySelector('.plan-name').textContent.includes('Base');
+                            
+                            if (btn && !isBase) {
+                                if (isLimitReached) {
+                                    btn.dataset.blocked = "true";
+                                    btn.style.opacity = "0.7";
+                                    btn.style.cursor = "not-allowed";
+                                } else {
+                                    btn.dataset.blocked = "false";
+                                    btn.style.opacity = "1";
+                                    btn.style.cursor = "pointer";
+                                }
+                            }
+                        });
                     }
                 }, error => {
                     console.error("Errore lettura monetizzazione:", error);
+                });
+
+                // Gestore click pulsanti abbonamento con controllo Massimale
+                document.querySelectorAll('.btn-subscribe').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        if (this.dataset.blocked === "true") {
+                            e.preventDefault();
+                            alert("ℹ️ Per l'anno solare corrente è stato raggiunto il numero massimo di abbonamenti sostenitori disponibili. La piattaforma rimane pienamente accessibile con la Versione Base e per tutti gli Studenti. Le nuove sottoscrizioni riapriranno prossimamente.");
+                        }
+                    });
                 });
             }
         });

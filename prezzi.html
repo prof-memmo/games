@@ -471,21 +471,21 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase !== 'undefined') {
                 const db = firebase.firestore();
-                db.collection('ecosistema_settings').doc('monetizzazione').onSnapshot(doc => {
+                db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                     const data = doc.data();
                     const viewHow = document.getElementById('view-how-it-works');
                     const viewPiani = document.getElementById('view-monetizzazione-active');
                     const pageTitle = document.getElementById('page-main-title');
                     const pageDesc = document.getElementById('page-main-desc');
 
-                    if (!data || !data.isActive) {
+                    if (!data || !data.monetizzazione) {
                         // Monetizzazione OFF -> Mostra vista "Come Funziona"
                         if (viewHow) viewHow.style.display = 'block';
                         if (viewPiani) viewPiani.style.display = 'none';
                         if (pageTitle) pageTitle.textContent = 'Come Funziona';
                         if (pageDesc) pageDesc.innerHTML = '<strong style="color: var(--color-primary);">Prima Edizione 2026.</strong> Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l\'apprendimento come una grande avventura in classe.';
                     } else {
-                        // Monetizzazione ON -> Mostra vista "Piani e Abbonamenti"
+                        // Monetizzazione ON -> Mostra vista "Prezzi e Piani"
                         if (viewHow) viewHow.style.display = 'none';
                         if (viewPiani) viewPiani.style.display = 'block';
                         if (pageTitle) pageTitle.textContent = 'Prezzi e Piani';

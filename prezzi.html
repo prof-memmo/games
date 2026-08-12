@@ -533,7 +533,78 @@
                                 }
                             }
                         });
+
+                        // Aggiorna diciture piani da Firestore
+                        const piani = data.piani_config || {};
+                        const cards = document.querySelectorAll('.pricing-card');
+                        const pianiKeys = ['viandante', 'docente', 'ecosistema'];
+                        cards.forEach((card, idx) => {
+                            if (idx === 0) return; // Skip Base
+                            const key = pianiKeys[idx - 1];
+                            if (!key) return;
+                            const desc = piani['desc-' + key];
+                            const btnText = piani['btn-' + key];
+                            const featuresRaw = piani['features-' + key];
+
+                            const descEl = card.querySelector('.plan-desc');
+                            const btnEl = card.querySelector('.btn-subscribe');
+                            const featuresList = card.querySelector('.plan-features');
+
+                            if (descEl && desc) descEl.textContent = desc;
+                            if (btnEl && btnText) btnEl.textContent = btnText;
+                            if (featuresList && featuresRaw) {
+                                const lines = featuresRaw.split('\n').filter(l => l.trim());
+                                featuresList.innerHTML = lines.map(line => {
+                                    const isNeg = line.startsWith('-');
+                                    const text = line.replace(/^[+-]\s*/, '');
+                                    return isNeg
+                                        ? `<li class="negative"><i class="ph-fill ph-x-circle"></i> ${text}</li>`
+                                        : `<li><i class="ph-fill ph-check-circle"></i> ${text}</li>`;
+                                }).join('');
+                            }
+                        });
                     }
+
+                    // Aggiorna testi "Come Funziona" da Firestore
+                    const cf = data.come_funziona_config || {};
+
+                    // Scheda 1: toggle visibilità
+                    const scheda1El = document.querySelector('#view-how-it-works > div:first-child');
+                    if (scheda1El) scheda1El.style.display = cf.scheda1_visibile === false ? 'none' : '';
+                    // Scheda 2: toggle visibilità
+                    const scheda2El = document.querySelector('#view-how-it-works > div:nth-child(2)');
+                    if (scheda2El) scheda2El.style.display = cf.scheda2_visibile === false ? 'none' : '';
+
+                    // Titoli schede
+                    const s1Title = document.querySelector('#view-how-it-works h2:first-of-type');
+                    if (s1Title && cf['scheda1-titolo']) s1Title.textContent = cf['scheda1-titolo'];
+                    const s2Title = document.querySelector('#view-how-it-works > div:nth-child(2) h2');
+                    if (s2Title && cf['scheda2-titolo']) s2Title.textContent = cf['scheda2-titolo'];
+
+                    // Intro scheda 2
+                    const s2Intro = document.querySelector('#view-how-it-works > div:nth-child(2) > p');
+                    if (s2Intro && cf['scheda2-intro']) s2Intro.textContent = cf['scheda2-intro'];
+
+                    // Voci scheda 1: Docenti, Studenti, Viandanti
+                    const buildList = (raw, containerSelector) => {
+                        const ul = document.querySelector(containerSelector);
+                        if (!ul || !raw) return;
+                        ul.innerHTML = raw.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
+                    };
+                    buildList(cf['scheda1-docenti'], '#view-how-it-works .grid > div:nth-child(1) ul');
+                    buildList(cf['scheda1-studenti'], '#view-how-it-works .grid > div:nth-child(2) ul');
+                    buildList(cf['scheda1-viandanti'], '#view-how-it-works .grid > div:nth-child(3) ul');
+
+                    // Voci scheda 2
+                    if (cf['scheda2-voci']) {
+                        const s2ul = document.querySelector('#view-how-it-works > div:nth-child(2) ul');
+                        if (s2ul) {
+                            s2ul.innerHTML = cf['scheda2-voci'].split('\n').filter(l => l.trim()).map(l =>
+                                `<li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>${l}</li>`
+                            ).join('');
+                        }
+                    }
+
                 }, error => {
                     console.error("Errore lettura monetizzazione:", error);
                 });

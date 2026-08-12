@@ -282,99 +282,165 @@
     </nav>
 
     <div class="pricing-header">
-        <h1>Scegli il tuo piano.</h1>
-        <p>Sblocca il pieno potenziale della didattica ludica. Passa alle versioni complete per accedere a tutte le funzionalità avanzate, tornei e strumenti di gestione.</p>
+        <h1 id="page-main-title">Come Funziona</h1>
+        <p id="page-main-desc"><strong style="color: var(--color-primary);">Prima Edizione 2026.</strong> Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</p>
     </div>
 
-    <!-- BANNER STUDENTI -->
-    <div style="max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; position: relative; z-index: 10;">
-        <div style="background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.12) 100%); border: 1px solid rgba(16,185,129,0.35); border-radius: 20px; padding: 2rem 2.5rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
-            <div style="background: rgba(16,185,129,0.15); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i class="ph ph-student" style="font-size: 2rem; color: #059669;"></i>
+    <!-- VISTA 1: COME FUNZIONA (QUANDO MONETIZZAZIONE È OFF) -->
+    <div id="view-how-it-works" style="max-width: 1000px; margin: 0 auto; padding: 0 2rem 8rem;">
+        
+        <!-- Scheda 1: Funzionalità Attualmente Attive -->
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 2.5rem; margin-bottom: 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;">
+                <div style="background: #eef2ff; color: #4f46e5; border-radius: 12px; padding: 10px 14px; font-size: 1.4rem; font-weight: bold;">🚀</div>
+                <h2 style="font-family: 'Outfit', sans-serif; margin: 0; color: #0f172a; font-size: 1.8rem;">Funzionalità Attualmente Attive</h2>
             </div>
-            <div style="flex: 1; min-width: 200px;">
-                <div style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #064e3b; margin-bottom: 0.4rem;">👩‍🏫 Sei uno studente?</div>
-                <div style="color: #374151; font-size: 0.95rem; line-height: 1.6;">
-                    Se sei iscritto a una classe scolastica, <strong>non devi pagare nulla</strong>. Il tuo docente ha un piano attivo e ti fornirà un <strong>codice classe</strong> per accedere alle piattaforme che userà durante l'anno.<br>
-                    <span style="color: #6b7280; font-size: 0.88rem; margin-top: 0.3rem; display: block;">Se invece sei un appassionato autonomo (studente universitario, autodidatta, ecc.) puoi esplorare la versione gratuita o scegliere il Piano Viandante.</span>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; border: 1px solid #cbd5e1;">
+                    <h3 style="margin-top:0; color: #2563eb; font-size: 1.2rem;"><i class="ph ph-chalkboard-teacher"></i> Per i Docenti</h3>
+                    <ul style="padding-left: 1.2rem; color: #334155; line-height: 1.6; margin: 0; font-size: 0.95rem;">
+                        <li>Creazione ed organizzazione delle classi didattiche</li>
+                        <li>Generazione di Codici Classe per gli studenti</li>
+                        <li>Gestione fino a 4 squadre su FantaLetteratura</li>
+                        <li>Attività di riflessione e grammatica su Palestra di Riflessione</li>
+                    </ul>
+                </div>
+
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; border: 1px solid #cbd5e1;">
+                    <h3 style="margin-top:0; color: #059669; font-size: 1.2rem;"><i class="ph ph-student"></i> Per gli Studenti</h3>
+                    <ul style="padding-left: 1.2rem; color: #334155; line-height: 1.6; margin: 0; font-size: 0.95rem;">
+                        <li>Accesso alle classi create dal proprio docente tramite codice</li>
+                        <li>Partecipazione attiva ai giochi didattici e alle sfide</li>
+                        <li>Monitoraggio dei progressi e delle attività svolte</li>
+                        <li>Profilo Studente attivo e collegato alla scuola</li>
+                    </ul>
+                </div>
+
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 16px; border: 1px solid #cbd5e1;">
+                    <h3 style="margin-top:0; color: #d97706; font-size: 1.2rem;"><i class="ph ph-compass"></i> Per i Viandanti (Autonomi)</h3>
+                    <ul style="padding-left: 1.2rem; color: #334155; line-height: 1.6; margin: 0; font-size: 0.95rem;">
+                        <li>Esplorazione libera delle app e dei giochi disponibili</li>
+                        <li>Accesso alle versioni dimostrative ed alle attività aperte</li>
+                        <li>Partecipazione alla filosofia ludica dell'Ecosistema</li>
+                    </ul>
                 </div>
             </div>
-            <a href="https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html" style="background: #059669; color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.75rem 1.5rem; border-radius: 10px; white-space: nowrap; flex-shrink: 0; transition: background 0.2s;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">Entra come Studente →</a>
+        </div>
+
+        <!-- Scheda 2: In Lavorazione / Prossimamente -->
+        <div style="background: #ffffff; border: 2px dashed #cbd5e1; border-radius: 24px; padding: 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="background: #fef3c7; color: #d97706; border-radius: 12px; padding: 10px 14px; font-size: 1.4rem; font-weight: bold;">🛠️</div>
+                    <h2 style="font-family: 'Outfit', sans-serif; margin: 0; color: #0f172a; font-size: 1.8rem;">In Lavorazione / Prossimamente</h2>
+                </div>
+                <span style="background: #fef3c7; color: #92400e; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">IN SVILUPPO</span>
+            </div>
+            
+            <p style="color: #475569; line-height: 1.6; font-size: 1rem; margin-bottom: 1.5rem;">
+                L'Ecosistema Prof. Memmo è in continua evoluzione. Stiamo sviluppando nuove espansioni e funzionalità avanzate per arricchire l'esperienza in classe:
+            </p>
+
+            <ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; list-style: none; padding: 0; margin: 0;">
+                <li style="background: #f8fafc; padding: 12px 16px; border-radius: 12px; color: #334155; font-size: 0.95rem;"><i class="ph ph-wrench" style="color: #d97706; margin-right: 8px;"></i> Tornei interscolastici estesi</li>
+                <li style="background: #f8fafc; padding: 12px 16px; border-radius: 12px; color: #334155; font-size: 0.95rem;"><i class="ph ph-wrench" style="color: #d97706; margin-right: 8px;"></i> Moduli avanzati di analisi sintattica e del periodo</li>
+                <li style="background: #f8fafc; padding: 12px 16px; border-radius: 12px; color: #334155; font-size: 0.95rem;"><i class="ph ph-wrench" style="color: #d97706; margin-right: 8px;"></i> Nuovi giochi di ruolo e storie interattive</li>
+                <li style="background: #f8fafc; padding: 12px 16px; border-radius: 12px; color: #334155; font-size: 0.95rem;"><i class="ph ph-wrench" style="color: #d97706; margin-right: 8px;"></i> Strumenti di reportistica e statistiche per docenti</li>
+            </ul>
         </div>
     </div>
 
-    <div class="pricing-grid">
-        
-        <!-- CARD BASE -->
-        <div class="pricing-card">
-            <div class="plan-name">Versione Base</div>
-            <div class="plan-desc">Gratuita e accessibile per esplorare le dinamiche fondamentali dei giochi.</div>
-            <div class="plan-price">€0<span>/anno</span></div>
-            
-            <ul class="plan-features">
-                <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Max 4 squadre, una sola classe)</li>
-                <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione (Attività fondamentali)</li>
-                <li class="negative"><i class="ph-fill ph-x-circle"></i> FantaLetteratura: Tornei interni e missioni personalizzate</li>
-                <li class="negative"><i class="ph-fill ph-x-circle"></i> Palestra: Analisi logica, periodo, testi B1/B2, test cultura gen.</li>
-            </ul>
-            
-            <button class="btn-subscribe">Inizia Gratis</button>
+    <!-- VISTA 2: PIANI E ABBONAMENTI (QUANDO MONETIZZAZIONE È ON) -->
+    <div id="view-monetizzazione-active" style="display: none;">
+        <!-- BANNER STUDENTI -->
+        <div style="max-width: 900px; margin: 0 auto 3rem; padding: 0 2rem; position: relative; z-index: 10;">
+            <div style="background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.12) 100%); border: 1px solid rgba(16,185,129,0.35); border-radius: 20px; padding: 2rem 2.5rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <div style="background: rgba(16,185,129,0.15); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="ph ph-student" style="font-size: 2rem; color: #059669;"></i>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #064e3b; margin-bottom: 0.4rem;">👩‍🏫 Sei uno studente?</div>
+                    <div style="color: #374151; font-size: 0.95rem; line-height: 1.6;">
+                        Se sei iscritto a una classe scolastica, <strong>non devi pagare nulla</strong>. Il tuo docente ha un piano attivo e ti fornirà un <strong>codice classe</strong> per accedere alle piattaforme che userà durante l'anno.<br>
+                        <span style="color: #6b7280; font-size: 0.88rem; margin-top: 0.3rem; display: block;">Se invece sei un appassionato autonomo (studente universitario, autodidatta, ecc.) puoi esplorare la versione gratuita o scegliere il Piano Viandante.</span>
+                    </div>
+                </div>
+                <a href="https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html" style="background: #059669; color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 0.75rem 1.5rem; border-radius: 10px; white-space: nowrap; flex-shrink: 0; transition: background 0.2s;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">Entra come Studente →</a>
+            </div>
         </div>
 
-        <!-- CARD VIANDANTE -->
-        <div class="pricing-card">
-            <div class="plan-name">Piano Viandante</div>
-            <div class="plan-desc">Perfetto per appassionati e giocatori che vogliono esplorare i giochi e le storie.</div>
-            <div class="plan-price">€9.99<span>/anno</span></div>
-            
-            <ul class="plan-features">
-                <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Versione Base)</li>
-                <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione (Versione Base)</li>
-                <li><i class="ph-fill ph-check-circle"></i> <strong>La Rotta degli Eroi</strong></li>
-                <li><i class="ph-fill ph-check-circle"></i> <strong>La Corte dei Dannati</strong></li>
-                <li><i class="ph-fill ph-check-circle"></i> Accesso ai futuri giochi narrativi</li>
-                <li class="negative"><i class="ph-fill ph-x-circle"></i> Strumenti docente (creazione classi, tornei, dashboard)</li>
-            </ul>
-            
-            <button class="btn-subscribe">Scegli Viandante</button>
-        </div>
+        <div class="pricing-grid">
+            <!-- CARD BASE -->
+            <div class="pricing-card">
+                <div class="plan-name">Versione Base</div>
+                <div class="plan-desc">Gratuita e accessibile per esplorare le dinamiche fondamentali dei giochi.</div>
+                <div class="plan-price">€0<span>/anno</span></div>
+                
+                <ul class="plan-features">
+                    <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Max 4 squadre, una sola classe)</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione (Attività fondamentali)</li>
+                    <li class="negative"><i class="ph-fill ph-x-circle"></i> FantaLetteratura: Tornei interni e missioni personalizzate</li>
+                    <li class="negative"><i class="ph-fill ph-x-circle"></i> Palestra: Analisi logica, periodo, testi B1/B2, test cultura gen.</li>
+                </ul>
+                
+                <button class="btn-subscribe">Inizia Gratis</button>
+            </div>
 
-        <!-- CARD DOCENTE -->
-        <div class="pricing-card popular">
-            <div class="popular-badge">Consigliato</div>
-            <div class="plan-name">Docente Didattico</div>
-            <div class="plan-desc">Gli strumenti definitivi per gestire le tue classi e la didattica.</div>
-            <div class="plan-price">€19.99<span>/anno</span></div>
-            
-            <ul class="plan-features">
-                <li><i class="ph-fill ph-check-circle"></i> <strong>FantaLetteratura (Completo)</strong>: Tornei, missioni</li>
-                <li><i class="ph-fill ph-check-circle"></i> <strong>Palestra (Completa)</strong>: Analisi logica, testi B2</li>
-                <li><i class="ph-fill ph-check-circle"></i> Gestione Classi e Studenti</li>
-                <li><i class="ph-fill ph-check-circle"></i> Codici Classe privati</li>
-                <li><i class="ph-fill ph-check-circle"></i> Strumenti Docente e Dashboard avanzata</li>
-                <li class="negative"><i class="ph-fill ph-x-circle"></i> Non include La Rotta degli Eroi o Travel Agency</li>
-            </ul>
-            
-            <button class="btn-subscribe">Scegli Docente</button>
-        </div>
+            <!-- CARD VIANDANTE -->
+            <div class="pricing-card">
+                <div class="plan-name">Piano Viandante</div>
+                <div class="plan-desc">Perfetto per appassionati e giocatori che vogliono esplorare i giochi e le storie.</div>
+                <div class="plan-price">€9.99<span>/anno</span></div>
+                
+                <ul class="plan-features">
+                    <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Versione Base)</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione (Versione Base)</li>
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>La Rotta degli Eroi</strong></li>
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>La Corte dei Dannati</strong></li>
+                    <li><i class="ph-fill ph-check-circle"></i> Accesso ai futuri giochi narrativi</li>
+                    <li class="negative"><i class="ph-fill ph-x-circle"></i> Strumenti docente (creazione classi, tornei, dashboard)</li>
+                </ul>
+                
+                <button class="btn-subscribe">Scegli Viandante</button>
+            </div>
 
-        <!-- CARD ECOSISTEMA -->
-        <div class="pricing-card" style="border-color: rgba(99, 102, 241, 0.4);">
-            <div class="plan-name" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ecosistema Completo</div>
-            <div class="plan-desc">L'esperienza totale. Accesso illimitato a tutti i contenuti e strumenti.</div>
-            <div class="plan-price">€24.99<span>/anno</span></div>
-            
-            <ul class="plan-features">
-                <li><i class="ph-fill ph-check-circle"></i> <strong>Tutto il piano Docente Completo Didattico</strong></li>
-                <li><i class="ph-fill ph-check-circle"></i> <strong>La Rotta degli Eroi</strong></li>
-                <li><i class="ph-fill ph-check-circle"></i> <strong>Travel Agency C.</strong></li>
-                <li><i class="ph-fill ph-check-circle"></i> Tutti i futuri giochi completi in anteprima</li>
-                <li><i class="ph-fill ph-check-circle"></i> Assistenza dedicata</li>
-            </ul>
-            
-            <button class="btn-subscribe" style="border-color: rgba(99, 102, 241, 0.5);">Ottieni Tutto</button>
-        </div>
+            <!-- CARD DOCENTE -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">Consigliato</div>
+                <div class="plan-name">Docente Didattico</div>
+                <div class="plan-desc">Gli strumenti definitivi per gestire le tue classi e la didattica.</div>
+                <div class="plan-price">€19.99<span>/anno</span></div>
+                
+                <ul class="plan-features">
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>FantaLetteratura (Completo)</strong>: Tornei, missioni</li>
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>Palestra (Completa)</strong>: Analisi logica, testi B2</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Gestione Classi e Studenti</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Codici Classe privati</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Strumenti Docente e Dashboard avanzata</li>
+                    <li class="negative"><i class="ph-fill ph-x-circle"></i> Non include La Rotta degli Eroi o Travel Agency</li>
+                </ul>
+                
+                <button class="btn-subscribe">Scegli Docente</button>
+            </div>
 
+            <!-- CARD ECOSISTEMA -->
+            <div class="pricing-card" style="border-color: rgba(99, 102, 241, 0.4);">
+                <div class="plan-name" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ecosistema Completo</div>
+                <div class="plan-desc">L'esperienza totale. Accesso illimitato a tutti i contenuti e strumenti.</div>
+                <div class="plan-price">€24.99<span>/anno</span></div>
+                
+                <ul class="plan-features">
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>Tutto il piano Docente Completo Didattico</strong></li>
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>La Rotta degli Eroi</strong></li>
+                    <li><i class="ph-fill ph-check-circle"></i> <strong>Travel Agency C.</strong></li>
+                    <li><i class="ph-fill ph-check-circle"></i> Tutti i futuri giochi completi in anteprima</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Assistenza dedicata</li>
+                </ul>
+                
+                <button class="btn-subscribe" style="border-color: rgba(99, 102, 241, 0.5);">Ottieni Tutto</button>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -407,14 +473,23 @@
                 const db = firebase.firestore();
                 db.collection('ecosistema_settings').doc('monetizzazione').onSnapshot(doc => {
                     const data = doc.data();
+                    const viewHow = document.getElementById('view-how-it-works');
+                    const viewPiani = document.getElementById('view-monetizzazione-active');
+                    const pageTitle = document.getElementById('page-main-title');
+                    const pageDesc = document.getElementById('page-main-desc');
+
                     if (!data || !data.isActive) {
-                        // Monetizzazione OFF, nascondi e mostra overlay
-                        document.getElementById('coming-soon-overlay').style.display = 'flex';
-                        document.body.style.overflow = 'hidden';
+                        // Monetizzazione OFF -> Mostra vista "Come Funziona"
+                        if (viewHow) viewHow.style.display = 'block';
+                        if (viewPiani) viewPiani.style.display = 'none';
+                        if (pageTitle) pageTitle.textContent = 'Come Funziona';
+                        if (pageDesc) pageDesc.innerHTML = '<strong style="color: var(--color-primary);">Prima Edizione 2026.</strong> Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l\'apprendimento come una grande avventura in classe.';
                     } else {
-                        // Monetizzazione ON
-                        document.getElementById('coming-soon-overlay').style.display = 'none';
-                        document.body.style.overflow = 'auto';
+                        // Monetizzazione ON -> Mostra vista "Piani e Abbonamenti"
+                        if (viewHow) viewHow.style.display = 'none';
+                        if (viewPiani) viewPiani.style.display = 'block';
+                        if (pageTitle) pageTitle.textContent = 'Prezzi e Piani';
+                        if (pageDesc) pageDesc.textContent = 'Sblocca il pieno potenziale della didattica ludica. Passa alle versioni complete per accedere a tutte le funzionalità avanzate, tornei e strumenti di gestione.';
                     }
                 }, error => {
                     console.error("Errore lettura monetizzazione:", error);

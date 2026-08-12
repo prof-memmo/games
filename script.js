@@ -374,25 +374,26 @@ document.addEventListener('DOMContentLoaded', () => {
         db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
             const data = doc.data();
             
-            // 1. Gestione Prezzi e Piani nel Menu
+            // 1. Gestione "Come funziona" / "Prezzi e Piani" nel Menu
             const navLinksUl = document.querySelector('.nav-links');
             if (navLinksUl) {
-                // Gestione Prezzi
                 let prezziLi = document.getElementById('nav-prezzi-piani');
-                if (data && data.monetizzazione) {
-                    if (!prezziLi) {
-                        prezziLi = document.createElement('li');
-                        prezziLi.id = 'nav-prezzi-piani';
-                        prezziLi.innerHTML = '<a href="prezzi.html" style="color: #8b5cf6; font-weight: bold;"><i class="ph-bold ph-star"></i> Prezzi e Piani</a>';
-                        if (navLinksUl.lastElementChild) {
-                            navLinksUl.insertBefore(prezziLi, navLinksUl.lastElementChild);
-                        } else {
-                            navLinksUl.appendChild(prezziLi);
-                        }
+                if (!prezziLi) {
+                    prezziLi = document.createElement('li');
+                    prezziLi.id = 'nav-prezzi-piani';
+                    if (navLinksUl.lastElementChild) {
+                        navLinksUl.insertBefore(prezziLi, navLinksUl.lastElementChild);
+                    } else {
+                        navLinksUl.appendChild(prezziLi);
                     }
-                } else {
-                    if (prezziLi) prezziLi.remove();
                 }
+
+                if (data && data.monetizzazione) {
+                    prezziLi.innerHTML = '<a href="prezzi.html" style="color: #8b5cf6; font-weight: bold;"><i class="ph-bold ph-star"></i> Prezzi e Piani</a>';
+                } else {
+                    prezziLi.innerHTML = '<a href="prezzi.html" style="color: #2563eb; font-weight: bold;"><i class="ph-bold ph-info"></i> Come funziona</a>';
+                }
+            }
 
                 // Gestione Sostieni
                 let sostieniLi = document.getElementById('nav-sostieni');

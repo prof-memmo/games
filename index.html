@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prof. Memmo - Games&Co. | Imparare Giocando</title>
-    <meta name="description" content="Giochi didattici e di simulazione per trasformare la classe in un’esperienza attiva, coinvolgente e cooperativa.">
+    <meta name="description" content="Giochi didattici e di simulazione per trasformare la classe in un'esperienza attiva, coinvolgente e cooperativa.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Icons (Phosphor) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=mobilefix1">
+    <link rel="stylesheet" href="style.css?v=mobilefix2">
 
   <!-- Icone per Safari e Dispositivi Mobili -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5">
@@ -50,7 +50,7 @@
         </div>
         <div class="container hero-content">
             <h1 class="fade-in-up">Imparare giocando.</h1>
-            <p class="subtitle fade-in-up delay-1">Giochi didattici e di simulazione per trasformare la classe (e non solo) in un’esperienza attiva, coinvolgente e cooperativa.</p>
+            <p class="subtitle fade-in-up delay-1">Giochi didattici e di simulazione per trasformare la classe (e non solo) in un'esperienza attiva, coinvolgente e cooperativa.</p>
             <div id="vetrina-banner" class="fade-in-up delay-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
                 <img id="vetrina-img" src="assets/party-popper.png" alt="Cornucopia" style="width: 150px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
                 <p style="margin: 0; font-size: 1.1rem; color: var(--color-text-light); line-height: 1.6;">
@@ -97,9 +97,13 @@
         </div>
     </footer>
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-init.js"></script>\n    <script src="js/services/database.js"></script>\n    <script src="script.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <script src="js/services/database.js"></script>
+
+    <!-- Caricamento Esperienze -->
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
         if(typeof firebase !== 'undefined') {
@@ -108,10 +112,10 @@
                 const snapshot = await db.collection("hub_esperienze")
                                         .where("status", "==", "approved")
                                         .get();
-                                        
+
                 const carousel = document.getElementById("experiences-carousel");
-                carousel.innerHTML = ""; // svuota caricamento
-                
+                carousel.innerHTML = "";
+
                 if (snapshot.empty) {
                     carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
                     return;
@@ -121,11 +125,11 @@
                     const data = doc.data();
                     let authorText = data.nome || "Un docente";
                     if(data.pubblicazione === "Sì in forma anonima") authorText = "Docente anonimo";
-                    if(data.pubblicazione === "No") return; // Sicurezza extra
+                    if(data.pubblicazione === "No") return;
 
                     const card = document.createElement("div");
                     card.style.cssText = "min-width: 300px; max-width: 350px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); scroll-snap-align: center; text-align: left; flex: 0 0 auto;";
-                    
+
                     let stars = "";
                     const rating = parseInt(data.valutazione) || 5;
                     for(let i=0; i<5; i++) {
@@ -149,8 +153,9 @@
         }
       });
     </script>
+
     <!-- Script Menu Mobile -->
-    <script src="script.js?v=mobilefix1"></script>
+    <script src="script.js?v=mobilefix2"></script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js"></script>
 </body>

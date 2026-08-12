@@ -862,13 +862,10 @@ input:focus, textarea:focus {
   }
 }
 
-@media (max-width: 768px) {
-  /* Layout piatto per app-friendly view */
-  .game-card-large, .feature-card, .phil-box, .contact-card {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 10px 5px !important;
+@media (max-width: 1024px) {
+  .menu-toggle {
+    display: block !important;
+    z-index: 10001;
   }
 
   .nav-links {
@@ -904,9 +901,15 @@ input:focus, textarea:focus {
     display: inline-block;
     width: auto;
   }
+}
 
-  .menu-toggle {
-    display: block;
+@media (max-width: 768px) {
+  /* Layout piatto per app-friendly view */
+  .game-card-large, .feature-card, .phil-box, .contact-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 10px 5px !important;
   }
 
   .features-grid, .philosophy-grid {

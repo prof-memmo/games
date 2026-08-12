@@ -537,10 +537,9 @@
                         // Aggiorna diciture piani da Firestore
                         const piani = data.piani_config || {};
                         const cards = document.querySelectorAll('.pricing-card');
-                        const pianiKeys = ['viandante', 'docente', 'ecosistema'];
+                        const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
                         cards.forEach((card, idx) => {
-                            if (idx === 0) return; // Skip Base
-                            const key = pianiKeys[idx - 1];
+                            const key = pianiKeys[idx];
                             if (!key) return;
                             const desc = piani['desc-' + key];
                             const btnText = piani['btn-' + key];

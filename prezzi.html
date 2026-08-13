@@ -271,8 +271,8 @@
                 <li><a href="index.html" style="color: var(--color-primary);">Home</a></li>
                 <li><a href="giochi.html">Giochi e Materiali</a></li>
                 <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
-                <li><a href="come-funziona.html">Come Funziona</a></li>
-                <li><a href="prezzi.html" style="font-weight:700;">Prezzi e Piani</a></li>
+                <li><a href="accedi.html">Accedi</a></li>
+                <li><a href="prezzi.html" style="font-weight:700; color:var(--color-primary);">Scegli il tuo Piano</a></li>
                 <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
                 <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
             </ul>
@@ -283,7 +283,7 @@
     </nav>
 
     <div class="pricing-header" style="padding-bottom: 2rem;">
-        <h1 id="page-main-title">Prezzi e Piani</h1>
+        <h1 id="page-main-title">Scegli il tuo Piano</h1>
         <div id="vetrina-banner-page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center;">
             <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width: 130px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
             <p id="page-main-desc" style="margin: 0; font-size: 1.15rem; color: #334155; line-height: 1.6;">
@@ -432,7 +432,7 @@
 
                     // Se monetizzazione è OFF, reindirizza a Come Funziona
                     if (!data.monetizzazione) {
-                        window.location.replace('come-funziona.html');
+                        window.location.replace('accedi.html');
                         return;
                     }
 

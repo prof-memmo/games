@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Come Funziona - Prof. Memmo</title>
+    <meta name="description" content="Scopri come funziona l'Ecosistema Prof. Memmo: funzionalità attive per docenti, studenti e viandanti, e le novità in arrivo.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+    <style>
+        body.cf-page { background:#f8fafc; font-family:'Inter',sans-serif; margin:0; padding:0; overflow-x:hidden; background-image: radial-gradient(circle at 15% 50%,rgba(99,102,241,0.12) 0%,transparent 50%), radial-gradient(circle at 85% 30%,rgba(168,85,247,0.12) 0%,transparent 50%); }
+        .cf-header { text-align:center; padding:8rem 2rem 3rem; }
+        .cf-header h1 { font-family:'Outfit',sans-serif; font-size:3.5rem; font-weight:900; margin-bottom:1rem; background:linear-gradient(135deg,#2563eb,#059669); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
+        .cf-content { max-width:1000px; margin:0 auto; padding:0 2rem 8rem; }
+        #page-hidden-overlay { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center; color:#64748b; font-size:1.1rem; gap:1rem; }
+    </style>
+</head>
+<body class="cf-page">
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="come-funziona.html" style="font-weight:700; color:var(--color-primary);">Come Funziona</a></li>
+                <li id="nav-prezzi" style="display:none;"><a href="prezzi.html">Prezzi e Piani</a></li>
+                <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <div class="cf-header">
+        <h1 id="page-main-title">Come Funziona</h1>
+        <div id="vetrina-banner-page" style="display:flex;flex-direction:column;align-items:center;gap:15px;margin-top:1.5rem;max-width:800px;margin-left:auto;margin-right:auto;text-align:center;">
+            <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width:110px;height:auto;filter:drop-shadow(0 0 10px rgba(212,175,55,0.3));">
+            <p id="page-main-desc" style="margin:0;font-size:1.1rem;color:#334155;line-height:1.6;">
+                <strong id="vetrina-title-page" style="color:var(--color-primary);">Prima Edizione 2026.</strong>
+                <span id="vetrina-desc-page"> Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili.</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="page-hidden-overlay">
+        <i class="ph ph-eye-slash" style="font-size:3rem;"></i>
+        <p>Questa pagina non è al momento disponibile.</p>
+    </div>
+
+    <div id="cf-content" class="cf-content">
+        <div id="scheda1-block" style="background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:2.5rem;margin-bottom:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
+                <div style="background:#eef2ff;color:#4f46e5;border-radius:12px;padding:10px 14px;font-size:1.4rem;font-weight:bold;">🚀</div>
+                <h2 id="scheda1-titolo-el" style="font-family:'Outfit',sans-serif;margin:0;color:#0f172a;font-size:1.8rem;">Funzionalità Attualmente Attive</h2>
+            </div>
+            <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
+                <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border:1px solid #cbd5e1;">
+                    <h3 style="margin-top:0;color:#2563eb;font-size:1.2rem;"><i class="ph ph-chalkboard-teacher"></i> Per i Docenti</h3>
+                    <ul id="scheda1-docenti-list" style="padding-left:1.2rem;color:#334155;line-height:1.6;margin:0;font-size:0.95rem;">
+                        <li>Creazione ed organizzazione delle classi didattiche</li>
+                        <li>Generazione di Codici Classe per gli studenti</li>
+                        <li>Gestione fino a 4 squadre su FantaLetteratura</li>
+                        <li>Attività di riflessione e grammatica su Palestra di Riflessione</li>
+                    </ul>
+                </div>
+                <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border:1px solid #cbd5e1;">
+                    <h3 style="margin-top:0;color:#059669;font-size:1.2rem;"><i class="ph ph-student"></i> Per gli Studenti</h3>
+                    <ul id="scheda1-studenti-list" style="padding-left:1.2rem;color:#334155;line-height:1.6;margin:0;font-size:0.95rem;">
+                        <li>Accesso alle classi create dal proprio docente tramite codice</li>
+                        <li>Partecipazione attiva ai giochi didattici e alle sfide</li>
+                        <li>Monitoraggio dei progressi e delle attività svolte</li>
+                        <li>Profilo Studente attivo e collegato alla scuola</li>
+                    </ul>
+                </div>
+                <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border:1px solid #cbd5e1;">
+                    <h3 style="margin-top:0;color:#d97706;font-size:1.2rem;"><i class="ph ph-compass"></i> Per i Viandanti (Autonomi)</h3>
+                    <ul id="scheda1-viandanti-list" style="padding-left:1.2rem;color:#334155;line-height:1.6;margin:0;font-size:0.95rem;">
+                        <li>Esplorazione libera delle app e dei giochi disponibili</li>
+                        <li>Accesso alle versioni dimostrative ed alle attività aperte</li>
+                        <li>Partecipazione alla filosofia ludica dell'Ecosistema</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="scheda2-block" style="background:#fff;border:2px dashed #cbd5e1;border-radius:24px;padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.02);">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:1.5rem;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="background:#fef3c7;color:#d97706;border-radius:12px;padding:10px 14px;font-size:1.4rem;font-weight:bold;">🛠️</div>
+                    <h2 id="scheda2-titolo-el" style="font-family:'Outfit',sans-serif;margin:0;color:#0f172a;font-size:1.8rem;">In Lavorazione / Prossimamente</h2>
+                </div>
+                <span style="background:#fef3c7;color:#92400e;padding:6px 16px;border-radius:20px;font-size:0.85rem;font-weight:bold;letter-spacing:0.5px;">IN SVILUPPO</span>
+            </div>
+            <p id="scheda2-intro-el" style="color:#475569;line-height:1.6;font-size:1rem;margin-bottom:1.5rem;">L'Ecosistema Prof. Memmo è in continua evoluzione. Stiamo sviluppando nuove espansioni e funzionalità avanzate per arricchire l'esperienza in classe:</p>
+            <ul id="scheda2-voci-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;list-style:none;padding:0;margin:0;">
+                <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Tornei interscolastici estesi</li>
+                <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Moduli avanzati di analisi sintattica e del periodo</li>
+                <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Nuovi giochi di ruolo e storie interattive</li>
+                <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Strumenti di reportistica e statistiche per docenti</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') return;
+            const db = firebase.firestore();
+
+            db.collection('hub_settings').doc('vetrina').onSnapshot(doc => {
+                if (!doc.exists) return;
+                const d = doc.data();
+                const t = document.getElementById('vetrina-title-page');
+                const s = document.getElementById('vetrina-desc-page');
+                const i = document.getElementById('vetrina-img-page');
+                if (t && d.titolo) t.textContent = d.titolo + ' ';
+                if (s && d.descrizione) s.textContent = d.descrizione;
+                if (i && d.immagineUrl) i.src = d.immagineUrl;
+            });
+
+            db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
+                const data = doc.data() || {};
+
+                // Mostra link "Prezzi e Piani" in navbar solo se monetizzazione ON
+                const navPrezzi = document.getElementById('nav-prezzi');
+                if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
+
+                // Visibilità pagina intera
+                const hidden = document.getElementById('page-hidden-overlay');
+                const content = document.getElementById('cf-content');
+                const header = document.querySelector('.cf-header');
+                const banner = document.getElementById('vetrina-banner-page');
+                if (data.come_funziona_visibile === false) {
+                    if (hidden) hidden.style.display = 'flex';
+                    if (content) content.style.display = 'none';
+                    if (header) header.style.display = 'none';
+                    if (banner) banner.style.display = 'none';
+                    return;
+                }
+
+                const cf = data.come_funziona_config || {};
+
+                // Toggle schede singole
+                const s1 = document.getElementById('scheda1-block');
+                const s2 = document.getElementById('scheda2-block');
+                if (s1) s1.style.display = cf.scheda1_visibile === false ? 'none' : '';
+                if (s2) s2.style.display = cf.scheda2_visibile === false ? 'none' : '';
+
+                // Titoli
+                const t1 = document.getElementById('scheda1-titolo-el');
+                if (t1 && cf['scheda1-titolo']) t1.textContent = cf['scheda1-titolo'];
+                const t2 = document.getElementById('scheda2-titolo-el');
+                if (t2 && cf['scheda2-titolo']) t2.textContent = cf['scheda2-titolo'];
+
+                // Intro scheda 2
+                const i2 = document.getElementById('scheda2-intro-el');
+                if (i2 && cf['scheda2-intro']) i2.textContent = cf['scheda2-intro'];
+
+                // Liste
+                const fill = (id, raw) => {
+                    const ul = document.getElementById(id);
+                    if (!ul || !raw) return;
+                    ul.innerHTML = raw.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
+                };
+                fill('scheda1-docenti-list', cf['scheda1-docenti']);
+                fill('scheda1-studenti-list', cf['scheda1-studenti']);
+                fill('scheda1-viandanti-list', cf['scheda1-viandanti']);
+
+                if (cf['scheda2-voci']) {
+                    const ul = document.getElementById('scheda2-voci-list');
+                    if (ul) ul.innerHTML = cf['scheda2-voci'].split('\n').filter(l => l.trim()).map(l =>
+                        `<li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>${l}</li>`
+                    ).join('');
+                }
+            }, err => console.error('Errore ecosistema:', err));
+        });
+    </script>
+    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js"></script>
+</body>
+</html>

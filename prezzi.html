@@ -313,7 +313,7 @@
 
         <div class="pricing-grid">
             <!-- CARD BASE -->
-            <div class="pricing-card">
+            <div class="pricing-card" data-plan="base">
                 <div class="plan-name">Versione Base</div>
                 <div class="plan-desc">Gratuita e accessibile per esplorare le dinamiche fondamentali dei giochi.</div>
                 <div class="plan-price">€0<span>/anno</span></div>
@@ -329,7 +329,7 @@
             </div>
 
             <!-- CARD VIANDANTE -->
-            <div class="pricing-card">
+            <div class="pricing-card" data-plan="viandante">
                 <div class="plan-name">Piano Viandante</div>
                 <div class="plan-desc">Perfetto per appassionati e giocatori che vogliono esplorare i giochi e le storie.</div>
                 <div class="plan-price">€9.99<span>/anno</span></div>
@@ -347,7 +347,7 @@
             </div>
 
             <!-- CARD DOCENTE -->
-            <div class="pricing-card popular">
+            <div class="pricing-card popular" data-plan="docente">
                 <div class="popular-badge">Consigliato</div>
                 <div class="plan-name">Docente Didattico</div>
                 <div class="plan-desc">Gli strumenti definitivi per gestire le tue classi e la didattica.</div>
@@ -366,7 +366,7 @@
             </div>
 
             <!-- CARD ECOSISTEMA -->
-            <div class="pricing-card" style="border-color: rgba(99, 102, 241, 0.4);">
+            <div class="pricing-card" data-plan="ecosistema" style="border-color: rgba(99, 102, 241, 0.4);">
                 <div class="plan-name" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ecosistema Completo</div>
                 <div class="plan-desc">L'esperienza totale. Accesso illimitato a tutti i contenuti e strumenti.</div>
                 <div class="plan-price">€24.99<span>/anno</span></div>
@@ -405,7 +405,7 @@
     </footer>
 
     <!-- Script Menu Mobile -->
-    <script src="script.js"></script>
+    <script src="script.js?v=20260814_1215"></script>
 
     <!-- Script controllo visibilità e testi tramite Firebase -->
     <script>
@@ -426,46 +426,19 @@
                     }
                 });
 
-                // 2. Controllo monetizzazione e piani
+                // 2. Controllo monetizzazione e sincronizzazione testi piani
                 db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
+                    if (!doc.exists) return;
                     const data = doc.data() || {};
 
-                    // Se monetizzazione è OFF, reindirizza a Come Funziona
-                    if (!data.monetizzazione) {
-                        window.location.replace('accedi.html');
-                        return;
-                    }
-
-                    // Controllo massimale fiscale
-                    const massimale = data.massimale_incassi || 4500;
-                    const totaleIncassato = data.totale_incassato_anno || 0;
-                    const isLimitReached = totaleIncassato >= massimale;
-
-                    document.querySelectorAll('.pricing-card').forEach((card) => {
-                        const btn = card.querySelector('.btn-subscribe');
-                        const isBase = card.querySelector('.plan-name') && card.querySelector('.plan-name').textContent.includes('Base');
-                        if (btn && !isBase) {
-                            if (isLimitReached) {
-                                btn.dataset.blocked = "true";
-                                btn.style.opacity = "0.7";
-                                btn.style.cursor = "not-allowed";
-                            } else {
-                                btn.dataset.blocked = "false";
-                                btn.style.opacity = "1";
-                                btn.style.cursor = "pointer";
-                            }
-                        }
-                    });
-
-                    // Aggiorna diciture e prezzi piani da Firestore
+                    // Aggiorna SEMPRE diciture e prezzi piani da Firestore (piani_config)
                     const piani = data.piani_config || {};
                     const monet = data.monetizzazione_config || {};
-                    const cards = document.querySelectorAll('.pricing-card');
-                    const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
                     
-                    cards.forEach((card, idx) => {
-                        const key = pianiKeys[idx];
-                        if (!key) return;
+                    const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
+                    pianiKeys.forEach(key => {
+                        const card = document.querySelector(`.pricing-card[data-plan="${key}"]`);
+                        if (!card) return;
                         
                         const desc = piani['desc-' + key];
                         const btnText = piani['btn-' + key];
@@ -482,12 +455,16 @@
                         const priceEl = card.querySelector('.plan-price');
                         const featuresList = card.querySelector('.plan-features');
 
-                        if (priceEl && priceValue !== null && priceValue !== undefined) {
+                        if (priceEl && priceValue !== null && priceValue !== undefined && priceValue !== '') {
                             priceEl.innerHTML = `€${priceValue}<span>/anno</span>`;
                         }
-                        if (descEl && desc) descEl.textContent = desc;
-                        if (btnEl && btnText) btnEl.textContent = btnText;
-                        if (featuresList && featuresRaw) {
+                        if (descEl && desc !== undefined && desc !== '') {
+                            descEl.textContent = desc;
+                        }
+                        if (btnEl && btnText !== undefined && btnText !== '') {
+                            btnEl.textContent = btnText;
+                        }
+                        if (featuresList && featuresRaw !== undefined && featuresRaw !== '') {
                             const lines = featuresRaw.split('\n').filter(l => l.trim());
                             featuresList.innerHTML = lines.map(line => {
                                 const isNeg = line.startsWith('-');
@@ -496,6 +473,27 @@
                                     ? `<li class="negative"><i class="ph-fill ph-x-circle"></i> ${text}</li>`
                                     : `<li><i class="ph-fill ph-check-circle"></i> ${text}</li>`;
                             }).join('');
+                        }
+                    });
+
+                    // Controllo massimale fiscale
+                    const massimale = data.massimale_incassi || 4500;
+                    const totaleIncassato = data.totale_incassato_anno || 0;
+                    const isLimitReached = totaleIncassato >= massimale;
+
+                    document.querySelectorAll('.pricing-card').forEach((card) => {
+                        const btn = card.querySelector('.btn-subscribe');
+                        const isBase = card.dataset.plan === 'base';
+                        if (btn && !isBase) {
+                            if (isLimitReached) {
+                                btn.dataset.blocked = "true";
+                                btn.style.opacity = "0.7";
+                                btn.style.cursor = "not-allowed";
+                            } else {
+                                btn.dataset.blocked = "false";
+                                btn.style.opacity = "1";
+                                btn.style.cursor = "pointer";
+                            }
                         }
                     });
 
@@ -511,7 +509,9 @@
                             alert("ℹ️ Per l'anno solare corrente è stato raggiunto il numero massimo di abbonamenti sostenitori disponibili. La piattaforma rimane pienamente accessibile con la Versione Base e per tutti gli Studenti. Le nuove sottoscrizioni riapriranno prossimamente.");
                         }
                     });
-          });
+                });
+            }
+        });
     </script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js"></script>

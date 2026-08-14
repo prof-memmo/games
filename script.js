@@ -1,31 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 
-    // Mobile Menu Toggle
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    if (menuToggle && navLinks) {
-        const menuIcon = menuToggle.querySelector('i');
-        menuToggle.addEventListener('click', () => {
+    // Mobile Menu Toggle Globale & Universale
+    window.toggleMobileMenu = function(btn) {
+        const nav = document.querySelector('.nav-links');
+        if (!nav) return;
+        nav.classList.toggle('active');
+        const icon = (btn && btn.querySelector) ? btn.querySelector('i') : document.querySelector('.menu-toggle i');
+        if (icon) {
+            if (nav.classList.contains('active')) {
+                icon.className = 'ph ph-x';
+            } else {
+                icon.className = 'ph ph-list';
+            }
+        }
+    };
+
+    document.addEventListener('click', (e) => {
+        const toggle = e.target.closest('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        if (toggle && navLinks) {
             navLinks.classList.toggle('active');
+            const menuIcon = toggle.querySelector('i');
             if (menuIcon) {
                 if (navLinks.classList.contains('active')) {
-                    menuIcon.classList.replace('ph-list', 'ph-x');
+                    menuIcon.className = 'ph ph-x';
                 } else {
-                    menuIcon.classList.replace('ph-x', 'ph-list');
+                    menuIcon.className = 'ph ph-list';
                 }
             }
-        });
-
-        // Close mobile menu when clicking a link
-        const navItems = document.querySelectorAll('.nav-links a');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
+        } else if (e.target.closest('.nav-links a')) {
+            if (navLinks) {
                 navLinks.classList.remove('active');
-                if (menuIcon) menuIcon.classList.replace('ph-x', 'ph-list');
-            });
-        });
-    }
+                const menuIcon = document.querySelector('.menu-toggle i');
+                if (menuIcon) menuIcon.className = 'ph ph-list';
+            }
+        } else if (!e.target.closest('.nav-links') && !e.target.closest('.navbar')) {
+            if (navLinks && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                const menuIcon = document.querySelector('.menu-toggle i');
+                if (menuIcon) menuIcon.className = 'ph ph-list';
+            }
+        }
+    });
 
     // Intersection Observer for scroll animations
     const revealElements = document.querySelectorAll('.reveal');

@@ -362,7 +362,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 2. Gestione Bottone Sostieni (Solo su pagine specifiche)
+            // 2. Gestione Scegli il tuo Piano (Monetizzazione attiva/disattiva)
+            const navPrezzi = document.getElementById('nav-prezzi');
+            if (navPrezzi) {
+                navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
+            } else if (data.monetizzazione) {
+                const navUl = document.querySelector('.nav-links');
+                if (navUl) {
+                    const targetLink = navUl.querySelector('a[href="accedi.html"], a[href="profilo.html"]');
+                    const accediLi = targetLink ? targetLink.parentElement : null;
+                    if (accediLi) {
+                        const newLi = document.createElement('li');
+                        newLi.id = 'nav-prezzi';
+                        newLi.innerHTML = '<a href="prezzi.html">Scegli il tuo Piano</a>';
+                        accediLi.after(newLi);
+                    }
+                }
+            }
+
+            // 3. Gestione Bottone Sostieni (Solo su pagine specifiche)
             const isContatti = window.location.pathname.includes('contatti.html');
             const isCondividi = window.location.pathname.includes('condividi-esperienza.html');
             

@@ -457,21 +457,34 @@
                         }
                     });
 
-                    // Aggiorna diciture piani da Firestore
+                    // Aggiorna diciture e prezzi piani da Firestore
                     const piani = data.piani_config || {};
+                    const monet = data.monetizzazione_config || {};
                     const cards = document.querySelectorAll('.pricing-card');
                     const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
+                    
                     cards.forEach((card, idx) => {
                         const key = pianiKeys[idx];
                         if (!key) return;
+                        
                         const desc = piani['desc-' + key];
                         const btnText = piani['btn-' + key];
                         const featuresRaw = piani['features-' + key];
+                        
+                        let priceValue = null;
+                        if (key === 'base') priceValue = '0';
+                        else if (key === 'viandante') priceValue = monet.price_viandante;
+                        else if (key === 'docente') priceValue = monet.price_docente;
+                        else if (key === 'ecosistema') priceValue = monet.price_ecosistema;
 
                         const descEl = card.querySelector('.plan-desc');
                         const btnEl = card.querySelector('.btn-subscribe');
+                        const priceEl = card.querySelector('.plan-price');
                         const featuresList = card.querySelector('.plan-features');
 
+                        if (priceEl && priceValue !== null && priceValue !== undefined) {
+                            priceEl.innerHTML = `€${priceValue}<span>/anno</span>`;
+                        }
                         if (descEl && desc) descEl.textContent = desc;
                         if (btnEl && btnText) btnEl.textContent = btnText;
                         if (featuresList && featuresRaw) {

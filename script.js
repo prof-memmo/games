@@ -362,30 +362,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 2. Gestione Scegli il tuo Piano (univoca, senza duplicazioni)
-            const allPrezziElements = document.querySelectorAll('li#nav-prezzi, li#nav-prezzi-piani, .nav-links a[href="prezzi.html"]');
-            if (allPrezziElements.length > 0) {
-                allPrezziElements.forEach((el, index) => {
-                    const li = el.tagName === 'LI' ? el : el.closest('li');
-                    if (li) {
-                        if (index === 0) {
-                            li.id = 'nav-prezzi';
-                            li.style.display = data.monetizzazione ? 'list-item' : 'none';
-                        } else {
-                            li.remove();
-                        }
+            // 2. Gestione Scegli il tuo Piano (univoca, pulita, senza cancellare elementi errati)
+            const navUl = document.querySelector('.nav-links');
+            if (navUl) {
+                const listItems = Array.from(navUl.querySelectorAll('li')).filter(li => 
+                    li.id === 'nav-prezzi' || li.id === 'nav-prezzi-piani' || li.querySelector('a[href="prezzi.html"]')
+                );
+                
+                if (listItems.length > 0) {
+                    const mainLi = listItems[0];
+                    mainLi.id = 'nav-prezzi';
+                    mainLi.style.display = data.monetizzazione ? 'list-item' : 'none';
+                    for (let i = 1; i < listItems.length; i++) {
+                        listItems[i].remove();
                     }
-                });
-            } else if (data.monetizzazione) {
-                const navUl = document.querySelector('.nav-links');
-                if (navUl) {
-                    const targetLink = navUl.querySelector('a[href="accedi.html"], a[href="profilo.html"]');
-                    const accediLi = targetLink ? targetLink.parentElement : null;
-                    if (accediLi) {
-                        const newLi = document.createElement('li');
-                        newLi.id = 'nav-prezzi';
-                        newLi.innerHTML = '<a href="prezzi.html">Scegli il tuo Piano</a>';
-                        accediLi.after(newLi);
+                } else if (data.monetizzazione) {
+                    const accediLi = navUl.querySelector('a[href="accedi.html"], a[href="profilo.html"]')?.closest('li');
+                    const newLi = document.createElement('li');
+                    newLi.id = 'nav-prezzi';
+                    newLi.innerHTML = '<a href="prezzi.html">Scegli il tuo Piano</a>';
+                    if (accediLi && accediLi.nextSibling) {
+                        navUl.insertBefore(newLi, accediLi.nextSibling);
+                    } else if (navUl.lastElementChild) {
+                        navUl.insertBefore(newLi, navUl.lastElementChild);
+                    } else {
+                        navUl.appendChild(newLi);
                     }
                 }
             }
@@ -422,14 +423,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Aggiornamento dinamico Navbar se l'utente è autenticato
+    // 4. Aggiornamento dinamico Navbar se l'utente è autenticato
     if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().onAuthStateChanged(user => {
             const navLinks = document.querySelectorAll('.nav-links a');
             navLinks.forEach(link => {
                 const href = link.getAttribute('href') || '';
                 const text = link.textContent.trim();
-                if (href === 'accedi.html' || href === 'profilo.html' || text === 'Accedi' || text.includes('Profilo')) {
+                if (href.includes('accedi.html') || href.includes('profilo.html') || text === 'Accedi' || text.includes('Profilo')) {
                     if (user) {
                         link.href = 'profilo.html';
                         link.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';

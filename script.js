@@ -345,24 +345,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Ascoltatore globale per Ecosistema (Monetizzazione e Sostieni)
+// Ascoltatore globale per Ecosistema (Monetizzazione, Esperienze, Sostieni e Profilo)
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof firebase !== 'undefined') {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
         const db = firebase.firestore();
         db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
-            const data = doc.data();
+            const data = doc.data() || {};
             
-            // Gestione Visibilità Esperienze
+            // 1. Gestione Visibilità Esperienze
             const sezioneEsperienze = document.getElementById('sezione-esperienze');
             if (sezioneEsperienze) {
-                if (data && data.esperienze) {
+                if (data.esperienze) {
                     sezioneEsperienze.style.display = 'block';
                 } else {
                     sezioneEsperienze.style.display = 'none';
                 }
             }
-        });
-    }
 
             // 2. Gestione Bottone Sostieni (Solo su pagine specifiche)
             const isContatti = window.location.pathname.includes('contatti.html');
@@ -371,7 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isContatti || isCondividi) {
                 let sostieniContainer = document.getElementById('sostieni-container-hook');
                 if (!sostieniContainer) {
-                    // Crea un hook all'inizio del main se non esiste
                     const main = document.querySelector('main');
                     if (main) {
                         sostieniContainer = document.createElement('div');
@@ -383,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (sostieniContainer) {
-                    if (data && data.sostieni_il_progetto) {
+                    if (data.sostieni_il_progetto) {
                         sostieniContainer.innerHTML = `
                             <a href="sostieni.html" class="btn" style="background: linear-gradient(135deg, #ef4444, #f43f5e); color: white; border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
                                 <i class="ph-fill ph-heart"></i> Sostieni Prof. Memmo
@@ -397,18 +394,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Aggiornamento dinamico Navbar se l'utente è autenticato
+    // 3. Aggiornamento dinamico Navbar se l'utente è autenticato
     if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().onAuthStateChanged(user => {
             const navLinks = document.querySelectorAll('.nav-links a');
             navLinks.forEach(link => {
-                if (link.getAttribute('href') === 'accedi.html' || link.textContent.trim() === 'Accedi') {
+                const href = link.getAttribute('href') || '';
+                const text = link.textContent.trim();
+                if (href === 'accedi.html' || href === 'profilo.html' || text === 'Accedi' || text.includes('Profilo')) {
                     if (user) {
                         link.href = 'profilo.html';
-                        link.innerHTML = '<i class="ph ph-user-circle"></i> Profilo';
+                        link.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';
+                        link.style.color = '#059669';
+                        link.style.fontWeight = '700';
                     } else {
                         link.href = 'accedi.html';
-                        link.textContent = 'Accedi';
+                        link.innerHTML = 'Accedi';
+                        link.style.color = '';
+                        link.style.fontWeight = '';
                     }
                 }
             });

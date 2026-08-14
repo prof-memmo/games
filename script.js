@@ -352,46 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
             const data = doc.data();
             
-            // 1. Gestione "Come funziona" / "Prezzi e Piani" nel Menu
-            const navLinksUl = document.querySelector('.nav-links');
-            if (navLinksUl) {
-                let prezziLi = document.getElementById('nav-prezzi-piani');
-                if (!prezziLi) {
-                    prezziLi = document.createElement('li');
-                    prezziLi.id = 'nav-prezzi-piani';
-                    if (navLinksUl.lastElementChild) {
-                        navLinksUl.insertBefore(prezziLi, navLinksUl.lastElementChild);
-                    } else {
-                        navLinksUl.appendChild(prezziLi);
-                    }
-                }
-
-                if (data && data.monetizzazione) {
-                    prezziLi.innerHTML = '<a href="prezzi.html" style="color: #8b5cf6; font-weight: bold;"><i class="ph-bold ph-star"></i> Prezzi e Piani</a>';
-                } else {
-                    prezziLi.innerHTML = '<a href="prezzi.html" style="color: #2563eb; font-weight: bold;"><i class="ph-bold ph-info"></i> Come funziona</a>';
-                }
-            }
-
-                // Gestione Sostieni
-                let sostieniLi = document.getElementById('nav-sostieni');
-                if (data && data.sostieni_il_progetto) {
-                    if (!sostieniLi) {
-                        sostieniLi = document.createElement('li');
-                        sostieniLi.id = 'nav-sostieni';
-                        sostieniLi.innerHTML = '<a href="sostieni.html" style="color: #ef4444; font-weight: bold;"><i class="ph-fill ph-heart"></i> Sostieni il Progetto</a>';
-                        if (navLinksUl.lastElementChild) {
-                            navLinksUl.insertBefore(sostieniLi, navLinksUl.lastElementChild);
-                        } else {
-                            navLinksUl.appendChild(sostieniLi);
-                        }
-                    }
-                } else {
-                    if (sostieniLi) sostieniLi.remove();
-                }
-            }
-            
-            // 2. Gestione Visibilità Esperienze
+            // Gestione Visibilità Esperienze
             const sezioneEsperienze = document.getElementById('sezione-esperienze');
             if (sezioneEsperienze) {
                 if (data && data.esperienze) {
@@ -400,6 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     sezioneEsperienze.style.display = 'none';
                 }
             }
+        });
+    }
 
             // 2. Gestione Bottone Sostieni (Solo su pagine specifiche)
             const isContatti = window.location.pathname.includes('contatti.html');

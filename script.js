@@ -362,10 +362,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 2. Gestione Scegli il tuo Piano (Monetizzazione attiva/disattiva)
-            const navPrezzi = document.getElementById('nav-prezzi');
-            if (navPrezzi) {
-                navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
+            // 2. Gestione Scegli il tuo Piano (univoca, senza duplicazioni)
+            const allPrezziElements = document.querySelectorAll('li#nav-prezzi, li#nav-prezzi-piani, .nav-links a[href="prezzi.html"]');
+            if (allPrezziElements.length > 0) {
+                allPrezziElements.forEach((el, index) => {
+                    const li = el.tagName === 'LI' ? el : el.closest('li');
+                    if (li) {
+                        if (index === 0) {
+                            li.id = 'nav-prezzi';
+                            li.style.display = data.monetizzazione ? 'list-item' : 'none';
+                        } else {
+                            li.remove();
+                        }
+                    }
+                });
             } else if (data.monetizzazione) {
                 const navUl = document.querySelector('.nav-links');
                 if (navUl) {

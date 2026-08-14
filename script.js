@@ -458,4 +458,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Aggiornamento dinamico Navbar se l'utente è autenticato
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged(user => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === 'accedi.html' || link.textContent.trim() === 'Accedi') {
+                    if (user) {
+                        link.href = 'profilo.html';
+                        link.innerHTML = '<i class="ph ph-user-circle"></i> Profilo';
+                    } else {
+                        link.href = 'accedi.html';
+                        link.textContent = 'Accedi';
+                    }
+                }
+            });
+        });
+    }
 });

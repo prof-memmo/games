@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il mio Profilo - Prof. Memmo</title>
+    <meta name="description" content="Gestisci il tuo profilo, visualizza il piano attivo, accedi ai giochi didattici e controlla le notifiche.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --accent: #059669;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body.profile-page {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+        }
+
+        .profile-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 7.5rem 1.5rem 5rem;
+        }
+
+        /* Banner Anteprima Admin */
+        #admin-preview-banner {
+            display: none;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .profile-header-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-titles h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            margin: 0 0 5px;
+            color: var(--text-dark);
+        }
+
+        .profile-titles p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .profile-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+        }
+
+        .badge-docente { background: #e0e7ff; color: #4338ca; }
+        .badge-studente { background: #dcfce7; color: #15803d; }
+        .badge-viandante { background: #fef3c7; color: #b45309; }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 850px) {
+            .profile-grid { grid-template-columns: 1fr; }
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Card Abbonamento */
+        .plan-status-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .plan-name-label {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .plan-expiry {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .btn-action-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-action-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Notifiche */
+        .notif-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notif-item strong {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+
+        .notif-item .notif-date {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Piattaforme abilitate */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .game-card-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 1rem;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+
+        .game-card-link:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .game-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        /* Sezione Gestione Account */
+        .account-danger-zone {
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn-outline-danger {
+            background: transparent;
+            border: 1px solid #fca5a5;
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-danger:hover {
+            background: #fee2e2;
+        }
+
+        .btn-logout {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* Modal Conferma Eliminazione */
+        #delete-confirm-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #delete-confirm-modal.active { display: flex; }
+        
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="profile-page">
+
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="profilo.html" style="font-weight:700; color:var(--color-primary);"><i class="ph ph-user-circle"></i> Il mio Profilo</a></li>
+                <li id="nav-prezzi" style="display:none;"><a href="prezzi.html">Scegli il tuo Piano</a></li>
+                <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+
+        <!-- Banner Anteprima Admin -->
+        <div id="admin-preview-banner">
+            <div>
+                <i class="ph ph-eye" style="font-size:1.3rem; vertical-align:middle; margin-right:6px;"></i>
+                <span id="admin-preview-text">Modalità Anteprima Admin: visualizzazione profilo in sola lettura</span>
+            </div>
+            <a href="https://prof-memmo.github.io/prof-memmo-gestione-siti/" style="color:#92400e; text-decoration:underline; font-size:0.9rem;">Torna all'Hub</a>
+        </div>
+
+        <!-- Header Profilo -->
+        <div class="profile-header-card">
+            <div class="profile-info">
+                <div class="profile-avatar" id="user-avatar-box">
+                    <span id="user-avatar-initials">U</span>
+                </div>
+                <div class="profile-titles">
+                    <h1 id="user-display-name">Caricamento profilo...</h1>
+                    <p id="user-email">email@esempio.com</p>
+                    <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
+                </div>
+            </div>
+            <div id="header-action-buttons">
+                <button class="btn-logout" onclick="eseguiLogout()"><i class="ph ph-sign-out"></i> Disconnetti</button>
+            </div>
+        </div>
+
+        <!-- Grid Contenuti -->
+        <div class="profile-grid">
+            
+            <!-- Card 1: Piano & Abbonamento -->
+            <div class="glass-card">
+                <h2 class="card-title"><i class="ph ph-credit-card" style="color:var(--primary);"></i> Il tuo Piano</h2>
+                
+                <div class="plan-status-box">
+                    <div class="plan-header">
+                        <span class="plan-name-label" id="profile-plan-name">Piano Base</span>
+                        <span id="profile-plan-tag" style="font-size:0.8rem; background:#ede9fe; color:#6366f1; padding:3px 8px; border-radius:6px; font-weight:700; display:none;">Admin</span>
+                    </div>
+                    <div class="plan-expiry" id="profile-plan-expiry">
+                        Accesso gratuito ai contenuti base della piattaforma.
+                    </div>
+                </div>
+
+                <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan">
+                    <i class="ph ph-arrow-clockwise"></i> Rinnova o Cambia Piano
+                </a>
+            </div>
+
+            <!-- Card 2: Le mie Notifiche -->
+            <div class="glass-card">
+                <h2 class="card-title"><i class="ph ph-bell" style="color:#f59e0b;"></i> Le mie Notifiche</h2>
+                <ul class="notif-list" id="profile-notif-list">
+                    <li class="notif-item">
+                        <strong>🎉 Benvenuto nell'Ecosistema!</strong>
+                        Esplora i giochi disponibili e partecipa alle attività didattiche.
+                        <div class="notif-date">Oggi</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Card Piattaforme e Giochi Abilitati -->
+        <div class="glass-card" style="margin-bottom: 2rem;">
+            <h2 class="card-title"><i class="ph ph-game-controller" style="color:var(--accent);"></i> I tuoi Giochi e Strumenti</h2>
+            <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:1.5rem;">
+                In base al tuo piano e al tuo ruolo, ecco i collegamenti rapidi a tutte le piattaforme a cui hai accesso:
+            </p>
+            <div class="games-grid" id="profile-games-grid">
+                
+                <a href="https://prof-memmo.github.io/Fantaletteratura" class="game-card-link" target="_blank">
+                    <div class="game-icon-box" style="background:#e0f2fe; color:#0284c7;"><i class="ph ph-book-open"></i></div>
+                    <div>
+                        <strong style="display:block;">FantaLetteratura</strong>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Gare letterarie</span>
+                    </div>
+                </a>
+
+                <a href="https://prof-memmo.github.io/palestra-di-riflessione" class="game-card-link" target="_blank">
+                    <div class="game-icon-box" style="background:#dcfce7; color:#16a34a;"><i class="ph ph-brain"></i></div>
+                    <div>
+                        <strong style="display:block;">Palestra di Riflessione</strong>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Grammatica attiva</span>
+                    </div>
+                </a>
+
+                <a href="https://prof-memmo.github.io/rotta-eroi" class="game-card-link" target="_blank" id="card-rotta-eroi">
+                    <div class="game-icon-box" style="background:#fef3c7; color:#d97706;"><i class="ph ph-compass"></i></div>
+                    <div>
+                        <strong style="display:block;">La Rotta degli Eroi</strong>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Epica e Mitologia</span>
+                    </div>
+                </a>
+
+                <a href="https://prof-memmo.github.io/corte-commedia" class="game-card-link" target="_blank" id="card-corte-commedia">
+                    <div class="game-icon-box" style="background:#f3e8ff; color:#9333ea;"><i class="ph ph-masks-theater"></i></div>
+                    <div>
+                        <strong style="display:block;">La Corte della Commedia</strong>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Teatro e Commedia</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Gestione Account / Azioni Avanzate -->
+        <div class="account-danger-zone" id="profile-danger-zone">
+            <div>
+                <strong style="display:block; color:var(--text-dark); font-size:0.95rem;">Gestione del tuo Account</strong>
+                <span style="font-size:0.85rem; color:var(--text-muted);">Puoi disattivare temporaneamente il tuo profilo o richiedere la cancellazione dei dati.</span>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-outline-danger" onclick="confermaDisattivazione()"><i class="ph ph-pause-circle"></i> Disattiva Account</button>
+                <button class="btn-outline-danger" style="background:#fee2e2; border-color:#ef4444;" onclick="apriModalEliminazione()"><i class="ph ph-trash"></i> Elimina Dati</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Conferma Eliminazione Dati -->
+    <div id="delete-confirm-modal">
+        <div class="modal-box">
+            <h3 style="margin-top:0; color:#ef4444; font-size:1.3rem; display:flex; align-items:center; gap:8px;">
+                <i class="ph ph-warning-octagon"></i> Conferma Eliminazione
+            </h3>
+            <p id="delete-modal-explanation" style="font-size:0.95rem; color:#475569; line-height:1.6;">
+                Sei sicuro di voler eliminare il tuo profilo? Questa azione è irreversibile.
+            </p>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:1.5rem;">
+                <button class="btn-logout" onclick="chiudiModalEliminazione()">Annulla</button>
+                <button class="btn-outline-danger" style="background:#ef4444; color:white; border:none; padding:10px 20px;" onclick="eseguiEliminazioneAccount()">Sì, Elimina Definitivamente</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentProfileUser = null;
+        let isPreviewMode = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof firebase === 'undefined') return;
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+
+            // 1. Controllo Parametri URL (Anteprima Admin)
+            const urlParams = new URLSearchParams(window.location.search);
+            const previewUserId = urlParams.get('preview');
+
+            // 2. Controllo monetizzazione per il link navbar "Scegli il tuo Piano"
+            db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
+                const data = doc.data() || {};
+                const navPrezzi = document.getElementById('nav-prezzi');
+                if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
+            });
+
+            // 3. Gestione Auth State
+            auth.onAuthStateChanged(async (authUser) => {
+                if (previewUserId) {
+                    // Modalità Anteprima: solo se l'utente loggato è l'admin
+                    if (authUser && authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com') {
+                        isPreviewMode = true;
+                        document.getElementById('admin-preview-banner').style.display = 'flex';
+                        document.getElementById('admin-preview-text').textContent = `🔍 Anteprima Admin (Sola Lettura) — Utente ID: ${previewUserId}`;
+                        document.getElementById('profile-danger-zone').style.display = 'none';
+                        caricaDatiProfilo(previewUserId, true);
+                        return;
+                    }
+                }
+
+                if (!authUser) {
+                    // Non loggato -> redirect alla pagina accedi
+                    window.location.replace('accedi.html');
+                    return;
+                }
+
+                currentProfileUser = authUser;
+                caricaDatiProfilo(authUser.uid, false);
+                caricaNotificheEcosistema();
+            });
+        });
+
+        async function caricaDatiProfilo(userId, isPreview) {
+            const db = firebase.firestore();
+            try {
+                const doc = await db.collection('hub_users').doc(userId).get();
+                let uData = doc.exists ? doc.data() : {};
+
+                const authUser = firebase.auth().currentUser;
+                const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
+                const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
+                const role = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+                const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+                const isAdminOverride = !!uData.admin_override;
+                const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+
+                // Render Anagrafica
+                document.getElementById('user-display-name').textContent = displayName;
+                document.getElementById('user-email').textContent = email;
+                
+                const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+                document.getElementById('user-avatar-initials').textContent = initials;
+
+                // Render Ruolo Badge
+                const roleBadge = document.getElementById('user-role-badge');
+                if (role.includes('docente') || role.includes('prof') || role.includes('admin')) {
+                    roleBadge.textContent = 'Docente';
+                    roleBadge.className = 'profile-badge badge-docente';
+                } else if (role.includes('studente')) {
+                    roleBadge.textContent = 'Studente';
+                    roleBadge.className = 'profile-badge badge-studente';
+                } else {
+                    roleBadge.textContent = 'Viandante';
+                    roleBadge.className = 'profile-badge badge-viandante';
+                }
+
+                // Render Piano
+                const planLabels = {
+                    'base': 'Piano Base (Gratuito)',
+                    'viandante': 'Piano Viandante',
+                    'docente_didattico': 'Docente Didattico',
+                    'docente_ecosistema': 'Ecosistema Completo'
+                };
+                document.getElementById('profile-plan-name').textContent = planLabels[plan] || plan;
+
+                const tagAdmin = document.getElementById('profile-plan-tag');
+                if (isSuperAdmin) {
+                    tagAdmin.style.display = 'inline-block';
+                    tagAdmin.textContent = '👑 Super Admin';
+                    tagAdmin.style.background = '#fef3c7';
+                    tagAdmin.style.color = '#92400e';
+                } else if (isAdminOverride) {
+                    tagAdmin.style.display = 'inline-block';
+                    tagAdmin.textContent = '⚙️ Admin Override';
+                } else {
+                    tagAdmin.style.display = 'none';
+                }
+
+                // Render Scadenza
+                const currentYear = new Date().getFullYear();
+                const expiryEl = document.getElementById('profile-plan-expiry');
+                if (isSuperAdmin || isAdminOverride) {
+                    expiryEl.innerHTML = '<strong>Scadenza:</strong> Nessuna scadenza (Accesso illimitato permanente).';
+                } else if (plan !== 'base') {
+                    const scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : `31/12/${currentYear}`;
+                    expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Gli abbonamenti si rinnovano fino al termine dell'anno scolastico/solare.</span>`;
+                } else {
+                    expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
+                }
+
+                // Personalizzazione spiegazione eliminazione in base al ruolo
+                const deleteExpl = document.getElementById('delete-modal-explanation');
+                if (role.includes('docente')) {
+                    deleteExpl.innerHTML = "Sei registrato come <strong>Docente</strong>. L'eliminazione del profilo comporterà la <strong>cancellazione definitiva del tuo account</strong>, delle tue credenziali e dei dati didattici associati.";
+                } else {
+                    deleteExpl.innerHTML = "Sei registrato come <strong>" + roleBadge.textContent + "</strong>. Verranno eliminati i tuoi dati anagrafici e il profilo di accesso all'Ecosistema.";
+                }
+
+            } catch (e) {
+                console.error("Errore caricamento profilo:", e);
+            }
+        }
+
+        async function caricaNotificheEcosistema() {
+            const db = firebase.firestore();
+            try {
+                const snap = await db.collection('hub_notifications').orderBy('createdAt', 'desc').limit(5).get();
+                if (!snap.empty) {
+                    const notifList = document.getElementById('profile-notif-list');
+                    notifList.innerHTML = '';
+                    snap.forEach(doc => {
+                        const n = doc.data();
+                        const li = document.createElement('li');
+                        li.className = 'notif-item';
+                        li.innerHTML = `<strong>🔔 ${n.titolo || 'Notifica Ecosistema'}</strong>${n.messaggio || n.testo || ''}<div class="notif-date">${n.data || 'Recente'}</div>`;
+                        notifList.appendChild(li);
+                    });
+                }
+            } catch(e) {
+                console.log("Notifiche non caricate:", e);
+            }
+        }
+
+        async function eseguiLogout() {
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                await firebase.auth().signOut();
+                window.location.replace('accedi.html');
+            }
+        }
+
+        async function confermaDisattivazione() {
+            if (confirm("Vuoi disattivare temporaneamente il tuo account? Potrai richiedere la riattivazione all'amministratore.")) {
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    const user = firebase.auth().currentUser;
+                    if (user) {
+                        await firebase.firestore().collection('hub_users').doc(user.uid).set({
+                            statusAccount: 'disattivo',
+                            disattivatoIl: new Date().toISOString()
+                        }, { merge: true });
+                        alert("Il tuo account è stato disattivato.");
+                        eseguiLogout();
+                    }
+                }
+            }
+        }
+
+        function apriModalEliminazione() {
+            document.getElementById('delete-confirm-modal').classList.add('active');
+        }
+
+        function chiudiModalEliminazione() {
+            document.getElementById('delete-confirm-modal').classList.remove('active');
+        }
+
+        async function eseguiEliminazioneAccount() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            try {
+                const db = firebase.firestore();
+                const doc = await db.collection('hub_users').doc(user.uid).get();
+                const role = (doc.exists ? (doc.data().ruolo || doc.data().role || '') : '').toLowerCase();
+
+                // 1. Se Docente: rimuove anche eventuali record classi o configurazioni
+                // 2. Rimuove doc da hub_users
+                await db.collection('hub_users').doc(user.uid).delete();
+
+                // 3. Elimina utente da Firebase Auth
+                await user.delete();
+                alert("Il tuo account è stato eliminato con successo.");
+                window.location.replace('index.html');
+            } catch (e) {
+                console.error("Errore eliminazione account:", e);
+                if (e.code === 'auth/requires-recent-login') {
+                    alert("Per motivi di sicurezza, effettua nuovamente l'accesso prima di eliminare definitivamente l'account.");
+                    eseguiLogout();
+                } else {
+                    alert("Errore durante l'eliminazione: " + e.message);
+                }
+            }
+        }
+    </script>
+    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js"></script>
+</body>
+</html>

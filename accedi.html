@@ -4,19 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accedi - Prof. Memmo</title>
-    <meta name="description" content="Accedi alla tua area personale l'Ecosistema Prof. Memmo: funzionalità attive per docenti, studenti e viandanti, e le novità in arrivo.">
+    <meta name="description" content="Accedi alla tua area personale dell'Ecosistema Prof. Memmo: consulta il tuo profilo, scopri il funzionamento per docenti, studenti e viandanti.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
     <style>
         body.cf-page { background:#f8fafc; font-family:'Inter',sans-serif; margin:0; padding:0; overflow-x:hidden; background-image: radial-gradient(circle at 15% 50%,rgba(99,102,241,0.12) 0%,transparent 50%), radial-gradient(circle at 85% 30%,rgba(168,85,247,0.12) 0%,transparent 50%); }
-        .cf-header { text-align:center; padding:8rem 2rem 3rem; }
-        .cf-header h1 { font-family:'Outfit',sans-serif; font-size:3.5rem; font-weight:900; margin-bottom:1rem; background:linear-gradient(135deg,#2563eb,#059669); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
+        .cf-header { text-align:center; padding:7.5rem 2rem 2rem; }
+        .cf-header h1 { font-family:'Outfit',sans-serif; font-size:3.5rem; font-weight:900; margin-bottom:0.5rem; background:linear-gradient(135deg,#2563eb,#059669); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
         .cf-content { max-width:1000px; margin:0 auto; padding:0 2rem 8rem; }
         #page-hidden-overlay { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center; color:#64748b; font-size:1.1rem; gap:1rem; }
+
+        /* Login Box */
+        .login-hero-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(37,99,235,0.06);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-google-login {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-google-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+
+        .btn-go-profile {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #2563eb, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 6px 16px rgba(37,99,235,0.25);
+        }
     </style>
 </head>
 <body class="cf-page">
@@ -30,8 +85,8 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="giochi.html">Giochi e Materiali</a></li>
                 <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
-                <li><a href="accedi.html" style="font-weight:700; color:var(--color-primary);">Accedi</a></li>
-                <li id="nav-prezzi" style="display:none;"><a href="prezzi.html">Prezzi e Piani</a></li>
+                <li><a href="accedi.html" id="nav-accedi-link" style="font-weight:700; color:var(--color-primary);">Accedi</a></li>
+                <li id="nav-prezzi" style="display:none;"><a href="prezzi.html">Scegli il tuo Piano</a></li>
                 <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
                 <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
             </ul>
@@ -41,9 +96,9 @@
 
     <div class="cf-header">
         <h1 id="page-main-title">Accedi</h1>
-        <div id="vetrina-banner-page" style="display:flex;flex-direction:column;align-items:center;gap:15px;margin-top:1.5rem;max-width:800px;margin-left:auto;margin-right:auto;text-align:center;">
-            <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width:110px;height:auto;filter:drop-shadow(0 0 10px rgba(212,175,55,0.3));">
-            <p id="page-main-desc" style="margin:0;font-size:1.1rem;color:#334155;line-height:1.6;">
+        <div id="vetrina-banner-page" style="display:flex;flex-direction:column;align-items:center;gap:15px;margin-top:1rem;max-width:800px;margin-left:auto;margin-right:auto;text-align:center;">
+            <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width:100px;height:auto;filter:drop-shadow(0 0 10px rgba(212,175,55,0.3));">
+            <p id="page-main-desc" style="margin:0;font-size:1.05rem;color:#334155;line-height:1.6;">
                 <strong id="vetrina-title-page" style="color:var(--color-primary);">Prima Edizione 2026.</strong>
                 <span id="vetrina-desc-page">Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</span>
             </p>
@@ -56,6 +111,29 @@
     </div>
 
     <div id="cf-content" class="cf-content">
+        
+        <!-- Box di Accesso Rapido -->
+        <div class="login-hero-card">
+            <div style="font-size: 2.2rem;">🔐</div>
+            <h2 style="font-family:'Outfit',sans-serif; margin:0; color:#0f172a; font-size:1.6rem;">Accedi alla tua Area Personale</h2>
+            <p style="color:#64748b; font-size:0.95rem; max-width:550px; margin:0;">
+                Accedi con il tuo account Google per gestire il tuo profilo, visualizzare il tuo piano attivo e accedere direttamente a tutte le tue piattaforme.
+            </p>
+            
+            <div id="auth-state-box" style="margin-top:10px;">
+                <button class="btn-google-login" id="btn-login-google" onclick="eseguiLoginGoogle()">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    Accedi con Google
+                </button>
+            </div>
+        </div>
+
+        <!-- Scheda 1: Funzionalità Attive -->
         <div id="scheda1-block" style="background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:2.5rem;margin-bottom:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
                 <div style="background:#eef2ff;color:#4f46e5;border-radius:12px;padding:10px 14px;font-size:1.4rem;font-weight:bold;">🚀</div>
@@ -91,6 +169,7 @@
             </div>
         </div>
 
+        <!-- Scheda 2: In Lavorazione -->
         <div id="scheda2-block" style="background:#fff;border:2px dashed #cbd5e1;border-radius:24px;padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.02);">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:1.5rem;">
                 <div style="display:flex;align-items:center;gap:12px;">
@@ -111,10 +190,64 @@
 
     <script src="script.js"></script>
     <script>
+        async function eseguiLoginGoogle() {
+            if (typeof firebase === 'undefined' || !firebase.auth) {
+                alert("Errore caricamento autenticazione.");
+                return;
+            }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await firebase.auth().signInWithPopup(provider);
+                const user = result.user;
+                if (user) {
+                    // Crea o aggiorna documento in hub_users se nuovo
+                    const db = firebase.firestore();
+                    const uRef = db.collection('hub_users').doc(user.uid);
+                    const snap = await uRef.get();
+                    if (!snap.exists) {
+                        await uRef.set({
+                            nome: user.displayName || 'Utente',
+                            email: user.email,
+                            ruolo: 'viandante',
+                            subscription: 'base',
+                            createdAt: new Date().toISOString()
+                        }, { merge: true });
+                    }
+                    window.location.href = 'profilo.html';
+                }
+            } catch (e) {
+                console.error("Errore login:", e);
+                alert("Errore durante l'accesso: " + e.message);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase === 'undefined') return;
             const db = firebase.firestore();
 
+            // 1. Controllo Auth State
+            if (firebase.auth) {
+                firebase.auth().onAuthStateChanged(user => {
+                    const box = document.getElementById('auth-state-box');
+                    const navAccedi = document.getElementById('nav-accedi-link');
+                    if (user) {
+                        if (navAccedi) {
+                            navAccedi.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';
+                            navAccedi.href = 'profilo.html';
+                        }
+                        if (box) {
+                            box.innerHTML = `
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                                    <div style="font-weight:600; color:#15803d;">✅ Sei connesso come ${user.displayName || user.email}</div>
+                                    <a href="profilo.html" class="btn-go-profile"><i class="ph ph-user"></i> Vai al tuo Profilo</a>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+            }
+
+            // 2. Banner Vetrina
             db.collection('hub_settings').doc('vetrina').onSnapshot(doc => {
                 if (!doc.exists) return;
                 const d = doc.data();
@@ -126,14 +259,13 @@
                 if (i && d.immagineUrl) i.src = d.immagineUrl;
             });
 
+            // 3. Ecosistema settings
             db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                 const data = doc.data() || {};
 
-                // Mostra link "Prezzi e Piani" in navbar solo se monetizzazione ON
                 const navPrezzi = document.getElementById('nav-prezzi');
                 if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
 
-                // Visibilità pagina intera
                 const hidden = document.getElementById('page-hidden-overlay');
                 const content = document.getElementById('cf-content');
                 const header = document.querySelector('.cf-header');
@@ -148,23 +280,19 @@
 
                 const cf = data.come_funziona_config || {};
 
-                // Toggle schede singole
                 const s1 = document.getElementById('scheda1-block');
                 const s2 = document.getElementById('scheda2-block');
                 if (s1) s1.style.display = cf.scheda1_visibile === false ? 'none' : '';
                 if (s2) s2.style.display = cf.scheda2_visibile === false ? 'none' : '';
 
-                // Titoli
                 const t1 = document.getElementById('scheda1-titolo-el');
                 if (t1 && cf['scheda1-titolo']) t1.textContent = cf['scheda1-titolo'];
                 const t2 = document.getElementById('scheda2-titolo-el');
                 if (t2 && cf['scheda2-titolo']) t2.textContent = cf['scheda2-titolo'];
 
-                // Intro scheda 2
                 const i2 = document.getElementById('scheda2-intro-el');
                 if (i2 && cf['scheda2-intro']) i2.textContent = cf['scheda2-intro'];
 
-                // Liste
                 const fill = (id, raw) => {
                     const ul = document.getElementById(id);
                     if (!ul || !raw) return;

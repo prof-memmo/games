@@ -218,34 +218,92 @@
         </div>
     </div>
 
-        <!-- Firebase SDKs -->
+    <!-- Modal: Risorsa Riservata Ecosistema -->
+    <div class="wip-modal-overlay" id="ecosistema-modal">
+        <div class="wip-modal" style="max-width: 480px;">
+            <div class="wip-modal-emoji">📄</div>
+            <h3 style="color: #7c3aed;">Piano Ecosistema Completo</h3>
+            <p style="font-size: 0.95rem; color: #475569; line-height: 1.5;">
+                I quaderni didattici completi e tutti i materiali scaricabili in PDF sono inclusi nel <strong>Piano Ecosistema Completo</strong>.<br><br>
+                Attiva il tuo piano per scaricare liberamente tutte le dispense e le risorse didattiche dell'anno!
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <a href="prezzi.html" class="btn btn-primary" style="background-color: #7c3aed; border-color: #7c3aed; padding: 0.6rem 1.2rem; font-size: 0.9rem;">Scopri i Piani</a>
+                <button class="btn btn-outline" id="eco-close" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="js/firebase-init.js"></script>
-    <script src="js/services/database.js"></script>
-    <script src="script.js"></script>
+    <script src="js/firebase-init.js?v=20260814_1225"></script>
+    <script src="script.js?v=20260814_1225"></script>
+    
     <script>
-        // WIP modal
-        const wipModal = document.getElementById('wip-modal');
-        if (wipModal) {
-            document.querySelectorAll('.wip-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    wipModal.classList.add('active');
+        document.addEventListener('DOMContentLoaded', () => {
+            // WIP modal
+            const wipModal = document.getElementById('wip-modal');
+            if (wipModal) {
+                document.querySelectorAll('.wip-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        wipModal.classList.add('active');
+                    });
                 });
-            });
-            const wipClose = document.getElementById('wip-close');
-            if (wipClose) {
-                wipClose.addEventListener('click', () => {
-                    wipModal.classList.remove('active');
-                });
-            }
-            wipModal.addEventListener('click', (e) => {
-                if (e.target === wipModal) {
-                    wipModal.classList.remove('active');
+                const wipClose = document.getElementById('wip-close');
+                if (wipClose) {
+                    wipClose.addEventListener('click', () => {
+                        wipModal.classList.remove('active');
+                    });
                 }
+            }
+
+            // Controllo download Quaderno riservato a Piano Ecosistema
+            const ecoModal = document.getElementById('ecosistema-modal');
+            const ecoClose = document.getElementById('eco-close');
+            if (ecoClose) {
+                ecoClose.addEventListener('click', () => ecoModal.classList.remove('active'));
+            }
+
+            let monetizzazioneAttiva = false;
+            let userSubscription = 'base';
+
+            if (typeof firebase !== 'undefined') {
+                const db = firebase.firestore();
+                db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const d = doc.data();
+                        monetizzazioneAttiva = !!d.monetizzazione;
+                    }
+                });
+
+                if (firebase.auth) {
+                    firebase.auth().onAuthStateChanged(async user => {
+                        if (user) {
+                            try {
+                                const uSnap = await db.collection('hub_users').doc(user.uid).get();
+                                if (uSnap.exists) {
+                                    userSubscription = uSnap.data().subscription || 'base';
+                                }
+                            } catch(e) {}
+                        }
+                    });
+                }
+            }
+
+            document.querySelectorAll('.btn-download:not(.wip-link)').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (monetizzazioneAttiva && userSubscription !== 'ecosistema') {
+                        e.preventDefault();
+                        if (ecoModal) ecoModal.classList.add('active');
+                    }
+                });
             });
-        }
+        });
     </script>
+    <!-- Modali condivisi ecosistema Prof. Memmo -->
+    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260814_1225"></script>
 </body>
 </html>

@@ -662,10 +662,10 @@
             window._currentSelectedAvatar = currentAvatar;
 
             const grid = document.getElementById('global-avatar-grid');
-            grid.innerHTML = [6,7,8,9,10,11,12,13,14,15,16].map(num => `
+            grid.innerHTML = [6,7,8,9,10,11,12,13,14,15].map(num => `
                 <div class="global-avatar-opt ${currentAvatar === `assets/avatars/${num}.png` ? 'active' : ''}" 
                      onclick="selezionaAvatarGlobale(this, 'assets/avatars/${num}.png')"
-                     style="width:48px; height:48px; border-radius:50%; border:3px solid ${currentAvatar === `assets/avatars/${num}.png` ? '#6366f1' : 'transparent'}; cursor:pointer; overflow:hidden; transition:transform 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                     style="width:50px; height:50px; border-radius:50%; border:3px solid ${currentAvatar === `assets/avatars/${num}.png` ? '#6366f1' : 'transparent'}; cursor:pointer; overflow:hidden; transition:transform 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.15); background:#ffffff; display:flex; align-items:center; justify-content:center;">
                     <img src="assets/avatars/${num}.png" alt="Avatar ${num}" style="width:100%; height:100%; object-fit:cover;">
                 </div>
             `).join('');

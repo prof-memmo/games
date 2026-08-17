@@ -378,7 +378,7 @@
         <!-- Header Profilo -->
         <div class="profile-header-card">
             <div class="profile-info">
-                <div class="profile-avatar" id="user-avatar-box">
+                <div class="profile-avatar" id="user-avatar-box" onclick="apriModificaProfiloGlobale()" style="cursor:pointer;" title="Clicca per cambiare avatar">
                     <span id="user-avatar-initials">U</span>
                 </div>
                 <div class="profile-titles">
@@ -387,7 +387,8 @@
                     <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
                 </div>
             </div>
-            <div id="header-action-buttons">
+            <div id="header-action-buttons" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding:8px 16px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-weight:700; color:#334155; cursor:pointer;"><i class="ph ph-user-gear"></i> Modifica Avatar &amp; Dati</button>
                 <button class="btn-logout" onclick="eseguiLogout()"><i class="ph ph-sign-out"></i> Disconnetti</button>
             </div>
         </div>
@@ -541,82 +542,183 @@
                 const isAdminOverride = !!uData.admin_override;
                 const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
 
-                // Render Anagrafica
-                document.getElementById('user-display-name').textContent = displayName;
-                document.getElementById('user-email').textContent = email;
-                
-                const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
-                document.getElementById('user-avatar-initials').textContent = initials;
-
-                // Render Ruolo Badge
-                const roleBadge = document.getElementById('user-role-badge');
-                if (role.includes('docente') || role.includes('prof') || role.includes('admin')) {
-                    roleBadge.textContent = 'Docente';
-                    roleBadge.className = 'profile-badge badge-docente';
-                } else if (role.includes('studente')) {
-                    roleBadge.textContent = 'Studente';
-                    roleBadge.className = 'profile-badge badge-studente';
-                } else {
-                    roleBadge.textContent = 'Viandante';
-                    roleBadge.className = 'profile-badge badge-viandante';
-                }
-
-                // Render Piano
-                const planLabels = {
-                    'base': 'Piano Base (Gratuito)',
-                    'viandante': 'Piano Viandante',
-                    'docente_didattico': 'Docente Didattico',
-                    'docente_ecosistema': 'Ecosistema Completo'
-                };
-                document.getElementById('profile-plan-name').textContent = planLabels[plan] || plan;
-
-                const tagAdmin = document.getElementById('profile-plan-tag');
-                if (isSuperAdmin) {
-                    tagAdmin.style.display = 'inline-block';
-                    tagAdmin.textContent = '👑 Super Admin';
-                    tagAdmin.style.background = '#fef3c7';
-                    tagAdmin.style.color = '#92400e';
-                } else if (isAdminOverride) {
-                    tagAdmin.style.display = 'inline-block';
-                    tagAdmin.textContent = '⚙️ Admin Override';
-                } else {
-                    tagAdmin.style.display = 'none';
-                }
-
-                // Render Scadenza
-                const currentYear = new Date().getFullYear();
-                const expiryEl = document.getElementById('profile-plan-expiry');
-                if (isSuperAdmin || isAdminOverride) {
-                    expiryEl.innerHTML = '<strong>Scadenza:</strong> Nessuna scadenza (Accesso illimitato permanente).';
-                } else if (plan !== 'base') {
-                    const scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : `31/12/${currentYear}`;
-                    expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Gli abbonamenti si rinnovano fino al termine dell'anno scolastico/solare.</span>`;
-                } else {
-                    expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
-                }
-
-                // Personalizzazione spiegazione eliminazione in base al ruolo
-                const deleteExpl = document.getElementById('delete-modal-explanation');
-                if (role.includes('docente')) {
-                    deleteExpl.innerHTML = "Sei registrato come <strong>Docente</strong>. L'eliminazione del profilo comporterà la <strong>cancellazione definitiva del tuo account</strong>, delle tue credenziali e dei dati didattici associati.";
-                } else {
-                    deleteExpl.innerHTML = "Sei registrato come <strong>" + roleBadge.textContent + "</strong>. Verranno eliminati i tuoi dati anagrafici e il profilo di accesso all'Ecosistema.";
-                }
-
-                // Personalizzazione Sezione Giochi & Materiali
-                const gamesDesc = document.getElementById('profile-games-section-desc');
-                const btnUpgrade = document.getElementById('btn-upgrade-plan-link');
-                
-                if (plan === 'docente_ecosistema' || isSuperAdmin) {
-                    if (gamesDesc) gamesDesc.textContent = "Hai accesso a tutte le piattaforme e ai materiali didattici completi dell'Ecosistema. Esplora le schede, i regolamenti e avvia le attività.";
-                    if (btnUpgrade) btnUpgrade.style.display = 'none';
-                } else {
-                    if (gamesDesc) gamesDesc.textContent = "Il tuo piano attuale (" + (planLabels[plan] || plan) + ") comprende una selezione dedicata. Esplora la pagina completa per scoprire tutti i giochi attivi e i materiali disponibili.";
-                    if (btnUpgrade) btnUpgrade.style.display = 'inline-flex';
-                }
-
+                renderUserData(doc, authUser, uData);
             } catch (e) {
                 console.error("Errore caricamento profilo:", e);
+            }
+        }
+
+        function renderUserData(doc, authUser, uDataOverride) {
+            const uData = uDataOverride || (doc.exists ? doc.data() : {});
+            const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
+            const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
+            const role = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+            const isAdminOverride = !!uData.admin_override;
+            const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+
+            // Render Anagrafica
+            document.getElementById('user-display-name').textContent = displayName;
+            document.getElementById('user-email').textContent = email;
+            
+            // Render Avatar
+            const avatarBox = document.getElementById('user-avatar-box');
+            if (uData.avatar && (uData.avatar.includes('/') || uData.avatar.includes('.png'))) {
+                avatarBox.innerHTML = `<img src="${uData.avatar}" alt="Avatar" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            } else {
+                const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+                avatarBox.innerHTML = `<span id="user-avatar-initials">${initials}</span>`;
+            }
+
+            // Render Ruolo Badge
+            const roleBadge = document.getElementById('user-role-badge');
+            if (role.includes('docente') || role.includes('prof') || role.includes('admin')) {
+                roleBadge.textContent = 'Docente';
+                roleBadge.className = 'profile-badge badge-docente';
+            } else if (role.includes('studente')) {
+                roleBadge.textContent = 'Studente';
+                roleBadge.className = 'profile-badge badge-studente';
+            } else {
+                roleBadge.textContent = 'Viandante';
+                roleBadge.className = 'profile-badge badge-viandante';
+            }
+
+            // Render Piano
+            const planLabels = {
+                'base': 'Piano Base (Gratuito)',
+                'viandante': 'Piano Viandante',
+                'docente_didattico': 'Docente Didattico',
+                'docente_ecosistema': 'Ecosistema Completo'
+            };
+            document.getElementById('profile-plan-name').textContent = planLabels[plan] || plan;
+
+            const tagAdmin = document.getElementById('profile-plan-tag');
+            if (isSuperAdmin) {
+                tagAdmin.style.display = 'inline-block';
+                tagAdmin.textContent = '👑 Super Admin';
+                tagAdmin.style.background = '#fef3c7';
+                tagAdmin.style.color = '#92400e';
+            } else if (isAdminOverride) {
+                tagAdmin.style.display = 'inline-block';
+                tagAdmin.textContent = '⚙️ Admin Override';
+            } else {
+                tagAdmin.style.display = 'none';
+            }
+
+            // Render Scadenza
+            const currentYear = new Date().getFullYear();
+            const expiryEl = document.getElementById('profile-plan-expiry');
+            if (isSuperAdmin || isAdminOverride) {
+                expiryEl.innerHTML = '<strong>Scadenza:</strong> Nessuna scadenza (Accesso illimitato permanente).';
+            } else if (plan !== 'base') {
+                const scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : `31/12/${currentYear}`;
+                expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Gli abbonamenti si rinnovano fino al termine dell'anno scolastico/solare.</span>`;
+            } else {
+                expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
+            }
+
+            // Personalizzazione spiegazione eliminazione in base al ruolo
+            const deleteExpl = document.getElementById('delete-modal-explanation');
+            if (role.includes('docente')) {
+                deleteExpl.innerHTML = "Eliminando il tuo account docente cancellerai definitivamente il tuo profilo, l'accesso a tutte le sezioni didattiche e i dati delle tue classi collegate.";
+            } else {
+                deleteExpl.innerHTML = "Eliminando il tuo account cancellerai definitivamente i tuoi progressi, i badge ottenuti e tutti i tuoi dati di gioco.";
+            }
+
+            // Personalizzazione Sezione Giochi & Materiali
+            const gamesDesc = document.getElementById('profile-games-section-desc');
+            const btnUpgrade = document.getElementById('btn-upgrade-plan-link');
+            
+            if (plan === 'docente_ecosistema' || isSuperAdmin) {
+                if (gamesDesc) gamesDesc.textContent = "Hai accesso a tutte le piattaforme e ai materiali didattici completi dell'Ecosistema. Esplora le schede, i regolamenti e avvia le attività.";
+                if (btnUpgrade) btnUpgrade.style.display = 'none';
+            } else {
+                if (gamesDesc) gamesDesc.textContent = "Il tuo piano attuale (" + (planLabels[plan] || plan) + ") comprende una selezione dedicata. Esplora la pagina completa per scoprire tutti i giochi attivi e i materiali disponibili.";
+                if (btnUpgrade) btnUpgrade.style.display = 'inline-flex';
+            }
+
+            // Salva cache per modale modifica
+            window._currentUserData = uData;
+            window._currentSelectedAvatar = uData.avatar || 'assets/avatars/6.png';
+        }
+
+        function apriModificaProfiloGlobale() {
+            const uData = window._currentUserData || {};
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            document.getElementById('global-edit-name').value = uData.nome || uData.name || user.displayName || '';
+            
+            const isDocente = (uData.ruolo || uData.role || '').toLowerCase().includes('docente') || (uData.ruolo || uData.role || '').toLowerCase().includes('teacher');
+            const schoolGroup = document.getElementById('global-edit-school-group');
+            if (isDocente) {
+                schoolGroup.style.display = 'block';
+                document.getElementById('global-edit-school').value = uData.scuola || uData.school || '';
+            } else {
+                schoolGroup.style.display = 'none';
+            }
+
+            const currentAvatar = uData.avatar || 'assets/avatars/6.png';
+            window._currentSelectedAvatar = currentAvatar;
+
+            const grid = document.getElementById('global-avatar-grid');
+            grid.innerHTML = [6,7,8,9,10,11,12,13,14,15,16].map(num => `
+                <div class="global-avatar-opt ${currentAvatar === `assets/avatars/${num}.png` ? 'active' : ''}" 
+                     onclick="selezionaAvatarGlobale(this, 'assets/avatars/${num}.png')"
+                     style="width:48px; height:48px; border-radius:50%; border:3px solid ${currentAvatar === `assets/avatars/${num}.png` ? '#6366f1' : 'transparent'}; cursor:pointer; overflow:hidden; transition:transform 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                    <img src="assets/avatars/${num}.png" alt="Avatar ${num}" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('edit-global-profile-modal');
+            modal.style.display = 'flex';
+        }
+
+        function selezionaAvatarGlobale(el, avatarPath) {
+            window._currentSelectedAvatar = avatarPath;
+            document.querySelectorAll('.global-avatar-opt').forEach(opt => {
+                opt.classList.remove('active');
+                opt.style.borderColor = 'transparent';
+                opt.style.transform = 'scale(1)';
+            });
+            if (el) {
+                el.classList.add('active');
+                el.style.borderColor = '#6366f1';
+                el.style.transform = 'scale(1.1)';
+            }
+        }
+
+        async function salvaModificaProfiloGlobale() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const newName = document.getElementById('global-edit-name').value.trim();
+            const newSchool = document.getElementById('global-edit-school').value.trim();
+            if (!newName) {
+                alert("Il nome non può essere vuoto.");
+                return;
+            }
+
+            try {
+                const db = firebase.firestore();
+                const updateData = {
+                    nome: newName,
+                    name: newName,
+                    avatar: window._currentSelectedAvatar || 'assets/avatars/6.png',
+                    scuola: newSchool,
+                    school: newSchool
+                };
+
+                await db.collection('hub_users').doc(user.uid).set(updateData, { merge: true });
+                alert("Profilo e avatar aggiornati con successo!");
+                document.getElementById('edit-global-profile-modal').style.display = 'none';
+                
+                // Ricarica dati
+                const doc = await db.collection('hub_users').doc(user.uid).get();
+                renderUserData(doc, user);
+            } catch(e) {
+                console.error("Errore salvataggio profilo:", e);
+                alert("Errore salvataggio: " + e.message);
             }
         }
 
@@ -677,14 +779,7 @@
 
             try {
                 const db = firebase.firestore();
-                const doc = await db.collection('hub_users').doc(user.uid).get();
-                const role = (doc.exists ? (doc.data().ruolo || doc.data().role || '') : '').toLowerCase();
-
-                // 1. Se Docente: rimuove anche eventuali record classi o configurazioni
-                // 2. Rimuove doc da hub_users
                 await db.collection('hub_users').doc(user.uid).delete();
-
-                // 3. Elimina utente da Firebase Auth
                 await user.delete();
                 alert("Il tuo account è stato eliminato con successo.");
                 window.location.replace('index.html');
@@ -699,6 +794,39 @@
             }
         }
     </script>
+
+    <!-- Modal Modifica Profilo Globale -->
+    <div id="edit-global-profile-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:20px; max-width:480px; width:100%; padding:25px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <h3 style="margin:0; font-size:1.2rem; color:#0f172a;"><i class="ph ph-user-gear"></i> Modifica Profilo &amp; Avatar</h3>
+                <button onclick="document.getElementById('edit-global-profile-modal').style.display='none'" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#888;">&times;</button>
+            </div>
+            
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:8px;">Scegli il tuo Avatar Ufficiale:</label>
+                <div id="global-avatar-grid" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; max-height:140px; overflow-y:auto; padding:10px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
+                    <!-- Popolato da JS -->
+                </div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Nome e Cognome:</label>
+                <input type="text" id="global-edit-name" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            </div>
+
+            <div id="global-edit-school-group" style="margin-bottom:20px; display:none;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto:</label>
+                <input type="text" id="global-edit-school" placeholder="Es. IC Manzoni" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button onclick="salvaModificaProfiloGlobale()" style="flex:2; background:#6366f1; color:white; font-weight:700; border:none; padding:12px; border-radius:10px; cursor:pointer;">Salva Modifiche</button>
+                <button onclick="document.getElementById('edit-global-profile-modal').style.display='none'" style="flex:1; background:#f1f5f9; color:#475569; font-weight:700; border:1px solid #cbd5e1; padding:12px; border-radius:10px; cursor:pointer;">Annulla</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260814_1700"></script>
 </body>
 </html>

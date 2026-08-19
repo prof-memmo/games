@@ -701,16 +701,23 @@
 
             try {
                 const db = firebase.firestore();
+                const chosenAvatar = window._currentSelectedAvatar || 'assets/avatars/6.png';
                 const updateData = {
                     nome: newName,
                     name: newName,
-                    avatar: window._currentSelectedAvatar || 'assets/avatars/6.png',
+                    avatar: chosenAvatar,
+                    'anagrafica.avatar': chosenAvatar,
+                    'anagrafica.nome': newName,
                     scuola: newSchool,
                     school: newSchool
                 };
 
                 await db.collection('hub_users').doc(user.uid).set(updateData, { merge: true });
-                alert("Profilo e avatar aggiornati con successo!");
+                await db.collection('users').doc(user.uid).set({ name: newName, avatar: chosenAvatar }, { merge: true }).catch(() => {});
+                if (user.updateProfile) {
+                    await user.updateProfile({ photoURL: chosenAvatar, displayName: newName }).catch(() => {});
+                }
+                alert("Profilo e avatar aggiornati con successo in tutto l'ecosistema!");
                 document.getElementById('edit-global-profile-modal').style.display = 'none';
                 
                 // Ricarica dati

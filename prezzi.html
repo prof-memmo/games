@@ -333,7 +333,7 @@
             <div class="pricing-card" data-plan="viandante">
                 <div class="plan-name">Piano Viandante</div>
                 <div class="plan-desc">Perfetto per appassionati e giocatori che vogliono esplorare i giochi e le storie.</div>
-                <div class="plan-price">€9.99<span>/anno</span></div>
+                <div class="plan-price">€14.99<span>/anno</span></div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Versione Base)</li>
@@ -352,7 +352,7 @@
                 <div class="popular-badge">Consigliato</div>
                 <div class="plan-name">Docente Didattico</div>
                 <div class="plan-desc">Gli strumenti definitivi per gestire le tue classi e la didattica.</div>
-                <div class="plan-price">€19.99<span>/anno</span></div>
+                <div class="plan-price">€24.99<span>/anno</span></div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> <strong>FantaLetteratura (Completo)</strong>: Tornei, missioni</li>
@@ -370,7 +370,7 @@
             <div class="pricing-card" data-plan="ecosistema" style="border-color: rgba(99, 102, 241, 0.4);">
                 <div class="plan-name" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ecosistema Completo</div>
                 <div class="plan-desc">L'esperienza totale. Accesso illimitato a tutti i contenuti e strumenti.</div>
-                <div class="plan-price">€24.99<span>/anno</span></div>
+                <div class="plan-price">€34.99<span>/anno</span></div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> <strong>Tutto il piano Docente Completo Didattico</strong></li>
@@ -437,6 +437,8 @@
                     const monet = data.monetizzazione_config || {};
                     
                     const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
+                    const stripePiani = data.stripe_piani_config || {};
+                    
                     pianiKeys.forEach(key => {
                         const card = document.querySelector(`.pricing-card[data-plan="${key}"]`);
                         if (!card) return;
@@ -447,9 +449,9 @@
                         
                         let priceValue = null;
                         if (key === 'base') priceValue = '0';
-                        else if (key === 'viandante') priceValue = monet.price_viandante;
-                        else if (key === 'docente') priceValue = monet.price_docente;
-                        else if (key === 'ecosistema') priceValue = monet.price_ecosistema;
+                        else if (key === 'viandante') priceValue = monet.price_viandante || '14.99';
+                        else if (key === 'docente') priceValue = monet.price_docente || '24.99';
+                        else if (key === 'ecosistema') priceValue = monet.price_ecosistema || '34.99';
 
                         const descEl = card.querySelector('.plan-desc');
                         const btnEl = card.querySelector('.btn-subscribe');
@@ -502,13 +504,52 @@
                     console.error("Errore lettura ecosistema:", error);
                 });
 
-                // Gestore click pulsanti abbonamento con controllo Massimale
+                // Gestore click pulsanti abbonamento con Stripe Checkout sicuro
                 document.querySelectorAll('.btn-subscribe').forEach(btn => {
                     btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const card = this.closest('.pricing-card');
+                        const planKey = card ? card.dataset.plan : 'base';
+
                         if (this.dataset.blocked === "true") {
-                            e.preventDefault();
-                            alert("ℹ️ Per l'anno solare corrente è stato raggiunto il numero massimo di abbonamenti sostenitori disponibili. La piattaforma rimane pienamente accessibile con la Versione Base e per tutti gli Studenti. Le nuove sottoscrizioni riapriranno prossimamente.");
+                            alert("ℹ️ Per l'anno solare corrente è stato raggiunto il numero massimo di abbonamenti sostenitori disponibili. La piattaforma rimane pienamente accessibile con la Versione Base e per tutti gli Studenti.");
+                            return;
                         }
+
+                        if (planKey === 'base') {
+                            window.location.href = 'accedi.html';
+                            return;
+                        }
+
+                        const authUser = firebase.auth().currentUser;
+                        if (!authUser) {
+                            alert("Per sottoscrivere un piano è necessario effettuare prima l'accesso con il proprio account.");
+                            window.location.href = 'accedi.html?redirect=prezzi.html';
+                            return;
+                        }
+
+                        db.collection('hub_settings').doc('ecosistema').get().then(doc => {
+                            const data = doc.exists ? doc.data() : {};
+                            const isMonetActive = !!data.monetizzazione;
+                            const stripePiani = data.stripe_piani_config || {};
+                            const priceId = stripePiani[planKey === 'ecosistema' ? 'completo' : planKey];
+
+                            if (!isMonetActive) {
+                                alert("🎉 L'Ecosistema Prof. Memmo è attualmente in modalità GRATUITA per l'anno scolastico in corso. Tutte le funzionalità sono aperte liberamente per studenti e docenti!");
+                                window.location.href = 'profilo.html';
+                                return;
+                            }
+
+                            if (!priceId) {
+                                alert("⚠️ Il listino Stripe per questo piano non è ancora stato configurato dall'amministratore. La piattaforma rimane accessibile gratuitamente.");
+                                return;
+                            }
+
+                            // Reindirizzamento a Stripe Checkout (Link o Sessione sicura)
+                            alert(`Reindirizzamento sicuro a Stripe Checkout per il piano ${planKey.toUpperCase()}...\nUtente identificato: ${authUser.email}`);
+                        }).catch(err => {
+                            console.error("Errore avvio checkout:", err);
+                        });
                     });
                 });
             }

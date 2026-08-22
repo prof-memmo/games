@@ -581,6 +581,11 @@
                             bannerEl.style.display = 'none';
                         }
                     }
+
+                    // Aggiorna diciture e prezzi piani da Firestore (piani_config e monetizzazione_config)
+                    const piani = data.piani_config || {};
+                    const monet = data.monetizzazione_config || {};
+                    const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
                     
                     pianiKeys.forEach(key => {
                         const card = document.querySelector(`.pricing-card[data-plan="${key}"]`);

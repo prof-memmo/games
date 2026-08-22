@@ -632,8 +632,16 @@
                                 return;
                             }
 
-                            // Reindirizzamento a Stripe Checkout (Link o Sessione sicura)
-                            alert(`Reindirizzamento sicuro a Stripe Checkout per il piano ${planKey.toUpperCase()}...\nUtente identificato: ${authUser.email}`);
+                            // Reindirizzamento a Stripe Checkout (Payment Link o Sessione sicura)
+                            let checkoutUrl = priceId.trim();
+                            if (checkoutUrl.startsWith('http://') || checkoutUrl.startsWith('https://')) {
+                                const sep = checkoutUrl.includes('?') ? '&' : '?';
+                                checkoutUrl = `${checkoutUrl}${sep}prefilled_email=${encodeURIComponent(authUser.email)}&client_reference_id=${encodeURIComponent(authUser.uid)}`;
+                                window.location.href = checkoutUrl;
+                            } else {
+                                // Se è un price_ID o stringa
+                                alert(`✅ Configurazione Stripe rilevata (${priceId}).\nPer attivare il reindirizzamento automatico immediato al pagamento, incolla nel campo dell'Hub il tuo "Payment Link" di Stripe (es. https://buy.stripe.com/test_...).\n\nUtente: ${authUser.email}`);
+                            }
                         }).catch(err => {
                             console.error("Errore avvio checkout:", err);
                         });

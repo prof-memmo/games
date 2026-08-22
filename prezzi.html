@@ -544,8 +544,13 @@
                     let activePromo = null;
 
                     for (const [key, p] of Object.entries(promoConfig)) {
-                        if (p && p.attivo !== false && p.data_inizio && p.data_fine) {
-                            if (todayStr >= p.data_inizio && todayStr <= p.data_fine) {
+                        if (p && p.attivo !== false) {
+                            const hasStart = !!p.data_inizio;
+                            const hasEnd = !!p.data_fine;
+                            const isStarted = !hasStart || todayStr >= p.data_inizio;
+                            const isEnded = hasEnd && todayStr > p.data_fine;
+                            
+                            if (isStarted && !isEnded) {
                                 activePromo = p;
                                 break;
                             }
@@ -555,17 +560,22 @@
                     // Gestione visiva del Banner Promozionale
                     const bannerEl = document.getElementById('promo-live-banner');
                     if (bannerEl) {
-                        if (activePromo) {
+                        const pct = activePromo ? (parseFloat(activePromo.percentuale) || 0) : 0;
+                        if (activePromo && pct > 0) {
                             bannerEl.style.display = 'flex';
                             const titleEl = document.getElementById('promo-banner-title');
                             const badgeEl = document.getElementById('promo-banner-badge');
                             const expiryEl = document.getElementById('promo-banner-expiry');
                             if (titleEl) titleEl.textContent = activePromo.titolo || 'Promozione Speciale';
-                            if (badgeEl) badgeEl.textContent = `-${activePromo.percentuale}%`;
-                            if (expiryEl && activePromo.data_fine) {
-                                const parts = activePromo.data_fine.split('-');
-                                const dateFormatted = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : activePromo.data_fine;
-                                expiryEl.textContent = `Offerta valida fino al ${dateFormatted}`;
+                            if (badgeEl) badgeEl.textContent = `-${pct}%`;
+                            if (expiryEl) {
+                                if (activePromo.data_fine) {
+                                    const parts = activePromo.data_fine.split('-');
+                                    const dateFormatted = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : activePromo.data_fine;
+                                    expiryEl.textContent = `Offerta valida fino al ${dateFormatted}`;
+                                } else {
+                                    expiryEl.textContent = `Offerta Speciale Attiva`;
+                                }
                             }
                         } else {
                             bannerEl.style.display = 'none';
@@ -591,13 +601,15 @@
                         const priceEl = card.querySelector('.plan-price');
                         const featuresList = card.querySelector('.plan-features');
 
+                        const pct = activePromo ? (parseFloat(activePromo.percentuale) || 0) : 0;
+
                         if (priceEl && priceValue !== null && priceValue !== undefined && priceValue !== '') {
-                            if (key !== 'base' && activePromo && activePromo.percentuale > 0) {
+                            if (key !== 'base' && activePromo && pct > 0) {
                                 const baseNum = parseFloat(priceValue);
-                                const discNum = (baseNum * (1 - activePromo.percentuale / 100)).toFixed(2);
+                                const discNum = (baseNum * (1 - pct / 100)).toFixed(2);
                                 priceEl.innerHTML = `
                                     <div style="font-size:0.95rem; text-decoration:line-through; color:#94a3b8; font-weight:500; margin-bottom:-2px;">€${priceValue}</div>
-                                    <div>€${discNum} <span style="font-size:1rem; font-weight:500;">/anno</span> <span style="font-size:0.75rem; background:#10b981; color:#fff; padding:2px 7px; border-radius:999px; font-weight:700; vertical-align:middle; display:inline-block;">-${activePromo.percentuale}%</span></div>
+                                    <div>€${discNum} <span style="font-size:1rem; font-weight:500;">/anno</span> <span style="font-size:0.75rem; background:#10b981; color:#fff; padding:2px 7px; border-radius:999px; font-weight:700; vertical-align:middle; display:inline-block;">-${pct}%</span></div>
                                 `;
                             } else {
                                 priceEl.innerHTML = `€${priceValue}<span>/anno</span>`;
@@ -693,8 +705,12 @@
                             let activeCouponId = null;
 
                             for (const [key, p] of Object.entries(promoConfig)) {
-                                if (p && p.attivo !== false && p.data_inizio && p.data_fine) {
-                                    if (todayStr >= p.data_inizio && todayStr <= p.data_fine) {
+                                if (p && p.attivo !== false) {
+                                    const hasStart = !p.data_inizio;
+                                    const hasEnd = !p.data_fine;
+                                    const isStarted = hasStart || todayStr >= p.data_inizio;
+                                    const isEnded = !hasEnd && todayStr > p.data_fine;
+                                    if (isStarted && !isEnded) {
                                         if (p.stripe_coupon_id && p.stripe_coupon_id.trim()) {
                                             activeCouponId = p.stripe_coupon_id.trim();
                                         }

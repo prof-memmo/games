@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prezzi e Piani - Prof. Memmo</title>
+    <title>Scegli il tuo Piano - Prof. Memmo Games</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
@@ -312,6 +312,25 @@
             </div>
         </div>
 
+        <!-- Banner Promozionale Dinamico (mostrato se c'è una promo attiva) -->
+        <div id="promo-live-banner" style="display:none; max-width: 1200px; margin: 0 auto 2.5rem; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); color: white; border-radius: 16px; padding: 1.2rem 1.8rem; box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.3); border: 1px solid rgba(255,255,255,0.15); align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="font-size: 2rem; background: rgba(255,255,255,0.15); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;" id="promo-banner-emoji">🎉</div>
+                <div>
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        <span id="promo-banner-title">Promozione in Corso</span>
+                        <span id="promo-banner-badge" style="background: #10b981; color: #fff; font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; font-weight: 700;">-20%</span>
+                    </div>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 2px;" id="promo-banner-subtitle">
+                        Prezzi scontati applicati automaticamente! Il coupon promozionale verrà passato direttamente al checkout di Stripe.
+                    </div>
+                </div>
+            </div>
+            <div id="promo-banner-expiry" style="font-size: 0.85rem; background: rgba(0,0,0,0.25); padding: 6px 14px; border-radius: 8px; font-weight: 600; border: 1px solid rgba(255,255,255,0.1);">
+                Scade a breve
+            </div>
+        </div>
+
         <div class="pricing-grid">
             <!-- CARD BASE -->
             <div class="pricing-card" data-plan="base">
@@ -519,12 +538,39 @@
                     if (!doc.exists) return;
                     const data = doc.data() || {};
 
-                    // Aggiorna SEMPRE diciture e prezzi piani da Firestore (piani_config)
-                    const piani = data.piani_config || {};
-                    const monet = data.monetizzazione_config || {};
-                    
-                    const pianiKeys = ['base', 'viandante', 'docente', 'ecosistema'];
-                    const stripePiani = data.stripe_piani_config || {};
+                    // Calcolo eventuale Promozione attiva da promozioni_config
+                    const promoConfig = data.promozioni_config || {};
+                    const todayStr = new Date().toISOString().slice(0, 10);
+                    let activePromo = null;
+
+                    for (const [key, p] of Object.entries(promoConfig)) {
+                        if (p && p.attivo !== false && p.data_inizio && p.data_fine) {
+                            if (todayStr >= p.data_inizio && todayStr <= p.data_fine) {
+                                activePromo = p;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Gestione visiva del Banner Promozionale
+                    const bannerEl = document.getElementById('promo-live-banner');
+                    if (bannerEl) {
+                        if (activePromo) {
+                            bannerEl.style.display = 'flex';
+                            const titleEl = document.getElementById('promo-banner-title');
+                            const badgeEl = document.getElementById('promo-banner-badge');
+                            const expiryEl = document.getElementById('promo-banner-expiry');
+                            if (titleEl) titleEl.textContent = activePromo.titolo || 'Promozione Speciale';
+                            if (badgeEl) badgeEl.textContent = `-${activePromo.percentuale}%`;
+                            if (expiryEl && activePromo.data_fine) {
+                                const parts = activePromo.data_fine.split('-');
+                                const dateFormatted = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : activePromo.data_fine;
+                                expiryEl.textContent = `Offerta valida fino al ${dateFormatted}`;
+                            }
+                        } else {
+                            bannerEl.style.display = 'none';
+                        }
+                    }
                     
                     pianiKeys.forEach(key => {
                         const card = document.querySelector(`.pricing-card[data-plan="${key}"]`);
@@ -546,7 +592,16 @@
                         const featuresList = card.querySelector('.plan-features');
 
                         if (priceEl && priceValue !== null && priceValue !== undefined && priceValue !== '') {
-                            priceEl.innerHTML = `€${priceValue}<span>/anno</span>`;
+                            if (key !== 'base' && activePromo && activePromo.percentuale > 0) {
+                                const baseNum = parseFloat(priceValue);
+                                const discNum = (baseNum * (1 - activePromo.percentuale / 100)).toFixed(2);
+                                priceEl.innerHTML = `
+                                    <div style="font-size:0.95rem; text-decoration:line-through; color:#94a3b8; font-weight:500; margin-bottom:-2px;">€${priceValue}</div>
+                                    <div>€${discNum} <span style="font-size:1rem; font-weight:500;">/anno</span> <span style="font-size:0.75rem; background:#10b981; color:#fff; padding:2px 7px; border-radius:999px; font-weight:700; vertical-align:middle; display:inline-block;">-${activePromo.percentuale}%</span></div>
+                                `;
+                            } else {
+                                priceEl.innerHTML = `€${priceValue}<span>/anno</span>`;
+                            }
                         }
                         if (descEl && desc !== undefined && desc !== '') {
                             descEl.textContent = desc;
@@ -632,15 +687,36 @@
                                 return;
                             }
 
+                            // Verifica eventuale promozione attiva da passare a Stripe
+                            const promoConfig = data.promozioni_config || {};
+                            const todayStr = new Date().toISOString().slice(0, 10);
+                            let activeCouponId = null;
+
+                            for (const [key, p] of Object.entries(promoConfig)) {
+                                if (p && p.attivo !== false && p.data_inizio && p.data_fine) {
+                                    if (todayStr >= p.data_inizio && todayStr <= p.data_fine) {
+                                        if (p.stripe_coupon_id && p.stripe_coupon_id.trim()) {
+                                            activeCouponId = p.stripe_coupon_id.trim();
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
                             // Reindirizzamento a Stripe Checkout (Payment Link o Sessione sicura)
                             let checkoutUrl = priceId.trim();
                             if (checkoutUrl.startsWith('http://') || checkoutUrl.startsWith('https://')) {
                                 const sep = checkoutUrl.includes('?') ? '&' : '?';
-                                checkoutUrl = `${checkoutUrl}${sep}prefilled_email=${encodeURIComponent(authUser.email)}&client_reference_id=${encodeURIComponent(authUser.uid)}`;
+                                let urlParams = `prefilled_email=${encodeURIComponent(authUser.email)}&client_reference_id=${encodeURIComponent(authUser.uid)}`;
+                                if (activeCouponId) {
+                                    urlParams += `&prefilled_promo_code=${encodeURIComponent(activeCouponId)}`;
+                                }
+                                checkoutUrl = `${checkoutUrl}${sep}${urlParams}`;
                                 window.location.href = checkoutUrl;
                             } else {
                                 // Se è un price_ID o stringa
-                                alert(`✅ Configurazione Stripe rilevata (${priceId}).\nPer attivare il reindirizzamento automatico immediato al pagamento, incolla nel campo dell'Hub il tuo "Payment Link" di Stripe (es. https://buy.stripe.com/test_...).\n\nUtente: ${authUser.email}`);
+                                let promoNote = activeCouponId ? `\n🎁 Coupon promozionale attivo applicato: ${activeCouponId}` : '';
+                                alert(`✅ Configurazione Stripe rilevata (${priceId}).${promoNote}\nPer attivare il reindirizzamento automatico immediato al pagamento, incolla nel campo dell'Hub il tuo "Payment Link" di Stripe (es. https://buy.stripe.com/test_...).\n\nUtente: ${authUser.email}`);
                             }
                         }).catch(err => {
                             console.error("Errore avvio checkout:", err);

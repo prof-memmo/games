@@ -148,19 +148,62 @@
 
         .plan-price {
             font-family: 'Outfit', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 900;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.85rem;
+            min-height: 85px;
             display: flex;
-            align-items: baseline;
-            gap: 4px;
+            flex-direction: column;
+            justify-content: flex-end;
         }
 
-        .plan-price span {
+        .plan-price .price-main {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            line-height: 1;
+            color: #0f172a;
+        }
+
+        .plan-price .price-main span.period {
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.05rem;
+            font-weight: 600;
             color: var(--text-secondary);
+        }
+
+        .plan-price .price-promo-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .plan-price .old-price-badge {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #dc2626;
+            text-decoration: line-through;
+            text-decoration-color: #dc2626;
+            text-decoration-thickness: 2.5px;
+            background: #fee2e2;
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            line-height: 1.2;
+        }
+
+        .plan-price .discount-badge {
+            background: #10b981;
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 999px;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
         }
 
         .plan-desc {
@@ -204,35 +247,71 @@
         }
 
         .btn-subscribe {
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            font-weight: 600;
+            padding: 1.15rem 1.5rem;
+            border-radius: 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
             text-align: center;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: 1px solid var(--border-glow);
-            background: #f1f5f9;
-            color: var(--text-primary);
+            background: #0f172a;
+            color: #ffffff;
             box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            letter-spacing: 0.2px;
         }
 
         .btn-subscribe:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+        }
+
+        .pricing-card[data-plan="base"] .btn-subscribe {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1.5px solid #cbd5e1;
+            box-shadow: none;
+        }
+
+        .pricing-card[data-plan="base"] .btn-subscribe:hover {
             background: #e2e8f0;
+            color: #0f172a;
+            border-color: #94a3b8;
+            transform: translateY(-2px);
         }
 
         .pricing-card.popular .btn-subscribe {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             border: none;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 8px 25px -3px rgba(37, 99, 235, 0.5);
             color: white;
         }
 
         .pricing-card.popular .btn-subscribe:hover {
-            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.6);
-            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -3px rgba(37, 99, 235, 0.7);
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        }
+
+        .pricing-card[data-plan="ecosistema"] .btn-subscribe {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border: none;
+            box-shadow: 0 8px 25px -3px rgba(124, 58, 237, 0.5);
+            color: white;
+        }
+
+        .pricing-card[data-plan="ecosistema"] .btn-subscribe:hover {
+            box-shadow: 0 12px 30px -3px rgba(124, 58, 237, 0.7);
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
         }
 
         /* Overlay "Non attivo" */
@@ -336,7 +415,9 @@
             <div class="pricing-card" data-plan="base">
                 <div class="plan-name">Versione Base</div>
                 <div class="plan-desc">Gratuita e accessibile per esplorare le dinamiche fondamentali dei giochi.</div>
-                <div class="plan-price">€0<span>/anno</span></div>
+                <div class="plan-price">
+                    <div class="price-main">€0 <span class="period">/anno</span></div>
+                </div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Max 4 squadre, una sola classe)</li>
@@ -352,7 +433,9 @@
             <div class="pricing-card" data-plan="viandante">
                 <div class="plan-name">Piano Viandante</div>
                 <div class="plan-desc">Perfetto per appassionati e giocatori che vogliono esplorare i giochi e le storie.</div>
-                <div class="plan-price">€14.99<span>/anno</span></div>
+                <div class="plan-price">
+                    <div class="price-main">€14.99 <span class="period">/anno</span></div>
+                </div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> FantaLetteratura (Versione Base)</li>
@@ -371,7 +454,9 @@
                 <div class="popular-badge">Consigliato</div>
                 <div class="plan-name">Docente Didattico</div>
                 <div class="plan-desc">Gli strumenti definitivi per gestire le tue classi e la didattica.</div>
-                <div class="plan-price">€24.99<span>/anno</span></div>
+                <div class="plan-price">
+                    <div class="price-main">€24.99 <span class="period">/anno</span></div>
+                </div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> <strong>FantaLetteratura (Completo)</strong>: Tornei, missioni</li>
@@ -389,7 +474,9 @@
             <div class="pricing-card" data-plan="ecosistema" style="border-color: rgba(99, 102, 241, 0.4);">
                 <div class="plan-name" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ecosistema Completo</div>
                 <div class="plan-desc">L'esperienza totale. Accesso illimitato a tutti i contenuti e strumenti.</div>
-                <div class="plan-price">€34.99<span>/anno</span></div>
+                <div class="plan-price">
+                    <div class="price-main">€34.99 <span class="period">/anno</span></div>
+                </div>
                 
                 <ul class="plan-features">
                     <li><i class="ph-fill ph-check-circle"></i> <strong>Tutto il piano Docente Completo Didattico</strong></li>
@@ -613,11 +700,20 @@
                                 const baseNum = parseFloat(priceValue);
                                 const discNum = (baseNum * (1 - pct / 100)).toFixed(2);
                                 priceEl.innerHTML = `
-                                    <div style="font-size:0.95rem; text-decoration:line-through; color:#94a3b8; font-weight:500; margin-bottom:-2px;">€${priceValue}</div>
-                                    <div>€${discNum} <span style="font-size:1rem; font-weight:500;">/anno</span> <span style="font-size:0.75rem; background:#10b981; color:#fff; padding:2px 7px; border-radius:999px; font-weight:700; vertical-align:middle; display:inline-block;">-${pct}%</span></div>
+                                    <div class="price-promo-row">
+                                        <span class="old-price-badge">€${priceValue}</span>
+                                        <span class="discount-badge">-${pct}%</span>
+                                    </div>
+                                    <div class="price-main">
+                                        €${discNum} <span class="period">/anno</span>
+                                    </div>
                                 `;
                             } else {
-                                priceEl.innerHTML = `€${priceValue}<span>/anno</span>`;
+                                priceEl.innerHTML = `
+                                    <div class="price-main">
+                                        €${priceValue} <span class="period">/anno</span>
+                                    </div>
+                                `;
                             }
                         }
                         if (descEl && desc !== undefined && desc !== '') {

@@ -364,12 +364,9 @@
 
     <div class="pricing-header" style="padding-bottom: 2rem;">
         <h1 id="page-main-title">Scegli il tuo Piano</h1>
-        <div id="vetrina-banner-page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center;">
-            <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width: 130px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
-            <p id="page-main-desc" style="margin: 0; font-size: 1.15rem; color: #334155; line-height: 1.6;">
-                <strong id="vetrina-title-page" style="color: var(--color-primary);">Prima Edizione 2026.</strong> <span id="vetrina-desc-page">Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</span>
-            </p>
-        </div>
+        <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 650px; margin: 0.8rem auto 0; line-height: 1.6;">
+            Trova la formula ideale per le tue classi o per esplorare i giochi didattici in totale autonomia.
+        </p>
     </div>
 
     <!-- PIANI E ABBONAMENTI -->
@@ -607,20 +604,7 @@
             if (typeof firebase !== 'undefined') {
                 const db = firebase.firestore();
                 
-                // 1. Sincronizzazione Banner Vetrina
-                db.collection('hub_settings').doc('vetrina').onSnapshot(doc => {
-                    if (doc.exists) {
-                        const vData = doc.data();
-                        const titleEl = document.getElementById('vetrina-title-page');
-                        const descEl = document.getElementById('vetrina-desc-page');
-                        const imgEl = document.getElementById('vetrina-img-page');
-                        if (titleEl && vData.titolo) titleEl.textContent = vData.titolo + ' ';
-                        if (descEl && vData.descrizione) descEl.textContent = vData.descrizione;
-                        if (imgEl && vData.immagineUrl) imgEl.src = vData.immagineUrl;
-                    }
-                });
-
-                // 2. Controllo monetizzazione e sincronizzazione testi piani
+                // Sincronizzazione piani, sconti e monetizzazione
                 db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                     if (!doc.exists) return;
                     const data = doc.data() || {};

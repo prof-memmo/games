@@ -375,6 +375,20 @@
             <a href="https://prof-memmo.github.io/prof-memmo-gestione-siti/" style="color:#92400e; text-decoration:underline; font-size:0.9rem;">Torna all'Hub</a>
         </div>
 
+        <!-- Banner Successo Pagamento Stripe -->
+        <div id="stripe-success-banner" style="display:none; background: linear-gradient(135deg, #064e3b 0%, #059669 100%); color: white; border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.35); align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="font-size: 2.2rem; background: rgba(255,255,255,0.2); border-radius: 12px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">🎉</div>
+                <div>
+                    <h3 style="margin:0 0 4px 0; font-family:'Outfit',sans-serif; font-size:1.3rem; font-weight:700;">Abbonamento Attivato con Successo!</h3>
+                    <p style="margin:0; opacity:0.95; font-size:0.95rem; line-height:1.4;">
+                        Grazie per aver supportato il progetto didattico! Il tuo piano è ora attivo e puoi accedere a tutte le funzionalità complete.
+                    </p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('stripe-success-banner').style.display='none'" style="background: rgba(255,255,255,0.25); border: none; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;">Chiudi</button>
+        </div>
+
         <!-- Header Profilo -->
         <div class="profile-header-card">
             <div class="profile-info">
@@ -494,6 +508,12 @@
             // 1. Controllo Parametri URL (Anteprima Admin)
             const urlParams = new URLSearchParams(window.location.search);
             const previewUserId = urlParams.get('preview');
+
+            // Controllo ritorno da pagamento Stripe
+            if (urlParams.get('pagamento') === 'successo' || urlParams.get('payment') === 'success' || urlParams.get('session_id')) {
+                const stripeBanner = document.getElementById('stripe-success-banner');
+                if (stripeBanner) stripeBanner.style.display = 'flex';
+            }
 
             // 2. Controllo monetizzazione per il link navbar "Scegli il tuo Piano"
             db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {

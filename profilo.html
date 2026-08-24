@@ -13,6 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-functions-compat.js"></script>
     <script src="js/firebase-init.js"></script>
 
     <style>
@@ -424,9 +425,14 @@
                     </div>
                 </div>
 
-                <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan">
-                    <i class="ph ph-arrow-clockwise"></i> Rinnova o Cambia Piano
-                </a>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan">
+                        <i class="ph ph-arrow-clockwise"></i> Rinnova o Cambia Piano
+                    </a>
+                    <button id="btn-profile-refund" onclick="apriModalRimborso()" style="display:none; background:#fffbeb; border:1px solid #f59e0b; color:#b45309; padding:10px 18px; border-radius:12px; font-weight:600; font-size:0.92rem; cursor:pointer; transition:all 0.2s; align-items:center; gap:6px;">
+                        <i class="ph ph-arrow-counter-clockwise"></i> Richiedi Rimborso (entro 14gg)
+                    </button>
+                </div>
             </div>
 
             <!-- Card 2: Le mie Notifiche -->
@@ -637,6 +643,27 @@
                 expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
             }
 
+            // Controllo Visibilità Pulsante Rimborso (14 giorni)
+            const subData = uData.subscription || {};
+            const btnRefund = document.getElementById('btn-profile-refund');
+            if (btnRefund) {
+                const hasStripeSub = !!(subData.stripeSubscriptionId || uData.stripeSubscriptionId);
+                const notRefunded = subData.status !== 'refunded';
+                let isWithin14Days = false;
+
+                if (hasStripeSub && notRefunded && !isSuperAdmin && !isAdminOverride && plan !== 'base') {
+                    const purchasedTime = (subData.purchasedAt && subData.purchasedAt.seconds)
+                        ? (subData.purchasedAt.seconds * 1000)
+                        : (uData.createdAt && uData.createdAt.seconds ? uData.createdAt.seconds * 1000 : Date.now());
+                    const elapsedDays = (Date.now() - purchasedTime) / (1000 * 60 * 60 * 24);
+                    if (elapsedDays <= 14) {
+                        isWithin14Days = true;
+                    }
+                }
+
+                btnRefund.style.display = isWithin14Days ? 'inline-flex' : 'none';
+            }
+
             // Personalizzazione spiegazione eliminazione in base al ruolo
             const deleteExpl = document.getElementById('delete-modal-explanation');
             if (role.includes('docente')) {
@@ -800,6 +827,43 @@
             document.getElementById('delete-confirm-modal').classList.remove('active');
         }
 
+        // Gestione Modale e Chiamata Rimborso Self-Service
+        function apriModalRimborso() {
+            document.getElementById('refund-recesso-modal').style.display = 'flex';
+        }
+
+        function chiudiModalRimborso() {
+            document.getElementById('refund-recesso-modal').style.display = 'none';
+        }
+
+        async function confermaRimborsoRecesso() {
+            const btnConfirm = document.getElementById('btn-confirm-refund-action');
+            const originalText = btnConfirm.innerHTML;
+            btnConfirm.disabled = true;
+            btnConfirm.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Elaborazione rimborso in corso...';
+
+            try {
+                const requestRefundFn = firebase.functions().httpsCallable('requestSubscriptionRefund');
+                const result = await requestRefundFn({});
+                const data = result.data || {};
+
+                chiudiModalRimborso();
+                alert("✅ Richiesta di rimborso completata con successo!\n\n" + (data.message || "L'importo verrà accreditato sul metodo di pagamento originario entro 5-10 giorni lavorativi. Il tuo account è stato reimpostato al Piano Base."));
+
+                const authUser = firebase.auth().currentUser;
+                if (authUser) {
+                    caricaDatiProfilo(authUser.uid, false);
+                }
+            } catch (err) {
+                console.error("Errore richiesta rimborso:", err);
+                const msg = err.message || "Si è verificato un errore durante l'elaborazione del rimborso. Riprova più tardi.";
+                alert("⚠️ " + msg);
+            } finally {
+                btnConfirm.disabled = false;
+                btnConfirm.innerHTML = originalText;
+            }
+        }
+
         async function eseguiEliminazioneAccount() {
             const user = firebase.auth().currentUser;
             if (!user) return;
@@ -850,6 +914,40 @@
             <div style="display:flex; gap:10px;">
                 <button onclick="salvaModificaProfiloGlobale()" style="flex:2; background:#6366f1; color:white; font-weight:700; border:none; padding:12px; border-radius:10px; cursor:pointer;">Salva Modifiche</button>
                 <button onclick="document.getElementById('edit-global-profile-modal').style.display='none'" style="flex:1; background:#f1f5f9; color:#475569; font-weight:700; border:1px solid #cbd5e1; padding:12px; border-radius:10px; cursor:pointer;">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Richiesta Rimborso (Diritto di Recesso entro 14 giorni) -->
+    <div id="refund-recesso-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.7); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:24px; max-width:520px; width:100%; padding:2rem; box-shadow:0 25px 60px rgba(0,0,0,0.3); animation:modalPop 0.2s ease-out;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:40px; height:40px; border-radius:12px; background:#fef3c7; color:#d97706; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
+                        <i class="ph ph-arrow-counter-clockwise"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#0f172a;">Richiesta di Rimborso</h3>
+                        <span style="font-size:0.8rem; color:#64748b;">Diritto di recesso entro 14 giorni</span>
+                    </div>
+                </div>
+                <button onclick="chiudiModalRimborso()" style="background:none; border:none; font-size:1.4rem; color:#94a3b8; cursor:pointer;">&times;</button>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:1.2rem; margin-bottom:1.5rem; font-size:0.92rem; color:#334155; line-height:1.6;">
+                <p style="margin:0 0 10px 0;">
+                    Stai per esercitare il diritto di recesso per il tuo abbonamento.
+                </p>
+                <ul style="margin:0; padding-left:1.2rem; color:#475569;">
+                    <li style="margin-bottom:6px;">L'abbonamento verrà cancellato immediatamente e il tuo account tornerà al <strong>Piano Base</strong>.</li>
+                    <li style="margin-bottom:6px;">L'intero importo dell'ultimo pagamento ti sarà riaccreditato sul metodo di pagamento originario.</li>
+                    <li>I tempi tecnici di riaccredito bancario sono di circa <strong>5-10 giorni lavorativi</strong>.</li>
+                </ul>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button onclick="chiudiModalRimborso()" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#475569; padding:10px 18px; border-radius:12px; font-weight:600; cursor:pointer;">Annulla</button>
+                <button id="btn-confirm-refund-action" onclick="confermaRimborsoRecesso()" style="background:linear-gradient(135deg, #d97706, #b45309); border:none; color:white; padding:10px 20px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(217,119,6,0.3);">Conferma Rimborso</button>
             </div>
         </div>
     </div>

@@ -651,7 +651,7 @@
                 const notRefunded = subData.status !== 'refunded';
                 let isWithin14Days = false;
 
-                if (hasStripeSub && notRefunded && !isSuperAdmin && !isAdminOverride && plan !== 'base') {
+                if (hasStripeSub && notRefunded) {
                     const purchasedTime = (subData.purchasedAt && subData.purchasedAt.seconds)
                         ? (subData.purchasedAt.seconds * 1000)
                         : (uData.createdAt && uData.createdAt.seconds ? uData.createdAt.seconds * 1000 : Date.now());

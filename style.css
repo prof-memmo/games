@@ -1418,36 +1418,5 @@ input:focus, textarea:focus {
   text-align: justify;
 }
 
-/* Bottone Il mio Profilo nella Navbar */
-.nav-profile-pill,
-.nav-links a.nav-profile-pill,
-.navbar a.nav-profile-pill {
-  background: #2563eb !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  padding: 0.45rem 1.15rem !important;
-  border-radius: 999px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 7px !important;
-  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3) !important;
-  text-decoration: none !important;
-  transition: all 0.2s ease !important;
-  line-height: 1.2 !important;
-}
 
-.nav-profile-pill:hover,
-.nav-links a.nav-profile-pill:hover,
-.navbar a.nav-profile-pill:hover {
-  background: #1d4ed8 !important;
-  color: #ffffff !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 5px 14px rgba(37, 99, 235, 0.4) !important;
-}
-
-.nav-profile-pill i,
-.nav-links a.nav-profile-pill i {
-  color: #ffffff !important;
-  font-size: 1.2rem !important;
-}
 

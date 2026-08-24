@@ -433,12 +433,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (href.includes('accedi.html') || href.includes('profilo.html') || text === 'Accedi' || text.includes('Profilo')) {
                     if (user) {
                         link.href = 'profilo.html';
-                        link.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';
-                        link.classList.add('nav-profile-pill');
+                        link.innerHTML = 'Il mio Profilo';
                     } else {
                         link.href = 'accedi.html';
                         link.innerHTML = 'Accedi';
-                        link.classList.remove('nav-profile-pill');
                     }
                 }
             });

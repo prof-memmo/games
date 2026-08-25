@@ -299,6 +299,45 @@
             transition: all 0.2s;
         }
 
+        /* Switch Toggle Newsletter GDPR */
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 34px;
+        }
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .switch-toggle input:checked + .slider-toggle {
+            background-color: #10b981;
+        }
+        .switch-toggle input:checked + .slider-toggle:before {
+            transform: translateX(22px);
+        }
+
         .btn-outline-danger:hover {
             background: #fee2e2;
         }
@@ -447,6 +486,31 @@
                 </ul>
             </div>
 
+        </div>
+
+        <!-- Card Preferenze Comunicazioni & Newsletter GDPR -->
+        <div class="glass-card" style="margin-bottom: 2rem; border-left: 4px solid #0284c7;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 260px;">
+                    <h2 class="card-title" style="margin-bottom: 8px;">
+                        <i class="ph ph-envelope-simple" style="color:#0284c7;"></i> Newsletter &amp; Comunicazioni
+                    </h2>
+                    <p style="color:var(--text-muted); font-size:0.92rem; line-height: 1.5; margin: 0;">
+                        Ricevi via email le novità didattiche, nuovi materiali, aggiornamenti sui giochi e le iniziative del Prof. Memmo. Puoi modificare il tuo consenso in qualsiasi momento ai sensi del GDPR.
+                    </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 12px 18px; border-radius: 14px; border: 1px solid #e2e8f0;">
+                    <div style="text-align: right;">
+                        <span id="profile-newsletter-status-badge" style="display: inline-block; font-size: 0.82rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                            ✓ Iscritto
+                        </span>
+                    </div>
+                    <label class="switch-toggle" title="Attiva o disattiva l'iscrizione alla newsletter">
+                        <input type="checkbox" id="profile-newsletter-toggle" onchange="toggleNewsletterConsenso(this.checked)">
+                        <span class="slider-toggle"></span>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <!-- Card Collegamento Unico a Giochi e Materiali -->
@@ -684,9 +748,60 @@
                 if (btnUpgrade) btnUpgrade.style.display = 'inline-flex';
             }
 
+            // Render Stato Newsletter (Consenso GDPR)
+            const hasNewsConsent = uData.newsletter === true || (uData.consents && uData.consents.newsletter === true);
+            const newsToggle = document.getElementById('profile-newsletter-toggle');
+            const newsBadge = document.getElementById('profile-newsletter-status-badge');
+            if (newsToggle) newsToggle.checked = hasNewsConsent;
+            if (newsBadge) {
+                if (hasNewsConsent) {
+                    newsBadge.innerHTML = '<i class="ph ph-check-circle"></i> Iscritto (Attivo)';
+                    newsBadge.style.background = '#ecfdf5';
+                    newsBadge.style.color = '#059669';
+                    newsBadge.style.borderColor = '#a7f3d0';
+                } else {
+                    newsBadge.innerHTML = '<i class="ph ph-x-circle"></i> Non Iscritto';
+                    newsBadge.style.background = '#f1f5f9';
+                    newsBadge.style.color = '#64748b';
+                    newsBadge.style.borderColor = '#cbd5e1';
+                }
+            }
+
             // Salva cache per modale modifica
             window._currentUserData = uData;
             window._currentSelectedAvatar = uData.avatar || 'assets/avatars/6.png';
+        }
+
+        /**
+         * Gestione cambio consenso Newsletter Self-Service
+         */
+        async function toggleNewsletterConsenso(isChecked) {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+            const db = firebase.firestore();
+            const newsBadge = document.getElementById('profile-newsletter-status-badge');
+            const newsToggle = document.getElementById('profile-newsletter-toggle');
+            
+            // Feedback UI immediato
+            if (newsBadge) {
+                newsBadge.innerHTML = isChecked ? '<i class="ph ph-check-circle"></i> Iscritto (Attivo)' : '<i class="ph ph-x-circle"></i> Non Iscritto';
+                newsBadge.style.background = isChecked ? '#ecfdf5' : '#f1f5f9';
+                newsBadge.style.color = isChecked ? '#059669' : '#64748b';
+                newsBadge.style.borderColor = isChecked ? '#a7f3d0' : '#cbd5e1';
+            }
+
+            try {
+                await db.collection('hub_users').doc(user.uid).set({
+                    newsletter: !!isChecked,
+                    "consents.newsletter": !!isChecked,
+                    "consents.lastUserActionAt": new Date().toISOString(),
+                    "consents.source": "profile_page"
+                }, { merge: true });
+            } catch(err) {
+                console.error("Errore aggiornamento consenso newsletter:", err);
+                alert("Si è verificato un errore durante l'aggiornamento del consenso. Riprova.");
+                if (newsToggle) newsToggle.checked = !isChecked;
+            }
         }
 
         function apriModificaProfiloGlobale() {

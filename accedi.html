@@ -337,20 +337,36 @@
                     };
                 }
 
-                // Salvataggio su Firestore
+                // Salvataggio su Firestore conforme alle regole di sicurezza
                 const uRef = db.collection('hub_users').doc(currentAuthUser.uid);
-                const userPayload = {
-                    nome: currentAuthUser.displayName || 'Utente Ecosistema',
-                    email: currentAuthUser.email || '',
-                    ruolo: pendingRole,
-                    subscription: 'base',
-                    createdAt: new Date().toISOString()
-                };
-                if (surveyData) {
-                    userPayload.survey = surveyData;
-                }
+                const snap = await uRef.get();
 
-                await uRef.set(userPayload, { merge: true });
+                if (!snap.exists) {
+                    // Creazione nuovo utente
+                    const newUserPayload = {
+                        nome: currentAuthUser.displayName || 'Utente Ecosistema',
+                        email: currentAuthUser.email || '',
+                        role: pendingRole,
+                        ruolo: pendingRole,
+                        statusAccount: 'active',
+                        subscription: pendingRole === 'studente' ? 'studente' : 'base',
+                        createdAt: new Date().toISOString()
+                    };
+                    if (surveyData) {
+                        newUserPayload.survey = surveyData;
+                    }
+                    await uRef.set(newUserPayload);
+                } else {
+                    // Aggiornamento dati anagrafici e survey per utente esistente
+                    const updatePayload = {};
+                    if (currentAuthUser.displayName) updatePayload.nome = currentAuthUser.displayName;
+                    if (surveyData) updatePayload.survey = surveyData;
+                    if (!snap.data().ruolo) updatePayload.ruolo = pendingRole;
+                    
+                    if (Object.keys(updatePayload).length > 0) {
+                        await uRef.set(updatePayload, { merge: true });
+                    }
+                }
 
                 // Controllo monetizzazione per redirect
                 const ecoSnap = await db.collection('hub_settings').doc('ecosistema').get();

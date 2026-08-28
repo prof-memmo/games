@@ -70,6 +70,75 @@
             transform: translateY(-6px);
             box-shadow: 0 15px 30px rgba(37, 99, 235, 0.12);
         }
+        /* Unified Login Modal */
+        .login-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            animation: pmModalFadeIn 0.25s ease;
+        }
+        @keyframes pmModalFadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .login-modal-box {
+            background: #ffffff;
+            border-radius: 24px;
+            max-width: 440px;
+            width: 100%;
+            padding: 2.2rem 2rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .login-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            font-size: 1.8rem;
+            line-height: 1;
+            color: #94a3b8;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color 0.2s;
+        }
+        .login-modal-close:hover {
+            color: #0f172a;
+        }
+        .login-checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            text-align: left;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.86rem;
+            color: #475569;
+            line-height: 1.45;
+            cursor: pointer;
+        }
+        .login-checkbox-group input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .login-checkbox-group a {
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="cf-page">
@@ -91,6 +160,41 @@
             <div class="menu-toggle" onclick="window.toggleMobileMenu(this)"><i class="ph ph-list"></i></div>
         </div>
     </nav>
+
+    <!-- MODAL POPUP UNIFICATO DI LOGIN -->
+    <div id="unified-login-modal" class="login-modal-overlay">
+        <div class="login-modal-box">
+            <button class="login-modal-close" onclick="closeLoginModal()">&times;</button>
+            <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+            <h2 style="font-family:'Outfit',sans-serif; margin:0 0 6px 0; color:#0f172a; font-size:1.45rem;">Hub Didattico Prof. Memmo</h2>
+            <p style="color:#64748b; font-size:0.88rem; margin:0 0 18px 0;">Accedi con il tuo account per entrare nell'Ecosistema</p>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px 14px; margin-bottom: 18px;">
+                <label class="login-checkbox-group">
+                    <input type="checkbox" id="modal-check-age">
+                    <span>Dichiaro di avere <strong>almeno 14 anni</strong> o di essere sotto la supervisione di un adulto o docente.</span>
+                </label>
+                <label class="login-checkbox-group">
+                    <input type="checkbox" id="modal-check-terms">
+                    <span>Ho letto e accetto i <a href="#" onclick="event.preventDefault(); openSharedModal('termini')">Termini di Servizio</a> e la <a href="#" onclick="event.preventDefault(); openSharedModal('privacy')">Privacy Policy</a>.</span>
+                </label>
+                <label class="login-checkbox-group" style="margin-bottom: 0;">
+                    <input type="checkbox" id="modal-check-news" checked>
+                    <span>Acconsento a ricevere comunicazioni e <strong>newsletter didattiche</strong> dal Prof. Memmo.</span>
+                </label>
+            </div>
+
+            <button type="button" class="btn-google-login" id="btn-modal-google-auth" onclick="eseguiLoginGoogleConConsenso()" style="width: 100%; justify-content: center; padding: 13px; font-size: 1rem; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08);">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                Entra o Registrati con Google
+            </button>
+        </div>
+    </div>
 
     <!-- STEP 1: ONBOARDING SCELTA RUOLO -->
     <div id="portal-onboarding" style="display:none; width: 100%; min-height: 80vh; flex-direction: column; align-items: center; justify-content: center; padding: 7rem 20px 4rem; box-sizing: border-box;">
@@ -221,14 +325,8 @@
                 </p>
                 
                 <div id="auth-state-box" style="margin-top:8px;">
-                    <button class="btn-google-login" id="btn-login-google" onclick="eseguiLoginGoogle()" style="padding: 12px 24px; font-size: 0.98rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                        </svg>
-                        Fai il Log-in con Google
+                    <button class="btn-google-login" id="btn-login-google" onclick="openLoginModal()" style="padding: 13px 28px; font-size: 1.02rem;">
+                        🔑 Fai il Log-in
                     </button>
                 </div>
             </div>
@@ -387,12 +485,55 @@
             document.getElementById('main-accedi-view').style.display = 'block';
         }
 
-        async function eseguiLoginGoogle() {
+        function openLoginModal() {
+            const modal = document.getElementById('unified-login-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('unified-login-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        async function eseguiLoginGoogleConConsenso() {
+            const checkAge = document.getElementById('modal-check-age');
+            const checkTerms = document.getElementById('modal-check-terms');
+            const checkNews = document.getElementById('modal-check-news');
+
+            if (!checkAge || !checkAge.checked) {
+                alert("Per proseguire, devi confermare di avere almeno 14 anni o di essere sotto la supervisione di un adulto o docente.");
+                if (checkAge) checkAge.focus();
+                return;
+            }
+
+            if (!checkTerms || !checkTerms.checked) {
+                alert("Per proseguire, devi accettare i Termini di Servizio e la Privacy Policy.");
+                if (checkTerms) checkTerms.focus();
+                return;
+            }
+
+            const wantsNewsletter = checkNews ? checkNews.checked : false;
+
             if (typeof firebase === 'undefined' || !firebase.auth) {
                 alert("Errore caricamento autenticazione.");
                 return;
             }
+
+            const btn = document.getElementById('btn-modal-google-auth');
+            if (btn) {
+                btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Accesso in corso...';
+                btn.disabled = true;
+            }
+
             const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+
             try {
                 const result = await firebase.auth().signInWithPopup(provider);
                 const user = result.user;
@@ -401,6 +542,12 @@
                     const db = firebase.firestore();
                     const uRef = db.collection('hub_users').doc(user.uid);
                     const snap = await uRef.get();
+
+                    if (wantsNewsletter) {
+                        await uRef.set({ newsletter: true, newsletterConsentDate: new Date().toISOString() }, { merge: true }).catch(() => {});
+                    }
+
+                    closeLoginModal();
 
                     if (snap.exists && snap.data().ruolo) {
                         // Utente già registrato: atterra al profilo
@@ -414,7 +561,21 @@
                 }
             } catch (e) {
                 console.error("Errore login:", e);
-                alert("Errore durante l'accesso: " + e.message);
+                if (e.code !== 'auth/popup-closed-by-user') {
+                    alert("Errore durante l'accesso: " + (e.message || e.code));
+                }
+                if (btn) {
+                    btn.innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        Entra o Registrati con Google
+                    `;
+                    btn.disabled = false;
+                }
             }
         }
 

@@ -465,7 +465,7 @@
                 </div>
 
                 <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                    <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan">
+                    <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan" onclick="return gestisciClickCambiaPiano(event)">
                         <i class="ph ph-arrow-clockwise"></i> Rinnova o Cambia Piano
                     </a>
                     <button id="btn-profile-refund" onclick="apriModalRimborso()" style="display:none; background:#fffbeb; border:1px solid #f59e0b; color:#b45309; padding:10px 18px; border-radius:12px; font-weight:600; font-size:0.92rem; cursor:pointer; transition:all 0.2s; align-items:center; gap:6px;">
@@ -526,7 +526,7 @@
                     <a href="giochi.html" class="btn-action-primary" style="background: linear-gradient(135deg, #059669, #047857);">
                         <i class="ph ph-compass"></i> Vai a Giochi e Materiali
                     </a>
-                    <a href="prezzi.html" id="btn-upgrade-plan-link" class="btn-action-primary" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">
+                    <a href="prezzi.html" id="btn-upgrade-plan-link" class="btn-action-primary" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);" onclick="return gestisciClickCambiaPiano(event)">
                         <i class="ph ph-sparkle"></i> Scegli o Cambia Piano
                     </a>
                 </div>
@@ -586,9 +586,20 @@
             // 2. Controllo monetizzazione per il link navbar "Scegli il tuo Piano"
             db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                 const data = doc.data() || {};
+                window._ecosystemData = data;
                 const navPrezzi = document.getElementById('nav-prezzi');
                 if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
             });
+
+        function gestisciClickCambiaPiano(e) {
+            const isMonetActive = window._ecosystemData && !!window._ecosystemData.monetizzazione;
+            if (!isMonetActive) {
+                if (e) e.preventDefault();
+                alert("ℹ️ Al momento le iscrizioni sono aperte con il Piano Base Gratuito.\n\nPuoi esplorare e utilizzare liberamente i giochi e le funzionalità dell'Ecosistema. I piani e le funzioni avanzate per docenti saranno disponibili prossimamente!");
+                return false;
+            }
+            return true;
+        }
 
             // 3. Gestione Auth State
             auth.onAuthStateChanged(async (authUser) => {

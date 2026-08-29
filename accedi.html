@@ -15,60 +15,75 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
     <style>
-        body.cf-page { background:#f8fafc; font-family:'Inter',sans-serif; margin:0; padding:0; overflow-x:hidden; background-image: radial-gradient(circle at 15% 50%,rgba(99,102,241,0.12) 0%,transparent 50%), radial-gradient(circle at 85% 30%,rgba(168,85,247,0.12) 0%,transparent 50%); }
-        .cf-header { text-align:center; padding:7.5rem 2rem 2rem; }
-        .cf-header h1 { font-family:'Outfit',sans-serif; font-size:3.5rem; font-weight:900; margin-bottom:0.5rem; background:linear-gradient(135deg,#2563eb,#059669); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
-        .cf-content { max-width:1000px; margin:0 auto; padding:0 2rem 8rem; }
-        #page-hidden-overlay { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center; color:#64748b; font-size:1.1rem; gap:1rem; }
+        body.cf-page { 
+            background: #f8fafc; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+            background-image: radial-gradient(circle at 15% 50%, rgba(99,102,241,0.12) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(168,85,247,0.12) 0%, transparent 50%); 
+        }
+        .cf-header { 
+            text-align: center; 
+            padding: 7rem 2rem 1.5rem; 
+        }
+        .cf-header h1 { 
+            font-family: var(--font-family-headings, 'Outfit', sans-serif); 
+            font-size: clamp(2.5rem, 5vw, 3.5rem); 
+            font-weight: 700; 
+            color: var(--color-text-dark, #0f172a); 
+            margin-bottom: 0.5rem; 
+            display: inline-block; 
+        }
+        .cf-content { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 0 2rem 8rem; 
+        }
+        #page-hidden-overlay { 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 60vh; 
+            text-align: center; 
+            color: #64748b; 
+            font-size: 1.1rem; 
+            gap: 1rem; 
+        }
 
-        /* Onboarding & Survey Styles */
-        .pill-option {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 50px;
-            padding: 8px 18px;
-            margin: 4px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #334155;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .pill-option:hover {
-            background: #e2e8f0;
-            border-color: #94a3b8;
-            transform: translateY(-1px);
-        }
-        .pill-option.selected {
-            background: #2563eb;
-            color: #ffffff;
-            border-color: #1d4ed8;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-            font-weight: 600;
-        }
-
-        .role-selection-card {
+        .login-hero-card {
             background: #ffffff;
-            border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 2rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .role-selection-card:hover {
-            border-color: #2563eb;
-            transform: translateY(-6px);
-            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.12);
+
+        .btn-go-profile {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--color-primary, #2563eb);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--border-radius-pill, 100px);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-family-headings, 'Outfit', sans-serif);
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+            transition: all 0.2s ease;
+        }
+        .btn-go-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37,99,235,0.25);
         }
     </style>
 </head>
@@ -92,319 +107,96 @@
         </div>
     </nav>
 
-    <!-- STEP 1: ONBOARDING SCELTA RUOLO -->
-    <div id="portal-onboarding" style="display:none; width: 100%; min-height: 80vh; flex-direction: column; align-items: center; justify-content: center; padding: 7rem 20px 4rem; box-sizing: border-box;">
-        <div style="text-align: center; margin-bottom: 2.5rem; max-width: 650px;">
-            <div style="font-size: 2.8rem; margin-bottom: 10px;">👋</div>
-            <h1 style="font-family:'Outfit',sans-serif; font-size: 2.4rem; margin: 0 0 10px 0; color: #0f172a;">Benvenuto nell'Ecosistema!</h1>
-            <p style="color: #64748b; font-size: 1.05rem; margin: 0; line-height: 1.6;">
-                Per iniziare e personalizzare la tua esperienza didattica, scegli il tuo ruolo:
-            </p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 900px; width: 100%; margin-bottom: 2.5rem;">
-            <!-- Card Docente -->
-            <div class="role-selection-card" onclick="selectRole('docente')">
-                <div style="font-size: 3.5rem; margin-bottom: 12px;">👨‍🏫</div>
-                <h3 style="font-family:'Outfit',sans-serif; font-size: 1.4rem; margin: 0 0 8px 0; color: #1e293b;">DOCENTE</h3>
-                <p style="color: #64748b; font-size: 0.92rem; margin: 0; line-height: 1.5;">Per insegnanti ed educatori: crea classi, assegna codici agli studenti e gestisci squadre.</p>
-            </div>
-
-            <!-- Card Studente -->
-            <div class="role-selection-card" onclick="selectRole('studente')">
-                <div style="font-size: 3.5rem; margin-bottom: 12px;">🎓</div>
-                <h3 style="font-family:'Outfit',sans-serif; font-size: 1.4rem; margin: 0 0 8px 0; color: #1e293b;">STUDENTE</h3>
-                <p style="color: #64748b; font-size: 0.92rem; margin: 0; line-height: 1.5;">Per allievi e ragazzi: partecipa alle sfide della tua classe con il codice del tuo docente.</p>
-            </div>
-
-            <!-- Card Viandante -->
-            <div class="role-selection-card" onclick="selectRole('viandante')">
-                <div style="font-size: 3.5rem; margin-bottom: 12px;">🌍</div>
-                <h3 style="font-family:'Outfit',sans-serif; font-size: 1.4rem; margin: 0 0 8px 0; color: #1e293b;">VIANDANTE</h3>
-                <p style="color: #64748b; font-size: 0.92rem; margin: 0; line-height: 1.5;">Per appassionati, genitori e curiosi: esplora e prova liberamente i giochi didattici.</p>
-            </div>
-        </div>
-
-        <div style="text-align: center;">
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px;">Scegliendo un ruolo accetti i Termini di Servizio e la Privacy Policy.</p>
-            <button class="btn btn-logout" onclick="eseguiLogoutOnboarding()">
-                <i class="ph ph-arrow-left"></i> Annulla ed Esci
-            </button>
-        </div>
-    </div>
-
-    <!-- STEP 2: QUESTIONARIO 3 DOMANDE ANALYTICS -->
-    <div id="portal-survey" style="display:none; width: 100%; min-height: 80vh; flex-direction: column; align-items: center; justify-content: center; padding: 7rem 20px 4rem; box-sizing: border-box;">
-        <div style="background: #ffffff; width: 100%; max-width: 680px; border-radius: 24px; box-shadow: 0 10px 35px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; padding: 35px; box-sizing: border-box;">
-            <div style="text-align: center; margin-bottom: 25px;">
-                <span style="font-size: 2.4rem; margin-bottom: 8px; display: inline-block;">✨</span>
-                <h2 style="font-family:'Outfit',sans-serif; font-size: 1.8rem; margin: 0 0 8px 0; color: #0f172a;">Piacere di conoscerti!</h2>
-                <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Raccontaci qualcosa di te con 3 veloci risposte (richiede 30 secondi):</p>
-            </div>
-
-            <!-- DOMANDA 1: Canale -->
-            <div style="margin-bottom: 24px;">
-                <label style="font-weight: 700; font-size: 0.95rem; color: #1e293b; display: block; margin-bottom: 10px;">
-                    1. 📱 Come mi hai conosciuto?
-                </label>
-                <div id="survey-canale-options" style="display: flex; flex-wrap: wrap;">
-                    <div class="pill-option" data-value="Instagram" onclick="toggleSingleOption('survey-canale-options', this)">📸 Instagram</div>
-                    <div class="pill-option" data-value="TikTok / YouTube" onclick="toggleSingleOption('survey-canale-options', this)">🎬 TikTok / YouTube</div>
-                    <div class="pill-option" data-value="Passaparola" onclick="toggleSingleOption('survey-canale-options', this)">💬 Passaparola (Amici / Colleghi)</div>
-                    <div class="pill-option" data-value="A Scuola" onclick="toggleSingleOption('survey-canale-options', this)">🏫 A Scuola</div>
-                    <div class="pill-option" data-value="Ricerca Google" onclick="toggleSingleOption('survey-canale-options', this)">🔍 Ricerca Google / Web</div>
-                    <div class="pill-option" data-value="Altro" onclick="toggleSingleOption('survey-canale-options', this)">✨ Altro</div>
-                </div>
-            </div>
-
-            <!-- DOMANDA 2: Fascia di Età -->
-            <div style="margin-bottom: 24px;">
-                <label style="font-weight: 700; font-size: 0.95rem; color: #1e293b; display: block; margin-bottom: 10px;">
-                    2. 🎂 Qual è la tua fascia di età?
-                </label>
-                <div id="survey-eta-options" style="display: flex; flex-wrap: wrap;">
-                    <div class="pill-option" data-value="Under 14" onclick="toggleSingleOption('survey-eta-options', this)">Under 14</div>
-                    <div class="pill-option" data-value="14-18 anni" onclick="toggleSingleOption('survey-eta-options', this)">14 - 18 anni</div>
-                    <div class="pill-option" data-value="19-25 anni" onclick="toggleSingleOption('survey-eta-options', this)">19 - 25 anni</div>
-                    <div class="pill-option" data-value="26-40 anni" onclick="toggleSingleOption('survey-eta-options', this)">26 - 40 anni</div>
-                    <div class="pill-option" data-value="41-60 anni" onclick="toggleSingleOption('survey-eta-options', this)">41 - 60 anni</div>
-                    <div class="pill-option" data-value="Over 60" onclick="toggleSingleOption('survey-eta-options', this)">Over 60</div>
-                </div>
-            </div>
-
-            <!-- DOMANDA 3: Materie di Interesse -->
-            <div style="margin-bottom: 30px;">
-                <label style="font-weight: 700; font-size: 0.95rem; color: #1e293b; display: block; margin-bottom: 6px;">
-                    3. 📚 Quali materie ti appassionano di più? <span style="font-weight: 400; font-size: 0.8rem; color: #64748b;">(seleziona una o più)</span>
-                </label>
-                <div id="survey-materie-options" style="display: flex; flex-wrap: wrap;">
-                    <div class="pill-option" data-value="Letteratura" onclick="this.classList.toggle('selected')">📖 Letteratura</div>
-                    <div class="pill-option" data-value="Storia" onclick="this.classList.toggle('selected')">🏺 Storia</div>
-                    <div class="pill-option" data-value="Epica & Mitologia" onclick="this.classList.toggle('selected')">⚡ Epica &amp; Mitologia</div>
-                    <div class="pill-option" data-value="Geografia" onclick="this.classList.toggle('selected')">🗺️ Geografia</div>
-                    <div class="pill-option" data-value="Riflessione sulla lingua" onclick="this.classList.toggle('selected')">🧠 Riflessione sulla lingua</div>
-                    <div class="pill-option" data-value="Religione & Etica" onclick="this.classList.toggle('selected')">🕊️ Religione &amp; Etica</div>
-                    <div class="pill-option" data-value="Filosofia" onclick="this.classList.toggle('selected')">🏛️ Filosofia</div>
-                </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn-go-profile" style="padding: 14px; font-size: 1.05rem; justify-content: center; width: 100%; border: none; cursor: pointer;" onclick="submitSurvey(false)">
-                    Completa e Inizia 🚀
-                </button>
-                <button type="button" style="background: none; border: none; font-size: 0.88rem; color: #64748b; margin-top: 5px; cursor: pointer; text-decoration: underline;" onclick="submitSurvey(true)">
-                    Salta questo passaggio per ora &rarr;
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- CONTENUTO PRINCIPALE PAGINA ACCEDI -->
-    <div id="main-accedi-view">
-        <div class="cf-header">
-            <h1 id="page-main-title">Accedi</h1>
-            <div id="vetrina-banner-page" style="display:flex;flex-direction:column;align-items:center;gap:15px;margin-top:1rem;max-width:800px;margin-left:auto;margin-right:auto;text-align:center;">
-                <img id="vetrina-img-page" src="assets/party-popper.png" alt="Cornucopia" style="width:100px;height:auto;filter:drop-shadow(0 0 10px rgba(212,175,55,0.3));">
-                <p id="page-main-desc" style="margin:0;font-size:1.05rem;color:#334155;line-height:1.6;">
-                    <strong id="vetrina-title-page" style="color:var(--color-primary);">Prima Edizione 2026.</strong>
-                    <span id="vetrina-desc-page">Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</span>
-                </p>
-            </div>
-        </div>
+    <div class="cf-header">
+        <h1 id="page-main-title">Accedi</h1>
+    </div>
 
-        <div id="page-hidden-overlay">
-            <i class="ph ph-eye-slash" style="font-size:3rem;"></i>
-            <p>Questa pagina non è al momento disponibile.</p>
-        </div>
+    <div id="page-hidden-overlay">
+        <i class="ph ph-eye-slash" style="font-size:3rem;"></i>
+        <p>Questa pagina non è al momento disponibile.</p>
+    </div>
 
-        <div id="cf-content" class="cf-content">
+    <div id="cf-content" class="cf-content">
+        
+        <!-- Box di Accesso Rapido -->
+        <div class="login-hero-card">
+            <div style="font-size: 2.4rem; margin-bottom: 0.5rem;">🔐</div>
+            <h2 style="font-family:var(--font-family-headings, 'Outfit', sans-serif); margin:0 0 0.5rem 0; color:var(--color-text-dark, #0f172a); font-size:1.6rem; font-weight:700; text-align:center;">Accedi alla tua Area Personale</h2>
+            <p style="font-family:var(--font-family-base, 'Inter', sans-serif); color:var(--color-text-light, #64748b); font-size:0.95rem; max-width:560px; margin:0 auto 1.5rem; line-height:1.6; text-align:center;">
+                Accedi con il tuo account Google per gestire il tuo profilo, visualizzare il tuo piano attivo e accedere direttamente a tutte le piattaforme.
+            </p>
             
-            <!-- Box di Accesso Rapido -->
-            <div class="login-hero-card">
-                <div style="font-size: 2.2rem;">🔐</div>
-                <h2 style="font-family:'Outfit',sans-serif; margin:0; color:#0f172a; font-size:1.6rem;">Accedi alla tua Area Personale</h2>
-                <p style="color:#64748b; font-size:0.95rem; max-width:550px; margin:0;">
-                    Accedi con il tuo account Google per gestire il tuo profilo, visualizzare il tuo piano attivo e accedere direttamente a tutte le tue piattaforme.
-                </p>
-                
-                <div id="auth-state-box" style="margin-top:10px;">
-                    <button class="btn-google-login" id="btn-login-google" onclick="eseguiLoginGoogle()">
-                        <svg width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                        </svg>
-                        Accedi con Google
-                    </button>
-                </div>
+            <div id="auth-state-box" style="display:flex; justify-content:center; width:100%;">
+                <button class="btn btn-primary" id="btn-login-google" onclick="vaiAlPortaleLogin()" style="font-size:1rem; padding:0.9rem 2.2rem; cursor:pointer;">
+                    <i class="ph ph-sign-in" style="font-size:1.2rem;"></i> Fai il Log-in
+                </button>
             </div>
+        </div>
 
-            <!-- Scheda 1: Funzionalità Attive -->
-            <div id="scheda1-block" style="background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:2.5rem;margin-bottom:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.03);">
-                <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
-                    <div style="background:#eef2ff;color:#4f46e5;border-radius:12px;padding:10px 14px;font-size:1.4rem;font-weight:bold;">🚀</div>
-                    <h2 id="scheda1-titolo-el" style="font-family:'Outfit',sans-serif;margin:0;color:#0f172a;font-size:1.8rem;">Funzionalità Attualmente Attive</h2>
+        <!-- Scheda 1: Funzionalità Attive -->
+        <div id="scheda1-block" style="background:#fff; border:1px solid #e2e8f0; border-radius:24px; padding:2.5rem; margin-bottom:2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.5rem;">
+                <div style="background:#eef2ff; color:#4f46e5; border-radius:12px; padding:10px 14px; font-size:1.4rem; font-weight:bold;">🚀</div>
+                <h2 id="scheda1-titolo-el" style="font-family:'Outfit',sans-serif; margin:0; color:#0f172a; font-size:1.8rem;">Funzionalità Attualmente Attive</h2>
+            </div>
+            <div class="grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem;">
+                <div style="background:#f8fafc; padding:1.5rem; border-radius:16px; border:1px solid #cbd5e1;">
+                    <h3 style="margin-top:0; color:#2563eb; font-size:1.2rem;"><i class="ph ph-chalkboard-teacher"></i> Per i Docenti</h3>
+                    <ul id="scheda1-docenti-list" style="padding-left:1.2rem; color:#334155; line-height:1.6; margin:0; font-size:0.95rem;">
+                        <li>Creazione ed organizzazione delle classi didattiche</li>
+                        <li>Generazione di Codici Classe per gli studenti</li>
+                        <li>Gestione fino a 4 squadre su FantaLetteratura</li>
+                        <li>Attività di riflessione e grammatica su Palestra di Riflessione</li>
+                    </ul>
                 </div>
-                <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;">
-                    <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border:1px solid #cbd5e1;">
-                        <h3 style="margin-top:0;color:#2563eb;font-size:1.2rem;"><i class="ph ph-chalkboard-teacher"></i> Per i Docenti</h3>
-                        <ul id="scheda1-docenti-list" style="padding-left:1.2rem;color:#334155;line-height:1.6;margin:0;font-size:0.95rem;">
-                            <li>Creazione ed organizzazione delle classi didattiche</li>
-                            <li>Generazione di Codici Classe per gli studenti</li>
-                            <li>Gestione fino a 4 squadre su FantaLetteratura</li>
-                            <li>Attività di riflessione e grammatica su Palestra di Riflessione</li>
-                        </ul>
-                    </div>
-                    <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border:1px solid #cbd5e1;">
-                        <h3 style="margin-top:0;color:#059669;font-size:1.2rem;"><i class="ph ph-student"></i> Per gli Studenti</h3>
-                        <ul id="scheda1-studenti-list" style="padding-left:1.2rem;color:#334155;line-height:1.6;margin:0;font-size:0.95rem;">
-                            <li>Accesso alle classi create dal proprio docente tramite codice</li>
-                            <li>Partecipazione attiva ai giochi didattici e alle sfide</li>
-                            <li>Monitoraggio dei progressi e delle attività svolte</li>
-                            <li>Profilo Studente attivo e collegato alla scuola</li>
-                        </ul>
-                    </div>
-                    <div style="background:#f8fafc;padding:1.5rem;border-radius:16px;border:1px solid #cbd5e1;">
-                        <h3 style="margin-top:0;color:#d97706;font-size:1.2rem;"><i class="ph ph-compass"></i> Per i Viandanti (Autonomi)</h3>
-                        <ul id="scheda1-viandanti-list" style="padding-left:1.2rem;color:#334155;line-height:1.6;margin:0;font-size:0.95rem;">
-                            <li>Esplorazione libera delle app e dei giochi disponibili</li>
-                            <li>Accesso alle versioni dimostrative ed alle attività aperte</li>
-                            <li>Partecipazione alla filosofia ludica dell'Ecosistema</li>
-                        </ul>
-                    </div>
+                <div style="background:#f8fafc; padding:1.5rem; border-radius:16px; border:1px solid #cbd5e1;">
+                    <h3 style="margin-top:0; color:#059669; font-size:1.2rem;"><i class="ph ph-student"></i> Per gli Studenti</h3>
+                    <ul id="scheda1-studenti-list" style="padding-left:1.2rem; color:#334155; line-height:1.6; margin:0; font-size:0.95rem;">
+                        <li>Accesso alle classi create dal proprio docente tramite codice</li>
+                        <li>Partecipazione attiva ai giochi didattici e alle sfide</li>
+                        <li>Monitoraggio dei progressi e delle attività svolte</li>
+                        <li>Profilo Studente attivo e collegato alla scuola</li>
+                    </ul>
+                </div>
+                <div style="background:#f8fafc; padding:1.5rem; border-radius:16px; border:1px solid #cbd5e1;">
+                    <h3 style="margin-top:0; color:#d97706; font-size:1.2rem;"><i class="ph ph-compass"></i> Per i Viandanti (Autonomi)</h3>
+                    <ul id="scheda1-viandanti-list" style="padding-left:1.2rem; color:#334155; line-height:1.6; margin:0; font-size:0.95rem;">
+                        <li>Esplorazione libera delle app e dei giochi disponibili</li>
+                        <li>Accesso alle versioni dimostrative ed alle attività aperte</li>
+                        <li>Partecipazione alla filosofia ludica dell'Ecosistema</li>
+                    </ul>
                 </div>
             </div>
+        </div>
 
-            <!-- Scheda 2: In Lavorazione -->
-            <div id="scheda2-block" style="background:#fff;border:2px dashed #cbd5e1;border-radius:24px;padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.02);">
-                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:1.5rem;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="background:#fef3c7;color:#d97706;border-radius:12px;padding:10px 14px;font-size:1.4rem;font-weight:bold;">🛠️</div>
-                        <h2 id="scheda2-titolo-el" style="font-family:'Outfit',sans-serif;margin:0;color:#0f172a;font-size:1.8rem;">In Lavorazione / Prossimamente</h2>
-                    </div>
-                    <span style="background:#fef3c7;color:#92400e;padding:6px 16px;border-radius:20px;font-size:0.85rem;font-weight:bold;letter-spacing:0.5px;">IN SVILUPPO</span>
+        <!-- Scheda 2: In Lavorazione -->
+        <div id="scheda2-block" style="background:#fff; border:2px dashed #cbd5e1; border-radius:24px; padding:2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:15px; margin-bottom:1.5rem;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="background:#fef3c7; color:#d97706; border-radius:12px; padding:10px 14px; font-size:1.4rem; font-weight:bold;">🛠️</div>
+                    <h2 id="scheda2-titolo-el" style="font-family:'Outfit',sans-serif; margin:0; color:#0f172a; font-size:1.8rem;">In Lavorazione / Prossimamente</h2>
                 </div>
-                <p id="scheda2-intro-el" style="color:#475569;line-height:1.6;font-size:1rem;margin-bottom:1.5rem;">L'Ecosistema Prof. Memmo è in continua evoluzione. Stiamo sviluppando nuove espansioni e funzionalità avanzate per arricchire l'esperienza in classe:</p>
-                <ul id="scheda2-voci-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;list-style:none;padding:0;margin:0;">
-                    <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Tornei interscolastici estesi</li>
-                    <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Moduli avanzati di analisi sintattica e del periodo</li>
-                    <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Nuovi giochi di ruolo e storie interattive</li>
-                    <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>Strumenti di reportistica e statistiche per docenti</li>
-                </ul>
+                <span style="background:#fef3c7; color:#92400e; padding:6px 16px; border-radius:20px; font-size:0.85rem; font-weight:bold; letter-spacing:0.5px;">IN SVILUPPO</span>
             </div>
+            <p id="scheda2-intro-el" style="color:#475569; line-height:1.6; font-size:1rem; margin-bottom:1.5rem;">L'Ecosistema Prof. Memmo è in continua evoluzione. Stiamo sviluppando nuove espansioni e funzionalità avanzate per arricchire l'esperienza in classe:</p>
+            <ul id="scheda2-voci-list" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; list-style:none; padding:0; margin:0;">
+                <li style="background:#f8fafc; padding:12px 16px; border-radius:12px; color:#334155; font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706; margin-right:8px;"></i>Tornei interscolastici estesi</li>
+                <li style="background:#f8fafc; padding:12px 16px; border-radius:12px; color:#334155; font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706; margin-right:8px;"></i>Moduli avanzati di analisi sintattica e del periodo</li>
+                <li style="background:#f8fafc; padding:12px 16px; border-radius:12px; color:#334155; font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706; margin-right:8px;"></i>Nuovi giochi di ruolo e storie interattive</li>
+                <li style="background:#f8fafc; padding:12px 16px; border-radius:12px; color:#334155; font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706; margin-right:8px;"></i>Strumenti di reportistica e statistiche per docenti</li>
+            </ul>
         </div>
     </div>
 
     <script src="script.js?v=20260814_1700"></script>
     <script>
-        let currentAuthUser = null;
-        let pendingRole = 'viandante';
-
-        function toggleSingleOption(containerId, el) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.querySelectorAll('.pill-option').forEach(p => p.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        function selectRole(ruolo) {
-            pendingRole = ruolo || 'viandante';
-            document.getElementById('portal-onboarding').style.display = 'none';
-            document.getElementById('portal-survey').style.display = 'flex';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        async function submitSurvey(skipped = false) {
-            if (!currentAuthUser) return;
-            const db = firebase.firestore();
-            try {
-                let surveyData = null;
-                if (!skipped) {
-                    const canaleEl = document.querySelector('#survey-canale-options .pill-option.selected');
-                    const etaEl = document.querySelector('#survey-eta-options .pill-option.selected');
-                    const materieEls = document.querySelectorAll('#survey-materie-options .pill-option.selected');
-
-                    const canale = canaleEl ? canaleEl.getAttribute('data-value') : 'Non specificato';
-                    const fasciaEta = etaEl ? etaEl.getAttribute('data-value') : 'Non specificato';
-                    const materie = Array.from(materieEls).map(el => el.getAttribute('data-value'));
-
-                    surveyData = {
-                        canale: canale,
-                        fasciaEta: fasciaEta,
-                        materie: materie,
-                        completedAt: new Date().toISOString()
-                    };
-                }
-
-                // Salvataggio su Firestore
-                const uRef = db.collection('hub_users').doc(currentAuthUser.uid);
-                const userPayload = {
-                    nome: currentAuthUser.displayName || 'Utente Ecosistema',
-                    email: currentAuthUser.email || '',
-                    ruolo: pendingRole,
-                    subscription: 'base',
-                    createdAt: new Date().toISOString()
-                };
-                if (surveyData) {
-                    userPayload.survey = surveyData;
-                }
-
-                await uRef.set(userPayload, { merge: true });
-
-                // Controllo monetizzazione per redirect
-                const ecoSnap = await db.collection('hub_settings').doc('ecosistema').get();
-                const isMonetActive = ecoSnap.exists && !!ecoSnap.data().monetizzazione;
-
-                if (isMonetActive && pendingRole !== 'studente') {
-                    window.location.href = 'prezzi.html';
-                } else {
-                    window.location.href = 'profilo.html';
-                }
-            } catch(e) {
-                console.error("Errore salvataggio profilo:", e);
-                alert("Errore durante il salvataggio. Riprova: " + e.message);
-            }
-        }
-
-        async function eseguiLogoutOnboarding() {
-            if (firebase.auth) {
-                await firebase.auth().signOut();
-            }
-            document.getElementById('portal-onboarding').style.display = 'none';
-            document.getElementById('portal-survey').style.display = 'none';
-            document.getElementById('main-accedi-view').style.display = 'block';
-        }
-
-        async function eseguiLoginGoogle() {
-            if (typeof firebase === 'undefined' || !firebase.auth) {
-                alert("Errore caricamento autenticazione.");
-                return;
-            }
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                const result = await firebase.auth().signInWithPopup(provider);
-                const user = result.user;
-                if (user) {
-                    currentAuthUser = user;
-                    const db = firebase.firestore();
-                    const uRef = db.collection('hub_users').doc(user.uid);
-                    const snap = await uRef.get();
-
-                    if (snap.exists && snap.data().ruolo) {
-                        // Utente già registrato: atterra al profilo
-                        window.location.href = 'profilo.html';
-                    } else {
-                        // Nuovo utente: avvia Onboarding
-                        document.getElementById('main-accedi-view').style.display = 'none';
-                        document.getElementById('portal-onboarding').style.display = 'flex';
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                }
-            } catch (e) {
-                console.error("Errore login:", e);
-                alert("Errore durante l'accesso: " + e.message);
-            }
+        function vaiAlPortaleLogin() {
+            const isPreview = window.location.pathname.includes('/preview');
+            const portalUrl = isPreview 
+                ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html'
+                : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html';
+            window.location.href = portalUrl;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -417,15 +209,14 @@
                     const box = document.getElementById('auth-state-box');
                     const navAccedi = document.getElementById('nav-accedi-link');
                     if (user) {
-                        currentAuthUser = user;
                         if (navAccedi) {
                             navAccedi.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';
                             navAccedi.href = 'profilo.html';
                         }
                         if (box) {
                             box.innerHTML = `
-                                <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-                                    <div style="font-weight:600; color:#15803d;">✅ Sei connesso come ${user.displayName || user.email}</div>
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+                                    <div style="font-weight:600; color:#15803d; font-size:0.95rem;">✅ Sei connesso come ${user.displayName || user.email}</div>
                                     <a href="profilo.html" class="btn-go-profile"><i class="ph ph-user"></i> Vai al tuo Profilo</a>
                                 </div>
                             `;
@@ -434,68 +225,66 @@
                 });
             }
 
-            // 2. Banner Vetrina
-            db.collection('hub_settings').doc('vetrina').onSnapshot(doc => {
-                if (!doc.exists) return;
-                const d = doc.data();
-                const t = document.getElementById('vetrina-title-page');
-                const s = document.getElementById('vetrina-desc-page');
-                const i = document.getElementById('vetrina-img-page');
-                if (t && d.titolo) t.textContent = d.titolo + ' ';
-                if (s && d.descrizione) s.textContent = d.descrizione;
-                if (i && d.immagineUrl) i.src = d.immagineUrl;
-            });
+            // 2. Controllo Visibilità Pagina da Firestore
+            try {
+                db.collection('hub_settings').doc('pagine_visibilita').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const isHidden = data['come_funziona'] === false;
+                        const overlay = document.getElementById('page-hidden-overlay');
+                        const content = document.getElementById('cf-content');
+                        if (overlay && content) {
+                            if (isHidden) {
+                                overlay.style.display = 'flex';
+                                content.style.display = 'none';
+                            } else {
+                                overlay.style.display = 'none';
+                                content.style.display = 'block';
+                            }
+                        }
+                    }
+                });
+            } catch(e) {
+                console.warn("Controllo visibilità fallito:", e);
+            }
 
-            // 3. Ecosistema settings
-            db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
-                const data = doc.data() || {};
+            // 3. Sincronizzazione Testi Schede da Firestore
+            try {
+                db.collection('hub_settings').doc('come_funziona_testi').onSnapshot(doc => {
+                    if (doc.exists) {
+                        const d = doc.data();
+                        if (d.titolo_pagina) document.getElementById('page-main-title').innerText = d.titolo_pagina;
+                        if (d.titolo_scheda1) document.getElementById('scheda1-titolo-el').innerText = d.titolo_scheda1;
+                        if (d.titolo_scheda2) document.getElementById('scheda2-titolo-el').innerText = d.titolo_scheda2;
+                        if (d.intro_scheda2) document.getElementById('scheda2-intro-el').innerText = d.intro_scheda2;
 
-                const navPrezzi = document.getElementById('nav-prezzi');
-                if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
+                        const popolaLista = (id, items) => {
+                            const el = document.getElementById(id);
+                            if (el && Array.isArray(items) && items.length > 0) {
+                                el.innerHTML = items.map(item => `<li>${item}</li>`).join('');
+                            }
+                        };
 
-                const hidden = document.getElementById('page-hidden-overlay');
-                const content = document.getElementById('cf-content');
-                const header = document.querySelector('.cf-header');
-                const banner = document.getElementById('vetrina-banner-page');
-                if (data.come_funziona_visibile === false) {
-                    if (hidden) hidden.style.display = 'flex';
-                    if (content) content.style.display = 'none';
-                    if (header) header.style.display = 'none';
-                    if (banner) banner.style.display = 'none';
-                    return;
-                }
+                        const popolaListaIcone = (id, items) => {
+                            const el = document.getElementById(id);
+                            if (el && Array.isArray(items) && items.length > 0) {
+                                el.innerHTML = items.map(item => `
+                                    <li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;">
+                                        <i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>${item}
+                                    </li>
+                                `).join('');
+                            }
+                        };
 
-                const cf = data.come_funziona_config || {};
-
-                const s1 = document.getElementById('scheda1-block');
-                const s2 = document.getElementById('scheda2-block');
-                if (s1) s1.style.display = cf.scheda1_visibile === false ? 'none' : '';
-                if (s2) s2.style.display = cf.scheda2_visibile === false ? 'none' : '';
-
-                const t1 = document.getElementById('scheda1-titolo-el');
-                if (t1 && cf['scheda1-titolo']) t1.textContent = cf['scheda1-titolo'];
-                const t2 = document.getElementById('scheda2-titolo-el');
-                if (t2 && cf['scheda2-titolo']) t2.textContent = cf['scheda2-titolo'];
-
-                const i2 = document.getElementById('scheda2-intro-el');
-                if (i2 && cf['scheda2-intro']) i2.textContent = cf['scheda2-intro'];
-
-                const fill = (id, raw) => {
-                    const ul = document.getElementById(id);
-                    if (!ul || !raw) return;
-                    ul.innerHTML = raw.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
-                };
-                fill('scheda1-docenti-list', cf['scheda1-docenti']);
-                fill('scheda1-studenti-list', cf['scheda1-studenti']);
-                fill('scheda1-viandanti-list', cf['scheda1-viandanti']);
-
-                if (cf['scheda2-voci']) {
-                    const ul = document.getElementById('scheda2-voci-list');
-                    if (ul) ul.innerHTML = cf['scheda2-voci'].split('\n').filter(l => l.trim()).map(l =>
-                        `<li style="background:#f8fafc;padding:12px 16px;border-radius:12px;color:#334155;font-size:0.95rem;"><i class="ph ph-wrench" style="color:#d97706;margin-right:8px;"></i>${l}</li>`
-                    ).join('');
-                }
-            }, err => console.error('Errore ecosistema:', err));
+                        popolaLista('scheda1-docenti-list', d.voci_docenti);
+                        popolaLista('scheda1-studenti-list', d.voci_studenti);
+                        popolaLista('scheda1-viandanti-list', d.voci_viandanti);
+                        popolaListaIcone('scheda2-voci-list', d.voci_in_lavorazione);
+                    }
+                });
+            } catch(e) {
+                console.warn("Sync testi fallito:", e);
+            }
         });
     </script>
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>

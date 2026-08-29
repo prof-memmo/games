@@ -704,14 +704,22 @@
                 tagAdmin.style.display = 'none';
             }
 
-            // Render Scadenza
-            const currentYear = new Date().getFullYear();
+            // Render Scadenza (1 anno dall'iscrizione/sottoscrizione)
             const expiryEl = document.getElementById('profile-plan-expiry');
-            if (isSuperAdmin || isAdminOverride) {
-                expiryEl.innerHTML = '<strong>Scadenza:</strong> Nessuna scadenza (Accesso illimitato permanente).';
+            let rawCreatedAt = uData.createdAt ? (uData.createdAt.seconds ? uData.createdAt.seconds * 1000 : new Date(uData.createdAt).getTime()) : (uData.joinedAt ? (uData.joinedAt.seconds ? uData.joinedAt.seconds * 1000 : new Date(uData.joinedAt).getTime()) : Date.now());
+            let expDate = new Date(rawCreatedAt);
+            expDate.setFullYear(expDate.getFullYear() + 1);
+            let scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : expDate.toLocaleDateString('it-IT');
+            let isExpired = plan !== 'base' && !isSuperAdmin && (expDate < new Date());
+
+            if (isSuperAdmin) {
+                expiryEl.innerHTML = '<strong>Scadenza:</strong> <span style="color:#b45309; font-weight:700;">👑 Nessuna scadenza (Super Amministratore).</span>';
             } else if (plan !== 'base') {
-                const scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : `31/12/${currentYear}`;
-                expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Gli abbonamenti si rinnovano fino al termine dell'anno scolastico/solare.</span>`;
+                if (isExpired) {
+                    expiryEl.innerHTML = `<strong>Scadenza:</strong> <span style="color:#ef4444; font-weight:700;">Scaduto il ${scadenzaFormatted}</span>.<br><a href="prezzi.html" class="btn" style="display:inline-block; margin-top:8px; background:#10b981; color:white; padding:6px 14px; font-size:0.85rem; border-radius:6px; text-decoration:none; font-weight:700;"><i class="fa-solid fa-arrows-rotate"></i> Rinnova Abbonamento</a>`;
+                } else {
+                    expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Abbonamento annuale valido per 12 mesi dalla data di iscrizione/sottoscrizione.</span>`;
+                }
             } else {
                 expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
             }

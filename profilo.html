@@ -430,20 +430,41 @@
         </div>
 
         <!-- Header Profilo -->
-        <div class="profile-header-card">
-            <div class="profile-info">
-                <div class="profile-avatar" id="user-avatar-box" onclick="apriModificaProfiloGlobale()" style="cursor:pointer;" title="Clicca per cambiare avatar">
+        <div class="profile-header-card" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px;">
+            <div class="profile-info" style="display:flex; align-items:center; gap:20px; flex:1; min-width:280px;">
+                <div class="profile-avatar" id="user-avatar-box" onclick="apriModificaProfiloGlobale()" style="cursor:pointer; flex-shrink:0;" title="Clicca per cambiare avatar">
                     <span id="user-avatar-initials">U</span>
                 </div>
-                <div class="profile-titles">
-                    <h1 id="user-display-name">Caricamento profilo...</h1>
-                    <p id="user-email">email@esempio.com</p>
-                    <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
+                <div class="profile-titles" style="flex:1;">
+                    <h1 id="user-display-name" style="margin:0 0 2px 0;">Caricamento profilo...</h1>
+                    <p id="user-email" style="margin:0 0 6px 0; color:#64748b; font-size:0.9rem;">email@esempio.com</p>
+                    
+                    <!-- Riga 1: Ruolo Principale -->
+                    <div style="margin-bottom:6px;">
+                        <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
+                    </div>
+
+                    <!-- Riga 2: Dati Geografici e Didattici (Città, Scuola, Classe sulla stessa riga) -->
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span id="header-city-badge" style="display:inline-flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:#475569; background:#f1f5f9; padding:4px 10px; border-radius:20px; border:1px solid #e2e8f0;">
+                            📍 <span id="header-city-val">Non specificata</span>
+                        </span>
+                        <span id="header-school-badge" style="display:none; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:#475569; background:#f1f5f9; padding:4px 10px; border-radius:20px; border:1px solid #e2e8f0;">
+                            🏫 <span id="header-school-val">Scuola</span>
+                        </span>
+                        <span id="header-class-badge" style="display:none; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:#1e40af; background:#eff6ff; padding:4px 10px; border-radius:20px; border:1px solid #bfdbfe;">
+                            🎓 <span id="header-class-val">Classe</span>
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div id="header-action-buttons" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding:8px 16px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-weight:700; color:#334155; cursor:pointer;"><i class="ph ph-user-gear"></i> Modifica Avatar &amp; Dati</button>
-                <button class="btn-logout" onclick="eseguiLogout()"><i class="ph ph-sign-out"></i> Disconnetti</button>
+            <div id="header-action-buttons" style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+                <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding:8px 14px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-weight:700; color:#334155; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:0.88rem;">
+                    <i class="ph ph-pencil-simple"></i> Modifica
+                </button>
+                <button class="btn-logout" onclick="eseguiLogout()" style="padding:8px 14px; border-radius:10px; display:inline-flex; align-items:center; gap:6px; font-size:0.88rem;">
+                    <i class="ph ph-sign-out"></i> Disconnetti
+                </button>
             </div>
         </div>
 
@@ -546,6 +567,26 @@
         </div>
 
     </div>
+
+    <!-- Footer Istituzionale Ecosistema -->
+    <footer class="footer" style="margin-top: 3.5rem;">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&amp;Co.</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 20px; margin: 0 0 15px 0; width: 100%; flex-wrap: nowrap;">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png" alt="Patamu Logo" style="height: 80px; object-fit: contain; flex-shrink: 0;">
+                <p style="text-align: left; font-size: 0.8rem; line-height: 1.4; margin: 0; flex: 1; color: inherit;">
+                    &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0).
+                </p>
+            </div>
+            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
+                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+            </div>
+        </div>
+    </footer>
 
     <!-- Modal Conferma Eliminazione Dati -->
     <div id="delete-confirm-modal">
@@ -651,10 +692,12 @@
             const uData = uDataOverride || (doc.exists ? doc.data() : {});
             const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
             const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
-            const role = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+            let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            if (isSuperAdmin) effectiveRole = 'docente';
+
             const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
             const isAdminOverride = !!uData.admin_override;
-            const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
 
             // Render Anagrafica
             document.getElementById('user-display-name').textContent = displayName;
@@ -671,15 +714,49 @@
 
             // Render Ruolo Badge
             const roleBadge = document.getElementById('user-role-badge');
-            if (role.includes('docente') || role.includes('prof') || role.includes('admin')) {
+            if (isSuperAdmin) {
+                roleBadge.textContent = 'Super Admin / Docente';
+                roleBadge.className = 'profile-badge badge-docente';
+            } else if (effectiveRole.includes('docente') || effectiveRole.includes('prof') || effectiveRole.includes('admin')) {
                 roleBadge.textContent = 'Docente';
                 roleBadge.className = 'profile-badge badge-docente';
-            } else if (role.includes('studente')) {
+            } else if (effectiveRole.includes('studente')) {
                 roleBadge.textContent = 'Studente';
                 roleBadge.className = 'profile-badge badge-studente';
             } else {
                 roleBadge.textContent = 'Viandante';
                 roleBadge.className = 'profile-badge badge-viandante';
+            }
+
+            // Render Scuola, Città e Classe di Appartenenza nell'Header
+            const scuolaVal = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
+            const cittaVal = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
+            const classeVal = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
+
+            const elCityVal = document.getElementById('header-city-val');
+            const schoolBadge = document.getElementById('header-school-badge');
+            const schoolValEl = document.getElementById('header-school-val');
+            const classBadge = document.getElementById('header-class-badge');
+            const classValEl = document.getElementById('header-class-val');
+
+            if (elCityVal) {
+                elCityVal.textContent = cittaVal ? cittaVal : 'Città non specificata';
+            }
+
+            const isViandante = !isSuperAdmin && effectiveRole.includes('viandante');
+
+            if (isViandante) {
+                if (schoolBadge) schoolBadge.style.display = 'none';
+                if (classBadge) classBadge.style.display = 'none';
+            } else {
+                if (schoolBadge) {
+                    schoolBadge.style.display = 'inline-flex';
+                    if (schoolValEl) schoolValEl.textContent = scuolaVal ? scuolaVal : 'Scuola non indicata';
+                }
+                if (classBadge) {
+                    classBadge.style.display = 'inline-flex';
+                    if (classValEl) classValEl.textContent = classeVal ? `Classe: ${classeVal}` : 'Nessuna classe associata';
+                }
             }
 
             // Render Piano
@@ -704,14 +781,22 @@
                 tagAdmin.style.display = 'none';
             }
 
-            // Render Scadenza
-            const currentYear = new Date().getFullYear();
+            // Render Scadenza (1 anno dall'iscrizione/sottoscrizione)
             const expiryEl = document.getElementById('profile-plan-expiry');
-            if (isSuperAdmin || isAdminOverride) {
-                expiryEl.innerHTML = '<strong>Scadenza:</strong> Nessuna scadenza (Accesso illimitato permanente).';
+            let rawCreatedAt = uData.createdAt ? (uData.createdAt.seconds ? uData.createdAt.seconds * 1000 : new Date(uData.createdAt).getTime()) : (uData.joinedAt ? (uData.joinedAt.seconds ? uData.joinedAt.seconds * 1000 : new Date(uData.joinedAt).getTime()) : Date.now());
+            let expDate = new Date(rawCreatedAt);
+            expDate.setFullYear(expDate.getFullYear() + 1);
+            let scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : expDate.toLocaleDateString('it-IT');
+            let isExpired = plan !== 'base' && !isSuperAdmin && (expDate < new Date());
+
+            if (isSuperAdmin) {
+                expiryEl.innerHTML = '<strong>Scadenza:</strong> <span style="color:#b45309; font-weight:700;">👑 Nessuna scadenza (Super Amministratore).</span>';
             } else if (plan !== 'base') {
-                const scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : `31/12/${currentYear}`;
-                expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Gli abbonamenti si rinnovano fino al termine dell'anno scolastico/solare.</span>`;
+                if (isExpired) {
+                    expiryEl.innerHTML = `<strong>Scadenza:</strong> <span style="color:#ef4444; font-weight:700;">Scaduto il ${scadenzaFormatted}</span>.<br><a href="prezzi.html" class="btn" style="display:inline-block; margin-top:8px; background:#10b981; color:white; padding:6px 14px; font-size:0.85rem; border-radius:6px; text-decoration:none; font-weight:700;"><i class="fa-solid fa-arrows-rotate"></i> Rinnova Abbonamento</a>`;
+                } else {
+                    expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Abbonamento annuale valido per 12 mesi dalla data di iscrizione/sottoscrizione.</span>`;
+                }
             } else {
                 expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
             }
@@ -818,16 +903,28 @@
             const user = firebase.auth().currentUser;
             if (!user) return;
 
+            const email = (uData.email || user.email || '').toLowerCase();
+            const isSuperAdmin = email === 'prof.memmo@gmail.com';
+            let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            if (isSuperAdmin) effectiveRole = 'docente';
+
             document.getElementById('global-edit-name').value = uData.nome || uData.name || user.displayName || '';
+            document.getElementById('global-edit-school').value = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
+            document.getElementById('global-edit-city').value = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
             
-            const isDocente = (uData.ruolo || uData.role || '').toLowerCase().includes('docente') || (uData.ruolo || uData.role || '').toLowerCase().includes('teacher');
+            const isViandante = !isSuperAdmin && effectiveRole.includes('viandante');
             const schoolGroup = document.getElementById('global-edit-school-group');
-            if (isDocente) {
-                schoolGroup.style.display = 'block';
-                document.getElementById('global-edit-school').value = uData.scuola || uData.school || '';
-            } else {
-                schoolGroup.style.display = 'none';
+            const classGroup = document.getElementById('global-edit-class-group');
+            
+            if (schoolGroup) {
+                schoolGroup.style.display = isViandante ? 'none' : 'block';
             }
+            if (classGroup) {
+                classGroup.style.display = isViandante ? 'none' : 'block';
+                document.getElementById('global-edit-class').value = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
+            }
+            const modalStatus = document.getElementById('modal-class-status-box');
+            if (modalStatus) modalStatus.style.display = 'none';
 
             const currentAvatar = uData.avatar || 'assets/avatars/6.png';
             window._currentSelectedAvatar = currentAvatar;
@@ -865,6 +962,9 @@
 
             const newName = document.getElementById('global-edit-name').value.trim();
             const newSchool = document.getElementById('global-edit-school').value.trim();
+            const newCity = document.getElementById('global-edit-city').value.trim();
+            const newClass = document.getElementById('global-edit-class') ? document.getElementById('global-edit-class').value.trim().toUpperCase() : '';
+            
             if (!newName) {
                 alert("Il nome non può essere vuoto.");
                 return;
@@ -880,7 +980,14 @@
                     'anagrafica.avatar': chosenAvatar,
                     'anagrafica.nome': newName,
                     scuola: newSchool,
-                    school: newSchool
+                    school: newSchool,
+                    'anagrafica.scuola': newSchool,
+                    citta: newCity,
+                    city: newCity,
+                    'anagrafica.citta': newCity,
+                    classe: newClass,
+                    classId: newClass,
+                    'anagrafica.classe': newClass
                 };
 
                 await db.collection('hub_users').doc(user.uid).set(updateData, { merge: true });
@@ -897,6 +1004,94 @@
             } catch(e) {
                 console.error("Errore salvataggio profilo:", e);
                 alert("Errore salvataggio: " + e.message);
+            }
+        }
+
+        async function verificaCodiceClasseModal() {
+            const input = document.getElementById('global-edit-class');
+            const statusBox = document.getElementById('modal-class-status-box');
+            const code = (input ? input.value : '').trim().toUpperCase();
+
+            if (!statusBox) return;
+
+            if (!code) {
+                statusBox.style.display = 'block';
+                statusBox.style.background = '#fef2f2';
+                statusBox.style.border = '1px solid #fecaca';
+                statusBox.style.color = '#dc2626';
+                statusBox.innerHTML = 'Inserisci un codice classe per verificarlo.';
+                return;
+            }
+
+            const btnVerify = document.getElementById('btn-modal-verify-class');
+            const origText = btnVerify ? btnVerify.innerHTML : '';
+            if (btnVerify) {
+                btnVerify.disabled = true;
+                btnVerify.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
+            }
+
+            try {
+                const db = firebase.firestore();
+                let foundDoc = null;
+
+                // Cerca in collection 'classes'
+                const q1 = await db.collection('classes').where('code', '==', code).get().catch(() => ({ empty: true }));
+                if (q1 && !q1.empty) foundDoc = q1.docs[0];
+
+                if (!foundDoc) {
+                    const q2 = await db.collection('classes').where('codice', '==', code).get().catch(() => ({ empty: true }));
+                    if (q2 && !q2.empty) foundDoc = q2.docs[0];
+                }
+
+                if (!foundDoc) {
+                    const docById = await db.collection('classes').doc(code).get().catch(() => ({ exists: false }));
+                    if (docById && docById.exists) foundDoc = docById;
+                }
+
+                if (!foundDoc) {
+                    const qFanta = await db.collection('fanta_teams').where('joinCode', '==', code).get().catch(() => ({ empty: true }));
+                    if (qFanta && !qFanta.empty) foundDoc = qFanta.docs[0];
+                }
+
+                if (!foundDoc) {
+                    statusBox.style.display = 'block';
+                    statusBox.style.background = '#fef2f2';
+                    statusBox.style.border = '1px solid #fecaca';
+                    statusBox.style.color = '#dc2626';
+                    statusBox.innerHTML = `⚠️ Nessuna classe trovata con il codice <strong>"${code}"</strong>.<br>Puoi lasciarlo vuoto o chiedere conferma al tuo docente.`;
+                    return;
+                }
+
+                const cData = foundDoc.data() || {};
+                const className = cData.name || cData.nome || cData.className || code;
+                const schoolName = cData.school || cData.scuola || cData.istituto || (cData.anagrafica && cData.anagrafica.scuola) || '';
+                const cityName = cData.city || cData.citta || (cData.anagrafica && cData.anagrafica.citta) || '';
+                const teacherName = cData.teacherName || cData.teacher || cData.docente || cData.ownerName || (cData.teacherEmail ? cData.teacherEmail.split('@')[0] : 'Docente');
+
+                // Auto-compila scuola e città nella modale
+                const elSchool = document.getElementById('global-edit-school');
+                const elCity = document.getElementById('global-edit-city');
+                if (schoolName && elSchool) elSchool.value = schoolName;
+                if (cityName && elCity) elCity.value = cityName;
+
+                statusBox.style.display = 'block';
+                statusBox.style.background = '#ecfdf5';
+                statusBox.style.border = '1px solid #10b981';
+                statusBox.style.color = '#065f46';
+                statusBox.innerHTML = `🎉 <strong>Classe Trovata:</strong> ${className} (${code})<br>👨‍🏫 <strong>Docente:</strong> ${teacherName} &bull; 🏫 <strong>Scuola:</strong> ${schoolName || 'Certificata'}`;
+
+            } catch (e) {
+                console.error("Errore verifica classe modale:", e);
+                statusBox.style.display = 'block';
+                statusBox.style.background = '#fef2f2';
+                statusBox.style.border = '1px solid #fecaca';
+                statusBox.style.color = '#dc2626';
+                statusBox.textContent = "Errore durante la verifica: " + e.message;
+            } finally {
+                if (btnVerify) {
+                    btnVerify.disabled = false;
+                    btnVerify.innerHTML = origText;
+                }
             }
         }
 
@@ -1025,14 +1220,33 @@
                 </div>
             </div>
 
-            <div style="margin-bottom:15px;">
+            <!-- Nome e Cognome -->
+            <div style="margin-bottom:12px;">
                 <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Nome e Cognome:</label>
                 <input type="text" id="global-edit-name" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
             </div>
 
-            <div id="global-edit-school-group" style="margin-bottom:20px; display:none;">
-                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto:</label>
-                <input type="text" id="global-edit-school" placeholder="Es. IC Manzoni" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            <!-- Città (Sempre visibile a tutta larghezza per tutti i ruoli) -->
+            <div id="global-edit-city-group" style="margin-bottom:12px;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">📍 La tua Città:</label>
+                <input type="text" id="global-edit-city" placeholder="Es. Roma, Milano, Napoli..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            </div>
+
+            <!-- Scuola (Visibile per Docenti e Studenti) -->
+            <div id="global-edit-school-group" style="margin-bottom:12px; display:none;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">🏫 Istituto Scolastico / Scuola:</label>
+                <input type="text" id="global-edit-school" placeholder="Es. I.C. Dante Alighieri" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            </div>
+
+            <div id="global-edit-class-group" style="margin-bottom:20px; display:none;">
+                <label style="font-weight:700; font-size:0.85rem; color:#4338ca; display:block; margin-bottom:6px;">Codice Classe (fornito dal Docente):</label>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="global-edit-class" placeholder="Es. MEMMO-3B" style="flex:1; padding:10px 14px; border-radius:10px; border:1.5px dashed #93c5fd; background:#f0f7ff; font-weight:700; text-transform:uppercase; font-size:0.95rem; box-sizing:border-box; letter-spacing:1px;">
+                    <button type="button" id="btn-modal-verify-class" onclick="verificaCodiceClasseModal()" style="padding:8px 14px; background:#eff6ff; border:1px solid #bfdbfe; color:#2563eb; border-radius:10px; font-weight:700; font-size:0.85rem; cursor:pointer;">
+                        <i class="ph ph-magnifying-glass"></i> Verifica
+                    </button>
+                </div>
+                <div id="modal-class-status-box" style="display:none; margin-top:8px; padding:8px 12px; border-radius:8px; font-size:0.82rem;"></div>
             </div>
 
             <div style="display:flex; gap:10px;">

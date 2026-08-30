@@ -662,10 +662,12 @@
             const uData = uDataOverride || (doc.exists ? doc.data() : {});
             const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
             const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
-            const role = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+            let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            if (isSuperAdmin) effectiveRole = 'docente';
+
             const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
             const isAdminOverride = !!uData.admin_override;
-            const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
 
             // Render Anagrafica
             document.getElementById('user-display-name').textContent = displayName;
@@ -682,10 +684,13 @@
 
             // Render Ruolo Badge
             const roleBadge = document.getElementById('user-role-badge');
-            if (role.includes('docente') || role.includes('prof') || role.includes('admin')) {
+            if (isSuperAdmin) {
+                roleBadge.textContent = 'Super Admin / Docente';
+                roleBadge.className = 'profile-badge badge-docente';
+            } else if (effectiveRole.includes('docente') || effectiveRole.includes('prof') || effectiveRole.includes('admin')) {
                 roleBadge.textContent = 'Docente';
                 roleBadge.className = 'profile-badge badge-docente';
-            } else if (role.includes('studente')) {
+            } else if (effectiveRole.includes('studente')) {
                 roleBadge.textContent = 'Studente';
                 roleBadge.className = 'profile-badge badge-studente';
             } else {
@@ -708,7 +713,7 @@
                 elCityVal.textContent = cittaVal ? cittaVal : 'Città non specificata';
             }
 
-            const isViandante = role.includes('viandante');
+            const isViandante = !isSuperAdmin && effectiveRole.includes('viandante');
 
             if (isViandante) {
                 if (schoolBadge) schoolBadge.style.display = 'none';
@@ -868,20 +873,28 @@
             const user = firebase.auth().currentUser;
             if (!user) return;
 
+            const email = (uData.email || user.email || '').toLowerCase();
+            const isSuperAdmin = email === 'prof.memmo@gmail.com';
+            let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            if (isSuperAdmin) effectiveRole = 'docente';
+
             document.getElementById('global-edit-name').value = uData.nome || uData.name || user.displayName || '';
             document.getElementById('global-edit-school').value = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
             document.getElementById('global-edit-city').value = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
             
-            const isViandante = (uData.ruolo || uData.role || '').toLowerCase().includes('viandante');
-            const schoolInput = document.getElementById('global-edit-school');
+            const isViandante = !isSuperAdmin && effectiveRole.includes('viandante');
+            const schoolGroup = document.getElementById('global-edit-school-group');
             const classGroup = document.getElementById('global-edit-class-group');
-            if (schoolInput && schoolInput.parentElement) {
-                schoolInput.parentElement.style.display = isViandante ? 'none' : 'block';
+            
+            if (schoolGroup) {
+                schoolGroup.style.display = isViandante ? 'none' : 'block';
             }
             if (classGroup) {
                 classGroup.style.display = isViandante ? 'none' : 'block';
                 document.getElementById('global-edit-class').value = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
             }
+            const modalStatus = document.getElementById('modal-class-status-box');
+            if (modalStatus) modalStatus.style.display = 'none';
 
             const currentAvatar = uData.avatar || 'assets/avatars/6.png';
             window._currentSelectedAvatar = currentAvatar;
@@ -1177,20 +1190,22 @@
                 </div>
             </div>
 
+            <!-- Nome e Cognome -->
             <div style="margin-bottom:12px;">
                 <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Nome e Cognome:</label>
                 <input type="text" id="global-edit-name" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
-                <div>
-                    <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto:</label>
-                    <input type="text" id="global-edit-school" placeholder="Es. I.C. Dante" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
-                </div>
-                <div>
-                    <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Città:</label>
-                    <input type="text" id="global-edit-city" placeholder="Es. Roma, Milano..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
-                </div>
+            <!-- Città (Sempre visibile a tutta larghezza per tutti i ruoli) -->
+            <div id="global-edit-city-group" style="margin-bottom:12px;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">📍 La tua Città:</label>
+                <input type="text" id="global-edit-city" placeholder="Es. Roma, Milano, Napoli..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            </div>
+
+            <!-- Scuola (Visibile per Docenti e Studenti) -->
+            <div id="global-edit-school-group" style="margin-bottom:12px; display:none;">
+                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">🏫 Istituto Scolastico / Scuola:</label>
+                <input type="text" id="global-edit-school" placeholder="Es. I.C. Dante Alighieri" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
             </div>
 
             <div id="global-edit-class-group" style="margin-bottom:20px; display:none;">

@@ -489,22 +489,22 @@
             <!-- Card 3: La mia Scuola & Classe -->
             <div class="glass-card" id="profile-school-class-card" style="grid-column: 1 / -1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1.2rem;">
-                    <h2 class="card-title" style="margin: 0;"><i class="ph ph-buildings" style="color:#6366f1;"></i> Scuola &amp; Classe di Appartenenza</h2>
-                    <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding: 6px 14px; font-size: 0.82rem; border-radius: 8px; background: white; border: 1px solid #cbd5e1; cursor: pointer;">
+                    <h2 class="card-title" id="profile-school-class-title" style="margin: 0;"><i class="ph ph-buildings" style="color:#6366f1;"></i> Scuola &amp; Classe di Appartenenza</h2>
+                    <button class="btn-action-outline" id="profile-school-class-edit-btn" onclick="apriModificaProfiloGlobale()" style="padding: 6px 14px; font-size: 0.82rem; border-radius: 8px; background: white; border: 1px solid #cbd5e1; cursor: pointer;">
                         <i class="ph ph-pencil-simple"></i> Modifica Scuola/Città
                     </button>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 1.2rem; margin-bottom: 1rem;">
-                    <div>
+                    <div id="profile-school-box">
                         <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">🏫 Istituto Scolastico:</div>
                         <div id="profile-school-display" style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark);">Non specificato</div>
                     </div>
-                    <div>
+                    <div id="profile-city-box">
                         <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">📍 Città:</div>
                         <div id="profile-city-display" style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark);">Non specificata</div>
                     </div>
-                    <div>
+                    <div id="profile-class-box">
                         <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">🎓 Classe / Gruppo:</div>
                         <div id="profile-class-display" style="font-size: 1.05rem; font-weight: 700; color: #4338ca;">Nessun codice associato</div>
                     </div>
@@ -730,29 +730,47 @@
             const elSchool = document.getElementById('profile-school-display');
             const elCity = document.getElementById('profile-city-display');
             const elClass = document.getElementById('profile-class-display');
+            const schoolBox = document.getElementById('profile-school-box');
+            const classBox = document.getElementById('profile-class-box');
             const classConnectBox = document.getElementById('profile-class-connect-box');
             const classConnectLabel = document.getElementById('profile-class-connect-label');
             const classConnectHint = document.getElementById('profile-class-connect-hint');
+            const cardTitle = document.getElementById('profile-school-class-title');
+            const editBtn = document.getElementById('profile-school-class-edit-btn');
 
             if (elSchool) elSchool.textContent = scuolaVal;
             if (elCity) elCity.textContent = cittaVal;
 
-            if (elClass) {
-                if (classeVal) {
-                    elClass.innerHTML = `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span>`;
-                } else {
-                    elClass.innerHTML = `<span style="color:#64748b; font-weight:normal;">Nessuna classe associata</span>`;
-                }
-            }
+            const isViandante = role.includes('viandante');
 
-            if (classConnectBox) {
-                classConnectBox.style.display = 'block';
+            if (isViandante) {
+                if (schoolBox) schoolBox.style.display = 'none';
+                if (classBox) classBox.style.display = 'none';
+                if (classConnectBox) classConnectBox.style.display = 'none';
+                if (cardTitle) cardTitle.innerHTML = '<i class="ph ph-map-pin" style="color:#6366f1;"></i> La mia Città';
+                if (editBtn) editBtn.innerHTML = '<i class="ph ph-pencil-simple"></i> Modifica Città';
+            } else {
+                if (schoolBox) schoolBox.style.display = 'block';
+                if (classBox) classBox.style.display = 'block';
+                if (classConnectBox) classConnectBox.style.display = 'block';
+                if (editBtn) editBtn.innerHTML = '<i class="ph ph-pencil-simple"></i> Modifica Scuola/Città';
+
                 if (role.includes('docente') || role.includes('admin')) {
+                    if (cardTitle) cardTitle.innerHTML = '<i class="ph ph-buildings" style="color:#6366f1;"></i> Scuola &amp; Classi Collegate';
                     if (classConnectLabel) classConnectLabel.innerHTML = '<i class="ph ph-key"></i> Inserisci Codice Classe (per associarti come docente di classe / collaboratore):';
                     if (classConnectHint) classConnectHint.innerHTML = '💡 Inserendo il codice di una classe ti collegherai ad essa per monitorare e collaborare con gli altri docenti della classe.';
                 } else {
+                    if (cardTitle) cardTitle.innerHTML = '<i class="ph ph-buildings" style="color:#6366f1;"></i> Scuola &amp; Classe di Appartenenza';
                     if (classConnectLabel) classConnectLabel.innerHTML = '<i class="ph ph-key"></i> Inserisci o Cambia il Codice Classe fornito dal tuo Docente:';
                     if (classConnectHint) classConnectHint.innerHTML = '💡 Inserendo il codice fornito dal tuo professore entrerai automaticamente nella classe per tutti i giochi e le attività.';
+                }
+
+                if (elClass) {
+                    if (classeVal) {
+                        elClass.innerHTML = `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span>`;
+                    } else {
+                        elClass.innerHTML = `<span style="color:#64748b; font-weight:normal;">Nessun codice associato</span>`;
+                    }
                 }
             }
 
@@ -904,9 +922,14 @@
             document.getElementById('global-edit-school').value = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
             document.getElementById('global-edit-city').value = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
             
+            const isViandante = (uData.ruolo || uData.role || '').toLowerCase().includes('viandante');
+            const schoolInput = document.getElementById('global-edit-school');
             const classGroup = document.getElementById('global-edit-class-group');
+            if (schoolInput && schoolInput.parentElement) {
+                schoolInput.parentElement.style.display = isViandante ? 'none' : 'block';
+            }
             if (classGroup) {
-                classGroup.style.display = 'block';
+                classGroup.style.display = isViandante ? 'none' : 'block';
                 document.getElementById('global-edit-class').value = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
             }
 

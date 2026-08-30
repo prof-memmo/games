@@ -430,15 +430,15 @@
         </div>
 
         <!-- Header Profilo -->
-        <div class="profile-header-card">
-            <div class="profile-info">
-                <div class="profile-avatar" id="user-avatar-box" onclick="apriModificaProfiloGlobale()" style="cursor:pointer;" title="Clicca per cambiare avatar">
+        <div class="profile-header-card" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px;">
+            <div class="profile-info" style="display:flex; align-items:center; gap:20px; flex:1; min-width:280px;">
+                <div class="profile-avatar" id="user-avatar-box" onclick="apriModificaProfiloGlobale()" style="cursor:pointer; flex-shrink:0;" title="Clicca per cambiare avatar">
                     <span id="user-avatar-initials">U</span>
                 </div>
-                <div class="profile-titles">
-                    <h1 id="user-display-name">Caricamento profilo...</h1>
-                    <p id="user-email">email@esempio.com</p>
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <div class="profile-titles" style="flex:1;">
+                    <h1 id="user-display-name" style="margin:0 0 2px 0;">Caricamento profilo...</h1>
+                    <p id="user-email" style="margin:0 0 8px 0; color:#64748b; font-size:0.9rem;">email@esempio.com</p>
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
                         <span id="header-city-badge" style="display:inline-flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:#475569; background:#f1f5f9; padding:4px 10px; border-radius:20px; border:1px solid #e2e8f0;">
                             📍 <span id="header-city-val">Non specificata</span>
@@ -452,9 +452,13 @@
                     </div>
                 </div>
             </div>
-            <div id="header-action-buttons" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding:8px 16px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-weight:700; color:#334155; cursor:pointer;"><i class="ph ph-user-gear"></i> Modifica Avatar &amp; Dati</button>
-                <button class="btn-logout" onclick="eseguiLogout()"><i class="ph ph-sign-out"></i> Disconnetti</button>
+            <div id="header-action-buttons" style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+                <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding:8px 14px; border-radius:10px; border:1px solid #cbd5e1; background:white; font-weight:700; color:#334155; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:0.88rem;">
+                    <i class="ph ph-pencil-simple"></i> Modifica
+                </button>
+                <button class="btn-logout" onclick="eseguiLogout()" style="padding:8px 14px; border-radius:10px; display:inline-flex; align-items:center; gap:6px; font-size:0.88rem;">
+                    <i class="ph ph-sign-out"></i> Disconnetti
+                </button>
             </div>
         </div>
 

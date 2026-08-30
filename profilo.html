@@ -437,9 +437,15 @@
                 </div>
                 <div class="profile-titles" style="flex:1;">
                     <h1 id="user-display-name" style="margin:0 0 2px 0;">Caricamento profilo...</h1>
-                    <p id="user-email" style="margin:0 0 8px 0; color:#64748b; font-size:0.9rem;">email@esempio.com</p>
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <p id="user-email" style="margin:0 0 6px 0; color:#64748b; font-size:0.9rem;">email@esempio.com</p>
+                    
+                    <!-- Riga 1: Ruolo Principale -->
+                    <div style="margin-bottom:6px;">
                         <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
+                    </div>
+
+                    <!-- Riga 2: Dati Geografici e Didattici (Città, Scuola, Classe sulla stessa riga) -->
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <span id="header-city-badge" style="display:inline-flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:#475569; background:#f1f5f9; padding:4px 10px; border-radius:20px; border:1px solid #e2e8f0;">
                             📍 <span id="header-city-val">Non specificata</span>
                         </span>

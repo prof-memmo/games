@@ -510,9 +510,9 @@
                     </div>
                 </div>
 
-                <div id="profile-student-class-connect-box" style="display: none; background: #eff6ff; border: 1.5px dashed #93c5fd; border-radius: 12px; padding: 14px;">
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e40af; margin-bottom: 6px;">
-                        <i class="ph ph-key"></i> Inserisci o Cambia il Codice Classe del tuo Docente:
+                <div id="profile-class-connect-box" style="background: #eff6ff; border: 1.5px dashed #93c5fd; border-radius: 12px; padding: 14px;">
+                    <label id="profile-class-connect-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e40af; margin-bottom: 6px;">
+                        <i class="ph ph-key"></i> Inserisci o Cambia il Codice Classe:
                     </label>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; max-width: 500px;">
                         <input type="text" id="profile-class-code-input" placeholder="Es. PM-3A91" style="flex: 1; min-width: 140px; padding: 8px 12px; border: 1px solid #bfdbfe; border-radius: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.95rem;">
@@ -520,8 +520,8 @@
                             Collega Classe
                         </button>
                     </div>
-                    <p style="font-size: 0.75rem; color: #64748b; margin: 6px 0 0 0;">
-                        💡 Inserendo il codice fornito dal tuo professore entrerai automaticamente nella classe per tutti i giochi e le attività.
+                    <p id="profile-class-connect-hint" style="font-size: 0.75rem; color: #64748b; margin: 6px 0 0 0;">
+                        💡 Gli studenti accedono alle attività della classe; i docenti possono inserire il codice per collegarsi come contitolari/collaboratori alla classe.
                     </p>
                 </div>
             </div>
@@ -730,22 +730,29 @@
             const elSchool = document.getElementById('profile-school-display');
             const elCity = document.getElementById('profile-city-display');
             const elClass = document.getElementById('profile-class-display');
-            const classConnectBox = document.getElementById('profile-student-class-connect-box');
+            const classConnectBox = document.getElementById('profile-class-connect-box');
+            const classConnectLabel = document.getElementById('profile-class-connect-label');
+            const classConnectHint = document.getElementById('profile-class-connect-hint');
 
             if (elSchool) elSchool.textContent = scuolaVal;
             if (elCity) elCity.textContent = cittaVal;
 
-            if (role.includes('studente')) {
-                if (classConnectBox) classConnectBox.style.display = 'block';
-                if (elClass) {
-                    elClass.innerHTML = classeVal 
-                        ? `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span>` 
-                        : `<span style="color:#64748b; font-weight:normal;">Nessun codice associato</span>`;
+            if (elClass) {
+                if (classeVal) {
+                    elClass.innerHTML = `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span>`;
+                } else {
+                    elClass.innerHTML = `<span style="color:#64748b; font-weight:normal;">Nessuna classe associata</span>`;
                 }
-            } else {
-                if (classConnectBox) classConnectBox.style.display = 'none';
-                if (elClass) {
-                    elClass.textContent = (role.includes('docente') || role.includes('admin')) ? 'Docente Referente' : 'Non applicabile';
+            }
+
+            if (classConnectBox) {
+                classConnectBox.style.display = 'block';
+                if (role.includes('docente') || role.includes('admin')) {
+                    if (classConnectLabel) classConnectLabel.innerHTML = '<i class="ph ph-key"></i> Inserisci Codice Classe (per associarti come docente di classe / collaboratore):';
+                    if (classConnectHint) classConnectHint.innerHTML = '💡 Inserendo il codice di una classe ti collegherai ad essa per monitorare e collaborare con gli altri docenti della classe.';
+                } else {
+                    if (classConnectLabel) classConnectLabel.innerHTML = '<i class="ph ph-key"></i> Inserisci o Cambia il Codice Classe fornito dal tuo Docente:';
+                    if (classConnectHint) classConnectHint.innerHTML = '💡 Inserendo il codice fornito dal tuo professore entrerai automaticamente nella classe per tutti i giochi e le attività.';
                 }
             }
 
@@ -897,10 +904,9 @@
             document.getElementById('global-edit-school').value = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
             document.getElementById('global-edit-city').value = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
             
-            const isStudente = (uData.ruolo || uData.role || '').toLowerCase().includes('studente');
             const classGroup = document.getElementById('global-edit-class-group');
             if (classGroup) {
-                classGroup.style.display = isStudente ? 'block' : 'none';
+                classGroup.style.display = 'block';
                 document.getElementById('global-edit-class').value = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
             }
 

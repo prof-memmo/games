@@ -510,19 +510,66 @@
                     </div>
                 </div>
 
-                <div id="profile-class-connect-box" style="background: #eff6ff; border: 1.5px dashed #93c5fd; border-radius: 12px; padding: 14px;">
-                    <label id="profile-class-connect-label" style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e40af; margin-bottom: 6px;">
-                        <i class="ph ph-key"></i> Inserisci o Cambia il Codice Classe:
-                    </label>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; max-width: 500px;">
-                        <input type="text" id="profile-class-code-input" placeholder="Es. PM-3A91" style="flex: 1; min-width: 140px; padding: 8px 12px; border: 1px solid #bfdbfe; border-radius: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.95rem;">
-                        <button onclick="associaCodiceClasse()" class="btn-action-primary" style="padding: 8px 16px; font-size: 0.9rem; border-radius: 8px;">
-                            Collega Classe
-                        </button>
+                <!-- Box Connessione / Ricerca con Conferma Codice Classe -->
+                <div id="profile-class-connect-box" style="background: #eff6ff; border: 1.5px dashed #93c5fd; border-radius: 14px; padding: 16px;">
+                    <div id="class-search-step">
+                        <label id="profile-class-connect-label" style="display: block; font-size: 0.88rem; font-weight: 700; color: #1e40af; margin-bottom: 8px;">
+                            <i class="ph ph-key"></i> Inserisci il Codice Classe fornito dal Docente:
+                        </label>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; max-width: 520px;">
+                            <input type="text" id="profile-class-code-input" placeholder="Es. MEMMO-3B" style="flex: 1; min-width: 150px; padding: 10px 14px; border: 1px solid #bfdbfe; border-radius: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 1rem;">
+                            <button id="btn-search-class" onclick="cercaCodiceClasse()" class="btn-action-primary" style="padding: 10px 20px; font-size: 0.92rem; border-radius: 10px;">
+                                <i class="ph ph-magnifying-glass"></i> Cerca Classe
+                            </button>
+                        </div>
+                        <p id="profile-class-connect-hint" style="font-size: 0.78rem; color: #64748b; margin: 8px 0 0 0;">
+                            💡 Inserisci il codice ricevuto dal tuo professore. Ti mostreremo l'anteprima della scuola e del docente per confermare l'adesione.
+                        </p>
+                        <div id="profile-class-search-error" style="display: none; margin-top: 10px; padding: 8px 12px; border-radius: 8px; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; font-size: 0.84rem; font-weight: 600;"></div>
                     </div>
-                    <p id="profile-class-connect-hint" style="font-size: 0.75rem; color: #64748b; margin: 6px 0 0 0;">
-                        💡 Gli studenti accedono alle attività della classe; i docenti possono inserire il codice per collegarsi come contitolari/collaboratori alla classe.
-                    </p>
+
+                    <!-- Scheda di Anteprima & Conferma Classe Trovata -->
+                    <div id="class-confirm-step" style="display: none; background: white; border: 1.5px solid #6366f1; border-radius: 12px; padding: 18px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <span style="font-size: 1.4rem;">🎉</span>
+                            <div>
+                                <h4 style="margin: 0; font-size: 1rem; color: #1e1b4b; font-weight: 800;">Classe Trovata!</h4>
+                                <span style="font-size: 0.8rem; color: #64748b;">Verifica i dati e conferma la tua appartenenza:</span>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 15px; font-size: 0.88rem;">
+                            <div>
+                                <span style="color: #64748b; display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">🎓 Classe:</span>
+                                <strong id="confirm-class-name" style="color: #312e81; font-size: 1rem;">-</strong>
+                            </div>
+                            <div>
+                                <span style="color: #64748b; display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">👨‍🏫 Docente Referente:</span>
+                                <strong id="confirm-class-teacher" style="color: #312e81;">-</strong>
+                            </div>
+                            <div>
+                                <span style="color: #64748b; display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">🏫 Scuola / Istituto:</span>
+                                <strong id="confirm-class-school" style="color: #312e81;">-</strong>
+                            </div>
+                            <div>
+                                <span style="color: #64748b; display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">📍 Città:</span>
+                                <strong id="confirm-class-city" style="color: #312e81;">-</strong>
+                            </div>
+                        </div>
+
+                        <p style="font-size: 0.84rem; color: #4338ca; margin: 0 0 14px 0; font-weight: 600;">
+                            ❓ Confermi di appartenere a questa classe?
+                        </p>
+
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button id="btn-confirm-class-join" onclick="confermaAdesioneClasse()" class="btn-action-primary" style="background: linear-gradient(135deg, #10b981, #059669); padding: 9px 20px; font-size: 0.92rem; border-radius: 8px;">
+                                <i class="ph ph-check"></i> ✓ Sì, Conferma e Unisciti
+                            </button>
+                            <button onclick="annullaRicercaClasse()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer;">
+                                Annulla
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -767,9 +814,17 @@
 
                 if (elClass) {
                     if (classeVal) {
-                        elClass.innerHTML = `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span>`;
+                        elClass.innerHTML = `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span> <button onclick="abbandonaClasseAttuale()" title="Esci da questa classe per sceglierne un'altra" style="margin-left:8px; background:#fff1f2; border:1px solid #fecdd3; color:#e11d48; padding:3px 8px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer; vertical-align:middle;"><i class="ph ph-sign-out"></i> Cambia</button>`;
+                        if (classConnectBox) classConnectBox.style.display = 'none';
                     } else {
-                        elClass.innerHTML = `<span style="color:#64748b; font-weight:normal;">Nessun codice associato</span>`;
+                        elClass.innerHTML = `<span style="color:#64748b; font-weight:normal;">Nessuna classe associata</span>`;
+                        if (classConnectBox) {
+                            classConnectBox.style.display = 'block';
+                            const sStep = document.getElementById('class-search-step');
+                            const cStep = document.getElementById('class-confirm-step');
+                            if (sStep) sStep.style.display = 'block';
+                            if (cStep) cStep.style.display = 'none';
+                        }
                     }
                 }
             }
@@ -1014,29 +1069,197 @@
             }
         }
 
-        async function associaCodiceClasse() {
-            const user = firebase.auth().currentUser;
-            if (!user) return;
+        window._pendingClassData = null;
+
+        async function cercaCodiceClasse() {
+            const errEl = document.getElementById('profile-class-search-error');
+            if (errEl) errEl.style.display = 'none';
+
             const input = document.getElementById('profile-class-code-input');
             const code = (input ? input.value : '').trim().toUpperCase();
             if (!code) {
-                alert("Per favore, inserisci un codice classe valido fornito dal tuo docente.");
+                if (errEl) {
+                    errEl.textContent = "Inserisci il codice classe fornito dal tuo professore.";
+                    errEl.style.display = 'block';
+                }
                 return;
             }
+
+            const btnSearch = document.getElementById('btn-search-class');
+            const origText = btnSearch ? btnSearch.innerHTML : '';
+            if (btnSearch) {
+                btnSearch.disabled = true;
+                btnSearch.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Ricerca...';
+            }
+
+            try {
+                const db = firebase.firestore();
+                let foundDoc = null;
+                let foundType = 'class';
+
+                // 1. Cerca in collection 'classes' per campo 'code'
+                const q1 = await db.collection('classes').where('code', '==', code).get().catch(() => ({ empty: true }));
+                if (q1 && !q1.empty) {
+                    foundDoc = q1.docs[0];
+                }
+
+                // 2. Cerca in collection 'classes' per campo 'codice' o id
+                if (!foundDoc) {
+                    const q2 = await db.collection('classes').where('codice', '==', code).get().catch(() => ({ empty: true }));
+                    if (q2 && !q2.empty) foundDoc = q2.docs[0];
+                }
+
+                if (!foundDoc) {
+                    const docById = await db.collection('classes').doc(code).get().catch(() => ({ exists: false }));
+                    if (docById && docById.exists) foundDoc = docById;
+                }
+
+                // 3. Cerca in fanta_teams (se joinCode)
+                if (!foundDoc) {
+                    const qFanta = await db.collection('fanta_teams').where('joinCode', '==', code).get().catch(() => ({ empty: true }));
+                    if (qFanta && !qFanta.empty) {
+                        foundDoc = qFanta.docs[0];
+                        foundType = 'fanta_team';
+                    }
+                }
+
+                if (!foundDoc) {
+                    if (errEl) {
+                        errEl.innerHTML = `⚠️ Nessuna classe trovata con il codice <strong>"${code}"</strong>.<br>Verifica di averlo digitato correttamente o chiedi conferma al tuo professore.`;
+                        errEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                const cData = foundDoc.data() || {};
+                const className = cData.name || cData.nome || cData.className || code;
+                const schoolName = cData.school || cData.scuola || cData.istituto || (cData.anagrafica && cData.anagrafica.scuola) || 'Istituto Scolastico';
+                const cityName = cData.city || cData.citta || (cData.anagrafica && cData.anagrafica.citta) || 'Non specificata';
+                const teacherName = cData.teacherName || cData.teacher || cData.docente || cData.ownerName || (cData.teacherEmail ? cData.teacherEmail.split('@')[0] : 'Docente Referente');
+
+                window._pendingClassData = {
+                    docId: foundDoc.id,
+                    type: foundType,
+                    code: code,
+                    className: className,
+                    school: schoolName,
+                    city: cityName,
+                    teacher: teacherName
+                };
+
+                // Popola scheda di conferma
+                document.getElementById('confirm-class-name').textContent = className + ` (${code})`;
+                document.getElementById('confirm-class-teacher').textContent = teacherName;
+                document.getElementById('confirm-class-school').textContent = schoolName;
+                document.getElementById('confirm-class-city').textContent = cityName;
+
+                // Mostra step conferma
+                document.getElementById('class-search-step').style.display = 'none';
+                document.getElementById('class-confirm-step').style.display = 'block';
+
+            } catch (e) {
+                console.error("Errore ricerca classe:", e);
+                if (errEl) {
+                    errEl.textContent = "Errore durante la ricerca della classe: " + e.message;
+                    errEl.style.display = 'block';
+                }
+            } finally {
+                if (btnSearch) {
+                    btnSearch.disabled = false;
+                    btnSearch.innerHTML = origText;
+                }
+            }
+        }
+
+        function annullaRicercaClasse() {
+            window._pendingClassData = null;
+            const cStep = document.getElementById('class-confirm-step');
+            const sStep = document.getElementById('class-search-step');
+            if (cStep) cStep.style.display = 'none';
+            if (sStep) sStep.style.display = 'block';
+            const errEl = document.getElementById('profile-class-search-error');
+            if (errEl) errEl.style.display = 'none';
+        }
+
+        async function confermaAdesioneClasse() {
+            if (!window._pendingClassData) return;
+            const p = window._pendingClassData;
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const btnConfirm = document.getElementById('btn-confirm-class-join');
+            const origText = btnConfirm ? btnConfirm.innerHTML : '';
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Salvataggio...';
+            }
+
+            try {
+                const db = firebase.firestore();
+                const updatePayload = {
+                    classe: p.code,
+                    classId: p.code,
+                    'anagrafica.classe': p.code,
+                    scuola: p.school,
+                    school: p.school,
+                    'anagrafica.scuola': p.school,
+                    citta: p.city,
+                    city: p.city,
+                    'anagrafica.citta': p.city
+                };
+
+                await db.collection('hub_users').doc(user.uid).set(updatePayload, { merge: true });
+
+                // Se classe standard, associa studente nell'array se supportato
+                if (p.type === 'class') {
+                    await db.collection('classes').doc(p.docId).set({
+                        students: firebase.firestore.FieldValue.arrayUnion(user.uid),
+                        studentEmails: firebase.firestore.FieldValue.arrayUnion(user.email || '')
+                    }, { merge: true }).catch(() => {});
+                }
+
+                alert(`🎉 Ti sei unito con successo alla classe "${p.className}" con il docente ${p.teacher}!`);
+                
+                annullaRicercaClasse();
+                const input = document.getElementById('profile-class-code-input');
+                if (input) input.value = '';
+
+                // Ricarica profilo aggiornato
+                const doc = await db.collection('hub_users').doc(user.uid).get();
+                renderUserData(doc, user);
+
+            } catch (e) {
+                console.error("Errore salvataggio classe:", e);
+                alert("Errore durante l'unione alla classe: " + e.message);
+            } finally {
+                if (btnConfirm) {
+                    btnConfirm.disabled = false;
+                    btnConfirm.innerHTML = origText;
+                }
+            }
+        }
+
+        async function abbandonaClasseAttuale() {
+            if (!confirm("⚠️ Sei sicuro di voler uscire dalla classe attuale?\n\nNon sarai più collegato alle attività e ai punteggi di questa classe finché non inserirai un nuovo codice.")) {
+                return;
+            }
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
             try {
                 const db = firebase.firestore();
                 await db.collection('hub_users').doc(user.uid).set({
-                    classe: code,
-                    classId: code,
-                    'anagrafica.classe': code
+                    classe: '',
+                    classId: '',
+                    'anagrafica.classe': ''
                 }, { merge: true });
-                alert(`Codice classe "${code}" collegato con successo al tuo profilo!`);
-                if (input) input.value = '';
+
+                alert("Hai abbandonato la classe. Ora puoi inserire un nuovo codice classe se lo desideri.");
                 const doc = await db.collection('hub_users').doc(user.uid).get();
                 renderUserData(doc, user);
-            } catch(e) {
-                console.error("Errore collegamento codice classe:", e);
-                alert("Errore durante il salvataggio: " + e.message);
+            } catch (e) {
+                console.error("Errore abbandono classe:", e);
+                alert("Errore durante l'operazione: " + e.message);
             }
         }
 

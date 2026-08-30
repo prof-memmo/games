@@ -486,6 +486,46 @@
                 </ul>
             </div>
 
+            <!-- Card 3: La mia Scuola & Classe -->
+            <div class="glass-card" id="profile-school-class-card" style="grid-column: 1 / -1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1.2rem;">
+                    <h2 class="card-title" style="margin: 0;"><i class="ph ph-buildings" style="color:#6366f1;"></i> Scuola &amp; Classe di Appartenenza</h2>
+                    <button class="btn-action-outline" onclick="apriModificaProfiloGlobale()" style="padding: 6px 14px; font-size: 0.82rem; border-radius: 8px; background: white; border: 1px solid #cbd5e1; cursor: pointer;">
+                        <i class="ph ph-pencil-simple"></i> Modifica Scuola/Città
+                    </button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 1.2rem; margin-bottom: 1rem;">
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">🏫 Istituto Scolastico:</div>
+                        <div id="profile-school-display" style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark);">Non specificato</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">📍 Città:</div>
+                        <div id="profile-city-display" style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark);">Non specificata</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">🎓 Classe / Gruppo:</div>
+                        <div id="profile-class-display" style="font-size: 1.05rem; font-weight: 700; color: #4338ca;">Nessun codice associato</div>
+                    </div>
+                </div>
+
+                <div id="profile-student-class-connect-box" style="display: none; background: #eff6ff; border: 1.5px dashed #93c5fd; border-radius: 12px; padding: 14px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e40af; margin-bottom: 6px;">
+                        <i class="ph ph-key"></i> Inserisci o Cambia il Codice Classe del tuo Docente:
+                    </label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; max-width: 500px;">
+                        <input type="text" id="profile-class-code-input" placeholder="Es. PM-3A91" style="flex: 1; min-width: 140px; padding: 8px 12px; border: 1px solid #bfdbfe; border-radius: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.95rem;">
+                        <button onclick="associaCodiceClasse()" class="btn-action-primary" style="padding: 8px 16px; font-size: 0.9rem; border-radius: 8px;">
+                            Collega Classe
+                        </button>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #64748b; margin: 6px 0 0 0;">
+                        💡 Inserendo il codice fornito dal tuo professore entrerai automaticamente nella classe per tutti i giochi e le attività.
+                    </p>
+                </div>
+            </div>
+
         </div>
 
         <!-- Card Preferenze Comunicazioni & Newsletter GDPR (Discreta & Compatta) -->
@@ -682,6 +722,33 @@
                 roleBadge.className = 'profile-badge badge-viandante';
             }
 
+            // Render Scuola, Città e Classe di Appartenenza
+            const scuolaVal = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || 'Non specificato';
+            const cittaVal = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || 'Non specificata';
+            const classeVal = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
+
+            const elSchool = document.getElementById('profile-school-display');
+            const elCity = document.getElementById('profile-city-display');
+            const elClass = document.getElementById('profile-class-display');
+            const classConnectBox = document.getElementById('profile-student-class-connect-box');
+
+            if (elSchool) elSchool.textContent = scuolaVal;
+            if (elCity) elCity.textContent = cittaVal;
+
+            if (role.includes('studente')) {
+                if (classConnectBox) classConnectBox.style.display = 'block';
+                if (elClass) {
+                    elClass.innerHTML = classeVal 
+                        ? `<span style="color:#2563eb; font-weight:800;">Classe: ${classeVal}</span>` 
+                        : `<span style="color:#64748b; font-weight:normal;">Nessun codice associato</span>`;
+                }
+            } else {
+                if (classConnectBox) classConnectBox.style.display = 'none';
+                if (elClass) {
+                    elClass.textContent = (role.includes('docente') || role.includes('admin')) ? 'Docente Referente' : 'Non applicabile';
+                }
+            }
+
             // Render Piano
             const planLabels = {
                 'base': 'Piano Base (Gratuito)',
@@ -827,14 +894,14 @@
             if (!user) return;
 
             document.getElementById('global-edit-name').value = uData.nome || uData.name || user.displayName || '';
+            document.getElementById('global-edit-school').value = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
+            document.getElementById('global-edit-city').value = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
             
-            const isDocente = (uData.ruolo || uData.role || '').toLowerCase().includes('docente') || (uData.ruolo || uData.role || '').toLowerCase().includes('teacher');
-            const schoolGroup = document.getElementById('global-edit-school-group');
-            if (isDocente) {
-                schoolGroup.style.display = 'block';
-                document.getElementById('global-edit-school').value = uData.scuola || uData.school || '';
-            } else {
-                schoolGroup.style.display = 'none';
+            const isStudente = (uData.ruolo || uData.role || '').toLowerCase().includes('studente');
+            const classGroup = document.getElementById('global-edit-class-group');
+            if (classGroup) {
+                classGroup.style.display = isStudente ? 'block' : 'none';
+                document.getElementById('global-edit-class').value = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
             }
 
             const currentAvatar = uData.avatar || 'assets/avatars/6.png';
@@ -873,6 +940,9 @@
 
             const newName = document.getElementById('global-edit-name').value.trim();
             const newSchool = document.getElementById('global-edit-school').value.trim();
+            const newCity = document.getElementById('global-edit-city').value.trim();
+            const newClass = document.getElementById('global-edit-class') ? document.getElementById('global-edit-class').value.trim().toUpperCase() : '';
+            
             if (!newName) {
                 alert("Il nome non può essere vuoto.");
                 return;
@@ -888,7 +958,14 @@
                     'anagrafica.avatar': chosenAvatar,
                     'anagrafica.nome': newName,
                     scuola: newSchool,
-                    school: newSchool
+                    school: newSchool,
+                    'anagrafica.scuola': newSchool,
+                    citta: newCity,
+                    city: newCity,
+                    'anagrafica.citta': newCity,
+                    classe: newClass,
+                    classId: newClass,
+                    'anagrafica.classe': newClass
                 };
 
                 await db.collection('hub_users').doc(user.uid).set(updateData, { merge: true });
@@ -905,6 +982,32 @@
             } catch(e) {
                 console.error("Errore salvataggio profilo:", e);
                 alert("Errore salvataggio: " + e.message);
+            }
+        }
+
+        async function associaCodiceClasse() {
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+            const input = document.getElementById('profile-class-code-input');
+            const code = (input ? input.value : '').trim().toUpperCase();
+            if (!code) {
+                alert("Per favore, inserisci un codice classe valido fornito dal tuo docente.");
+                return;
+            }
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_users').doc(user.uid).set({
+                    classe: code,
+                    classId: code,
+                    'anagrafica.classe': code
+                }, { merge: true });
+                alert(`Codice classe "${code}" collegato con successo al tuo profilo!`);
+                if (input) input.value = '';
+                const doc = await db.collection('hub_users').doc(user.uid).get();
+                renderUserData(doc, user);
+            } catch(e) {
+                console.error("Errore collegamento codice classe:", e);
+                alert("Errore durante il salvataggio: " + e.message);
             }
         }
 
@@ -1033,14 +1136,25 @@
                 </div>
             </div>
 
-            <div style="margin-bottom:15px;">
+            <div style="margin-bottom:12px;">
                 <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Nome e Cognome:</label>
                 <input type="text" id="global-edit-name" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
             </div>
 
-            <div id="global-edit-school-group" style="margin-bottom:20px; display:none;">
-                <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto:</label>
-                <input type="text" id="global-edit-school" placeholder="Es. IC Manzoni" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
+                <div>
+                    <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto:</label>
+                    <input type="text" id="global-edit-school" placeholder="Es. I.C. Dante" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Città:</label>
+                    <input type="text" id="global-edit-city" placeholder="Es. Roma, Milano..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+                </div>
+            </div>
+
+            <div id="global-edit-class-group" style="margin-bottom:20px; display:none;">
+                <label style="font-weight:700; font-size:0.85rem; color:#4338ca; display:block; margin-bottom:6px;">Codice Classe (fornito dal Docente):</label>
+                <input type="text" id="global-edit-class" placeholder="Es. PM-3A91" style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px dashed #93c5fd; background:#f0f7ff; font-weight:700; text-transform:uppercase; font-size:0.95rem; box-sizing:border-box; letter-spacing:1px;">
             </div>
 
             <div style="display:flex; gap:10px;">

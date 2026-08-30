@@ -824,10 +824,12 @@
 
             // Personalizzazione spiegazione eliminazione in base al ruolo
             const deleteExpl = document.getElementById('delete-modal-explanation');
-            if (role.includes('docente')) {
-                deleteExpl.innerHTML = "Eliminando il tuo account docente cancellerai definitivamente il tuo profilo, l'accesso a tutte le sezioni didattiche e i dati delle tue classi collegate.";
-            } else {
-                deleteExpl.innerHTML = "Eliminando il tuo account cancellerai definitivamente i tuoi progressi, i badge ottenuti e tutti i tuoi dati di gioco.";
+            if (deleteExpl) {
+                if (effectiveRole.includes('docente')) {
+                    deleteExpl.innerHTML = "Eliminando il tuo account docente cancellerai definitivamente il tuo profilo, l'accesso a tutte le sezioni didattiche e i dati delle tue classi collegate.";
+                } else {
+                    deleteExpl.innerHTML = "Eliminando il tuo account cancellerai definitivamente i tuoi progressi, i badge ottenuti e tutti i tuoi dati di gioco.";
+                }
             }
 
             // Personalizzazione Sezione Giochi & Materiali

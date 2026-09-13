@@ -193,10 +193,12 @@
     <script>
         function vaiAlPortaleLogin() {
             const isPreview = window.location.pathname.includes('/preview');
-            const portalUrl = isPreview 
+            const portalBase = isPreview 
                 ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html'
                 : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html';
-            window.location.href = portalUrl;
+            const currentSearch = window.location.search;
+            const targetUrl = currentSearch ? `${portalBase}${currentSearch}` : portalBase;
+            window.location.href = targetUrl;
         }
 
         document.addEventListener('DOMContentLoaded', () => {

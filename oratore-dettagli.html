@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Oratore - Prof. Memmo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background: #000;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border: 2px dashed rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html" style="color: var(--color-primary);">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="accedi.html">Accedi</a></li>
+                <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle" onclick="window.toggleMobileMenu(this)"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main data-game-id="l-oratore" style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
+        <div class="container">
+            
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
+                <span style="display: inline-block; background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 2.5rem; letter-spacing: 0.05em;">Gioco Online Esclusivo</span>
+                
+                <div class="game-detail-grid">
+                    <div class="game-detail-left">
+                        <img src="loghi/Logo l'oratore grande - base bianca.png" alt="L'Oratore Logo" class="game-detail-logo" style="max-height: 200px; width: auto; border-radius: 16px;">
+                        
+                        <div class="game-meta-card" style="margin: 0; max-width: 100%;">
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>📚 Materia:</span> Italiano, Retorica & Debate</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👥 Giocatori:</span> 2-4 Squadre</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>⏱️ Discorso:</span> 2 Minuti a Turno</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🎯 Obiettivi:</span> Espressione orale, argomentazione, lessico</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👶 Livelli QCER:</span> A1, A2, B1, B2, C1, C2</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Classe LIM, Debate, Laboratori</div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-detail-right">
+                        <p class="lead">
+                            <strong>L'Oratore</strong> è il gioco da tavolo digitale dedicato all'arte dell'eloquenza, dello storytelling e della retorica viva. Proiettato sulla LIM, trasforma l'aula in un'assemblea o in un tribunale antico: 2-4 squadre si sfidano a turni su un tabellone a 24 caselle, affrontando round tematici condivisi.
+                        </p>
+                        <p class="lead">
+                            Ogni oratore ha <strong>2 minuti</strong> per arringare la classe partendo da una situazione drammatica <em>in medias res</em>, evitando 5 insidiose parole vietate (o incorporando 5 parole obbligatorie). Con <strong>192 carte originali</strong> ripartite su 8 mazzi tematici (<em>Epica, Medioevo, Fantascienza, Teatro, Letteratura, Civiltà, Scienza, Creatività</em>), la difficoltà si adatta perfettamente dalla scuola primaria fino alla maturità e ai tornei di debate.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <a href="https://prof-memmo.github.io/l-oratore/" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem; box-shadow: var(--shadow-md);"><i class="ph-bold ph-play" style="margin-right: 0.5rem;"></i> Vai a L'Oratore Online</a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 5rem;">
+                <a href="giochi.html" class="btn btn-outline"><i class="ph ph-arrow-left" style="margin-right: 0.5rem;"></i> Torna al Catalogo Giochi</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <p class="footer-text">Laboratorio di innovazione didattica, gamification e strumenti per la scuola secondaria.</p>
+            <div class="footer-links">
+                <a href="Privacy policy e Trattamento - Prof. memmo games.pages">Privacy Policy</a>
+                <a href="contatti.html">Contatti</a>
+                <a href="sostieni.html">Sostieni il Progetto</a>
+            </div>
+            <p class="copyright">© 2026 Prof. Memmo - Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+</body>
+</html>

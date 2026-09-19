@@ -506,8 +506,10 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <!-- Fine Grid 2 Colonne -->
 
-        <!-- Card Gestione Classi e Roster Studenti (Visibile solo per Docenti e Admin) -->
+        <!-- Card Gestione Classi e Roster Studenti (A Tutta Larghezza, Visibile solo per Docenti e Admin) -->
         <div class="glass-card" id="profile-teacher-classes-section" style="display: none; margin-bottom: 2rem;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
                 <div>
@@ -532,22 +534,22 @@
             </div>
         </div>
 
-        <!-- Card Preferenze Comunicazioni & Newsletter GDPR (Discreta & Compatta) -->
-        <div style="margin-bottom: 1.5rem; padding: 12px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-                <div style="flex: 1; min-width: 220px;">
-                    <h4 style="font-size: 0.84rem; font-weight: 700; color: #475569; margin: 0 0 3px 0; display: flex; align-items: center; gap: 6px;">
-                        <i class="ph ph-envelope-simple" style="color:#64748b; font-size: 0.95rem;"></i> Newsletter &amp; Comunicazioni Didattiche
+        <!-- Card Preferenze Comunicazioni & Newsletter GDPR (A Tutta Larghezza, Discreta & Compatta) -->
+        <div style="margin-bottom: 2rem; padding: 14px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); width: 100%; box-sizing: border-box;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                <div style="flex: 1; min-width: 240px;">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #334155; margin: 0 0 3px 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="ph ph-envelope-simple" style="color:#6366f1; font-size: 1.1rem;"></i> Newsletter &amp; Comunicazioni Didattiche
                     </h4>
-                    <p style="color:#64748b; font-size:0.75rem; line-height: 1.4; margin: 0;">
-                        Ricevi via email novità didattiche e aggiornamenti. Consenso modificabile in ogni momento (GDPR).
+                    <p style="color:#64748b; font-size:0.82rem; line-height: 1.4; margin: 0;">
+                        Ricevi via email novità didattiche, schede e aggiornamenti sui giochi. Consenso modificabile in ogni momento (GDPR).
                     </p>
                 </div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span id="profile-newsletter-status-badge" style="display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 12px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span id="profile-newsletter-status-badge" style="display: inline-block; font-size: 0.76rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
                         ✓ Iscritto
                     </span>
-                    <label class="switch-toggle" title="Attiva o disattiva l'iscrizione alla newsletter" style="transform: scale(0.85); transform-origin: center right; margin: 0;">
+                    <label class="switch-toggle" title="Attiva o disattiva l'iscrizione alla newsletter" style="transform: scale(0.9); transform-origin: center right; margin: 0;">
                         <input type="checkbox" id="profile-newsletter-toggle" onchange="toggleNewsletterConsenso(this.checked)">
                         <span class="slider-toggle"></span>
                     </label>
@@ -555,7 +557,7 @@
             </div>
         </div>
 
-        <!-- Card Collegamento Unico a Giochi e Materiali -->
+        <!-- Card Collegamento Unico a Giochi e Materiali (A Tutta Larghezza) -->
         <div class="glass-card" style="margin-bottom: 2rem;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
                 <div style="flex: 1; min-width: 260px;">
@@ -590,6 +592,7 @@
         </div>
 
     </div>
+    <!-- Fine profile-container -->
 
     <!-- Footer Istituzionale Ecosistema -->
     <footer class="footer" style="margin-top: 3.5rem;">

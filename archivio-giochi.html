@@ -457,6 +457,27 @@
             });
         });
 
+        // Logica Ordinamento Alfabetico
+        if (sortBtn) {
+            sortBtn.addEventListener('click', () => {
+                const currentOrder = sortBtn.getAttribute('data-order');
+                const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+                
+                sortBtn.setAttribute('data-order', newOrder);
+                sortBtn.innerHTML = newOrder === 'asc' 
+                    ? '<i class="ph-bold ph-sort-ascending"></i> Ordina A - Z' 
+                    : '<i class="ph-bold ph-sort-descending"></i> Ordina Z - A';
+
+                items.sort((a, b) => {
+                    const titleA = a.getAttribute('data-title').toLowerCase();
+                    const titleB = b.getAttribute('data-title').toLowerCase();
+                    if (newOrder === 'asc') return titleA.localeCompare(titleB);
+                    else return titleB.localeCompare(titleA);
+                });
+                items.forEach(item => grid.appendChild(item));
+            });
+        }
+
         if (typeof firebase !== 'undefined') {
             const db = firebase.firestore();
             db.collection('games_status').onSnapshot(snapshot => {

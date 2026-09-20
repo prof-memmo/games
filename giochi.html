@@ -408,66 +408,83 @@
             const grid = document.getElementById('games-grid');
             const noResults = document.getElementById('no-results');
 
-            if (filterBtns.length > 0) {
-                // Logica Filtro
+            // Integrazione Firebase per stato giochi
+            const titleToIdMap = {
+                'fantaletteratura': 'fantaletteratura',
+                'la rotta degli eroi': 'la-rotta-degli-eroi',
+                'palestra di riflessione': 'palestra-di-riflessione',
+                'ops!': 'ops',
+                'l\'oratore': 'l-oratore',
+                'la corte della commedia': 'la-corte-della-commedia',
+                'travel agency': 'travel-agency',
+                'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
+                'la roulette': 'la-roulette'
+            };
+
+            let currentFilter = 'tutti';
+            let currentStatusMap = {};
+
+            function applyCardVisibility() {
+                let count = 0;
+                items.forEach(item => {
+                    const title = item.getAttribute('data-title')?.toLowerCase();
+                    const gameId = title ? titleToIdMap[title] : null;
+                    const status = (gameId && currentStatusMap[gameId]) ? currentStatusMap[gameId] : null;
+
+                    // 1. Controllo Visibilità in Vetrina
+                    if (status && status.visibleInVetrina === false) {
+                        item.style.display = 'none';
+                        return;
+                    }
+
+                    // 2. Controllo Filtro Materia
+                    const isOnline = item.getAttribute('data-type') === 'online';
+                    const itemMateria = item.getAttribute('data-materia');
+                    if (currentFilter === 'tutti' || itemMateria === currentFilter || (currentFilter === 'online' && isOnline)) {
+                        item.style.display = 'flex';
+                        count++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                if (noResults) {
+                    noResults.style.display = count === 0 ? 'block' : 'none';
+                }
+            }
+
+            // Logica Filtro
+            if (filterBtns) {
                 filterBtns.forEach(btn => {
                     btn.addEventListener('click', () => {
-        // Integrazione Firebase per stato giochi
-        const titleToIdMap = {
-            'fantaletteratura': 'fantaletteratura',
-            'la rotta degli eroi': 'la-rotta-degli-eroi',
-            'palestra di riflessione': 'palestra-di-riflessione',
-            'ops!': 'ops',
-            'l\'oratore': 'l-oratore',
-            'la corte della commedia': 'la-corte-della-commedia',
-            'travel agency': 'travel-agency',
-            'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
-            'la roulette': 'la-roulette'
-        };
-
-        let currentFilter = 'tutti';
-        let currentStatusMap = {};
-
-        function applyCardVisibility() {
-            let count = 0;
-            items.forEach(item => {
-                const title = item.getAttribute('data-title')?.toLowerCase();
-                const gameId = title ? titleToIdMap[title] : null;
-                const status = (gameId && currentStatusMap[gameId]) ? currentStatusMap[gameId] : null;
-
-                // 1. Controllo Visibilità in Vetrina
-                if (status && status.visibleInVetrina === false) {
-                    item.style.display = 'none';
-                    return;
-                }
-
-                // 2. Controllo Filtro Materia
-                const isOnline = item.getAttribute('data-type') === 'online';
-                const itemMateria = item.getAttribute('data-materia');
-                if (currentFilter === 'tutti' || itemMateria === currentFilter || (currentFilter === 'online' && isOnline)) {
-                    item.style.display = 'flex';
-                    count++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            if (noResults) {
-                noResults.style.display = count === 0 ? 'block' : 'none';
-            }
-        }
-
-        // Logica Filtro
-        if (filterBtns) {
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.getAttribute('data-filter') || 'tutti';
-                    applyCardVisibility();
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentFilter = btn.getAttribute('data-filter') || 'tutti';
+                        applyCardVisibility();
+                    });
                 });
-            });
-        }
+            }
+
+            // Logica Ordinamento Alfabetico
+            if (sortBtn) {
+                sortBtn.addEventListener('click', () => {
+                    const currentOrder = sortBtn.getAttribute('data-order');
+                    const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+                    
+                    sortBtn.setAttribute('data-order', newOrder);
+                    sortBtn.innerHTML = newOrder === 'asc' 
+                        ? '<i class="ph-bold ph-sort-ascending"></i> Ordina A - Z' 
+                        : '<i class="ph-bold ph-sort-descending"></i> Ordina Z - A';
+
+                    items.sort((a, b) => {
+                        const titleA = a.getAttribute('data-title').toLowerCase();
+                        const titleB = b.getAttribute('data-title').toLowerCase();
+                        if (newOrder === 'asc') return titleA.localeCompare(titleB);
+                        else return titleB.localeCompare(titleA);
+                    });
+                    items.forEach(item => grid.appendChild(item));
+                });
+            }
 
         if (typeof firebase !== 'undefined') {
             const db = firebase.firestore();

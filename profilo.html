@@ -506,25 +506,50 @@
                     </li>
                 </ul>
             </div>
-
         </div>
+        <!-- Fine Grid 2 Colonne -->
 
-        <!-- Card Preferenze Comunicazioni & Newsletter GDPR (Discreta & Compatta) -->
-        <div style="margin-bottom: 1.5rem; padding: 12px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-                <div style="flex: 1; min-width: 220px;">
-                    <h4 style="font-size: 0.84rem; font-weight: 700; color: #475569; margin: 0 0 3px 0; display: flex; align-items: center; gap: 6px;">
-                        <i class="ph ph-envelope-simple" style="color:#64748b; font-size: 0.95rem;"></i> Newsletter &amp; Comunicazioni Didattiche
-                    </h4>
-                    <p style="color:#64748b; font-size:0.75rem; line-height: 1.4; margin: 0;">
-                        Ricevi via email novità didattiche e aggiornamenti. Consenso modificabile in ogni momento (GDPR).
+        <!-- Card Gestione Classi e Roster Studenti (A Tutta Larghezza, Visibile solo per Docenti e Admin) -->
+        <div class="glass-card" id="profile-teacher-classes-section" style="display: none; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+                <div>
+                    <h2 class="card-title" style="margin: 0 0 4px 0;">
+                        <i class="ph ph-chalkboard-teacher" style="color:var(--primary);"></i> Le Mie Classi &amp; Roster Studenti
+                    </h2>
+                    <p style="color:var(--text-muted); font-size:0.92rem; margin: 0;">
+                        Crea classi, genera i codici d'accesso per gli studenti, monitora i profili attivati e reimposta le password con 1 click.
                     </p>
                 </div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span id="profile-newsletter-status-badge" style="display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 12px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                <button class="btn-action-primary" onclick="apriModalCreaClasse()" style="background: linear-gradient(135deg, #4f46e5, #4338ca);">
+                    <i class="ph ph-plus-circle"></i> Crea Nuova Classe
+                </button>
+            </div>
+
+            <!-- Contenitore Elenco Classi del Docente -->
+            <div id="teacher-classes-container">
+                <div style="text-align: center; padding: 2rem; color: #94a3b8;">
+                    <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 8px;">Caricamento delle tue classi in corso...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Preferenze Comunicazioni & Newsletter GDPR (A Tutta Larghezza, Discreta & Compatta) -->
+        <div style="margin-bottom: 2rem; padding: 14px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); width: 100%; box-sizing: border-box;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+                <div style="flex: 1; min-width: 240px;">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #334155; margin: 0 0 3px 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="ph ph-envelope-simple" style="color:#6366f1; font-size: 1.1rem;"></i> Newsletter &amp; Comunicazioni Didattiche
+                    </h4>
+                    <p style="color:#64748b; font-size:0.82rem; line-height: 1.4; margin: 0;">
+                        Ricevi via email novità didattiche, schede e aggiornamenti sui giochi. Consenso modificabile in ogni momento (GDPR).
+                    </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span id="profile-newsletter-status-badge" style="display: inline-block; font-size: 0.76rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
                         ✓ Iscritto
                     </span>
-                    <label class="switch-toggle" title="Attiva o disattiva l'iscrizione alla newsletter" style="transform: scale(0.85); transform-origin: center right; margin: 0;">
+                    <label class="switch-toggle" title="Attiva o disattiva l'iscrizione alla newsletter" style="transform: scale(0.9); transform-origin: center right; margin: 0;">
                         <input type="checkbox" id="profile-newsletter-toggle" onchange="toggleNewsletterConsenso(this.checked)">
                         <span class="slider-toggle"></span>
                     </label>
@@ -532,7 +557,7 @@
             </div>
         </div>
 
-        <!-- Card Collegamento Unico a Giochi e Materiali -->
+        <!-- Card Collegamento Unico a Giochi e Materiali (A Tutta Larghezza) -->
         <div class="glass-card" style="margin-bottom: 2rem;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
                 <div style="flex: 1; min-width: 260px;">
@@ -567,6 +592,7 @@
         </div>
 
     </div>
+    <!-- Fine profile-container -->
 
     <!-- Footer Istituzionale Ecosistema -->
     <footer class="footer" style="margin-top: 3.5rem;">
@@ -614,9 +640,54 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // 1. Controllo Parametri URL (Anteprima Admin)
+            // 1. Controllo Parametri URL (Anteprima / Demo Mode)
             const urlParams = new URLSearchParams(window.location.search);
             const previewUserId = urlParams.get('preview');
+            const isDemo = urlParams.get('demo') === 'true' || previewUserId === 'demo';
+
+            if (isDemo) {
+                const mockDocente = {
+                    nome: 'Prof. Mario Rossi',
+                    email: 'prof.mario@scuola.it',
+                    role: 'docente',
+                    ruolo: 'docente',
+                    avatar: 'assets/avatars/6.png',
+                    scuola: 'I.C. Dante Alighieri',
+                    citta: 'Roma',
+                    abbonamento: 'docente_ecosistema'
+                };
+                renderUserData({ exists: true, data: () => mockDocente }, { displayName: 'Prof. Mario Rossi', email: 'prof.mario@scuola.it', uid: 'demo_teacher_uid' }, mockDocente);
+                
+                window._docenteClassi = [
+                    {
+                        id: 'demo_cls_1',
+                        name: '3° B',
+                        school: 'I.C. Dante Alighieri',
+                        city: 'Roma',
+                        code: 'MEMMO-7K9P',
+                        students: [
+                            { studentId: 's1', name: 'Mario Rossi', claimed: true, nickname: 'SuperMario', avatar: 'assets/avatars/7.png' },
+                            { studentId: 's2', name: 'Giulia Bianchi', claimed: true, nickname: 'FeniceAlata', avatar: 'assets/avatars/8.png' },
+                            { studentId: 's3', name: 'Luca Verdi', claimed: false, nickname: null, avatar: null },
+                            { studentId: 's4', name: 'Elena Neri', claimed: true, nickname: 'DantePro', avatar: 'assets/avatars/9.png' },
+                            { studentId: 's5', name: 'Alessandro Manzoni', claimed: false, nickname: null, avatar: null }
+                        ]
+                    },
+                    {
+                        id: 'demo_cls_2',
+                        name: '2° A Scientifico',
+                        school: 'Liceo Galilei',
+                        city: 'Roma',
+                        code: 'MEMMO-4W2Z',
+                        students: [
+                            { studentId: 's1', name: 'Chiara Esposito', claimed: true, nickname: 'Starlight', avatar: 'assets/avatars/10.png' },
+                            { studentId: 's2', name: 'Marco Conti', claimed: false, nickname: null, avatar: null }
+                        ]
+                    }
+                ];
+                renderClassiDocente(window._docenteClassi);
+                return;
+            }
 
             // Controllo ritorno da pagamento Stripe
             if (urlParams.get('pagamento') === 'successo' || urlParams.get('payment') === 'success' || urlParams.get('session_id')) {
@@ -728,6 +799,15 @@
                 roleBadge.className = 'profile-badge badge-viandante';
             }
 
+            // Mostra o nascondi Sezione Gestione Classi & Roster
+            const classesSec = document.getElementById('profile-teacher-classes-section');
+            if (isSuperAdmin || effectiveRole.includes('docente') || effectiveRole.includes('admin')) {
+                if (classesSec) classesSec.style.display = 'block';
+                caricaClassiDocente(authUser ? authUser.uid : null, isSuperAdmin);
+            } else {
+                if (classesSec) classesSec.style.display = 'none';
+            }
+
             // Render Scuola, Città e Classe di Appartenenza nell'Header
             const scuolaVal = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
             const cittaVal = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
@@ -787,7 +867,11 @@
             let expDate = new Date(rawCreatedAt);
             expDate.setFullYear(expDate.getFullYear() + 1);
             let scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : expDate.toLocaleDateString('it-IT');
-            let isExpired = plan !== 'base' && !isSuperAdmin && (expDate < new Date());
+            let isExpired = plan !== 'base' && !isSuperAdmin && (
+                uData.abbonamento_scadenza 
+                    ? (new Date(uData.abbonamento_scadenza) < new Date()) 
+                    : (expDate < new Date())
+            );
 
             if (isSuperAdmin) {
                 expiryEl.innerHTML = '<strong>Scadenza:</strong> <span style="color:#b45309; font-weight:700;">👑 Nessuna scadenza (Super Amministratore).</span>';
@@ -1205,6 +1289,406 @@
                 }
             }
         }
+
+        // ==========================================
+        // GESTIONE CLASSI & ROSTER STUDENTE (DOCENTE)
+        // ==========================================
+        window._docenteClassi = [];
+        window._activeRosterClassId = null;
+
+        async function caricaClassiDocente(teacherUid, isSuperAdmin) {
+            const container = document.getElementById('teacher-classes-container');
+            if (!container) return;
+
+            if (!teacherUid) {
+                container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Accedi come docente per visualizzare le tue classi.</p>';
+                return;
+            }
+
+            try {
+                const db = firebase.firestore();
+                let snap;
+                if (isSuperAdmin) {
+                    snap = await db.collection('hub_classes').orderBy('createdAt', 'desc').get().catch(() => null);
+                    if (!snap || snap.empty) {
+                        snap = await db.collection('hub_classes').get();
+                    }
+                } else {
+                    snap = await db.collection('hub_classes').where('teacherId', '==', teacherUid).get();
+                }
+
+                window._docenteClassi = [];
+                if (snap && !snap.empty) {
+                    snap.forEach(doc => {
+                        window._docenteClassi.push({ id: doc.id, ...doc.data() });
+                    });
+                }
+
+                renderClassiDocente(window._docenteClassi);
+            } catch (e) {
+                console.error("Errore caricamento classi docente:", e);
+                container.innerHTML = `<div style="padding:15px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:12px; font-size:0.9rem;">
+                    Errore durante il recupero delle classi: ${e.message}
+                </div>`;
+            }
+        }
+
+        function renderClassiDocente(classi) {
+            const container = document.getElementById('teacher-classes-container');
+            if (!container) return;
+
+            if (!classi || classi.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2.5rem 1rem; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 16px;">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">🏫</div>
+                        <h3 style="font-size: 1.15rem; font-family:'Outfit',sans-serif; color: var(--text-dark); margin: 0 0 6px;">Nessuna classe ancora creata</h3>
+                        <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 480px; margin: 0 auto 1.2rem;">
+                            Crea la tua prima classe, incolla l'elenco degli alunni e genera subito il codice per farli giocare senza dover richiedere le loro email!
+                        </p>
+                        <button class="btn-action-primary" onclick="apriModalCreaClasse()" style="background: linear-gradient(135deg, #4f46e5, #4338ca);">
+                            <i class="ph ph-plus-circle"></i> Crea la tua Prima Classe
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem;">`;
+
+            classi.forEach(cls => {
+                const students = Array.isArray(cls.students) ? cls.students : [];
+                const totalStudents = students.length;
+                const claimedStudents = students.filter(s => s.claimed).length;
+                const code = cls.code || cls.id;
+                const school = cls.school || 'Scuola non indicata';
+                const city = cls.city || '';
+
+                html += `
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.4rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <div>
+                                    ${cls.isTest ? '<div style="background: #fdf2f8; color: #db2777; font-weight: 800; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; border: 1px solid #fbcfe8; margin-bottom: 4px; display: inline-block;">🧪 SANDBOX / TEST</div>' : ''}
+                                    <h3 style="margin: 0 0 3px 0; font-size: 1.25rem; font-family:'Outfit',sans-serif; color: var(--text-dark); font-weight: 700;">
+                                        ${cls.name || 'Classe'}
+                                    </h3>
+                                    <div style="font-size: 0.82rem; color: var(--text-muted);">
+                                        🏫 ${school} ${city ? '&bull; ' + city : ''}
+                                    </div>
+                                </div>
+                                <span style="background: #ede9fe; color: #4338ca; font-weight: 800; font-size: 0.82rem; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px;">
+                                    ${code}
+                                </span>
+                            </div>
+
+                            <!-- Codice Banner con Copia rapida -->
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <div style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Codice d'accesso Studenti</div>
+                                    <div style="font-size: 1.1rem; font-weight: 800; color: #1e40af; letter-spacing: 1px;">${code}</div>
+                                </div>
+                                <button onclick="copiaCodiceClasse('${code}')" style="background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; color: #334155; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                    <i class="ph ph-copy"></i> Copia
+                                </button>
+                            </div>
+
+                            <!-- Indicatori Studenti -->
+                            <div style="display: flex; gap: 10px; margin-bottom: 16px; font-size: 0.82rem;">
+                                <div style="flex: 1; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-weight: 800; color: #166534; font-size: 1.1rem;">${claimedStudents}</div>
+                                    <div style="color: #15803d; font-size: 0.75rem;">Attivi</div>
+                                </div>
+                                <div style="flex: 1; background: #fffbeb; border: 1px solid #fde68a; padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-weight: 800; color: #92400e; font-size: 1.1rem;">${totalStudents - claimedStudents}</div>
+                                    <div style="color: #b45309; font-size: 0.75rem;">In Attesa</div>
+                                </div>
+                                <div style="flex: 1; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px; border-radius: 8px; text-align: center;">
+                                    <div style="font-weight: 800; color: #1e40af; font-size: 1.1rem;">${totalStudents}</div>
+                                    <div style="color: #2563eb; font-size: 0.75rem;">Totale Alunni</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 12px;">
+                            <button onclick="apriModalRoster('${cls.id}')" style="flex: 1; background: #4f46e5; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="ph ph-users"></i> Gestisci Roster
+                            </button>
+                            <button onclick="eliminaClasseDocente('${cls.id}', '${(cls.name || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Elimina Classe">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function copiaCodiceClasse(code) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code);
+                alert(`📋 Codice "${code}" copiato negli appunti! Condividilo con i tuoi studenti.`);
+            } else {
+                prompt("Copia questo codice classe:", code);
+            }
+        }
+
+        // --- Modale Creazione Classe ---
+        function apriModalCreaClasse() {
+            const modal = document.getElementById('modal-crea-classe');
+            if (!modal) return;
+
+            // Pre-compila scuola e città dai dati dell'utente se presenti
+            const uScuola = document.getElementById('header-school-val')?.textContent || '';
+            const uCitta = document.getElementById('header-city-val')?.textContent || '';
+            
+            const inScuola = document.getElementById('nuova-classe-scuola');
+            const inCitta = document.getElementById('nuova-classe-citta');
+            if (inScuola && uScuola && uScuola !== 'Scuola non indicata') inScuola.value = uScuola;
+            if (inCitta && uCitta && uCitta !== 'Città non specificata') inCitta.value = uCitta;
+
+            modal.style.display = 'flex';
+        }
+
+        function chiudiModalCreaClasse() {
+            const modal = document.getElementById('modal-crea-classe');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function generaCodiceClasse() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let res = "MEMMO-";
+            for (let i = 0; i < 4; i++) {
+                res += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return res;
+        }
+
+        async function creaNuovaClasse() {
+            const nome = (document.getElementById('nuova-classe-nome')?.value || '').trim();
+            const scuola = (document.getElementById('nuova-classe-scuola')?.value || '').trim();
+            const citta = (document.getElementById('nuova-classe-citta')?.value || '').trim();
+            const rosterRaw = (document.getElementById('nuova-classe-roster')?.value || '').trim();
+
+            if (!nome) {
+                alert("Inserisci il nome della classe (es. 3° B).");
+                return;
+            }
+
+            if (!rosterRaw) {
+                alert("Inserisci almeno uno studente nell'elenco (uno per riga).");
+                return;
+            }
+
+            const rawNames = rosterRaw.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+            if (rawNames.length === 0) {
+                alert("Inserisci i nomi degli studenti validi.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-conferma-crea-classe');
+            const origText = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Creazione in corso...';
+            }
+
+            try {
+                const authUser = firebase.auth().currentUser;
+                if (!authUser) throw new Error("Utente non autenticato.");
+
+                const db = firebase.firestore();
+                const code = generaCodiceClasse();
+
+                const students = rawNames.map((name, idx) => ({
+                    studentId: `s${idx + 1}`,
+                    name: name,
+                    claimed: false,
+                    nickname: null,
+                    avatar: null,
+                    studentAuthUid: null,
+                    virtualEmail: null,
+                    claimedAt: null
+                }));
+
+                const teacherDisplayName = document.getElementById('user-display-name')?.textContent || authUser.displayName || 'Docente';
+
+                const newClassData = {
+                    name: nome,
+                    school: scuola,
+                    city: citta,
+                    code: code,
+                    teacherId: authUser.uid,
+                    teacherName: teacherDisplayName,
+                    teacherEmail: authUser.email || '',
+                    students: students,
+                    createdAt: new Date().toISOString(),
+                    lastUpdated: new Date().toISOString()
+                };
+
+                const docRef = await db.collection('hub_classes').add(newClassData);
+
+                chiudiModalCreaClasse();
+                alert(`🎉 Classe "${nome}" creata con successo!\n\nCodice d'accesso assegnato: ${code}\nStudenti registrati: ${students.length}`);
+
+                // Reset form
+                document.getElementById('nuova-classe-nome').value = '';
+                document.getElementById('nuova-classe-roster').value = '';
+
+                // Ricarica elenco classi
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+            } catch (e) {
+                console.error("Errore creazione classe:", e);
+                alert("Errore durante la creazione della classe: " + e.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origText;
+                }
+            }
+        }
+
+        // --- Modale Gestione Roster Studenti ---
+        function apriModalRoster(classId) {
+            const modal = document.getElementById('modal-gestione-roster');
+            if (!modal) return;
+
+            window._activeRosterClassId = classId;
+            const cls = window._docenteClassi.find(c => c.id === classId);
+            if (!cls) return;
+
+            document.getElementById('roster-modal-class-name').textContent = cls.name || 'Classe';
+            document.getElementById('roster-modal-class-code').textContent = cls.code || cls.id;
+
+            renderRosterTable(cls);
+            modal.style.display = 'flex';
+        }
+
+        function chiudiModalRoster() {
+            const modal = document.getElementById('modal-gestione-roster');
+            if (modal) modal.style.display = 'none';
+            window._activeRosterClassId = null;
+        }
+
+        function renderRosterTable(cls) {
+            const tbody = document.getElementById('roster-table-body');
+            if (!tbody) return;
+
+            const students = Array.isArray(cls.students) ? cls.students : [];
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">Nessun alunno presente nel roster.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            students.forEach((s, idx) => {
+                const isClaimed = !!s.claimed;
+                const statusBadge = isClaimed
+                    ? `<span style="background:#dcfce7; color:#15803d; font-weight:700; font-size:0.75rem; padding:4px 8px; border-radius:12px; display:inline-flex; align-items:center; gap:4px;"><i class="ph ph-check-circle"></i> Attivo</span>`
+                    : `<span style="background:#fef3c7; color:#92400e; font-weight:700; font-size:0.75rem; padding:4px 8px; border-radius:12px; display:inline-flex; align-items:center; gap:4px;"><i class="ph ph-clock"></i> In Attesa (1° Accesso)</span>`;
+
+                const avatarImg = s.avatar
+                    ? `<img src="${s.avatar}" alt="Avatar" style="width:28px; height:28px; border-radius:50%; object-fit:cover; vertical-align:middle; margin-right:6px;">`
+                    : `<span style="display:inline-block; width:28px; height:28px; border-radius:50%; background:#e2e8f0; text-align:center; line-height:28px; font-size:0.8rem; margin-right:6px;">👤</span>`;
+
+                const nickDisplay = s.nickname ? `<strong>${s.nickname}</strong>` : `<span style="color:#94a3b8; font-style:italic;">Non ancora scelto</span>`;
+
+                html += `
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 10px 12px; color: #64748b; font-size: 0.85rem; font-weight: 700;">${idx + 1}</td>
+                        <td style="padding: 10px 12px; font-weight: 600; color: #1e293b; font-size: 0.92rem;">${s.name}</td>
+                        <td style="padding: 10px 12px; font-size: 0.88rem; color: #334155;">
+                            ${avatarImg} ${nickDisplay}
+                        </td>
+                        <td style="padding: 10px 12px;">${statusBadge}</td>
+                        <td style="padding: 10px 12px; text-align: right;">
+                            <button onclick="reimpostaSlotStudente('${cls.id}', '${s.studentId}', '${(s.name || '').replace(/'/g, "\\'")}')" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #475569; padding: 6px 10px; border-radius: 8px; font-weight: 600; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Reimposta la password o sblocca lo slot">
+                                <i class="ph ph-arrows-counter-clockwise"></i> Reimposta
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        async function reimpostaSlotStudente(classId, studentId, studentName) {
+            if (!confirm(`Vuoi reimpostare lo slot per "${studentName}"?\n\nLa password e il nickname attuali verranno azzerati e l'alunno potrà reimpostare un nuovo profilo al prossimo accesso inserendo il codice classe.`)) {
+                return;
+            }
+
+            try {
+                const resetFn = firebase.functions().httpsCallable('resetStudentSlot');
+                const res = await resetFn({ classId: classId, studentId: studentId });
+                alert(res.data?.message || "Slot studente reimpostato con successo!");
+
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                const updatedCls = window._docenteClassi.find(c => c.id === classId);
+                if (updatedCls) renderRosterTable(updatedCls);
+            } catch (e) {
+                console.error("Errore reset slot studente:", e);
+                alert("Errore durante il reset: " + e.message);
+            }
+        }
+
+        async function aggiungiNuovoStudenteRoster() {
+            const input = document.getElementById('nuovo-studente-nome');
+            const name = (input ? input.value : '').trim();
+
+            if (!name) {
+                alert("Inserisci il nome e cognome dello studente.");
+                return;
+            }
+
+            if (!window._activeRosterClassId) return;
+
+            const btn = document.getElementById('btn-aggiungi-studente-roster');
+            const origText = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
+            }
+
+            try {
+                const addFn = firebase.functions().httpsCallable('addStudentToRoster');
+                await addFn({ classId: window._activeRosterClassId, name: name });
+
+                input.value = '';
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                const updatedCls = window._docenteClassi.find(c => c.id === window._activeRosterClassId);
+                if (updatedCls) renderRosterTable(updatedCls);
+            } catch (e) {
+                console.error("Errore aggiunta studente:", e);
+                alert("Errore durante l'aggiunta dello studente: " + e.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origText;
+                }
+            }
+        }
+
+        async function eliminaClasseDocente(classId, className) {
+            if (!confirm(`Sei sicuro di voler eliminare la classe "${className}"?\n\nQuesta azione cancellerà il codice d'accesso e tutti gli slot degli studenti associati a questa classe.`)) {
+                return;
+            }
+
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_classes').doc(classId).delete();
+                alert(`Classe "${className}" eliminata.`);
+
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+            } catch (e) {
+                console.error("Errore eliminazione classe:", e);
+                alert("Errore durante l'eliminazione: " + e.message);
+            }
+        }
     </script>
 
     <!-- Modal Modifica Profilo Globale -->
@@ -1288,6 +1772,103 @@
             <div style="display:flex; justify-content:flex-end; gap:12px;">
                 <button onclick="chiudiModalRimborso()" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#475569; padding:10px 18px; border-radius:12px; font-weight:600; cursor:pointer;">Annulla</button>
                 <button id="btn-confirm-refund-action" onclick="confermaRimborsoRecesso()" style="background:linear-gradient(135deg, #d97706, #b45309); border:none; color:white; padding:10px 20px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(217,119,6,0.3);">Conferma Rimborso</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Creazione Nuova Classe (Docente) -->
+    <div id="modal-crea-classe" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.7); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:24px; max-width:560px; width:100%; padding:2rem; box-shadow:0 25px 60px rgba(0,0,0,0.3); max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:40px; height:40px; border-radius:12px; background:#eff6ff; color:#2563eb; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
+                        <i class="ph ph-chalkboard-teacher"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:1.25rem; color:#0f172a;">Crea Nuova Classe</h3>
+                        <span style="font-size:0.8rem; color:#64748b;">Genera codice d'accesso per gli studenti</span>
+                    </div>
+                </div>
+                <button onclick="chiudiModalCreaClasse()" style="background:none; border:none; font-size:1.4rem; color:#94a3b8; cursor:pointer;">&times;</button>
+            </div>
+
+            <!-- Form Creazione Classe -->
+            <div style="margin-bottom:14px;">
+                <label style="font-weight:700; font-size:0.88rem; color:#334155; display:block; margin-bottom:6px;">Nome Classe *</label>
+                <input type="text" id="nuova-classe-nome" placeholder="Es. 3° B, 1° A Scientifico..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.95rem; box-sizing:border-box;">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                <div>
+                    <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto</label>
+                    <input type="text" id="nuova-classe-scuola" placeholder="Es. I.C. Dante Alighieri" style="width:100%; padding:9px 12px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Città</label>
+                    <input type="text" id="nuova-classe-citta" placeholder="Es. Roma, Milano..." style="width:100%; padding:9px 12px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; box-sizing:border-box;">
+                </div>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="font-weight:700; font-size:0.88rem; color:#334155; display:block; margin-bottom:6px;">
+                    Elenco Studenti (uno per riga) *
+                </label>
+                <textarea id="nuova-classe-roster" rows="6" placeholder="Incolla qui l'elenco dei tuoi alunni, uno per riga. Es:&#10;Mario Rossi&#10;Giulia Bianchi&#10;Luca Verdi&#10;Elena Neri" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; font-family:inherit; box-sizing:border-box; line-height:1.5;"></textarea>
+                <div style="font-size:0.78rem; color:#64748b; margin-top:4px;">
+                    🔒 Non occorrono email o dati personali. Gli alunni sceglieranno autonomamente nickname e password al 1° accesso.
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button onclick="chiudiModalCreaClasse()" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#475569; padding:10px 18px; border-radius:12px; font-weight:600; cursor:pointer;">Annulla</button>
+                <button id="btn-conferma-crea-classe" onclick="creaNuovaClasse()" style="background:linear-gradient(135deg, #4f46e5, #4338ca); border:none; color:white; padding:10px 22px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
+                    Crea Classe e Genera Codice 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gestione Roster Studenti & Reset (Docente) -->
+    <div id="modal-gestione-roster" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.7); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:24px; max-width:760px; width:100%; padding:2rem; box-shadow:0 25px 60px rgba(0,0,0,0.3); max-height:90vh; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; border-bottom:1px solid #e2e8f0; padding-bottom:12px; flex-shrink:0;">
+                <div>
+                    <h3 style="margin:0 0 2px 0; font-family:'Outfit',sans-serif; font-size:1.3rem; color:#0f172a;">
+                        Roster: <span id="roster-modal-class-name">Classe</span>
+                    </h3>
+                    <div style="font-size:0.82rem; color:#64748b;">
+                        Codice Classe: <strong id="roster-modal-class-code" style="color:#4338ca; letter-spacing:0.5px;">MEMMO-XXXX</strong>
+                    </div>
+                </div>
+                <button onclick="chiudiModalRoster()" style="background:none; border:none; font-size:1.4rem; color:#94a3b8; cursor:pointer;">&times;</button>
+            </div>
+
+            <!-- Tabella Roster con scorrimento -->
+            <div style="flex:1; overflow-y:auto; margin-bottom:1.2rem; border:1px solid #e2e8f0; border-radius:12px;">
+                <table style="width:100%; border-collapse:collapse; text-align:left;">
+                    <thead style="background:#f8fafc; border-bottom:1px solid #e2e8f0; position:sticky; top:0;">
+                        <tr>
+                            <th style="padding:10px 12px; font-size:0.75rem; text-transform:uppercase; color:#64748b; font-weight:700;">#</th>
+                            <th style="padding:10px 12px; font-size:0.75rem; text-transform:uppercase; color:#64748b; font-weight:700;">Nome Inserito</th>
+                            <th style="padding:10px 12px; font-size:0.75rem; text-transform:uppercase; color:#64748b; font-weight:700;">Nickname &amp; Avatar</th>
+                            <th style="padding:10px 12px; font-size:0.75rem; text-transform:uppercase; color:#64748b; font-weight:700;">Stato</th>
+                            <th style="padding:10px 12px; font-size:0.75rem; text-transform:uppercase; color:#64748b; font-weight:700; text-align:right;">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roster-table-body">
+                        <!-- Popolato dinamicamente da renderRosterTable -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Inserimento Rapido Nuovo Alunno -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex-shrink:0;">
+                <div style="flex:1; min-width:200px;">
+                    <input type="text" id="nuovo-studente-nome" placeholder="Aggiungi nuovo alunno (Nome e Cognome)..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.88rem; box-sizing:border-box;">
+                </div>
+                <button id="btn-aggiungi-studente-roster" onclick="aggiungiNuovoStudenteRoster()" style="background:#059669; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                    <i class="ph ph-plus"></i> Aggiungi Alunno
+                </button>
             </div>
         </div>
     </div>

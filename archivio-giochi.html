@@ -308,6 +308,28 @@
                     </div>
                 </div>
 
+                <!-- L'Oratore -->
+                <div class="game-card item" data-materia="lingua" data-type="online" data-title="L'Oratore">
+                    <div class="game-card-img"><img src="loghi/Logo l'oratore grande - base bianca.png" alt="L'Oratore Logo"></div>
+                    <div class="game-card-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <div class="game-card-cat" style="margin-bottom: 0;">Retorica & Debate</div>
+                            <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Gioco Online</span>
+                        </div>
+                        <h3>L'Oratore</h3>
+                        <p>L'arte del racconto e della retorica: sfida la classe a round di 2 minuti con 192 incipit immersivi e 6 livelli QCER.</p>
+                        <div class="game-meta-card">
+                            <div class="meta-item"><span>📚 Materia:</span> Italiano / Retorica</div>
+                            <div class="meta-item"><span>👥 Giocatori:</span> 2-4 Squadre</div>
+                            <div class="meta-item"><span>⏱️ Durata:</span> 30-45 min</div>
+                            <div class="meta-item"><span>🎯 Obiettivi:</span> Espressione orale, argomentazione</div>
+                            <div class="meta-item"><span>👶 Classe/Età:</span> A1 - C2 (Primaria - Sup.)</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Classe LIM, Debate, Laboratorio</div>
+                        </div>
+                        <a href="oratore-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
+                    </div>
+                </div>
+
                 <!-- Palestra di Riflessione -->
                 <div class="game-card item" data-materia="lingua" data-type="online" data-title="Palestra di Riflessione">
                     <div class="game-card-img"><img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/palestra-riflessione-badge.png" alt="Palestra di Riflessione Logo"></div>
@@ -380,35 +402,63 @@
             const grid = document.getElementById('games-grid');
             const noResults = document.getElementById('no-results');
 
-            // Logica Filtro
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Aggiorna stato active
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+        // Integrazione Firebase per stato giochi
+        const titleToIdMap = {
+            'fantaletteratura': 'fantaletteratura',
+            'la rotta degli eroi': 'la-rotta-degli-eroi',
+            'palestra di riflessione': 'palestra-di-riflessione',
+            'ops!': 'ops',
+            'la corte della commedia': 'la-corte-della-commedia',
+            'travel agency': 'travel-agency',
+            'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
+            'la roulette': 'la-roulette',
+            'l\'oratore': 'l-oratore'
+        };
 
-                    const filter = btn.getAttribute('data-filter');
-                    let count = 0;
+        let currentFilter = 'tutti';
+        let currentStatusMap = {};
 
-                    items.forEach(item => {
-                        const isOnline = item.getAttribute('data-type') === 'online';
-                        if (filter === 'tutti' || item.getAttribute('data-materia') === filter || (filter === 'online' && isOnline)) {
-                            item.style.display = 'flex';
-                            count++;
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
+        function applyCardVisibility() {
+            let count = 0;
+            items.forEach(item => {
+                const title = item.getAttribute('data-title')?.toLowerCase();
+                const gameId = title ? titleToIdMap[title] : null;
+                const status = (gameId && currentStatusMap[gameId]) ? currentStatusMap[gameId] : null;
 
-                    if(count === 0) {
-                        noResults.style.display = 'block';
-                    } else {
-                        noResults.style.display = 'none';
-                    }
-                });
+                // 1. Controllo Visibilità in Vetrina
+                if (status && status.visibleInVetrina === false) {
+                    item.style.display = 'none';
+                    return;
+                }
+
+                // 2. Controllo Filtro Materia
+                const isOnline = item.getAttribute('data-type') === 'online';
+                const itemMateria = item.getAttribute('data-materia');
+                if (currentFilter === 'tutti' || itemMateria === currentFilter || (currentFilter === 'online' && isOnline)) {
+                    item.style.display = 'flex';
+                    count++;
+                } else {
+                    item.style.display = 'none';
+                }
             });
 
-            // Logica Ordinamento Alfabetico
+            if (noResults) {
+                noResults.style.display = count === 0 ? 'block' : 'none';
+            }
+        }
+
+        // Logica Filtro
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter') || 'tutti';
+                applyCardVisibility();
+            });
+        });
+
+        // Logica Ordinamento Alfabetico
+        if (sortBtn) {
             sortBtn.addEventListener('click', () => {
                 const currentOrder = sortBtn.getAttribute('data-order');
                 const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
@@ -421,43 +471,26 @@
                 items.sort((a, b) => {
                     const titleA = a.getAttribute('data-title').toLowerCase();
                     const titleB = b.getAttribute('data-title').toLowerCase();
-                    
-                    if (newOrder === 'asc') {
-                        return titleA.localeCompare(titleB);
-                    } else {
-                        return titleB.localeCompare(titleA);
-                    }
+                    if (newOrder === 'asc') return titleA.localeCompare(titleB);
+                    else return titleB.localeCompare(titleA);
                 });
-                // Riunisci gli item nella grid
                 items.forEach(item => grid.appendChild(item));
             });
-
-        // Integrazione Firebase per stato giochi
-        const titleToIdMap = {
-            'fantaletteratura': 'fantaletteratura',
-            'la rotta degli eroi': 'la-rotta-degli-eroi',
-            'palestra di riflessione': 'palestra-di-riflessione',
-            'ops!': 'ops',
-            'la corte della commedia': 'la-corte-della-commedia',
-            'travel agency': 'travel-agency',
-            'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
-            'la roulette': 'la-roulette'
-        };
+        }
 
         if (typeof firebase !== 'undefined') {
             const db = firebase.firestore();
             db.collection('games_status').onSnapshot(snapshot => {
-                const statusMap = {};
                 snapshot.forEach(doc => {
-                    statusMap[doc.id] = doc.data();
+                    currentStatusMap[doc.id] = doc.data();
                 });
 
                 document.querySelectorAll('.game-card').forEach(card => {
                     const title = card.getAttribute('data-title')?.toLowerCase();
                     if (!title) return;
                     const gameId = titleToIdMap[title];
-                    if (gameId && statusMap[gameId]) {
-                        const status = statusMap[gameId];
+                    if (gameId && currentStatusMap[gameId]) {
+                        const status = currentStatusMap[gameId];
                         const btn = card.querySelector('.btn');
                         if (!status.isActive) {
                             btn.classList.add('wip-link');
@@ -476,7 +509,8 @@
                                 'travel agency': 'travel-agency.html',
                                 'il mio quaderno alternativo': 'quaderno-alternativo.html',
                                 'la corte della commedia': 'corte-commedia-dettagli.html',
-                                'ops!': 'ops-dettagli.html'
+                                'ops!': 'ops-dettagli.html',
+                                'l\'oratore': 'oratore-dettagli.html'
                             };
                             if (linkMap[title]) {
                                 btn.href = linkMap[title];
@@ -484,6 +518,8 @@
                         }
                     }
                 });
+
+                applyCardVisibility();
             });
         }
 

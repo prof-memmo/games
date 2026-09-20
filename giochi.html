@@ -408,36 +408,65 @@
             const grid = document.getElementById('games-grid');
             const noResults = document.getElementById('no-results');
 
-            if (filterBtns.length > 0) {
-                // Logica Filtro
-                filterBtns.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        // Aggiorna stato active
-                        filterBtns.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
+            // Integrazione Firebase per stato giochi
+            const titleToIdMap = {
+                'fantaletteratura': 'fantaletteratura',
+                'la rotta degli eroi': 'la-rotta-degli-eroi',
+                'palestra di riflessione': 'palestra-di-riflessione',
+                'ops!': 'ops',
+                'l\'oratore': 'l-oratore',
+                'la corte della commedia': 'la-corte-della-commedia',
+                'travel agency': 'travel-agency',
+                'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
+                'la roulette': 'la-roulette'
+            };
 
-                        const filter = btn.getAttribute('data-filter');
-                        let count = 0;
+            let currentFilter = 'tutti';
+            let currentStatusMap = {};
 
-                        items.forEach(item => {
-                            const isOnline = item.getAttribute('data-type') === 'online';
-                            if (filter === 'tutti' || item.getAttribute('data-materia') === filter || (filter === 'online' && isOnline)) {
-                                item.style.display = 'flex';
-                                count++;
-                            } else {
-                                item.style.display = 'none';
-                            }
-                        });
+            function applyCardVisibility() {
+                let count = 0;
+                items.forEach(item => {
+                    const title = item.getAttribute('data-title')?.toLowerCase();
+                    const gameId = title ? titleToIdMap[title] : null;
+                    const status = (gameId && currentStatusMap[gameId]) ? currentStatusMap[gameId] : null;
 
-                        if(count === 0) {
-                            noResults.style.display = 'block';
-                        } else {
-                            noResults.style.display = 'none';
-                        }
-                    });
+                    // 1. Controllo Visibilità in Vetrina
+                    if (status && status.visibleInVetrina === false) {
+                        item.style.display = 'none';
+                        return;
+                    }
+
+                    // 2. Controllo Filtro Materia
+                    const isOnline = item.getAttribute('data-type') === 'online';
+                    const itemMateria = item.getAttribute('data-materia');
+                    if (currentFilter === 'tutti' || itemMateria === currentFilter || (currentFilter === 'online' && isOnline)) {
+                        item.style.display = 'flex';
+                        count++;
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
 
-                // Logica Ordinamento Alfabetico
+                if (noResults) {
+                    noResults.style.display = count === 0 ? 'block' : 'none';
+                }
+            }
+
+            // Logica Filtro
+            if (filterBtns) {
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentFilter = btn.getAttribute('data-filter') || 'tutti';
+                        applyCardVisibility();
+                    });
+                });
+            }
+
+            // Logica Ordinamento Alfabetico
+            if (sortBtn) {
                 sortBtn.addEventListener('click', () => {
                     const currentOrder = sortBtn.getAttribute('data-order');
                     const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
@@ -450,46 +479,26 @@
                     items.sort((a, b) => {
                         const titleA = a.getAttribute('data-title').toLowerCase();
                         const titleB = b.getAttribute('data-title').toLowerCase();
-                        
-                        if (newOrder === 'asc') {
-                            return titleA.localeCompare(titleB);
-                        } else {
-                            return titleB.localeCompare(titleA);
-                        }
+                        if (newOrder === 'asc') return titleA.localeCompare(titleB);
+                        else return titleB.localeCompare(titleA);
                     });
-
-                    // Riunisci gli item nella grid
                     items.forEach(item => grid.appendChild(item));
                 });
             }
-        
-        // Integrazione Firebase per stato giochi
-        const titleToIdMap = {
-            'fantaletteratura': 'fantaletteratura',
-            'la rotta degli eroi': 'la-rotta-degli-eroi',
-            'palestra di riflessione': 'palestra-di-riflessione',
-            'ops!': 'ops',
-            'l\'oratore': 'l-oratore',
-            'la corte della commedia': 'la-corte-della-commedia',
-            'travel agency': 'travel-agency',
-            'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
-            'la roulette': 'la-roulette'
-        };
 
         if (typeof firebase !== 'undefined') {
             const db = firebase.firestore();
             db.collection('games_status').onSnapshot(snapshot => {
-                const statusMap = {};
                 snapshot.forEach(doc => {
-                    statusMap[doc.id] = doc.data();
+                    currentStatusMap[doc.id] = doc.data();
                 });
 
                 document.querySelectorAll('.game-card').forEach(card => {
                     const title = card.getAttribute('data-title')?.toLowerCase();
                     if (!title) return;
                     const gameId = titleToIdMap[title];
-                    if (gameId && statusMap[gameId]) {
-                        const status = statusMap[gameId];
+                    if (gameId && currentStatusMap[gameId]) {
+                        const status = currentStatusMap[gameId];
                         const btn = card.querySelector('.btn');
                         if (!status.isActive) {
                             btn.classList.add('wip-link');
@@ -539,6 +548,8 @@
                         }
                     }
                 });
+
+                applyCardVisibility();
             });
         }
 

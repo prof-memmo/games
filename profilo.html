@@ -867,7 +867,11 @@
             let expDate = new Date(rawCreatedAt);
             expDate.setFullYear(expDate.getFullYear() + 1);
             let scadenzaFormatted = uData.abbonamento_scadenza ? uData.abbonamento_scadenza.replace(/-/g, '/').split('/').reverse().join('/') : expDate.toLocaleDateString('it-IT');
-            let isExpired = plan !== 'base' && !isSuperAdmin && (expDate < new Date());
+            let isExpired = plan !== 'base' && !isSuperAdmin && (
+                uData.abbonamento_scadenza 
+                    ? (new Date(uData.abbonamento_scadenza) < new Date()) 
+                    : (expDate < new Date())
+            );
 
             if (isSuperAdmin) {
                 expiryEl.innerHTML = '<strong>Scadenza:</strong> <span style="color:#b45309; font-weight:700;">👑 Nessuna scadenza (Super Amministratore).</span>';

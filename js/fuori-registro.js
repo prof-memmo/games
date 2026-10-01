@@ -28,6 +28,43 @@ const FuoriRegistro = {
     }
 
     this.refreshCounter();
+
+    // Listener per chiusura dropdown cliccando fuori
+    document.addEventListener('click', (e) => {
+      const wrap = document.querySelector('.fr-user-menu-wrap');
+      const dropdown = document.getElementById('fr-user-dropdown');
+      if (wrap && dropdown && !wrap.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Sincronizzazione dati utente Hub se presenti
+    this.syncUserFromAuth();
+  },
+
+  toggleDropdown(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('fr-user-dropdown');
+    if (dropdown) {
+      dropdown.classList.toggle('hidden');
+    }
+  },
+
+  syncUserFromAuth() {
+    if (window.firebase && window.firebase.auth) {
+      window.firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          const nameEl = document.getElementById('header-user-name');
+          const roleEl = document.getElementById('header-user-role');
+          const avatarEl = document.getElementById('header-user-avatar');
+          const dropName = document.getElementById('dropdown-user-name');
+
+          if (nameEl && user.displayName) nameEl.textContent = user.displayName.toUpperCase();
+          if (dropName && user.displayName) dropName.textContent = user.displayName;
+          if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
+        }
+      });
+    }
   },
 
   setPromptMode(mode) {

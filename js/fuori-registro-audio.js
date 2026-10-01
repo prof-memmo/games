@@ -134,9 +134,29 @@ const FuoriRegistroAudio = {
   },
 
   updateUI() {
-    const btn = document.getElementById('fr-music-toggle-btn');
-    if (btn) {
-      btn.innerHTML = this.isPlayingMusic 
+    const playBtn = document.getElementById('music-play-btn');
+    if (playBtn) {
+      playBtn.innerHTML = this.isPlayingMusic 
+        ? '<i class="fa-solid fa-pause"></i>' 
+        : '<i class="fa-solid fa-play"></i>';
+      playBtn.title = this.isPlayingMusic ? "Metti in pausa" : "Riproduci musica";
+    }
+
+    const titleEl = document.getElementById('music-track-title');
+    if (titleEl && this.tracks[this.currentTrackIndex]) {
+      titleEl.textContent = this.tracks[this.currentTrackIndex].title;
+    }
+
+    const muteBtn = document.getElementById('music-mute-toggle-btn');
+    if (muteBtn) {
+      muteBtn.innerHTML = this.isMuted
+        ? '<i class="fa-solid fa-volume-xmark"></i> Attiva Musica'
+        : '<i class="fa-solid fa-volume-high"></i> Disattiva Musica';
+    }
+
+    const navBtn = document.getElementById('fr-music-toggle-btn');
+    if (navBtn) {
+      navBtn.innerHTML = this.isPlayingMusic 
         ? '<i class="ph-bold ph-pause"></i> Pausa Musica' 
         : '<i class="ph-bold ph-music-notes"></i> Musica Ambient';
     }

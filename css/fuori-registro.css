@@ -1,5 +1,5 @@
 /* ==========================================================================
-   FUORI REGISTRO — DESIGN SYSTEM & STYLESHEET (PROF. MEMMO VETRINA)
+   FUORI REGISTRO — DESIGN SYSTEM & STYLESHEET (ECOSISTEMA PROF. MEMMO)
    Atmosfera: Warm Midnight, Polvere di Stelle & Ambra
    ========================================================================== */
 
@@ -8,7 +8,7 @@
 :root {
   --fr-bg-space: #07090e;
   --fr-bg-midnight: #0c1017;
-  --fr-bg-surface: rgba(18, 24, 38, 0.82);
+  --fr-bg-surface: rgba(18, 24, 38, 0.85);
   --fr-bg-surface-hover: rgba(28, 36, 56, 0.92);
   
   --fr-accent-gold: #d4af37;
@@ -56,21 +56,302 @@ body.fuori-registro-page {
   pointer-events: none;
 }
 
-/* NAVBAR BRANDING OVERRIDES FOR FUORI REGISTRO */
-.fuori-registro-nav {
-  background: rgba(8, 11, 17, 0.85) !important;
+/* ==========================================================================
+   ECOSYSTEM APP HEADER (BRAND PROF. MEMMO)
+   ========================================================================== */
+.fr-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background: rgba(8, 11, 17, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--fr-border-glass) !important;
+  border-bottom: 1px solid var(--fr-border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 1000;
+  transition: var(--fr-transition);
 }
 
-.fuori-registro-nav .nav-links a {
-  color: var(--fr-text-muted) !important;
+.fr-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.fuori-registro-nav .nav-links a:hover,
-.fuori-registro-nav .nav-links a.active {
-  color: var(--fr-accent-gold-light) !important;
+.fr-header-logo {
+  height: 42px;
+  width: auto;
+  cursor: pointer;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.fr-header-logo:hover {
+  transform: scale(1.04);
+}
+
+.fr-header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fr-prof-avatar-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--fr-border-gold);
+  padding: 2px;
+  background: rgba(12, 16, 23, 0.9);
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+  transition: var(--fr-transition);
+}
+
+.fr-prof-avatar-wrap:hover {
+  transform: scale(1.08);
+  border-color: var(--fr-accent-gold);
+  box-shadow: var(--fr-shadow-glow);
+}
+
+.fr-prof-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fr-header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* User Menu & Dropdown */
+.fr-user-menu-wrap {
+  position: relative;
+}
+
+.fr-user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fr-border-glass);
+  padding: 6px 14px 6px 8px;
+  border-radius: var(--fr-radius-pill);
+  cursor: pointer;
+  transition: var(--fr-transition);
+  user-select: none;
+}
+
+.fr-user-trigger:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--fr-border-gold);
+}
+
+.fr-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--fr-accent-gold);
+}
+
+.fr-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fr-user-trigger-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.fr-user-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--fr-text-main);
+  letter-spacing: 0.03em;
+}
+
+.fr-user-role {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--fr-accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fr-user-chevron {
+  font-size: 0.75rem;
+  color: var(--fr-text-muted);
+  transition: transform 0.2s;
+}
+
+/* Dropdown Card */
+.fr-user-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 290px;
+  background: rgba(14, 18, 27, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--fr-border-gold);
+  border-radius: var(--fr-radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--fr-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1001;
+  animation: frDropdownIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fr-user-dropdown.hidden {
+  display: none !important;
+}
+
+@keyframes frDropdownIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.fr-dropdown-header {
+  border-bottom: 1px solid var(--fr-border-glass);
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.fr-dropdown-title {
+  font-family: var(--fr-font-title);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--fr-text-main);
+}
+
+.fr-dropdown-subtitle {
+  font-size: 0.72rem;
+  color: var(--fr-accent-gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Music Widget */
+.fr-dropdown-music {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fr-border-glass);
+  border-radius: var(--fr-radius-md);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fr-music-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--fr-accent-gold);
+}
+
+.fr-music-link {
+  color: var(--fr-text-dim);
+  text-decoration: none;
+  font-size: 0.62rem;
+}
+
+.fr-music-capsule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fr-music-title {
+  font-size: 0.75rem;
+  color: var(--fr-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.fr-music-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fr-music-btn, .fr-music-play-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: var(--fr-text-main);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+}
+
+.fr-music-play-btn {
+  background: var(--fr-accent-gold);
+  color: #07090e;
+  width: 30px;
+  height: 30px;
+  font-size: 0.8rem;
+}
+
+.fr-music-btn:hover, .fr-music-play-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Dropdown Action Buttons */
+.fr-dropdown-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fr-border-glass);
+  color: var(--fr-text-main);
+  padding: 8px 12px;
+  border-radius: var(--fr-radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--fr-transition);
+  text-decoration: none;
+}
+
+.fr-dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--fr-accent-gold);
+}
+
+.fr-dropdown-row {
+  display: flex;
+  gap: 8px;
 }
 
 /* MAIN WRAPPER */
@@ -80,8 +361,8 @@ body.fuori-registro-page {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 120px 1.5rem 80px 1.5rem;
-  min-height: calc(100vh - 80px);
+  padding: 110px 1.5rem 80px 1.5rem;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -468,29 +749,85 @@ body.fuori-registro-page {
   font-weight: 700;
 }
 
-/* MUSIC CONTROL IN NAVBAR */
-.fr-music-bar-btn {
-  background: rgba(212, 175, 55, 0.12);
-  border: 1px solid var(--fr-border-gold);
-  color: var(--fr-accent-gold-light);
-  padding: 6px 14px;
-  border-radius: var(--fr-radius-pill);
-  font-size: 0.8rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: var(--fr-transition);
+/* ==========================================================================
+   FOOTER PATAMU & LEGAL SECTION
+   ========================================================================== */
+.fr-footer {
+  background: rgba(8, 11, 17, 0.95);
+  border-top: 1px solid var(--fr-border-glass);
+  padding: 3rem 1.5rem 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
 }
 
-.fr-music-bar-btn:hover {
-  background: rgba(212, 175, 55, 0.25);
-  transform: scale(1.04);
+.fr-footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  color: var(--fr-text-main);
+  font-family: var(--fr-font-title);
+  font-weight: 700;
+}
+
+.fr-patamu-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 1.5rem auto;
+  max-width: 820px;
+  flex-wrap: wrap;
+}
+
+.fr-patamu-img {
+  height: 75px;
+  width: auto;
+  object-fit: contain;
+}
+
+.fr-patamu-text {
+  text-align: left;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--fr-text-muted);
+  flex: 1;
+  min-width: 280px;
+}
+
+.fr-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.fr-footer-links a {
+  color: var(--fr-text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.fr-footer-links a:hover {
+  color: var(--fr-accent-gold-light);
 }
 
 @media (max-width: 768px) {
+  .fr-header {
+    padding: 0 1rem;
+    height: 64px;
+  }
+  .fr-header-logo {
+    height: 34px;
+  }
+  .fr-user-trigger-text {
+    display: none;
+  }
   .fr-main-wrapper {
-    padding: 100px 1rem 60px 1rem;
+    padding: 90px 1rem 50px 1rem;
   }
   .fr-card {
     padding: 1.5rem;
@@ -499,5 +836,8 @@ body.fuori-registro-page {
     width: 100%;
     padding: 0.9rem 1.5rem;
     font-size: 1.05rem;
+  }
+  .fr-patamu-text {
+    text-align: center;
   }
 }

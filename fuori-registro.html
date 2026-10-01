@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Fuori Registro — Dove finiscono le parole che hai dentro | Prof. Memmo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/fuori-registro.css?v=20261001_1">
+  
+  <!-- Firebase SDKs Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-init.js?v=20261001_1"></script>
+  
+  <link rel="icon" type="image/png" href="loghi/LOGO 'Fuori registro' - header - base nera.png">
+</head>
+<body class="fuori-registro-page">
+
+  <!-- Ambient Particle Canvas -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- NAVBAR UNIFICATA PORTALE (THEMED FOR FUORI REGISTRO) -->
+  <nav class="navbar fuori-registro-nav">
+    <div class="container navbar-container">
+      <a href="index.html" class="logo">
+        <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+        <span>Prof. Memmo - Games&Co.</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="giochi.html">Giochi e Materiali</a></li>
+        <li><a href="fuori-registro.html" class="active" style="color: var(--fr-accent-gold-light) !important;"><i class="ph-bold ph-feather"></i> Fuori Registro</a></li>
+        <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+        <li><a href="accedi.html">Accedi</a></li>
+        <li>
+          <button class="fr-music-bar-btn" id="fr-music-toggle-btn" onclick="FuoriRegistroAudio.togglePlay()">
+            <i class="ph-bold ph-music-notes"></i> Musica Ambient
+          </button>
+        </li>
+      </ul>
+      <div class="menu-toggle" onclick="window.toggleMobileMenu(this)"><i class="ph ph-list"></i></div>
+    </div>
+  </nav>
+
+  <!-- MAIN EXPERIENCE CONTAINER -->
+  <main class="fr-main-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="fr-hero">
+      <img src="loghi/LOGO 'Fuori registro' - base nera.png" alt="Fuori Registro" class="fr-hero-logo">
+      <h1 class="fr-hero-tagline">«Dove finiscono le parole che hai dentro.»</h1>
+      <p class="fr-hero-desc">
+        Uno spazio libero, silenzioso e totalmente anonimo per studenti, docenti e viandanti.  
+        Nessun archivio pubblico, nessun giudizio: solo il sollievo di lasciar andare ciò che tieni dentro.
+      </p>
+    </section>
+
+    <!-- WRITING / RELEASE CARD -->
+    <section class="fr-card" id="fr-writing-card">
+      
+      <!-- Poetic Verse -->
+      <div class="fr-verse">
+        <p>C'è qualcosa che vorresti dire?</p>
+        <p>Non devi dire chi sei.</p>
+        <p class="accent">Puoi semplicemente scriverlo.</p>
+      </div>
+
+      <!-- Mode Selector: Free Thought vs Guided Prompt -->
+      <div class="fr-mode-chips">
+        <button class="fr-chip active" id="fr-chip-free" onclick="FuoriRegistro.setPromptMode('free')">
+          <i class="ph-bold ph-feather"></i> Pensiero Libero
+        </button>
+        <button class="fr-chip" id="fr-chip-guided" onclick="FuoriRegistro.setPromptMode('guided')">
+          <i class="ph-bold ph-compass"></i> Spunto di Riflessione
+        </button>
+      </div>
+
+      <!-- Guided Prompt Box -->
+      <div class="fr-guided-box" id="fr-guided-box" style="display: none;">
+        <div style="flex: 1;">
+          <div class="fr-guided-label"><i class="ph-bold ph-lightbulb"></i> Spunto per riflettere</div>
+          <div class="fr-guided-question" id="fr-prompt-question">
+            "Se nessuno potesse giudicarti, cosa diresti?"
+          </div>
+        </div>
+        <button class="fr-shuffle-btn" onclick="FuoriRegistro.shufflePrompt()" title="Cambia domanda">
+          <i class="ph-bold ph-arrows-clockwise"></i>
+        </button>
+      </div>
+
+      <!-- Textarea Input Container -->
+      <div style="position: relative; width: 100%;">
+        <textarea 
+          id="fr-thought-text" 
+          class="fr-textarea" 
+          placeholder="Scrivi qui il tuo pensiero... nessuno potrà risalire a te."
+          maxlength="2000"
+          oninput="FuoriRegistro.onTextChange()"
+        ></textarea>
+      </div>
+
+      <!-- Meta row: Role Selector (Optional & Anonymous) -->
+      <div class="fr-meta-row">
+        <div class="fr-role-chips">
+          <span style="font-size: 0.78rem; color: var(--fr-text-dim); margin-right: 4px; display: flex; align-items: center;">Io sono:</span>
+          <button class="fr-role-btn selected" data-role="anonimo" onclick="FuoriRegistro.selectRole('anonimo')">Anonimo</button>
+          <button class="fr-role-btn" data-role="studente" onclick="FuoriRegistro.selectRole('studente')">Studente</button>
+          <button class="fr-role-btn" data-role="docente" onclick="FuoriRegistro.selectRole('docente')">Docente</button>
+          <button class="fr-role-btn" data-role="viandante" onclick="FuoriRegistro.selectRole('viandante')">Viandante</button>
+        </div>
+        <div class="fr-char-count" id="fr-char-count">0 / 2000</div>
+      </div>
+
+      <!-- Safety & Privacy Guarantee Note -->
+      <div class="fr-safety-box">
+        <i class="ph-bold ph-shield-check" style="color: var(--fr-accent-gold); margin-right: 6px;"></i>
+        <strong>Custodia protetta:</strong> Questo messaggio non verrà mai pubblicato online né mostrato ad altri utenti. Quando premi "Libera questo pensiero", le parole si dissolvono nello spazio per compiere il loro rito liberatorio.
+      </div>
+
+      <!-- Action Button -->
+      <div class="fr-action-row">
+        <button class="fr-release-btn" id="fr-release-btn" onclick="FuoriRegistro.releaseThought()" disabled>
+          <i class="ph-bold ph-sparkle"></i> Libera questo pensiero
+        </button>
+      </div>
+
+    </section>
+
+    <!-- SUCCESS SCREEN (REVEALED AFTER DISSOLUTION) -->
+    <section class="fr-card fr-success-screen" id="fr-success-screen" style="display: none;">
+      <div class="fr-success-icon">
+        <i class="ph-bold ph-wind"></i>
+      </div>
+
+      <div class="fr-success-poem">
+        <div class="fr-success-line l1">Il tuo pensiero è arrivato.</div>
+        <div class="fr-success-line l2">Forse non cambierà ciò che è successo.</div>
+        <div class="fr-success-line l3">Ma adesso non è più soltanto dentro di te.</div>
+      </div>
+
+      <button class="fr-reset-btn" onclick="FuoriRegistro.resetForm()">
+        <i class="ph-bold ph-pencil-simple" style="margin-right: 6px;"></i> Lascia andare un altro pensiero
+      </button>
+    </section>
+
+    <!-- SILENT COUNTER FOOTER -->
+    <div class="fr-counter-pill">
+      <i class="ph-bold ph-sparkle" style="color: var(--fr-accent-gold);"></i>
+      <span>Oggi sono stati affidati a Fuori Registro <span class="fr-counter-num" id="fr-counter-num">47</span> pensieri silenziosi.</span>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" style="background: rgba(8, 11, 17, 0.95); border-top: 1px solid var(--fr-border-glass);">
+    <div class="container footer-content text-center">
+      <div class="footer-logo">
+        <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+        <span>Prof. Memmo - Games&Co.</span>
+      </div>
+      <p class="footer-text" style="color: var(--fr-text-muted);">Laboratorio di innovazione didattica, gamification e strumenti per la scuola secondaria.</p>
+      <div class="footer-links">
+        <a href="Privacy policy e Trattamento - Prof. memmo games.pages">Privacy Policy</a>
+        <a href="contatti.html">Contatti</a>
+        <a href="sostieni.html">Sostieni il Progetto</a>
+      </div>
+      <p class="copyright" style="color: var(--fr-text-dim);">© 2026 Prof. Memmo - Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script src="js/fuori-registro-prompts.js"></script>
+  <script src="js/fuori-registro-audio.js"></script>
+  <script src="js/fuori-registro-thoughts.js"></script>
+  <script src="js/fuori-registro.js"></script>
+</body>
+</html>

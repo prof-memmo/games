@@ -166,6 +166,7 @@
                         <button class="filter-btn" data-filter="scrittura">Laboratorio di scrittura</button>
                         <button class="filter-btn" data-filter="lingua">Riflessione sulla lingua</button>
                         <button class="filter-btn" data-filter="religione">Materia alternativa alla religione</button>
+                        <button class="filter-btn" data-filter="riflessione">Spazio riflessione</button>
                         <button class="filter-btn" data-filter="online">Giochi online</button>
                     </div>
                     <div style="display: flex; justify-content: center; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
@@ -361,6 +362,28 @@
                         </div>
                     </div>
 
+                    <!-- Fuori Registro -->
+                    <div class="game-card item" data-materia="riflessione" data-type="online" data-title="Fuori Registro">
+                        <div class="game-card-img"><img src="loghi/LOGO%20'Fuori%20registro'%20-%20base%20bianca.png" alt="Fuori Registro Logo"></div>
+                        <div class="game-card-content">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <div class="game-card-cat" style="margin-bottom: 0;">Spazio di Riflessione</div>
+                                <span style="background: #d4af37; color: #0b0f17; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Spazio Libero</span>
+                            </div>
+                            <h3>Fuori Registro</h3>
+                            <p>Dove finiscono le parole che hai dentro. Uno spazio protetto e totalmente anonimo per studenti, docenti e viandanti per liberare pensieri e riflessioni.</p>
+                            <div class="game-meta-card">
+                                <div class="meta-item"><span>📚 Tema:</span> Riflessione & Benessere</div>
+                                <div class="meta-item"><span>👥 Modalità:</span> Personale e riservata</div>
+                                <div class="meta-item"><span>⏱️ Durata:</span> Libera</div>
+                                <div class="meta-item"><span>🎯 Obiettivi:</span> Ascolto di sé, rilascio emotivo</div>
+                                <div class="meta-item"><span>👶 Destinatari:</span> Per tutte le età</div>
+                                <div class="meta-item"><span>🏫 Uso:</span> Personale, Classe, Casa</div>
+                            </div>
+                            <a href="fuori-registro-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
+                        </div>
+                    </div>
+
                 </div>
                 
                 <!-- Nessun Risultato State -->
@@ -418,7 +441,8 @@
                 'la corte della commedia': 'la-corte-della-commedia',
                 'travel agency': 'travel-agency',
                 'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
-                'la roulette': 'la-roulette'
+                'la roulette': 'la-roulette',
+                'fuori registro': 'fuori-registro'
             };
 
             let currentFilter = 'tutti';

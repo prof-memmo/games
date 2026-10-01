@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuori Registro - Prof. Memmo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js?v=20261001_1"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <span>Prof. Memmo - Games&Co.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="giochi.html" style="color: var(--color-primary);">Giochi e Materiali</a></li>
+                <li><a href="metodo-filosofia.html">Metodo e Filosofia</a></li>
+                <li><a href="accedi.html">Accedi</a></li>
+                <li><a href="condividi-esperienza.html">Condividi Esperienza</a></li>
+                <li><a href="contatti.html" class="btn btn-outline">Contatti</a></li>
+            </ul>
+            <div class="menu-toggle" onclick="window.toggleMobileMenu(this)"><i class="ph ph-list"></i></div>
+        </div>
+    </nav>
+
+    <main data-game-id="fuori-registro" style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
+        <div class="container">
+            
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
+                <span style="display: inline-block; background: #d4af37; color: #0b0f17; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 2.5rem; letter-spacing: 0.05em;">Spazio di Riflessione & Benessere</span>
+                
+                <div class="game-detail-grid">
+                    <div class="game-detail-left">
+                        <img src="loghi/LOGO 'Fuori registro' - base bianca.png" alt="Fuori Registro Logo" class="game-detail-logo" style="max-height: 200px; width: auto; border-radius: 16px;">
+                        
+                        <div class="game-meta-card" style="margin: 0; max-width: 100%;">
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>📚 Natura:</span> Spazio protetto e anonimo</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👥 Destinatari:</span> Studenti, Docenti, Viandanti</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>⏱️ Tempo:</span> Libero ed individuale</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🎯 Obiettivi:</span> Introspezione, sfogo catartico, ascolto</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🔒 Privacy:</span> Zero archivi pubblici, 100% anonimo</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Personale, Casa, Momenti di pausa</div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-detail-right">
+                        <p class="lead">
+                            <strong>Fuori Registro</strong> è lo spazio dell'Ecosistema Prof. Memmo dedicato a tutto ciò che a scuola non trova mai spazio: i pensieri non detti, le riflessioni intime, le fatiche silenziose e le parole custodite troppo a lungo.
+                        </p>
+                        <p class="lead">
+                            Ispirato al rito liberatorio dello scrivere per lasciar andare, non è un social network né uno sportello clinico: è un porto tranquillo in cui ogni parola affidata viene accolta e dissolta senza giudizio. Chi scrive può scegliere tra la pagina bianca o farsi guidare da una domanda stimolante, trovando sollievo nella consapevolezza che <em>adesso quel pensiero non è più soltanto dentro di sé</em>.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <a href="https://prof-memmo.github.io/fuori-registro/" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem; box-shadow: var(--shadow-md);"><i class="ph-bold ph-feather" style="margin-right: 0.5rem;"></i> Entra in Fuori Registro</a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 5rem;">
+                <a href="giochi.html" class="btn btn-outline"><i class="ph ph-arrow-left" style="margin-right: 0.5rem;"></i> Torna al Catalogo Giochi</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <div class="footer-logo">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img small">
+                <span>Prof. Memmo - Games&Co.</span>
+            </div>
+            <p class="footer-text">Laboratorio di innovazione didattica, gamification e strumenti per la scuola secondaria.</p>
+            <div class="footer-links">
+                <a href="Privacy policy e Trattamento - Prof. memmo games.pages">Privacy Policy</a>
+                <a href="contatti.html">Contatti</a>
+                <a href="sostieni.html">Sostieni il Progetto</a>
+            </div>
+            <p class="copyright">© 2026 Prof. Memmo - Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+</body>
+</html>

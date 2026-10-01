@@ -3,7 +3,7 @@
    Atmosfera: Warm Midnight, Polvere di Stelle & Ambra
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
   --fr-bg-space: #07090e;
@@ -31,7 +31,7 @@
   --fr-radius-lg: 22px;
   --fr-radius-pill: 9999px;
   
-  --fr-font-title: 'Outfit', sans-serif;
+  --fr-font-title: 'Julius Sans One', sans-serif;
   --fr-font-body: 'Inter', sans-serif;
   --fr-transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }

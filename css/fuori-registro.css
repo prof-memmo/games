@@ -642,33 +642,48 @@ body.fuori-registro-page {
 }
 
 /* PULSANTE INVIO */
+/* PULSANTE INVIO */
 .fr-action-row {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .fr-release-btn {
-  background: linear-gradient(135deg, #d4af37 0%, #b8911e 100%);
-  color: #070a0f;
-  border: none;
-  padding: 1rem 3rem;
+  width: 100%;
+  max-width: 780px;
+  background: rgba(212, 175, 55, 0.12);
+  color: rgba(212, 175, 55, 0.45);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 1.15rem 2.5rem;
   border-radius: var(--fr-radius-pill);
   font-family: var(--fr-font-title);
   font-size: 1.15rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  display: inline-flex;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: not-allowed;
+  display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.4);
-  transition: var(--fr-transition);
+  justify-content: center;
+  box-shadow: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.fr-release-btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 15px 35px -5px rgba(212, 175, 55, 0.6);
-  background: linear-gradient(135deg, #fbe07a 0%, #d4af37 100%);
+.fr-release-btn:not(:disabled) {
+  background: linear-gradient(135deg, #fce588 0%, #d4af37 50%, #b38b18 100%);
+  color: #080b11;
+  border: 1px solid #fff0a6;
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.65), 0 8px 25px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transform: translateY(-2px);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.fr-release-btn:not(:disabled):hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 0 50px rgba(251, 224, 122, 0.9), 0 12px 30px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, #ffffff 0%, #fbe07a 35%, #d4af37 100%);
 }
 
 .fr-release-btn:disabled {
@@ -772,37 +787,47 @@ body.fuori-registro-page {
    FOOTER PATAMU & LEGAL SECTION
    ========================================================================== */
 .fr-footer {
-  background: rgba(8, 11, 17, 0.95);
+  background: rgba(6, 8, 13, 0.98);
   border-top: 1px solid var(--fr-border-glass);
-  padding: 3rem 1.5rem 2rem 1.5rem;
+  padding: 2.25rem 1.5rem 2rem 1.5rem;
   text-align: center;
   position: relative;
   z-index: 10;
 }
 
-.fr-footer-logo {
+.fr-footer-links {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 1.5rem;
-  color: var(--fr-text-main);
+  gap: 2.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.fr-footer-links a {
+  color: var(--fr-text-muted);
+  text-decoration: none;
   font-family: var(--fr-font-title);
-  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.fr-footer-links a:hover {
+  color: var(--fr-accent-gold-light);
 }
 
 .fr-patamu-badge-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin: 1.5rem auto;
+  gap: 24px;
+  margin: 0 auto;
   max-width: 1040px;
   width: 100%;
 }
 
 .fr-patamu-img {
-  height: 75px;
+  height: 52px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
@@ -810,30 +835,14 @@ body.fuori-registro-page {
 
 .fr-patamu-text {
   text-align: left;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--fr-text-muted);
-  flex: 1;
-  width: 100%;
-  margin: 0;
-}
-
-.fr-footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1.25rem;
-}
-
-.fr-footer-links a {
+  font-family: var(--fr-font-title);
+  font-size: 0.73rem;
+  line-height: 1.65;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--fr-text-dim);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: color 0.2s;
-}
-
-.fr-footer-links a:hover {
-  color: var(--fr-accent-gold-light);
+  flex: 1;
+  margin: 0;
 }
 
 @media (max-width: 768px) {

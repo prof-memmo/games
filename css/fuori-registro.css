@@ -391,20 +391,26 @@ body.fuori-registro-page {
 
 .fr-hero-tagline {
   font-family: var(--fr-font-title);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 400;
   color: var(--fr-accent-gold-light);
-  letter-spacing: 0.04em;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.85rem;
   text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  width: 100%;
 }
 
 .fr-hero-desc {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--fr-text-muted);
-  max-width: 580px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.7;
+  text-align: center;
+  hyphens: none;
+  -webkit-hyphens: none;
+  word-break: normal;
 }
 
 /* CARD PRINCIPALE */

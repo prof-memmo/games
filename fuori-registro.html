@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=3">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Fuori Registro — Dove finiscono le parole che hai dentro | Prof. Memmo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome & Phosphor Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="css/fuori-registro.css?v=20261001_2">
+  
+  <!-- Firebase SDKs Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-init.js?v=20261001_1"></script>
+  
+  <!-- Modale Legale Condivisa Hub -->
+  <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20261001_1"></script>
+
+</head>
+<body class="fuori-registro-page">
+
+  <!-- Ambient Particle Canvas -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- ==========================================
+       HEADER DELL'ECOSISTEMA (BRAND UNIFORME PROF. MEMMO)
+       ========================================== -->
+  <header class="fr-header" id="main-app-header">
+    <!-- Logo Gioco Sinistra (Base Bianca per risaltare su sfondo scuro) -->
+    <div class="fr-header-left">
+      <img src="loghi/LOGO 'Fuori registro' - header - base bianca.png" alt="Logo Fuori Registro" class="fr-header-logo" onclick="window.location.reload()">
+    </div>
+
+    <!-- Logo Avatar Centrale Prof. Memmo -->
+    <div class="fr-header-center">
+      <div class="fr-prof-avatar-wrap" onclick="window.location.href='index.html'" title="Torna al Portale Giochi Prof. Memmo">
+        <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png" class="fr-prof-avatar-img" alt="Prof. Memmo Logo">
+      </div>
+    </div>
+
+    <!-- User Menu & Dropdown Integrato (Destra) -->
+    <div class="fr-header-right">
+      <div class="fr-user-menu-wrap">
+        <!-- Trigger Pill -->
+        <div class="fr-user-trigger" id="fr-user-trigger" onclick="FuoriRegistro.toggleDropdown(event)">
+          <div class="fr-user-avatar">
+            <img id="header-user-avatar" src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/avatars/6.png" alt="Avatar" onerror="this.src='https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png'">
+          </div>
+          <div class="fr-user-trigger-text">
+            <span class="fr-user-name" id="header-user-name">VIANDANTE</span>
+            <span class="fr-user-role" id="header-user-role">OSPITE ANONIMO</span>
+          </div>
+          <span class="fr-user-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+        </div>
+
+        <!-- Dropdown Card -->
+        <div class="fr-user-dropdown hidden" id="fr-user-dropdown">
+          
+          <div class="fr-dropdown-header">
+            <div class="fr-dropdown-title" id="dropdown-user-name">FUORI REGISTRO</div>
+            <div class="fr-dropdown-subtitle" id="dropdown-user-role-sub">SPAZIO PROTETTO</div>
+          </div>
+
+          <!-- Sottofondo Music Player Widget -->
+          <div class="fr-dropdown-music">
+            <div class="fr-music-header">
+              <span><i class="fa-solid fa-music"></i> SOTTOFONDO RILASSANTE</span>
+              <a href="https://freetouse.com/music" target="_blank" class="fr-music-link">FREETOUSE.COM</a>
+            </div>
+            <div class="fr-music-capsule">
+              <span class="fr-music-title" id="music-track-title">Hazelwood - At Ease</span>
+              <div class="fr-music-controls">
+                <button class="fr-music-btn" onclick="FuoriRegistroAudio.prevTrack()" title="Precedente"><i class="fa-solid fa-backward-step"></i></button>
+                <button class="fr-music-play-btn" id="music-play-btn" onclick="FuoriRegistroAudio.togglePlay()" title="Play/Pausa"><i class="fa-solid fa-play"></i></button>
+                <button class="fr-music-btn" onclick="FuoriRegistroAudio.nextTrack()" title="Successiva"><i class="fa-solid fa-forward-step"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <a href="giochi.html" class="fr-dropdown-btn">
+            <i class="fa-solid fa-gamepad"></i> Catalogo Giochi e Materiali
+          </a>
+
+          <a href="accedi.html" class="fr-dropdown-btn" id="btn-login-dropdown">
+            <i class="fa-solid fa-right-to-bracket"></i> Accedi / Area Personale
+          </a>
+
+          <div class="fr-dropdown-row">
+            <button class="fr-dropdown-btn" onclick="if(window.openSharedModal) window.openSharedModal('privacy');">
+              <i class="fa-solid fa-shield-halved"></i> Privacy
+            </button>
+            <button class="fr-dropdown-btn" onclick="if(window.openSharedModal) window.openSharedModal('terms');">
+              <i class="fa-solid fa-scroll"></i> Termini
+            </button>
+          </div>
+
+          <button class="fr-dropdown-btn" onclick="if(window.openSharedModal) window.openSharedModal('contatti');">
+            <i class="fa-solid fa-envelope"></i> Contatti & Assistenza
+          </button>
+
+          <button class="fr-dropdown-btn" id="music-mute-toggle-btn" style="background: rgba(212, 175, 55, 0.12); color: var(--fr-accent-gold-light);" onclick="FuoriRegistroAudio.toggleMute()">
+            <i class="fa-solid fa-volume-high"></i> Disattiva Musica
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN EXPERIENCE CONTAINER
+       ========================================== -->
+  <main class="fr-main-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="fr-hero">
+      <img src="loghi/LOGO 'Fuori registro' - base nera.png" alt="Fuori Registro" class="fr-hero-logo">
+      <h1 class="fr-hero-tagline">«Dove finiscono le parole che hai dentro.»</h1>
+      <p class="fr-hero-desc">
+        Uno spazio libero, silenzioso e totalmente anonimo per studenti, docenti e viandanti.  
+        Nessun archivio pubblico, nessun giudizio: solo il sollievo di lasciar andare ciò che tieni dentro.
+      </p>
+    </section>
+
+    <!-- WRITING / RELEASE CARD -->
+    <section class="fr-card" id="fr-writing-card">
+      
+      <!-- Poetic Verse -->
+      <div class="fr-verse">
+        <p>C'è qualcosa che vorresti dire?</p>
+        <p>Non devi dire chi sei.</p>
+        <p class="accent">Puoi semplicemente scriverlo.</p>
+      </div>
+
+      <!-- Mode Selector: Free Thought vs Guided Prompt -->
+      <div class="fr-mode-chips">
+        <button class="fr-chip active" id="fr-chip-free" onclick="FuoriRegistro.setPromptMode('free')">
+          <i class="fa-solid fa-feather-pointed"></i> Pensiero Libero
+        </button>
+        <button class="fr-chip" id="fr-chip-guided" onclick="FuoriRegistro.setPromptMode('guided')">
+          <i class="fa-solid fa-compass"></i> Spunto di Riflessione
+        </button>
+      </div>
+
+      <!-- Guided Prompt Box -->
+      <div class="fr-guided-box" id="fr-guided-box" style="display: none;">
+        <div style="flex: 1;">
+          <div class="fr-guided-label"><i class="fa-regular fa-lightbulb"></i> Spunto per riflettere</div>
+          <div class="fr-guided-question" id="fr-prompt-question">
+            "Se nessuno potesse giudicarti, cosa diresti?"
+          </div>
+        </div>
+        <button class="fr-shuffle-btn" onclick="FuoriRegistro.shufflePrompt()" title="Cambia domanda">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+      </div>
+
+      <!-- Textarea Input Container -->
+      <div style="position: relative; width: 100%;">
+        <textarea 
+          id="fr-thought-text" 
+          class="fr-textarea" 
+          placeholder="Scrivi qui il tuo pensiero... nessuno potrà risalire a te."
+          maxlength="2000"
+          oninput="FuoriRegistro.onTextChange()"
+        ></textarea>
+      </div>
+
+      <!-- Meta row: Character Counter -->
+      <div class="fr-meta-row" style="justify-content: flex-end;">
+        <div class="fr-char-count" id="fr-char-count">0 / 2000</div>
+      </div>
+
+      <!-- Safety & Privacy Guarantee Note -->
+      <div class="fr-safety-box">
+        <i class="fa-solid fa-shield-halved" style="color: var(--fr-accent-gold); margin-right: 6px;"></i>
+        <strong>Custodia protetta:</strong> Questo messaggio non verrà mai pubblicato online né mostrato ad altri utenti. Quando premi "Libera questo pensiero", le parole si dissolvono nello spazio per compiere il loro rito liberatorio.
+      </div>
+
+      <!-- Action Button -->
+      <div class="fr-action-row">
+        <button class="fr-release-btn" id="fr-release-btn" onclick="FuoriRegistro.releaseThought()" disabled>
+          LIBERA QUESTO PENSIERO
+        </button>
+      </div>
+
+    </section>
+
+    <!-- SUCCESS SCREEN (REVEALED AFTER DISSOLUTION) -->
+    <section class="fr-card fr-success-screen" id="fr-success-screen" style="display: none;">
+      <div class="fr-success-icon">
+        <i class="fa-solid fa-wind"></i>
+      </div>
+
+      <div class="fr-success-poem">
+        <div class="fr-success-line l1">Il tuo pensiero è arrivato.</div>
+        <div class="fr-success-line l2">Forse non cambierà ciò che è successo.</div>
+        <div class="fr-success-line l3">Ma adesso non è più soltanto dentro di te.</div>
+      </div>
+
+      <button class="fr-reset-btn" onclick="FuoriRegistro.resetForm()">
+        <i class="fa-solid fa-pen-nib" style="margin-right: 6px;"></i> Lascia andare un altro pensiero
+      </button>
+    </section>
+
+    <!-- SILENT COUNTER FOOTER -->
+    <div class="fr-counter-pill">
+      <i class="fa-solid fa-sparkle" style="color: var(--fr-accent-gold);"></i>
+      <span>Oggi sono stati affidati a Fuori Registro <span class="fr-counter-num" id="fr-counter-num">47</span> pensieri silenziosi.</span>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       OFFICIAL FOOTER WITH PATAMU BADGE
+       ========================================== -->
+  <footer class="fr-footer">
+    <div class="container" style="max-width: 1040px; margin: 0 auto; width: 100%;">
+      <div class="fr-footer-links">
+        <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('privacy');">PRIVACY POLICY</a>
+        <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('terms');">TERMINI E CONDIZIONI</a>
+      </div>
+
+      <div class="fr-patamu-badge-row">
+        <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png" alt="Patamu Logo" class="fr-patamu-img">
+        <p class="fr-patamu-text">
+          &copy; 2026 GUGLIELMO PIERSANTI. TUTTI I CONTENUTI PRESENTI SU QUESTO SITO SONO DI PROPRIETÀ DELL'AUTORE E SONO PROTETTI TRAMITE DEPOSITO E MARCATURA TEMPORALE PRESSO PATAMU. I CONTENUTI SONO INOLTRE DISTRIBUITI CON LICENZA CREATIVE COMMONS ATTRIBUTION-NONCOMMERCIAL-NODERIVATIVES 4.0 INTERNATIONAL (CC BY-NC-ND 4.0).
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/fuori-registro-prompts.js"></script>
+  <script src="js/fuori-registro-audio.js"></script>
+  <script src="js/fuori-registro-thoughts.js"></script>
+  <script src="js/fuori-registro.js"></script>
+</body>
+</html>

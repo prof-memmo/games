@@ -6,32 +6,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'Oratore - Prof. Memmo</title>
+    <title>Fuori Registro - Prof. Memmo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto 3rem auto;
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            background: #000;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            border: 2px dashed rgba(255,255,255,0.2);
-        }
-    </style>
+    
+    <!-- Firebase SDKs Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js?v=20261001_1"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -52,38 +38,38 @@
         </div>
     </nav>
 
-    <main data-game-id="l-oratore" style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
+    <main data-game-id="fuori-registro" style="padding-top: 8rem; min-height: 80vh; background-color: var(--color-bg-alt); padding-bottom: 6rem;">
         <div class="container">
             
             <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
-                <span style="display: inline-block; background: var(--color-primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 2.5rem; letter-spacing: 0.05em;">Gioco Online Esclusivo</span>
+                <span style="display: inline-block; background: #d4af37; color: #0b0f17; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 2.5rem; letter-spacing: 0.05em;">Spazio di Riflessione & Benessere</span>
                 
                 <div class="game-detail-grid">
                     <div class="game-detail-left">
-                        <img src="loghi/Logo l'oratore grande - base bianca.png" alt="L'Oratore Logo" class="game-detail-logo" style="max-height: 200px; width: auto; border-radius: 16px;">
+                        <img src="loghi/LOGO 'Fuori registro' - base bianca.png" alt="Fuori Registro Logo" class="game-detail-logo" style="max-height: 200px; width: auto; border-radius: 16px;">
                         
                         <div class="game-meta-card" style="margin: 0; max-width: 100%;">
-                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>📚 Materia:</span> Italiano, Retorica & Debate</div>
-                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👥 Giocatori:</span> 2-4 Squadre</div>
-                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>⏱️ Discorso:</span> 2 Minuti a Turno</div>
-                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🎯 Obiettivi:</span> Espressione orale, argomentazione, lessico</div>
-                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👶 Livelli QCER:</span> A1, A2, B1, B2, C1, C2</div>
-                            <div class="meta-item"><span>🏫 Uso:</span> Classe LIM, Debate, Laboratori</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>📚 Natura:</span> Spazio protetto e anonimo</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>👥 Destinatari:</span> Studenti, Docenti, Viandanti</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>⏱️ Tempo:</span> Libero ed individuale</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🎯 Obiettivi:</span> Introspezione, sfogo catartico, ascolto</div>
+                            <div class="meta-item" style="margin-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:0.5rem;"><span>🔒 Privacy:</span> Zero archivi pubblici, 100% anonimo</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Personale, Casa, Momenti di pausa</div>
                         </div>
                     </div>
                     
                     <div class="game-detail-right">
                         <p class="lead">
-                            <strong>L'Oratore</strong> è il gioco da tavolo digitale dedicato all'arte dell'eloquenza, dello storytelling e della retorica viva. Proiettato sulla LIM, trasforma l'aula in un'assemblea o in un tribunale antico: 2-4 squadre si sfidano a turni su un tabellone a 24 caselle, affrontando round tematici condivisi.
+                            <strong>Fuori Registro</strong> è lo spazio dell'Ecosistema Prof. Memmo dedicato a tutto ciò che a scuola non trova mai spazio: i pensieri non detti, le riflessioni intime, le fatiche silenziose e le parole custodite troppo a lungo.
                         </p>
                         <p class="lead">
-                            Ogni oratore ha <strong>2 minuti</strong> per arringare la classe partendo da una situazione drammatica <em>in medias res</em>, evitando 5 insidiose parole vietate (o incorporando 5 parole obbligatorie). Con <strong>192 carte originali</strong> ripartite su 8 mazzi tematici (<em>Epica, Medioevo, Fantascienza, Teatro, Letteratura, Civiltà, Scienza, Creatività</em>), la difficoltà si adatta perfettamente dalla scuola primaria fino alla maturità e ai tornei di debate.
+                            Ispirato al rito liberatorio dello scrivere per lasciar andare, non è un social network né uno sportello clinico: è un porto tranquillo in cui ogni parola affidata viene accolta e dissolta senza giudizio. Chi scrive può scegliere tra la pagina bianca o farsi guidare da una domanda stimolante, trovando sollievo nella consapevolezza che <em>adesso quel pensiero non è più soltanto dentro di sé</em>.
                         </p>
                     </div>
                 </div>
 
                 <div style="margin-top: 3rem;">
-                    <a href="https://prof-memmo.github.io/l-oratore/" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem; box-shadow: var(--shadow-md);"><i class="ph-bold ph-play" style="margin-right: 0.5rem;"></i> Vai a L'Oratore Online</a>
+                    <a href="fuori-registro.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem; box-shadow: var(--shadow-md);"><i class="ph-bold ph-feather" style="margin-right: 0.5rem;"></i> Entra in Fuori Registro <i class="ph-bold ph-arrow-square-out" style="margin-left: 0.35rem;"></i></a>
                 </div>
             </div>
 

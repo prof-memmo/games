@@ -205,8 +205,8 @@
         function vaiAlPortaleLogin(role) {
             const isPreview = window.location.pathname.includes('/preview');
             const portalBase = isPreview 
-                ? 'https://gestionesiti.profmemmo.it/preview/portal.html'
-                : 'https://gestionesiti.profmemmo.it/portal.html';
+                ? 'portal.html' 
+                : 'portal.html';
             const params = new URLSearchParams(window.location.search);
             if (role) params.set('role', role);
             if (!params.get('redirect')) params.set('redirect', 'profilo');

@@ -716,11 +716,36 @@
             return true;
         }
 
+            // Inizializzazione Ricezione SSO
+            let ssoUser = null;
+            try {
+                if (window.location.hash && window.location.hash.includes('pm_sso=')) {
+                    const match = window.location.hash.match(/pm_sso=([^&]+)/);
+                    if (match && match[1]) {
+                        ssoUser = JSON.parse(decodeURIComponent(match[1]));
+                        if (ssoUser && ssoUser.uid) {
+                            localStorage.setItem('pm_sso_session', JSON.stringify(ssoUser));
+                            history.replaceState(null, '', window.location.pathname + window.location.search);
+                        }
+                    }
+                }
+            } catch(e) {
+                console.warn("Errore parsing SSO:", e);
+            }
+
+            if (!ssoUser) {
+                try {
+                    const cached = localStorage.getItem('pm_sso_session');
+                    if (cached) ssoUser = JSON.parse(cached);
+                } catch(e) {}
+            }
+
             // 3. Gestione Auth State
             auth.onAuthStateChanged(async (authUser) => {
+                const effectiveUser = authUser || ssoUser;
                 if (previewUserId) {
                     // Modalità Anteprima: solo se l'utente loggato è l'admin
-                    if (authUser && authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com') {
+                    if (effectiveUser && effectiveUser.email && effectiveUser.email.toLowerCase() === 'prof.memmo@gmail.com') {
                         isPreviewMode = true;
                         document.getElementById('admin-preview-banner').style.display = 'flex';
                         document.getElementById('admin-preview-text').textContent = `🔍 Anteprima Admin (Sola Lettura) — Utente ID: ${previewUserId}`;
@@ -730,14 +755,14 @@
                     }
                 }
 
-                if (!authUser) {
+                if (!effectiveUser) {
                     // Non loggato -> redirect alla pagina accedi
                     window.location.replace('accedi.html');
                     return;
                 }
 
-                currentProfileUser = authUser;
-                caricaDatiProfilo(authUser.uid, false);
+                currentProfileUser = effectiveUser;
+                caricaDatiProfilo(effectiveUser.uid, false);
                 caricaNotificheEcosistema();
             });
         });
@@ -1205,10 +1230,11 @@
         }
 
         async function eseguiLogout() {
+            localStorage.removeItem('pm_sso_session');
             if (typeof firebase !== 'undefined' && firebase.auth) {
                 await firebase.auth().signOut();
-                window.location.replace('accedi.html');
             }
+            window.location.replace('accedi.html');
         }
 
         async function confermaDisattivazione() {

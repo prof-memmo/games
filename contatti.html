@@ -108,7 +108,7 @@
                             <div class="form-group checkbox-group">
                                 <input type="checkbox" id="terms-checkbox" required>
                                 <label for="terms-checkbox" class="checkbox-label">
-                                    Ho almeno 16 anni o sono sotto la supervisione di un adulto. Accetto la <a href="javascript:void(0)" data-legal="privacy">Privacy Policy</a> e i <a href="javascript:void(0)" data-legal="terms">Termini e Condizioni</a>.
+                                    Ho almeno 16 anni o sono sotto la supervisione di un adulto. Accetto la <a href="#" onclick="event.preventDefault(); openSharedModal('privacy');" style="color: var(--color-text-light, #94a3b8); text-decoration: underline;">Privacy Policy</a> e i <a href="#" onclick="event.preventDefault(); openSharedModal('termini');" style="color: var(--color-text-light, #94a3b8); text-decoration: underline;">Termini e Condizioni</a>.
                                 </label>
                             </div>
                             <button type="submit" id="submit-btn" class="btn btn-primary w-full">Invia Messaggio</button>
@@ -135,8 +135,8 @@
     </p>
 </div>
             <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
-                <a href="javascript:void(0)" data-legal="privacy" style="color: var(--color-text-light); text-decoration: none;">Privacy Policy</a>
-                <a href="javascript:void(0)" data-legal="terms" style="color: var(--color-text-light); text-decoration: none;">Termini e Condizioni</a>
+                <a href="#" onclick="event.preventDefault(); openSharedModal('privacy');" style="color: var(--color-text-light, #94a3b8); text-decoration: underline;">Privacy Policy</a>
+                <a href="#" onclick="event.preventDefault(); openSharedModal('termini');" style="color: var(--color-text-light, #94a3b8); text-decoration: underline;">Termini e Condizioni</a>
             </div>
         </div>
     </footer>

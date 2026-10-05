@@ -94,7 +94,7 @@
     <nav class="navbar">
         <div class="container navbar-container">
             <a href="index.html" class="logo">
-                <img src="https://gestionesiti.profmemmo.it/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
                 <span>Prof. Memmo - Games&Co.</span>
             </a>
             <ul class="nav-links">
@@ -205,55 +205,37 @@
         function vaiAlPortaleLogin(role) {
             const isPreview = window.location.pathname.includes('/preview');
             const portalBase = isPreview 
-                ? 'portal.html' 
-                : 'portal.html';
+                ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html'
+                : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html';
             const params = new URLSearchParams(window.location.search);
             if (role) params.set('role', role);
-            if (!params.get('redirect')) params.set('redirect', 'profilo');
             const queryString = params.toString();
             const targetUrl = queryString ? `${portalBase}?${queryString}` : portalBase;
             window.location.href = targetUrl;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Check SSO session
-            let ssoUser = null;
-            try {
-                const cached = localStorage.getItem('pm_sso_session');
-                if (cached) ssoUser = JSON.parse(cached);
-            } catch(e) {}
-
-            const updateAuthUi = (user) => {
-                const box = document.getElementById('auth-state-box');
-                const navAccedi = document.getElementById('nav-accedi-link');
-                if (user) {
-                    if (navAccedi) {
-                        navAccedi.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';
-                        navAccedi.href = 'profilo.html';
-                    }
-                    if (box) {
-                        box.innerHTML = `
-                            <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-                                <div style="font-weight:600; color:#15803d; font-size:0.95rem;">✅ Sei connesso come ${user.displayName || user.name || user.email}</div>
-                                <a href="profilo.html" class="btn-go-profile"><i class="ph ph-user"></i> Vai al tuo Profilo</a>
-                            </div>
-                        `;
-                    }
-                }
-            };
-
-            if (ssoUser) {
-                updateAuthUi(ssoUser);
-            }
-
             if (typeof firebase === 'undefined') return;
             const db = firebase.firestore();
 
             // 1. Controllo Auth State
             if (firebase.auth) {
                 firebase.auth().onAuthStateChanged(user => {
+                    const box = document.getElementById('auth-state-box');
+                    const navAccedi = document.getElementById('nav-accedi-link');
                     if (user) {
-                        updateAuthUi(user);
+                        if (navAccedi) {
+                            navAccedi.innerHTML = '<i class="ph ph-user-circle"></i> Il mio Profilo';
+                            navAccedi.href = 'profilo.html';
+                        }
+                        if (box) {
+                            box.innerHTML = `
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+                                    <div style="font-weight:600; color:#15803d; font-size:0.95rem;">✅ Sei connesso come ${user.displayName || user.email}</div>
+                                    <a href="profilo.html" class="btn-go-profile"><i class="ph ph-user"></i> Vai al tuo Profilo</a>
+                                </div>
+                            `;
+                        }
                     }
                 });
             }
@@ -320,6 +302,6 @@
             }
         });
     </script>
-    <script src="https://gestionesiti.profmemmo.it/shared/legal-modal.js?v=20260817c"></script>
+    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
 </body>
 </html>

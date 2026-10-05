@@ -94,7 +94,7 @@
     <nav class="navbar">
         <div class="container navbar-container">
             <a href="index.html" class="logo">
-                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <img src="https://gestionesiti.profmemmo.it/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
                 <span>Prof. Memmo - Games&Co.</span>
             </a>
             <ul class="nav-links">
@@ -205,8 +205,8 @@
         function vaiAlPortaleLogin(role) {
             const isPreview = window.location.pathname.includes('/preview');
             const portalBase = isPreview 
-                ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html'
-                : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html';
+                ? 'https://gestionesiti.profmemmo.it/preview/portal.html'
+                : 'https://gestionesiti.profmemmo.it/portal.html';
             const params = new URLSearchParams(window.location.search);
             if (role) params.set('role', role);
             const queryString = params.toString();
@@ -302,6 +302,6 @@
             }
         });
     </script>
-    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
+    <script src="https://gestionesiti.profmemmo.it/shared/legal-modal.js?v=20260817c"></script>
 </body>
 </html>

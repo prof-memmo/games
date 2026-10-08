@@ -731,6 +731,18 @@
                 }
 
                 if (!authUser) {
+                    // Controlla se abbiamo una sessione SSO attiva dall'Hub
+                    const ssoRaw = localStorage.getItem('hub_user_session');
+                    if (ssoRaw) {
+                        try {
+                            const ssoSession = JSON.parse(ssoRaw);
+                            if (ssoSession && ssoSession.uid) {
+                                caricaDatiProfilo(ssoSession.uid, false);
+                                caricaNotificheEcosistema();
+                                return;
+                            }
+                        } catch(e) {}
+                    }
                     // Non loggato -> redirect alla pagina accedi
                     window.location.replace('accedi.html');
                     return;

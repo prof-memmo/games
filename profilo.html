@@ -864,8 +864,7 @@
             const classesSec = document.getElementById('profile-teacher-classes-section');
             if (isSuperAdmin || effectiveRole.includes('docente') || effectiveRole.includes('admin')) {
                 if (classesSec) classesSec.style.display = 'block';
-                const effectiveTeacherUid = (authUser && authUser.uid) || (uData && uData.uid) || (window._currentSsoSession && window._currentSsoSession.uid) || 'superadmin_uid';
-                caricaClassiDocente(effectiveTeacherUid, isSuperAdmin);
+                caricaClassiDocente(authUser ? authUser.uid : null, isSuperAdmin);
             } else {
                 if (classesSec) classesSec.style.display = 'none';
             }

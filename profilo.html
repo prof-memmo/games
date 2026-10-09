@@ -1399,11 +1399,42 @@
                 renderClassiDocente(window._docenteClassi);
             } catch (e) {
                 console.error("Errore caricamento classi docente:", e);
-                container.innerHTML = `<div style="padding:15px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:12px; font-size:0.9rem;">
-                    Errore durante il recupero delle classi: ${e.message}
-                </div>`;
+                const isPermissionError = e.code === 'permission-denied' || (e.message && e.message.toLowerCase().includes('permission'));
+                if (isPermissionError) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2.2rem 1.5rem; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 16px;">
+                            <div style="font-size: 2.2rem; margin-bottom: 8px;">🔐</div>
+                            <h3 style="font-size: 1.15rem; font-family:'Outfit',sans-serif; color: #0f172a; margin: 0 0 8px;">Sincronizza il tuo Account Google per le Classi</h3>
+                            <p style="color: #64748b; font-size: 0.9rem; max-width: 480px; margin: 0 auto 1.2rem; line-height: 1.5;">
+                                L'accesso a Cloud Firestore richiede la sessione Firebase attiva su questo dominio. Clicca qui sotto per autorizzare la connessione in 1 click e caricare subito tutte le tue classi.
+                            </p>
+                            <button onclick="sincronizzaGoogleDocente()" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color:white; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.95rem; border:none; display:inline-flex; align-items:center; gap:8px; box-shadow: 0 4px 12px rgba(37,99,235,0.25);">
+                                <i class="ph ph-google-logo" style="font-size:1.2rem;"></i> Sincronizza con Google (1 Click)
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div style="padding:15px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:12px; font-size:0.9rem;">
+                        Errore durante il recupero delle classi: ${e.message}
+                    </div>`;
+                }
             }
         }
+
+        window.sincronizzaGoogleDocente = async function() {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                await firebase.auth().signInWithPopup(provider);
+            } catch(err) {
+                if (err.code === 'auth/popup-blocked') {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    firebase.auth().signInWithRedirect(provider);
+                } else if (err.code !== 'auth/popup-closed-by-user') {
+                    alert("Errore accesso Google: " + err.message);
+                }
+            }
+        };
 
         function renderClassiDocente(classi) {
             const container = document.getElementById('teacher-classes-container');

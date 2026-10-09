@@ -716,85 +716,124 @@
             return true;
         }
 
+            // Inizializzazione Ricezione SSO (Hash URL, Cookie .profmemmo.it, LocalStorage)
+            let ssoUser = null;
+            try {
+                if (window.location.hash && window.location.hash.includes('pm_sso=')) {
+                    const match = window.location.hash.match(/pm_sso=([^&]+)/);
+                    if (match && match[1]) {
+                        ssoUser = JSON.parse(decodeURIComponent(match[1]));
+                        if (ssoUser) {
+                            localStorage.setItem('hub_user_session', JSON.stringify(ssoUser));
+                            localStorage.setItem('pm_sso_session', JSON.stringify(ssoUser));
+                            if (ssoUser.displayName) localStorage.setItem('hub_user_name', ssoUser.displayName);
+                            if (ssoUser.avatar) localStorage.setItem('hub_user_avatar', ssoUser.avatar);
+                            if (ssoUser.role) localStorage.setItem('hub_user_role', ssoUser.role);
+                            if (ssoUser.subscription) localStorage.setItem('hub_user_plan', ssoUser.subscription);
+                            history.replaceState(null, '', window.location.pathname + window.location.search);
+                        }
+                    }
+                }
+            } catch(e) {
+                console.warn("Errore parsing SSO hash:", e);
+            }
+
+            if (!ssoUser) {
+                try {
+                    const cookies = document.cookie.split(';');
+                    for (let c of cookies) {
+                        const parts = c.trim().split('=');
+                        if (parts[0] === 'pm_sso_session' && parts[1]) {
+                            ssoUser = JSON.parse(decodeURIComponent(parts.slice(1).join('=')));
+                            if (ssoUser) {
+                                localStorage.setItem('hub_user_session', JSON.stringify(ssoUser));
+                                localStorage.setItem('pm_sso_session', JSON.stringify(ssoUser));
+                            }
+                            break;
+                        }
+                    }
+                } catch(e) {
+                    console.warn("Errore parsing SSO cookie:", e);
+                }
+            }
+
+            if (!ssoUser) {
+                try {
+                    const cached = localStorage.getItem('hub_user_session') || localStorage.getItem('pm_sso_session');
+                    if (cached) ssoUser = JSON.parse(cached);
+                } catch(e) {}
+            }
+
+            window._currentSsoSession = ssoUser;
+
             // 3. Gestione Auth State
             auth.onAuthStateChanged(async (authUser) => {
+                const effectiveUser = authUser || ssoUser;
                 if (previewUserId) {
                     // Modalità Anteprima: solo se l'utente loggato è l'admin
-                    if (authUser && authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com') {
+                    if (effectiveUser && effectiveUser.email && effectiveUser.email.toLowerCase() === 'prof.memmo@gmail.com') {
                         isPreviewMode = true;
                         document.getElementById('admin-preview-banner').style.display = 'flex';
                         document.getElementById('admin-preview-text').textContent = `🔍 Anteprima Admin (Sola Lettura) — Utente ID: ${previewUserId}`;
                         document.getElementById('profile-danger-zone').style.display = 'none';
-                        caricaDatiProfilo(previewUserId, true);
+                        caricaDatiProfilo(previewUserId, true, null);
                         return;
                     }
                 }
 
-                if (!authUser) {
-                    // Controlla se abbiamo una sessione SSO attiva dall'Hub
-                    const ssoRaw = localStorage.getItem('hub_user_session');
-                    if (ssoRaw) {
-                        try {
-                            const ssoSession = JSON.parse(ssoRaw);
-                            if (ssoSession && ssoSession.uid) {
-                                caricaDatiProfilo(ssoSession.uid, false);
-                                caricaNotificheEcosistema();
-                                return;
-                            }
-                        } catch(e) {}
-                    }
+                if (!effectiveUser) {
                     // Non loggato -> redirect alla pagina accedi
                     window.location.replace('accedi.html');
                     return;
                 }
 
-                currentProfileUser = authUser;
-                caricaDatiProfilo(authUser.uid, false);
+                currentProfileUser = effectiveUser;
+                caricaDatiProfilo(effectiveUser.uid || effectiveUser.email, false, effectiveUser);
                 caricaNotificheEcosistema();
             });
         });
 
-        async function caricaDatiProfilo(userId, isPreview) {
+        async function caricaDatiProfilo(userId, isPreview, ssoFallback) {
             const db = firebase.firestore();
+            let doc = { exists: false, data: () => ({}) };
+            let uData = ssoFallback ? { ...ssoFallback } : {};
+
             try {
-                const doc = await db.collection('hub_users').doc(userId).get();
-                let uData = doc.exists ? doc.data() : {};
-
-                const authUser = firebase.auth().currentUser;
-                const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
-                const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
-                const role = (uData.ruolo || uData.role || 'viandante').toLowerCase();
-                const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
-                const isAdminOverride = !!uData.admin_override;
-                const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
-
-                renderUserData(doc, authUser, uData);
+                if (userId && !String(userId).includes('@') && !String(userId).startsWith('sso_')) {
+                    const snap = await db.collection('hub_users').doc(userId).get();
+                    if (snap.exists) {
+                        doc = snap;
+                        uData = { ...uData, ...snap.data() };
+                    }
+                } else if (ssoFallback && ssoFallback.email) {
+                    const snapEmail = await db.collection('hub_users').where('email', '==', ssoFallback.email.toLowerCase()).limit(1).get();
+                    if (!snapEmail.empty) {
+                        doc = snapEmail.docs[0];
+                        uData = { ...uData, ...doc.data() };
+                    }
+                }
             } catch (e) {
                 console.warn("Lettura Firestore limitata (fallback sessione locale/SSO):", e);
-                const ssoRaw = localStorage.getItem('hub_user_session');
-                if (ssoRaw) {
-                    try {
-                        const sData = JSON.parse(ssoRaw);
-                        renderUserData({ exists: true, data: () => sData }, null, sData);
-                    } catch(err) {}
-                }
             }
+
+            const authUser = firebase.auth().currentUser;
+            renderUserData(doc, authUser, uData);
         }
 
         function renderUserData(doc, authUser, uDataOverride) {
             const uData = uDataOverride || (doc.exists ? doc.data() : {});
-            const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
-            const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
-            const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+            const displayName = uData.displayName || uData.nome || (authUser && authUser.displayName) || 'Prof. Memmo';
+            const email = (uData.email || (authUser && authUser.email) || '').toLowerCase();
+            const isSuperAdmin = email === 'prof.memmo@gmail.com';
             let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
             if (isSuperAdmin) effectiveRole = 'docente';
 
-            const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+            const plan = isSuperAdmin ? 'docente_ecosistema' : (uData.abbonamento || uData.subscription || uData.plan || 'base');
             const isAdminOverride = !!uData.admin_override;
 
             // Render Anagrafica
             document.getElementById('user-display-name').textContent = displayName;
-            document.getElementById('user-email').textContent = email;
+            document.getElementById('user-email').textContent = email || 'Non specificata';
             
             // Render Avatar
             const avatarBox = document.getElementById('user-avatar-box');
@@ -825,7 +864,8 @@
             const classesSec = document.getElementById('profile-teacher-classes-section');
             if (isSuperAdmin || effectiveRole.includes('docente') || effectiveRole.includes('admin')) {
                 if (classesSec) classesSec.style.display = 'block';
-                caricaClassiDocente(authUser ? authUser.uid : null, isSuperAdmin);
+                const effectiveTeacherUid = (authUser && authUser.uid) || (uData && uData.uid) || (window._currentSsoSession && window._currentSsoSession.uid) || 'superadmin_uid';
+                caricaClassiDocente(effectiveTeacherUid, isSuperAdmin);
             } else {
                 if (classesSec) classesSec.style.display = 'none';
             }
@@ -1224,10 +1264,20 @@
         }
 
         async function eseguiLogout() {
+            localStorage.removeItem('pm_sso_session');
+            localStorage.removeItem('hub_user_session');
+            localStorage.removeItem('hub_user_name');
+            localStorage.removeItem('hub_user_avatar');
+            localStorage.removeItem('hub_user_role');
+            localStorage.removeItem('hub_user_plan');
+            try {
+                document.cookie = "pm_sso_session=; path=/; domain=.profmemmo.it; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "pm_sso_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            } catch(e) {}
             if (typeof firebase !== 'undefined' && firebase.auth) {
-                await firebase.auth().signOut();
-                window.location.replace('accedi.html');
+                await firebase.auth().signOut().catch(() => {});
             }
+            window.location.replace('accedi.html');
         }
 
         async function confermaDisattivazione() {

@@ -770,7 +770,14 @@
 
                 renderUserData(doc, authUser, uData);
             } catch (e) {
-                console.error("Errore caricamento profilo:", e);
+                console.warn("Lettura Firestore limitata (fallback sessione locale/SSO):", e);
+                const ssoRaw = localStorage.getItem('hub_user_session');
+                if (ssoRaw) {
+                    try {
+                        const sData = JSON.parse(ssoRaw);
+                        renderUserData({ exists: true, data: () => sData }, null, sData);
+                    } catch(err) {}
+                }
             }
         }
 

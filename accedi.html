@@ -132,10 +132,10 @@
             
             <div id="auth-state-box" style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
                 <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; width:100%;">
-                    <button class="btn btn-primary" id="btn-login-docente" onclick="accediConGoogleDocente('docente')" style="font-size:0.95rem; padding:0.8rem 1.8rem; cursor:pointer;">
+                    <button class="btn btn-primary" id="btn-login-docente" onclick="vaiAlPortaleLogin('docente')" style="font-size:0.95rem; padding:0.8rem 1.8rem; cursor:pointer;">
                         👨‍🏫 Entra come Docente
                     </button>
-                    <button type="button" class="btn" id="btn-login-viandante" onclick="accediConGoogleDocente('viandante')" style="font-size:0.95rem; padding:0.8rem 1.8rem; cursor:pointer; background: #fef3c7; color: #b45309; border: 1.5px solid #fde68a; border-radius: 100px; font-weight: 700;">
+                    <button type="button" class="btn" id="btn-login-viandante" onclick="vaiAlPortaleLogin('viandante')" style="font-size:0.95rem; padding:0.8rem 1.8rem; cursor:pointer; background: #fef3c7; color: #b45309; border: 1.5px solid #fde68a; border-radius: 100px; font-weight: 700;">
                         🌍 Entra come Viandante
                     </button>
                 </div>
@@ -202,25 +202,6 @@
 
     <script src="script.js?v=20260814_1700"></script>
     <script>
-        window.accediConGoogleDocente = async function(role) {
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
-                const res = await firebase.auth().signInWithPopup(provider);
-                if (res && res.user) {
-                    window.location.href = 'profilo.html';
-                }
-            } catch(e) {
-                console.error("Errore login Google:", e);
-                if (e.code === 'auth/popup-blocked') {
-                    const provider = new firebase.auth.GoogleAuthProvider();
-                    firebase.auth().signInWithRedirect(provider);
-                } else if (e.code !== 'auth/popup-closed-by-user') {
-                    vaiAlPortaleLogin(role || 'docente');
-                }
-            }
-        };
-
         function vaiAlPortaleLogin(role) {
             const isPreview = window.location.pathname.includes('/preview');
             const isCustomDomain = window.location.hostname.endsWith('profmemmo.it');

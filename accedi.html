@@ -204,9 +204,10 @@
     <script>
         function vaiAlPortaleLogin(role) {
             const isPreview = window.location.pathname.includes('/preview');
+            const isCustomDomain = window.location.hostname.endsWith('profmemmo.it');
             const portalBase = isPreview 
-                ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html'
-                : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html';
+                ? (isCustomDomain ? 'https://profmemmo.it/preview/portal.html' : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html')
+                : (isCustomDomain ? 'https://profmemmo.it/portal.html' : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html');
             const params = new URLSearchParams(window.location.search);
             if (role) params.set('role', role);
             const queryString = params.toString();

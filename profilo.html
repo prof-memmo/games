@@ -864,7 +864,8 @@
             const classesSec = document.getElementById('profile-teacher-classes-section');
             if (isSuperAdmin || effectiveRole.includes('docente') || effectiveRole.includes('admin')) {
                 if (classesSec) classesSec.style.display = 'block';
-                caricaClassiDocente(authUser ? authUser.uid : null, isSuperAdmin);
+                const effectiveUid = authUser ? authUser.uid : (uData && uData.uid ? uData.uid : null);
+                caricaClassiDocente(effectiveUid, isSuperAdmin);
             } else {
                 if (classesSec) classesSec.style.display = 'none';
             }
@@ -1371,7 +1372,17 @@
             const container = document.getElementById('teacher-classes-container');
             if (!container) return;
 
+            // 1. Priorità di rendering immediato da sessione SSO sincronizzata
+            const sso = window._currentSsoSession;
+            if (sso && Array.isArray(sso.classes) && sso.classes.length > 0) {
+                window._docenteClassi = sso.classes;
+                renderClassiDocente(window._docenteClassi);
+            }
+
             if (!teacherUid) {
+                if (window._docenteClassi && window._docenteClassi.length > 0) {
+                    return; // Classi già renderizzate con successo dalla sessione
+                }
                 container.innerHTML = '<p style="color:#64748b; font-size:0.9rem;">Accedi come docente per visualizzare le tue classi.</p>';
                 return;
             }
@@ -1388,19 +1399,23 @@
                     snap = await db.collection('hub_classes').where('teacherId', '==', teacherUid).get();
                 }
 
-                window._docenteClassi = [];
                 if (snap && !snap.empty) {
+                    window._docenteClassi = [];
                     snap.forEach(doc => {
                         window._docenteClassi.push({ id: doc.id, ...doc.data() });
                     });
+                    renderClassiDocente(window._docenteClassi);
+                } else if (!window._docenteClassi || window._docenteClassi.length === 0) {
+                    renderClassiDocente([]);
                 }
-
-                renderClassiDocente(window._docenteClassi);
             } catch (e) {
-                console.error("Errore caricamento classi docente:", e);
-                container.innerHTML = `<div style="padding:15px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:12px; font-size:0.9rem;">
-                    Errore durante il recupero delle classi: ${e.message}
-                </div>`;
+                console.warn("Lettura Firestore classi limitata:", e);
+                // Se le classi sono già renderizzate dalla sessione SSO, non mostrare errore bloccante
+                if (!window._docenteClassi || window._docenteClassi.length === 0) {
+                    container.innerHTML = `<div style="padding:15px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:12px; font-size:0.9rem;">
+                        Errore durante il recupero delle classi: ${e.message}
+                    </div>`;
+                }
             }
         }
 

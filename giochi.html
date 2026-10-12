@@ -504,6 +504,38 @@
                 }
             }
 
+            // Esposizione per test di integrazione funzionale E2E ecosistema
+            window._testEcosystem = {
+                titleToIdMap: titleToIdMap,
+                getStatusMap: () => currentStatusMap,
+                applyCardVisibility: applyCardVisibility,
+                simulateStatusUpdate: (gameId, updateObj) => {
+                    currentStatusMap[gameId] = Object.assign({}, currentStatusMap[gameId] || {}, updateObj);
+                    // Aggiorna anche bottoni se isActive cambia
+                    document.querySelectorAll('.game-card').forEach(card => {
+                        const title = card.getAttribute('data-title')?.toLowerCase();
+                        if (title && titleToIdMap[title] === gameId) {
+                            const status = currentStatusMap[gameId];
+                            const btn = card.querySelector('.btn');
+                            if (btn && typeof status.isActive !== 'undefined') {
+                                if (!status.isActive) {
+                                    btn.classList.add('wip-link');
+                                    btn.classList.remove('btn-primary');
+                                    btn.classList.add('btn-outline');
+                                    btn.href = "#";
+                                } else {
+                                    btn.classList.remove('wip-link');
+                                    btn.classList.remove('btn-outline');
+                                    btn.classList.add('btn-primary');
+                                    btn.href = (gameId === 'historygram') ? 'historygram-dettagli.html' : btn.href;
+                                }
+                            }
+                        }
+                    });
+                    applyCardVisibility();
+                }
+            };
+
             // Logica Filtro
             if (filterBtns) {
                 filterBtns.forEach(btn => {

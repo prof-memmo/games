@@ -207,7 +207,7 @@
                             <div class="meta-item"><span>👶 Classe/Età:</span> Sec. di 1° grado</div>
                             <div class="meta-item"><span>🏫 Uso:</span> Classe, Ripasso</div>
                         </div>
-                        <a href="#" class="btn btn-outline wip-link" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
+                        <a href="javascript:void(0)" role="button" class="btn btn-outline wip-link" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
                     </div>
                 </div>
 
@@ -308,6 +308,28 @@
                             <div class="meta-item"><span>🏫 Uso:</span> Classe</div>
                         </div>
                         <a href="ops-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
+                    </div>
+                </div>
+
+                <!-- HistoryGram -->
+                <div class="game-card item" data-materia="storia" data-type="online" data-title="HistoryGram">
+                    <div class="game-card-img"><img src="loghi/historygram-logo.png" alt="HistoryGram Logo"></div>
+                    <div class="game-card-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <div class="game-card-cat" style="margin-bottom: 0;">Storia</div>
+                            <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Gioco Online</span>
+                        </div>
+                        <h3>HistoryGram</h3>
+                        <p>Il social network didattico della storia: Revolution Influencer ('800) e Riforma vs Controriforma ('500) tra post, like e debate.</p>
+                        <div class="game-meta-card">
+                            <div class="meta-item"><span>📚 Materia:</span> Storia Moderna & Contemporanea</div>
+                            <div class="meta-item"><span>👥 Giocatori:</span> Squadre / Classe</div>
+                            <div class="meta-item"><span>⏱️ Durata:</span> 1-2 ore</div>
+                            <div class="meta-item"><span>🎯 Obiettivi:</span> Pensiero critico, fonti, debate</div>
+                            <div class="meta-item"><span>👶 Classe/Età:</span> 2ª e 3ª Sec. di 1° grado</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> LIM, Classe, Smartphone</div>
+                        </div>
+                        <a href="historygram-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
                     </div>
                 </div>
 
@@ -413,7 +435,9 @@
             'il mio quaderno alternativo': 'il-mio-quaderno-alternativo',
             'la ruota geografica': 'la-ruota-geografica',
             'la roulette': 'la-ruota-geografica',
-            'l\'oratore': 'l-oratore'
+            'l\'oratore': 'l-oratore',
+            'fuori registro': 'fuori-registro',
+            'historygram': 'historygram'
         };
 
         let currentFilter = 'tutti';
@@ -447,6 +471,37 @@
                 noResults.style.display = count === 0 ? 'block' : 'none';
             }
         }
+
+        // Esposizione per test di integrazione funzionale E2E ecosistema
+        window._testEcosystem = {
+            titleToIdMap: titleToIdMap,
+            getStatusMap: () => currentStatusMap,
+            applyCardVisibility: applyCardVisibility,
+            simulateStatusUpdate: (gameId, updateObj) => {
+                currentStatusMap[gameId] = Object.assign({}, currentStatusMap[gameId] || {}, updateObj);
+                document.querySelectorAll('.game-card').forEach(card => {
+                    const title = card.getAttribute('data-title')?.toLowerCase();
+                    if (title && titleToIdMap[title] === gameId) {
+                        const status = currentStatusMap[gameId];
+                        const btn = card.querySelector('.btn');
+                        if (btn && typeof status.isActive !== 'undefined') {
+                            if (!status.isActive) {
+                                btn.classList.add('wip-link');
+                                btn.classList.remove('btn-primary');
+                                btn.classList.add('btn-outline');
+                                btn.href = "#";
+                            } else {
+                                btn.classList.remove('wip-link');
+                                btn.classList.remove('btn-outline');
+                                btn.classList.add('btn-primary');
+                                btn.href = (gameId === 'historygram') ? 'historygram-dettagli.html' : btn.href;
+                            }
+                        }
+                    }
+                });
+                applyCardVisibility();
+            }
+        };
 
         // Logica Filtro
         filterBtns.forEach(btn => {
@@ -511,7 +566,9 @@
                                 'il mio quaderno alternativo': 'quaderno-alternativo.html',
                                 'la corte della commedia': 'corte-commedia-dettagli.html',
                                 'ops!': 'ops-dettagli.html',
-                                'l\'oratore': 'oratore-dettagli.html'
+                                'l\'oratore': 'oratore-dettagli.html',
+                                'fuori registro': 'fuori-registro-dettagli.html',
+                                'historygram': 'historygram-dettagli.html'
                             };
                             if (linkMap[title]) {
                                 btn.href = linkMap[title];

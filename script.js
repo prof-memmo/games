@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (imgEl && data.imageUrl) imgEl.src = data.imageUrl;
                 }
             }
+        }, (err) => {
+            console.warn("Vetrina settings listener notice:", err.message);
         });
     }
     
@@ -341,6 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (status.uso) metaItems[5].innerHTML = `<span>🏫 Uso:</span> ${status.uso}`;
                 }
             }
+        }, err => {
+            console.warn("Game status listener notice:", err.message);
         });
     }
 });
@@ -420,6 +424,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
+        }, err => {
+            console.warn("Ecosistema settings listener notice:", err.message);
         });
     }
 

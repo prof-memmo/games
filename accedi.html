@@ -89,31 +89,63 @@
             box-shadow: 0 6px 20px rgba(37,99,235,0.25);
         }
 
-        .roles-three-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        .roles-horizontal-stack {
+            display: flex;
+            flex-direction: column;
             gap: 1.5rem;
-            align-items: stretch;
         }
-        @media (max-width: 900px) {
-            .roles-three-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .role-access-card {
+        .role-horizontal-card {
             background: #ffffff;
-            padding: 2rem 1.6rem;
+            padding: 2.2rem 2.4rem;
             border-radius: 20px;
             border: 1px solid #cbd5e1;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: space-between;
+            gap: 2.5rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02);
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .role-access-card:hover {
-            transform: translateY(-3px);
+        .role-horizontal-card:hover {
+            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+        .role-content-side {
+            flex: 1;
+            min-width: 0;
+        }
+        .role-btn-side {
+            flex-shrink: 0;
+            min-width: 230px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .role-btn-side button {
+            width: 100%;
+            padding: 1rem 1.6rem;
+            font-size: 0.98rem;
+            font-weight: 700;
+            border-radius: 100px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .role-btn-side button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+        @media (max-width: 800px) {
+            .role-horizontal-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.5rem;
+                padding: 1.7rem 1.4rem;
+            }
+            .role-btn-side {
+                width: 100%;
+                justify-content: stretch;
+            }
         }
     </style>
 </head>
@@ -162,53 +194,59 @@
                 </div>
             </div>
 
-            <div class="roles-three-grid">
-                <!-- Card 1: Docente -->
-                <div class="role-access-card" style="border-top: 4px solid #2563eb;">
-                    <div>
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+            <div class="roles-horizontal-stack">
+                <!-- Fascia 1: Docente -->
+                <div class="role-horizontal-card" style="border-left: 6px solid #2563eb;">
+                    <div class="role-content-side">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.75rem;">
                             <span style="font-size:1.8rem;">👨‍🏫</span>
-                            <h3 style="margin:0; color:#2563eb; font-size:1.25rem; font-family:'Outfit',sans-serif;">Il Docente sul Portale</h3>
+                            <h3 style="margin:0; color:#2563eb; font-size:1.3rem; font-family:'Outfit',sans-serif;">Il Docente sul Portale</h3>
                         </div>
-                        <p style="color:#334155; line-height:1.6; font-size:0.95rem; margin:0 0 1.5rem 0;">
+                        <p style="color:#334155; line-height:1.65; font-size:0.96rem; margin:0;">
                             L'accesso, la gestione dell'account, dei piani e delle classi avvengono tramite il Profilo Docente sul portale principale: <a href="https://prof-memmo.github.io/games/" style="color:#2563eb; font-weight:600; text-decoration:none;">prof-memmo.github.io/games/</a>. Da qui il docente crea le proprie classi, inserisce l'elenco dei propri studenti e genera il <strong>Codice Classe</strong>, valido come chiave d'accesso per tutti i giochi dell'ecosistema che ne fanno uso. Inserisce poi l’elenco nominativo degli studenti (<strong>basta solo un nome o un nickname</strong>).
                         </p>
                     </div>
-                    <button class="btn btn-primary" id="btn-login-docente" onclick="vaiAlPortaleLogin('docente')" style="width:100%; padding:0.9rem 1rem; font-size:0.95rem; cursor:pointer; border-radius:100px; font-weight:700; margin-top:auto;">
-                        👨‍🏫 Accedi come Docente →
-                    </button>
+                    <div class="role-btn-side">
+                        <button class="btn btn-primary" id="btn-login-docente" onclick="vaiAlPortaleLogin('docente')">
+                            👨‍🏫 Accedi come Docente →
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Card 2: Studente -->
-                <div class="role-access-card" style="border-top: 4px solid #059669;">
-                    <div>
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                <!-- Fascia 2: Studente -->
+                <div class="role-horizontal-card" style="border-left: 6px solid #059669;">
+                    <div class="role-content-side">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.75rem;">
                             <span style="font-size:1.8rem;">🎒</span>
-                            <h3 style="margin:0; color:#059669; font-size:1.25rem; font-family:'Outfit',sans-serif;">Gli Studenti nel Gioco</h3>
+                            <h3 style="margin:0; color:#059669; font-size:1.3rem; font-family:'Outfit',sans-serif;">Gli Studenti nel Gioco</h3>
                         </div>
-                        <p style="color:#334155; line-height:1.6; font-size:0.95rem; margin:0 0 1.5rem 0;">
+                        <p style="color:#334155; line-height:1.65; font-size:0.96rem; margin:0;">
                             Agli studenti <strong>non è richiesta alcuna registrazione tramite email personale</strong>. Per entrare nel gioco, gli studenti inseriscono semplicemente il <strong>Codice Classe</strong> fornito dal docente e si identificano selezionando il proprio nome dall'elenco ufficiale della classe.
                         </p>
                     </div>
-                    <button type="button" class="btn" onclick="vaiAlPortaleLogin('studente')" style="width:100%; padding:0.9rem 1rem; font-size:0.95rem; cursor:pointer; background:#eff6ff; color:#2563eb; border:1.5px solid #bfdbfe; border-radius:100px; font-weight:700; margin-top:auto;">
-                        🎒 Entra con Codice Classe →
-                    </button>
+                    <div class="role-btn-side">
+                        <button type="button" class="btn" onclick="vaiAlPortaleLogin('studente')" style="background:#eff6ff; color:#2563eb; border:1.5px solid #bfdbfe;">
+                            🎒 Entra con Codice Classe →
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Card 3: Viandante -->
-                <div class="role-access-card" style="border-top: 4px solid #d97706;">
-                    <div>
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+                <!-- Fascia 3: Viandante -->
+                <div class="role-horizontal-card" style="border-left: 6px solid #d97706;">
+                    <div class="role-content-side">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.75rem;">
                             <span style="font-size:1.8rem;">🌍</span>
-                            <h3 style="margin:0; color:#d97706; font-size:1.25rem; font-family:'Outfit',sans-serif;">I Viandanti (Autonomi)</h3>
+                            <h3 style="margin:0; color:#d97706; font-size:1.3rem; font-family:'Outfit',sans-serif;">I Viandanti (Autonomi)</h3>
                         </div>
-                        <p style="color:#334155; line-height:1.6; font-size:0.95rem; margin:0 0 1.5rem 0;">
+                        <p style="color:#334155; line-height:1.65; font-size:0.96rem; margin:0;">
                             Il profilo Viandante è dedicato a chi vive l'ecosistema al di fuori del contesto classe: appassionati, studenti universitari, autodidatti e giocatori singoli che vogliono esplorare i giochi, le storie e le attività in autonomia, senza la gestione di classi o codici scolastici.
                         </p>
                     </div>
-                    <button type="button" class="btn" id="btn-login-viandante" onclick="vaiAlPortaleLogin('viandante')" style="width:100%; padding:0.9rem 1rem; font-size:0.95rem; cursor:pointer; background:#fef3c7; color:#b45309; border:1.5px solid #fde68a; border-radius:100px; font-weight:700; margin-top:auto;">
-                        🌍 Entra come Viandante →
-                    </button>
+                    <div class="role-btn-side">
+                        <button type="button" class="btn" id="btn-login-viandante" onclick="vaiAlPortaleLogin('viandante')" style="background:#fef3c7; color:#b45309; border:1.5px solid #fde68a;">
+                            🌍 Entra come Viandante →
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

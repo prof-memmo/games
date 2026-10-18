@@ -826,20 +826,23 @@
                 elCityVal.textContent = cittaVal ? cittaVal : 'Città non specificata';
             }
 
-            const isViandante = !isSuperAdmin && effectiveRole.includes('viandante');
+            const isStudente = !isSuperAdmin && effectiveRole.includes('studente');
 
-            if (isViandante) {
-                if (schoolBadge) schoolBadge.style.display = 'none';
-                if (classBadge) classBadge.style.display = 'none';
-            } else {
+            // Solo per gli studenti (che appartengono a una singola classe e scuola come discenti)
+            // mostriamo i badge specifici nell'header.
+            // Per Docenti e Viandanti, l'header mostra unicamente la Città; scuole e classi sono gestite nella sezione sottostante ("Le Mie Classi").
+            if (isStudente) {
                 if (schoolBadge) {
-                    schoolBadge.style.display = 'inline-flex';
-                    if (schoolValEl) schoolValEl.textContent = scuolaVal ? scuolaVal : 'Scuola non indicata';
+                    schoolBadge.style.display = scuolaVal ? 'inline-flex' : 'none';
+                    if (schoolValEl) schoolValEl.textContent = scuolaVal;
                 }
                 if (classBadge) {
-                    classBadge.style.display = 'inline-flex';
-                    if (classValEl) classValEl.textContent = classeVal ? `Classe: ${classeVal}` : 'Nessuna classe associata';
+                    classBadge.style.display = classeVal ? 'inline-flex' : 'none';
+                    if (classValEl) classValEl.textContent = `Classe: ${classeVal}`;
                 }
+            } else {
+                if (schoolBadge) schoolBadge.style.display = 'none';
+                if (classBadge) classBadge.style.display = 'none';
             }
 
             // Render Piano
@@ -1001,15 +1004,17 @@
             document.getElementById('global-edit-school').value = uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
             document.getElementById('global-edit-city').value = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || '';
             
-            const isViandante = !isSuperAdmin && effectiveRole.includes('viandante');
+            const isStudente = !isSuperAdmin && effectiveRole.includes('studente');
             const schoolGroup = document.getElementById('global-edit-school-group');
             const classGroup = document.getElementById('global-edit-class-group');
             
+            // Per docenti e viandanti, scuola e codice classe non compaiono nella modale di modifica profilo:
+            // la scuola per i docenti appartiene a ciascuna classe specifica creata nella sezione "Le Mie Classi".
             if (schoolGroup) {
-                schoolGroup.style.display = isViandante ? 'none' : 'block';
+                schoolGroup.style.display = isStudente ? 'block' : 'none';
             }
             if (classGroup) {
-                classGroup.style.display = isViandante ? 'none' : 'block';
+                classGroup.style.display = isStudente ? 'block' : 'none';
                 document.getElementById('global-edit-class').value = uData.classe || uData.classId || (uData.anagrafica && uData.anagrafica.classe) || '';
             }
             const modalStatus = document.getElementById('modal-class-status-box');
@@ -1050,9 +1055,11 @@
             if (!user) return;
 
             const newName = document.getElementById('global-edit-name').value.trim();
-            const newSchool = document.getElementById('global-edit-school').value.trim();
             const newCity = document.getElementById('global-edit-city').value.trim();
-            const newClass = document.getElementById('global-edit-class') ? document.getElementById('global-edit-class').value.trim().toUpperCase() : '';
+            const elSchool = document.getElementById('global-edit-school');
+            const newSchool = elSchool ? elSchool.value.trim() : '';
+            const elClass = document.getElementById('global-edit-class');
+            const newClass = elClass ? elClass.value.trim().toUpperCase() : '';
             
             if (!newName) {
                 alert("Il nome non può essere vuoto.");
@@ -1068,16 +1075,22 @@
                     avatar: chosenAvatar,
                     'anagrafica.avatar': chosenAvatar,
                     'anagrafica.nome': newName,
-                    scuola: newSchool,
-                    school: newSchool,
-                    'anagrafica.scuola': newSchool,
                     citta: newCity,
                     city: newCity,
-                    'anagrafica.citta': newCity,
-                    classe: newClass,
-                    classId: newClass,
-                    'anagrafica.classe': newClass
+                    'anagrafica.citta': newCity
                 };
+
+                // Aggiorna scuola e classe solo se i relativi input sono visibili (es. studenti)
+                if (elSchool && elSchool.offsetParent !== null && newSchool) {
+                    updateData.scuola = newSchool;
+                    updateData.school = newSchool;
+                    updateData['anagrafica.scuola'] = newSchool;
+                }
+                if (elClass && elClass.offsetParent !== null && newClass) {
+                    updateData.classe = newClass;
+                    updateData.classId = newClass;
+                    updateData['anagrafica.classe'] = newClass;
+                }
 
                 await db.collection('hub_users').doc(user.uid).set(updateData, { merge: true });
                 await db.collection('users').doc(user.uid).set({ name: newName, avatar: chosenAvatar }, { merge: true }).catch(() => {});
@@ -1442,13 +1455,14 @@
             const modal = document.getElementById('modal-crea-classe');
             if (!modal) return;
 
-            // Pre-compila scuola e città dai dati dell'utente se presenti
-            const uScuola = document.getElementById('header-school-val')?.textContent || '';
-            const uCitta = document.getElementById('header-city-val')?.textContent || '';
+            // Pre-compila scuola e città: suggerisce l'ultima scuola usata per le classi o quella anagrafica, e la città dell'utente
+            const uData = window._currentUserData || {};
+            const lastSchool = (window._docenteClassi && window._docenteClassi.length > 0 && window._docenteClassi[0].school) || uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
+            const uCitta = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || (document.getElementById('header-city-val')?.textContent !== 'Città non specificata' ? document.getElementById('header-city-val')?.textContent : '') || '';
             
             const inScuola = document.getElementById('nuova-classe-scuola');
             const inCitta = document.getElementById('nuova-classe-citta');
-            if (inScuola && uScuola && uScuola !== 'Scuola non indicata') inScuola.value = uScuola;
+            if (inScuola && lastSchool && lastSchool !== 'Scuola non indicata') inScuola.value = lastSchool;
             if (inCitta && uCitta && uCitta !== 'Città non specificata') inCitta.value = uCitta;
 
             modal.style.display = 'flex';

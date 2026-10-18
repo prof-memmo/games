@@ -66,6 +66,11 @@
             grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
             gap: 2rem;
             justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+        .games-grid.loading {
+            opacity: 0;
+            pointer-events: none;
         }
         .game-card {
             background: white;
@@ -180,7 +185,7 @@
                 </div>
 
                 <!-- Griglia dei Giochi -->
-                <div class="games-grid" id="games-grid">
+                <div class="games-grid loading" id="games-grid">
 
                     <!-- Fantaletteratura -->
                     <div class="game-card item" data-materia="letteratura" data-type="online" data-title="Fantaletteratura">
@@ -594,44 +599,41 @@
                 });
             }
 
-        if (typeof firebase !== 'undefined') {
-            const db = firebase.firestore();
-            db.collection('games_status').onSnapshot(snapshot => {
-                snapshot.forEach(doc => {
-                    currentStatusMap[doc.id] = doc.data();
-                });
-
+            function updateCardsUI(statusMap) {
+                if (!statusMap) return;
                 document.querySelectorAll('.game-card').forEach(card => {
                     const title = card.getAttribute('data-title')?.toLowerCase();
                     if (!title) return;
                     const gameId = titleToIdMap[title];
-                    if (gameId && currentStatusMap[gameId]) {
-                        const status = currentStatusMap[gameId];
+                    if (gameId && statusMap[gameId]) {
+                        const status = statusMap[gameId];
                         const btn = card.querySelector('.btn');
-                        if (!status.isActive) {
-                            btn.classList.add('wip-link');
-                            btn.classList.remove('btn-primary');
-                            btn.classList.add('btn-outline');
-                            btn.href = "#";
-                        } else {
-                            btn.classList.remove('wip-link');
-                            btn.classList.remove('btn-outline');
-                            btn.classList.add('btn-primary');
-                            // Ripristina l'href in base al titolo
-                            const linkMap = {
-                                'fantaletteratura': 'fantaletteratura-dettagli.html',
-                                'la rotta degli eroi': 'rotta-eroi-dettagli.html',
-                                'palestra di riflessione': 'palestra-riflessione-dettagli.html',
-                                'travel agency': 'travel-agency.html',
-                                'il mio quaderno alternativo': 'quaderno-alternativo.html',
-                                'la corte della commedia': 'corte-commedia-dettagli.html',
-                                'ops!': 'ops-dettagli.html',
-                                'l\'oratore': 'oratore-dettagli.html',
-                                'fuori registro': 'fuori-registro-dettagli.html',
-                                'historygram': 'historygram-dettagli.html'
-                            };
-                            if (linkMap[title]) {
-                                btn.href = linkMap[title];
+                        if (btn && typeof status.isActive !== 'undefined') {
+                            if (!status.isActive) {
+                                btn.classList.add('wip-link');
+                                btn.classList.remove('btn-primary');
+                                btn.classList.add('btn-outline');
+                                btn.href = "#";
+                            } else {
+                                btn.classList.remove('wip-link');
+                                btn.classList.remove('btn-outline');
+                                btn.classList.add('btn-primary');
+                                // Ripristina l'href in base al titolo
+                                const linkMap = {
+                                    'fantaletteratura': 'fantaletteratura-dettagli.html',
+                                    'la rotta degli eroi': 'rotta-eroi-dettagli.html',
+                                    'palestra di riflessione': 'palestra-riflessione-dettagli.html',
+                                    'travel agency': 'travel-agency.html',
+                                    'il mio quaderno alternativo': 'quaderno-alternativo.html',
+                                    'la corte della commedia': 'corte-commedia-dettagli.html',
+                                    'ops!': 'ops-dettagli.html',
+                                    'l\'oratore': 'oratore-dettagli.html',
+                                    'fuori registro': 'fuori-registro-dettagli.html',
+                                    'historygram': 'historygram-dettagli.html'
+                                };
+                                if (linkMap[title]) {
+                                    btn.href = linkMap[title];
+                                }
                             }
                         }
                         
@@ -660,8 +662,42 @@
                 });
 
                 applyCardVisibility();
-            });
-        }
+            }
+
+            // Anti-Flicker Guard (Art. 10.2): Applicazione sincrona immediata da cache locale
+            try {
+                const cachedStatus = localStorage.getItem('pm_games_status_cache');
+                if (cachedStatus) {
+                    currentStatusMap = JSON.parse(cachedStatus);
+                    updateCardsUI(currentStatusMap);
+                    if (grid) grid.classList.remove('loading');
+                }
+            } catch (e) {
+                console.warn('Cache games_status non accessibile:', e);
+            }
+
+            // Fallback timeout per garantire visibilità entro 400ms anche se Firestore è offline o lento
+            setTimeout(() => {
+                if (grid && grid.classList.contains('loading')) {
+                    grid.classList.remove('loading');
+                }
+            }, 400);
+
+            if (typeof firebase !== 'undefined') {
+                const db = firebase.firestore();
+                db.collection('games_status').onSnapshot(snapshot => {
+                    snapshot.forEach(doc => {
+                        currentStatusMap[doc.id] = doc.data();
+                    });
+
+                    try {
+                        localStorage.setItem('pm_games_status_cache', JSON.stringify(currentStatusMap));
+                    } catch (e) {}
+
+                    updateCardsUI(currentStatusMap);
+                    if (grid) grid.classList.remove('loading');
+                });
+            }
 
         // Under Construction modal (Event Delegation)
         document.addEventListener('click', (e) => {

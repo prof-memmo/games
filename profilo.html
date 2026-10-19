@@ -18,8 +18,34 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-functions-compat.js"></script>
     <script src="js/firebase-init.js"></script>
+    <script>
+        // Zero-Flicker Guard (Art. 10.2): Pre-rilevamento sincrono sessione utente
+        (function() {
+            try {
+                var cached = localStorage.getItem('hub_user_name') || localStorage.getItem('hub_user_avatar') || localStorage.getItem('hub_admin_logged') || localStorage.getItem('corte_user') || localStorage.getItem('fanta_user_name') || localStorage.getItem('currentUser');
+                if (!cached) {
+                    document.documentElement.classList.add('pm-profile-pending-auth');
+                }
+            } catch(e) {}
+        })();
+    </script>
 
     <style>
+        .pm-profile-pending-auth .profile-container {
+            display: none !important;
+        }
+        #profile-auth-loading-overlay {
+            display: none;
+            min-height: 60vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .pm-profile-pending-auth #profile-auth-loading-overlay {
+            display: flex !important;
+        }
         :root {
             --bg-page: #f8fafc;
             --card-bg: #ffffff;
@@ -407,6 +433,17 @@
         </div>
     </nav>
 
+    <!-- Overlay Transitorio di Verifica Auth (Zero-Flicker Guard - Art. 10.2) -->
+    <div id="profile-auth-loading-overlay">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #eff6ff; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.2rem; border: 1.5px solid #bfdbfe;">
+            <i class="ph ph-user-circle" style="color: var(--primary);"></i>
+        </div>
+        <h2 style="font-family:'Outfit',sans-serif; font-weight:700; color:#0f172a; margin: 0 0 8px 0; font-size: 1.3rem;">Il mio Profilo</h2>
+        <p style="color:#64748b; font-size: 0.95rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--primary);"></i> Verifica sessione in corso...
+        </p>
+    </div>
+
     <div class="profile-container">
 
         <!-- Banner Anteprima Admin -->
@@ -439,12 +476,12 @@
                     <span id="user-avatar-initials">U</span>
                 </div>
                 <div class="profile-titles" style="flex:1;">
-                    <h1 id="user-display-name" style="margin:0 0 2px 0;">Caricamento profilo...</h1>
-                    <p id="user-email" style="margin:0 0 6px 0; color:#64748b; font-size:0.9rem;">email@esempio.com</p>
+                    <h1 id="user-display-name" style="margin:0 0 2px 0;">Il mio Profilo</h1>
+                    <p id="user-email" style="margin:0 0 6px 0; color:#64748b; font-size:0.9rem;">&nbsp;</p>
                     
                     <!-- Riga 1: Ruolo Principale -->
                     <div style="margin-bottom:6px;">
-                        <span class="profile-badge badge-viandante" id="user-role-badge">Viandante</span>
+                        <span class="profile-badge badge-viandante" id="user-role-badge" style="display:none;"></span>
                     </div>
 
                     <!-- Riga 2: Dati Geografici e Didattici (Città, Scuola, Classe sulla stessa riga) -->
@@ -736,6 +773,12 @@
                     return;
                 }
 
+                document.documentElement.classList.remove('pm-profile-pending-auth');
+                const loadOverlay = document.getElementById('profile-auth-loading-overlay');
+                if (loadOverlay) loadOverlay.style.display = 'none';
+                const pContainer = document.querySelector('.profile-container');
+                if (pContainer) pContainer.style.display = 'block';
+
                 currentProfileUser = authUser;
                 caricaDatiProfilo(authUser.uid, false);
                 caricaNotificheEcosistema();
@@ -788,18 +831,21 @@
 
             // Render Ruolo Badge
             const roleBadge = document.getElementById('user-role-badge');
-            if (isSuperAdmin) {
-                roleBadge.textContent = 'Super Admin / Docente';
-                roleBadge.className = 'profile-badge badge-docente';
-            } else if (effectiveRole.includes('docente') || effectiveRole.includes('prof') || effectiveRole.includes('admin')) {
-                roleBadge.textContent = 'Docente';
-                roleBadge.className = 'profile-badge badge-docente';
-            } else if (effectiveRole.includes('studente')) {
-                roleBadge.textContent = 'Studente';
-                roleBadge.className = 'profile-badge badge-studente';
-            } else {
-                roleBadge.textContent = 'Viandante';
-                roleBadge.className = 'profile-badge badge-viandante';
+            if (roleBadge) {
+                roleBadge.style.display = 'inline-block';
+                if (isSuperAdmin) {
+                    roleBadge.textContent = 'Super Admin / Docente';
+                    roleBadge.className = 'profile-badge badge-docente';
+                } else if (effectiveRole.includes('docente') || effectiveRole.includes('prof') || effectiveRole.includes('admin')) {
+                    roleBadge.textContent = 'Docente';
+                    roleBadge.className = 'profile-badge badge-docente';
+                } else if (effectiveRole.includes('studente')) {
+                    roleBadge.textContent = 'Studente';
+                    roleBadge.className = 'profile-badge badge-studente';
+                } else {
+                    roleBadge.textContent = 'Viandante';
+                    roleBadge.className = 'profile-badge badge-viandante';
+                }
             }
 
             // Mostra o nascondi Sezione Gestione Classi & Roster

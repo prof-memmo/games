@@ -1143,6 +1143,18 @@
                 if (user.updateProfile) {
                     await user.updateProfile({ photoURL: chosenAvatar, displayName: newName }).catch(() => {});
                 }
+                try {
+                    let resolved = chosenAvatar;
+                    if (resolved && !resolved.startsWith('http://') && !resolved.startsWith('https://')) {
+                        let clean = resolved.replace(/^(\/?assets\/avatars\/|\/?shared\/assets\/avatars\/)/, '');
+                        if (!clean.includes('/')) {
+                            if (!clean.endsWith('.png')) clean += '.png';
+                            resolved = 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/avatars/' + clean;
+                        }
+                    }
+                    localStorage.setItem('hub_user_name', newName);
+                    localStorage.setItem('hub_user_avatar', resolved);
+                } catch(eLS) {}
                 alert("Profilo e avatar aggiornati con successo in tutto l'ecosistema!");
                 document.getElementById('edit-global-profile-modal').style.display = 'none';
                 

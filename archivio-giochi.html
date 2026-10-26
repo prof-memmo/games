@@ -536,50 +536,72 @@
             });
         }
 
+        function updateArchiveCardsUI(statusMap) {
+            if (!statusMap) return;
+            document.querySelectorAll('.game-card').forEach(card => {
+                const title = card.getAttribute('data-title')?.toLowerCase();
+                if (!title) return;
+                const gameId = titleToIdMap[title];
+                if (gameId && statusMap[gameId]) {
+                    const status = statusMap[gameId];
+                    const btn = card.querySelector('.btn');
+                    if (!status.isActive) {
+                        btn.classList.add('wip-link');
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-outline');
+                        btn.href = "#";
+                    } else {
+                        btn.classList.remove('wip-link');
+                        btn.classList.remove('btn-outline');
+                        btn.classList.add('btn-primary');
+                        // Ripristina l'href in base al titolo
+                        const linkMap = {
+                            'fantaletteratura': 'fantaletteratura-dettagli.html',
+                            'la rotta degli eroi': 'rotta-eroi-dettagli.html',
+                            'palestra di riflessione': 'palestra-riflessione-dettagli.html',
+                            'travel agency': 'travel-agency.html',
+                            'il mio quaderno alternativo': 'quaderno-alternativo.html',
+                            'la corte della commedia': 'corte-commedia-dettagli.html',
+                            'ops!': 'ops-dettagli.html',
+                            'l\'oratore': 'oratore-dettagli.html',
+                            'fuori registro': 'fuori-registro-dettagli.html',
+                            'historygram': 'historygram-dettagli.html'
+                        };
+                        if (linkMap[title]) {
+                            btn.href = linkMap[title];
+                        }
+                    }
+                }
+            });
+
+            applyCardVisibility();
+        }
+
+        // Anti-Flicker Guard sincrono da cache locale
+        try {
+            const cachedStatus = localStorage.getItem('pm_games_status_cache');
+            if (cachedStatus) {
+                currentStatusMap = JSON.parse(cachedStatus);
+                updateArchiveCardsUI(currentStatusMap);
+            }
+        } catch (e) {
+            console.warn('Cache games_status non accessibile:', e);
+        }
+
         if (typeof firebase !== 'undefined') {
             const db = firebase.firestore();
             db.collection('games_status').onSnapshot(snapshot => {
+                const freshStatusMap = {};
                 snapshot.forEach(doc => {
-                    currentStatusMap[doc.id] = doc.data();
+                    freshStatusMap[doc.id] = doc.data();
                 });
+                currentStatusMap = freshStatusMap;
 
-                document.querySelectorAll('.game-card').forEach(card => {
-                    const title = card.getAttribute('data-title')?.toLowerCase();
-                    if (!title) return;
-                    const gameId = titleToIdMap[title];
-                    if (gameId && currentStatusMap[gameId]) {
-                        const status = currentStatusMap[gameId];
-                        const btn = card.querySelector('.btn');
-                        if (!status.isActive) {
-                            btn.classList.add('wip-link');
-                            btn.classList.remove('btn-primary');
-                            btn.classList.add('btn-outline');
-                            btn.href = "#";
-                        } else {
-                            btn.classList.remove('wip-link');
-                            btn.classList.remove('btn-outline');
-                            btn.classList.add('btn-primary');
-                            // Ripristina l'href in base al titolo
-                            const linkMap = {
-                                'fantaletteratura': 'fantaletteratura-dettagli.html',
-                                'la rotta degli eroi': 'rotta-eroi-dettagli.html',
-                                'palestra di riflessione': 'palestra-riflessione-dettagli.html',
-                                'travel agency': 'travel-agency.html',
-                                'il mio quaderno alternativo': 'quaderno-alternativo.html',
-                                'la corte della commedia': 'corte-commedia-dettagli.html',
-                                'ops!': 'ops-dettagli.html',
-                                'l\'oratore': 'oratore-dettagli.html',
-                                'fuori registro': 'fuori-registro-dettagli.html',
-                                'historygram': 'historygram-dettagli.html'
-                            };
-                            if (linkMap[title]) {
-                                btn.href = linkMap[title];
-                            }
-                        }
-                    }
-                });
+                try {
+                    localStorage.setItem('pm_games_status_cache', JSON.stringify(currentStatusMap));
+                } catch (e) {}
 
-                applyCardVisibility();
+                updateArchiveCardsUI(currentStatusMap);
             });
         }
 

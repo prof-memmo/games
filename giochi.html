@@ -682,9 +682,11 @@
             if (typeof firebase !== 'undefined') {
                 const db = firebase.firestore();
                 db.collection('games_status').onSnapshot(snapshot => {
+                    const freshStatusMap = {};
                     snapshot.forEach(doc => {
-                        currentStatusMap[doc.id] = doc.data();
+                        freshStatusMap[doc.id] = doc.data();
                     });
+                    currentStatusMap = freshStatusMap;
 
                     try {
                         localStorage.setItem('pm_games_status_cache', JSON.stringify(currentStatusMap));

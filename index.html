@@ -334,8 +334,9 @@
                     carousel.appendChild(card);
                 });
             } catch(e) {
-                console.error("Errore recupero esperienze:", e);
-                document.getElementById("experiences-carousel").innerHTML = '<p>Impossibile caricare le recensioni.</p>';
+                console.warn("Esperienze momentaneamente non disponibili o permessi anonimi limitati:", e.message || e);
+                const carousel = document.getElementById("experiences-carousel");
+                if (carousel) carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
             }
         }
       });

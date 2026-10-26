@@ -770,6 +770,12 @@
                         }
 
                         if (planKey === 'base') {
+                            const authUser = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth().currentUser : null;
+                            if (authUser) {
+                                alert("ℹ️ Sei già iscritto con il Piano Base Gratuito!\nPuoi accedere subito ai giochi e alle funzionalità incluse.");
+                                window.location.href = 'giochi.html';
+                                return;
+                            }
                             window.location.href = 'accedi.html';
                             return;
                         }

@@ -342,6 +342,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (status.classe) metaItems[4].innerHTML = `<span>👶 Classe/Età:</span> ${status.classe}`;
                     if (status.uso) metaItems[5].innerHTML = `<span>🏫 Uso:</span> ${status.uso}`;
                 }
+
+                // Aggiorna stato pulsante Gioco Online (se disattivato -> Lavori in corso)
+                const playBtn = mainEl.querySelector('a.btn-primary[href*="prof-memmo.github.io"], a.btn[href*="prof-memmo.github.io"], a.btn-primary');
+                if (playBtn) {
+                    if (!playBtn.dataset.originalHref) {
+                        playBtn.dataset.originalHref = playBtn.getAttribute('href') || '';
+                        playBtn.dataset.originalHtml = playBtn.innerHTML;
+                        playBtn.dataset.originalClassName = playBtn.className;
+                    }
+                    if (status.isActive === false) {
+                        playBtn.removeAttribute('href');
+                        playBtn.className = 'btn btn-outline';
+                        playBtn.style.cursor = 'not-allowed';
+                        playBtn.style.opacity = '0.75';
+                        playBtn.innerHTML = '<i class="ph-bold ph-wrench" style="margin-right: 0.5rem;"></i> Lavori in corso';
+                    } else {
+                        if (playBtn.dataset.originalHref) {
+                            playBtn.setAttribute('href', playBtn.dataset.originalHref);
+                        }
+                        playBtn.className = playBtn.dataset.originalClassName || 'btn btn-primary';
+                        playBtn.style.cursor = '';
+                        playBtn.style.opacity = '';
+                        playBtn.innerHTML = playBtn.dataset.originalHtml;
+                    }
+                }
             }
         }, err => {
             console.warn("Game status listener notice:", err.message);

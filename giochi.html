@@ -284,7 +284,7 @@
                                 <div class="meta-item"><span>👶 Classe/Età:</span> Sec. di 1° grado</div>
                                 <div class="meta-item"><span>🏫 Uso:</span> Classe, Ripasso</div>
                             </div>
-                            <a href="javascript:void(0)" role="button" class="btn btn-outline wip-link" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
+                            <a href="ruota-geografica-dettagli.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Vedi dettagli</a>
                         </div>
                     </div>
 
@@ -553,7 +553,7 @@
                                     btn.classList.remove('wip-link');
                                     btn.classList.remove('btn-outline');
                                     btn.classList.add('btn-primary');
-                                    btn.href = (gameId === 'historygram') ? 'historygram-dettagli.html' : btn.href;
+                                    btn.href = (gameId === 'historygram') ? 'historygram-dettagli.html' : (gameId === 'la-ruota-geografica') ? 'ruota-geografica-dettagli.html' : btn.href;
                                 }
                             }
                         }
@@ -625,7 +625,8 @@
                                     'ops!': 'ops-dettagli.html',
                                     'l\'oratore': 'oratore-dettagli.html',
                                     'fuori registro': 'fuori-registro-dettagli.html',
-                                    'historygram': 'historygram-dettagli.html'
+                                    'historygram': 'historygram-dettagli.html',
+                                    'la ruota geografica': 'ruota-geografica-dettagli.html'
                                 };
                                 if (linkMap[title]) {
                                     btn.href = linkMap[title];

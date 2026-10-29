@@ -383,15 +383,16 @@
 
         /* Loading Spinner */
         #reader-loader {
-            position: absolute;
+            position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 15px;
-            z-index: 100;
+            z-index: 250;
             transition: opacity 0.2s ease;
         }
 
@@ -1019,18 +1020,18 @@
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </button>
 
-            <!-- Loader Overlay -->
-            <div id="reader-loader">
-                <div class="spinner"></div>
-                <div style="font-weight: 600; font-size: 0.95rem; color: #e2e8f0;">Caricamento Quaderno in corso…</div>
-            </div>
-
             <!-- Footer Watermark & Protection notice -->
             <div class="reader-footer-info">
                 <span>&copy; Prof. Memmo &bull; Deposito Patamu protetto</span>
                 <span>Visualizzazione didattica protetta</span>
             </div>
         </main>
+
+        <!-- Loader & Notice Overlay -->
+        <div id="reader-loader">
+            <div class="spinner"></div>
+            <div style="font-weight: 600; font-size: 0.95rem; color: #e2e8f0;">Caricamento Quaderno in corso…</div>
+        </div>
 
         <!-- ========================================================
              FLOATING DRAWING & WRITING TOOLBAR
@@ -1310,8 +1311,29 @@
         };
 
         // --- STATO DEL LETTORE & ANNOTAZIONI ---
-        const PDF_URL = 'contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf';
-        const EDITION_ID = 'classe-1';
+        const urlParams = new URLSearchParams(window.location.search);
+        const EDITION_ID = urlParams.get('edition') || 'classe-1';
+
+        const EDITIONS_META = {
+            'classe-1': {
+                title: 'Classe Prima',
+                pdfUrl: 'contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf',
+                available: true
+            },
+            'classe-2': {
+                title: 'Classe Seconda',
+                pdfUrl: null,
+                available: false
+            },
+            'classe-3': {
+                title: 'Classe Terza',
+                pdfUrl: null,
+                available: false
+            }
+        };
+
+        const currentEditionMeta = EDITIONS_META[EDITION_ID] || EDITIONS_META['classe-1'];
+        const PDF_URL = currentEditionMeta.pdfUrl;
         
         let pdfDoc = null;
         let currentPageNum = 1;
@@ -1483,6 +1505,27 @@
             try {
                 showLoader(true);
                 initStudentProfile();
+
+                // Aggiorna badge edizione nell'header
+                const badgeEl = document.querySelector('.reader-title-box .reader-badge');
+                if (badgeEl) badgeEl.textContent = currentEditionMeta.title;
+
+                if (!currentEditionMeta.available || !PDF_URL) {
+                    showLoader(false);
+                    loader.style.opacity = '1';
+                    loader.style.pointerEvents = 'auto';
+                    loader.innerHTML = `
+                        <div style="margin-bottom: 0.5rem;"><img src="assets/avatars/16.png" alt="Capibara al lavoro" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); background: #fef3c7; padding: 4px; border: 3px solid #f59e0b;"></div>
+                        <div style="font-weight: 700; font-size: 1.25rem; color: #ffffff;">${currentEditionMeta.title} in lavorazione</div>
+                        <div style="font-size: 0.88rem; color: #94a3b8; max-width: 440px; text-align: center; line-height: 1.5; margin: 0.4rem 0 1.25rem 0;">I materiali didattici di questa classe sono in fase di completamento. Sfoglia il quaderno di Classe Prima oppure torna alla pagina principale.</div>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="quaderno-alternativo.html" class="reader-btn">Torna Indietro</a>
+                            <a href="quaderno-reader.html?edition=classe-1" class="reader-btn reader-btn-primary">Apri Classe Prima</a>
+                        </div>
+                    `;
+                    return;
+                }
+
                 renderTocList();
                 
                 const loadingTask = pdfjsLib.getDocument(PDF_URL);

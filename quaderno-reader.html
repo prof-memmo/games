@@ -23,6 +23,8 @@
             --reader-text-muted: #94a3b8;
             --reader-accent: #7c3aed;
             --reader-accent-hover: #6d28d9;
+            --reader-accent-light: rgba(124, 58, 237, 0.15);
+            --reader-surface: #1e293b;
         }
 
         * {
@@ -49,6 +51,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
         /* Top Bar */
@@ -68,7 +71,7 @@
         .topbar-left, .topbar-center, .topbar-right {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.65rem;
         }
 
         .topbar-center {
@@ -82,8 +85,8 @@
             color: var(--reader-text);
             border: 1px solid var(--reader-border);
             border-radius: 8px;
-            padding: 8px 14px;
-            font-size: 0.88rem;
+            padding: 7px 12px;
+            font-size: 0.86rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -92,7 +95,7 @@
             cursor: pointer;
             transition: all 0.15s ease;
             text-decoration: none;
-            min-height: 42px;
+            min-height: 40px;
         }
 
         .reader-btn:hover {
@@ -114,6 +117,13 @@
         .reader-btn-primary:hover {
             background: var(--reader-accent-hover);
             border-color: var(--reader-accent-hover);
+        }
+
+        .reader-btn-mode.active {
+            background: #0284c7;
+            border-color: #0284c7;
+            color: white;
+            box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
         }
 
         .reader-title-box {
@@ -147,14 +157,14 @@
             background: #334155;
             border: 1px solid #475569;
             color: white;
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             transition: all 0.15s ease;
         }
 
@@ -172,24 +182,24 @@
         .page-control-box {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: #1e293b;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             border: 1px solid var(--reader-border);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             font-weight: 600;
             color: var(--reader-text-muted);
         }
 
         .page-input {
-            width: 48px;
+            width: 46px;
             background: #0f172a;
             border: 1px solid var(--reader-border);
             color: white;
             text-align: center;
             border-radius: 6px;
-            padding: 4px 0;
+            padding: 3px 0;
             font-size: 0.9rem;
             font-weight: 700;
         }
@@ -197,6 +207,47 @@
         .page-input:focus {
             outline: none;
             border-color: var(--reader-accent);
+        }
+
+        /* Save & Student Badge */
+        .student-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #334155;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .student-pill:hover {
+            border-color: var(--reader-accent);
+            color: white;
+            background: #334155;
+        }
+
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            color: #10b981;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 3px 8px;
+            border-radius: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        .sync-badge.saving {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
         }
 
         /* Main Viewport Stage */
@@ -207,7 +258,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
             background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
         }
 
@@ -250,6 +301,73 @@
             pointer-events: none;
         }
 
+        /* Draw Canvas Layer */
+        canvas.draw-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 15;
+            touch-action: none;
+            pointer-events: none; /* Attivato dinamicamente in drawMode */
+        }
+
+        canvas.draw-canvas.active {
+            pointer-events: auto;
+            cursor: crosshair;
+        }
+
+        canvas.draw-canvas.tool-text {
+            cursor: text;
+        }
+
+        canvas.draw-canvas.tool-eraser {
+            cursor: cell;
+        }
+
+        /* Hotspot Layer per Indice Stampato (Pagine 3, 4, 5) */
+        .hotspot-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 12;
+            pointer-events: auto;
+        }
+
+        .hotspot-link {
+            position: absolute;
+            border-radius: 6px;
+            background: rgba(124, 58, 237, 0.06);
+            border: 1px dashed rgba(124, 58, 237, 0.3);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: #7c3aed;
+            font-weight: 700;
+            font-size: 0.78rem;
+        }
+
+        .hotspot-link:hover {
+            background: rgba(124, 58, 237, 0.22);
+            border-color: #7c3aed;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.35);
+        }
+
+        .hotspot-link span {
+            background: #ffffff;
+            color: #7c3aed;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
         /* Spina centrale del libro */
         .book-spine-shadow {
             position: absolute;
@@ -260,7 +378,7 @@
             transform: translateX(-50%);
             background: linear-gradient(to right, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.12) 100%);
             pointer-events: none;
-            z-index: 10;
+            z-index: 20;
         }
 
         /* Loading Spinner */
@@ -293,15 +411,15 @@
         /* Watermark & Footer info */
         .reader-footer-info {
             position: absolute;
-            bottom: 12px;
-            right: 18px;
-            font-size: 0.75rem;
+            bottom: 10px;
+            right: 16px;
+            font-size: 0.74rem;
             color: rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
             gap: 10px;
             pointer-events: none;
-            z-index: 20;
+            z-index: 25;
         }
 
         /* Floating Nav Buttons on Stage */
@@ -309,9 +427,9 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 52px;
-            height: 52px;
-            background: rgba(15, 23, 42, 0.65);
+            width: 50px;
+            height: 50px;
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: white;
@@ -319,7 +437,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
             z-index: 30;
             transition: all 0.2s;
@@ -328,7 +446,7 @@
         .stage-nav-arrow:hover:not(:disabled) {
             background: var(--reader-accent);
             border-color: var(--reader-accent);
-            transform: translateY(-50%) scale(1.1);
+            transform: translateY(-50%) scale(1.08);
         }
 
         .stage-nav-arrow:disabled {
@@ -336,13 +454,459 @@
             cursor: not-allowed;
         }
 
-        .stage-nav-left { left: 24px; }
-        .stage-nav-right { right: 24px; }
+        .stage-nav-left { left: 20px; }
+        .stage-nav-right { right: 20px; }
+
+        /* ========================================================
+           TOC DRAWER (CASSETTO LATERALE INDICE)
+           ======================================================== */
+        #toc-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: min(90vw, 420px);
+            background: #0f172a;
+            border-right: 1px solid var(--reader-border);
+            z-index: 200;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #toc-drawer.open {
+            transform: translateX(0);
+        }
+
+        #toc-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 190;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #toc-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .toc-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--reader-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #1e293b;
+        }
+
+        .toc-header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toc-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-brand img {
+            max-height: 38px;
+            max-width: 140px;
+            object-fit: contain;
+        }
+
+        .toc-close-btn {
+            background: transparent;
+            border: 1px solid var(--reader-border);
+            color: #94a3b8;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.15s;
+        }
+
+        .toc-close-btn:hover {
+            color: white;
+            background: #334155;
+        }
+
+        .toc-search-box {
+            position: relative;
+        }
+
+        .toc-search-box input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            color: white;
+            padding: 8px 12px 8px 34px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .toc-search-box input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        .toc-search-box i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .toc-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-group {
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            overflow: hidden;
+        }
+
+        .toc-group-title {
+            padding: 10px 14px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        .toc-group-title:hover {
+            color: #ffffff;
+            background: rgba(124, 58, 237, 0.15);
+        }
+
+        .toc-group-title .badge-page {
+            background: var(--reader-accent);
+            color: white;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .toc-items-sublist {
+            padding: 6px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toc-item {
+            padding: 8px 14px 8px 24px;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.12s;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-item:hover {
+            background: rgba(124, 58, 237, 0.12);
+            color: #ffffff;
+            border-left-color: var(--reader-accent);
+        }
+
+        .toc-item.active {
+            background: rgba(124, 58, 237, 0.2);
+            color: #c4b5fd;
+            font-weight: 600;
+            border-left-color: var(--reader-accent);
+        }
+
+        .toc-item .item-title {
+            flex-grow: 1;
+            line-height: 1.35;
+        }
+
+        .toc-item .item-tag {
+            font-size: 0.68rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #334155;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .toc-item .item-tag.tag-laboratorio {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .toc-item .item-tag.tag-test {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        /* ========================================================
+           DRAWING & ANNOTATION TOOLBAR (BARRA STRUMENTI DISEGNO)
+           ======================================================== */
+        #drawing-toolbar {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            border-radius: 30px;
+            padding: 6px 14px;
+            display: none; /* Attivata con drawMode */
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        #drawing-toolbar.visible {
+            display: flex;
+            animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translate(-50%, 15px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        .tool-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #cbd5e1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tool-btn:hover {
+            background: #1e293b;
+            color: white;
+            border-color: #334155;
+        }
+
+        .tool-btn.active {
+            background: var(--reader-accent);
+            color: white;
+            border-color: var(--reader-accent);
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+        }
+
+        .tool-divider {
+            width: 1px;
+            height: 24px;
+            background: #334155;
+            margin: 0 2px;
+        }
+
+        /* Color Swatches */
+        .color-palette {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-swatch {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.12s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.15);
+        }
+
+        .color-swatch.active {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px var(--reader-accent);
+            transform: scale(1.1);
+        }
+
+        /* Stroke Size Select */
+        .stroke-size-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stroke-dot {
+            border-radius: 50%;
+            background: #94a3b8;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.12s;
+        }
+
+        .stroke-dot.size-fine { width: 6px; height: 6px; }
+        .stroke-dot.size-medium { width: 10px; height: 10px; }
+        .stroke-dot.size-thick { width: 14px; height: 14px; }
+
+        .stroke-dot:hover, .stroke-dot.active {
+            background: #ffffff;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Inline Text Input Overlay on Page */
+        .text-editor-box {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--reader-accent);
+            border-radius: 6px;
+            padding: 6px 10px;
+            z-index: 50;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .text-editor-box textarea {
+            width: 220px;
+            height: 70px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #0f172a;
+            resize: both;
+        }
+
+        .text-editor-box textarea:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        .text-editor-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .btn-text-action {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-text-confirm {
+            background: var(--reader-accent);
+            color: white;
+        }
+
+        .btn-text-cancel {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        /* Student Name Prompt Modal */
+        #student-name-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #student-name-modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #1e293b;
+            border: 1px solid var(--reader-border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .modal-card h3 {
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .modal-card p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
 
         @media (max-width: 900px) {
             .reader-title-box .reader-title { display: none; }
             .topbar-right .reader-btn span { display: none; }
             .stage-nav-arrow { display: none; }
+            .student-pill span { display: none; }
         }
     </style>
 </head>
@@ -351,19 +915,26 @@
     <div id="reader-app">
         <!-- Top Toolbar -->
         <header class="reader-topbar">
-            <!-- Left: Back & Title -->
+            <!-- Left: Back & Table of Contents & Title -->
             <div class="topbar-left">
                 <a href="quaderno-alternativo.html" class="reader-btn" title="Torna a Scegli il tuo Quaderno">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                     <span>Indietro</span>
                 </a>
+                
+                <!-- Pulsante Indice -->
+                <button id="btn-toggle-toc" class="reader-btn reader-btn-primary" title="Apri Indice dei Percorsi e Lezioni">
+                    <i class="ph ph-list-bullets" style="font-size: 1.1rem;"></i>
+                    <span>Indice</span>
+                </button>
+
                 <div class="reader-title-box">
                     <span class="reader-title">Il mio quaderno alternativo</span>
                     <span class="reader-badge">Classe Prima</span>
                 </div>
             </div>
 
-            <!-- Center: Page Navigation -->
+            <!-- Center: Page Navigation & Student Sync Status -->
             <div class="topbar-center">
                 <button id="btn-prev" class="reader-nav-btn" title="Pagina Precedente (Freccia Sinistra)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -376,14 +947,31 @@
                 <button id="btn-next" class="reader-nav-btn" title="Pagina Successiva (Freccia Destra)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                 </button>
+
+                <!-- Student Profile Pill & Autosave status -->
+                <div id="student-profile-pill" class="student-pill" title="Clicca per cambiare nome dello studente">
+                    <i class="ph ph-user"></i>
+                    <span id="student-name-label">Mio Quaderno</span>
+                </div>
+                <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
+                    <i class="ph ph-cloud-check"></i>
+                    <span>Salvato</span>
+                </div>
             </div>
 
-            <!-- Right: View Mode, Zoom & Fullscreen -->
+            <!-- Right: Mode Switch (Sfoglia vs Disegna), Spread, Zoom & Fullscreen -->
             <div class="topbar-right">
+                <!-- Toggle Modalità Disegno / Scrittura -->
+                <button id="btn-toggle-draw-mode" class="reader-btn reader-btn-mode" title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                    <i class="ph ph-pencil-simple" style="font-size: 1.1rem;"></i>
+                    <span id="label-draw-mode">Disegna e Scrivi</span>
+                </button>
+
                 <button id="btn-toggle-spread" class="reader-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     <span id="label-spread">Vista Libro</span>
                 </button>
+
                 <button id="btn-zoom-out" class="reader-btn" title="Riduci Zoom">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M8 11h6"/></svg>
                 </button>
@@ -393,6 +981,7 @@
                 <button id="btn-zoom-in" class="reader-btn" title="Ingrandisci Zoom">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
                 </button>
+                
                 <button id="btn-fullscreen" class="reader-btn reader-btn-primary" title="Schermo Intero (Ottimale per LIM)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8V3m0 0h5M3 3l6 6m12-6h-5m5 0v5m0-5l-6 6M3 16v5m0 0h5m-5 0l6-6m12 6l-6-6m6 6v-5m0 5h-5"/></svg>
                     <span>Schermo Intero</span>
@@ -412,12 +1001,16 @@
                 <!-- Page Left / Single -->
                 <div id="page-wrapper-left" class="page-wrapper left-page">
                     <canvas id="canvas-page-left" class="pdf-canvas"></canvas>
+                    <canvas id="canvas-draw-left" class="draw-canvas"></canvas>
+                    <div id="hotspot-layer-left" class="hotspot-layer" style="display: none;"></div>
                 </div>
                 <!-- Spina libro (visibile in spread mode) -->
                 <div id="book-spine" class="book-spine-shadow" style="display: none;"></div>
                 <!-- Page Right (in spread mode) -->
                 <div id="page-wrapper-right" class="page-wrapper right-page" style="display: none;">
                     <canvas id="canvas-page-right" class="pdf-canvas"></canvas>
+                    <canvas id="canvas-draw-right" class="draw-canvas"></canvas>
+                    <div id="hotspot-layer-right" class="hotspot-layer" style="display: none;"></div>
                 </div>
             </div>
 
@@ -435,9 +1028,106 @@
             <!-- Footer Watermark & Protection notice -->
             <div class="reader-footer-info">
                 <span>&copy; Prof. Memmo &bull; Deposito Patamu protetto</span>
-                <span>Visualizzazione protetta per la didattica</span>
+                <span>Visualizzazione didattica protetta</span>
             </div>
         </main>
+
+        <!-- ========================================================
+             FLOATING DRAWING & WRITING TOOLBAR
+             ======================================================== -->
+        <div id="drawing-toolbar">
+            <!-- Penna / Matita -->
+            <button class="tool-btn active" data-tool="pen" title="Penna per scrivere a mano o disegnare">
+                <i class="ph ph-pencil-simple-line"></i>
+            </button>
+
+            <!-- Evidenziatore -->
+            <button class="tool-btn" data-tool="highlighter" title="Evidenziatore fluorescente">
+                <i class="ph ph-highlighter"></i>
+            </button>
+
+            <!-- Testo Digitato per DSA -->
+            <button class="tool-btn" data-tool="text" title="Testo digitato da tastiera (Accessibile DSA)">
+                <i class="ph ph-text-t"></i>
+            </button>
+
+            <!-- Gomma -->
+            <button class="tool-btn" data-tool="eraser" title="Gomma per cancellare">
+                <i class="ph ph-eraser"></i>
+            </button>
+
+            <div class="tool-divider"></div>
+
+            <!-- Tavolozza Colori -->
+            <div class="color-palette" id="color-palette">
+                <div class="color-swatch active" data-color="#1e293b" style="background: #1e293b;" title="Nero Grafite"></div>
+                <div class="color-swatch" data-color="#2563eb" style="background: #2563eb;" title="Blu Scuola"></div>
+                <div class="color-swatch" data-color="#7c3aed" style="background: #7c3aed;" title="Viola Memmo"></div>
+                <div class="color-swatch" data-color="#dc2626" style="background: #dc2626;" title="Rosso Correzione"></div>
+                <div class="color-swatch" data-color="#facc15" style="background: #facc15;" title="Giallo Evidenziatore"></div>
+                <div class="color-swatch" data-color="#4ade80" style="background: #4ade80;" title="Verde Evidenziatore"></div>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Selettore Spessore -->
+            <div class="stroke-size-selector">
+                <span class="stroke-dot size-fine active" data-width="2" title="Tratto Sottile"></span>
+                <span class="stroke-dot size-medium" data-width="5" title="Tratto Medio"></span>
+                <span class="stroke-dot size-thick" data-width="10" title="Tratto Spesso"></span>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Undo / Redo / Clear -->
+            <button class="tool-btn" id="btn-undo" title="Annulla ultimo tratto (Ctrl+Z)">
+                <i class="ph ph-arrow-u-up-left"></i>
+            </button>
+            <button class="tool-btn" id="btn-redo" title="Ripristina tratto (Ctrl+Y)">
+                <i class="ph ph-arrow-u-up-right"></i>
+            </button>
+            <button class="tool-btn" id="btn-clear-page" title="Cancella tutte le note di questa pagina">
+                <i class="ph ph-trash"></i>
+            </button>
+        </div>
+
+        <!-- ========================================================
+             TOC DRAWER & BACKDROP
+             ======================================================== -->
+        <div id="toc-backdrop"></div>
+        <aside id="toc-drawer">
+            <div class="toc-header">
+                <div class="toc-header-top">
+                    <div class="toc-brand">
+                        <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo">
+                    </div>
+                    <button id="btn-close-toc" class="toc-close-btn" title="Chiudi Indice (Esc)">
+                        <i class="ph ph-x"></i>
+                    </button>
+                </div>
+                <div class="toc-search-box">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input type="text" id="toc-search-input" placeholder="Cerca percorso, lezione o laboratorio…">
+                </div>
+            </div>
+            <div class="toc-list-container" id="toc-list">
+                <!-- Generato dinamicamente via JS -->
+            </div>
+        </aside>
+
+        <!-- Modal Cambio Nome Studente -->
+        <div id="student-name-modal">
+            <div class="modal-card">
+                <h3>Il tuo Quaderno Personale</h3>
+                <p>Inserisci il tuo nome o pseudonimo. Tutti i disegni e gli appunti scritti sul libro rimarranno collegati al tuo profilo!</p>
+                <input type="text" id="student-name-input" class="modal-input" placeholder="Es. Marco R." maxlength="30">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <button id="btn-cancel-student" class="reader-btn" style="flex: 1;">Annulla</button>
+                    <button id="btn-save-student" class="reader-btn reader-btn-primary" style="flex: 1;">Salva Profilo</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Local PDF.js Engine (Scuole & LIM Offline Resilient) -->
@@ -448,16 +1138,208 @@
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/vendor/pdf.worker.min.js';
         }
 
-        // --- STATO DEL LETTORE QUADERNO ---
+        // --- DATASET INDICE GENERALE DEI PERCORSI ---
+        const TOC_DATA = [
+            {
+                id: "intro-group",
+                title: "Introduzione & Indice",
+                page: 1,
+                items: [
+                    { title: "Copertina del Libro", page: 1, tag: "Copertina" },
+                    { title: "Presentazione del percorso", page: 2, tag: "Intro" },
+                    { title: "Indice Generale Stampato (Percorsi 1 e 2)", page: 3, tag: "Indice" },
+                    { title: "Indice Generale Stampato (Percorsi 3, 4 e 5)", page: 4, tag: "Indice" },
+                    { title: "Indice Generale Stampato (Percorsi 6, 7 e 8)", page: 5, tag: "Indice" }
+                ]
+            },
+            {
+                id: "percorso-1",
+                title: "Percorso 1: Benvenuti nella materia alternativa!",
+                page: 7,
+                items: [
+                    { title: "Attività di benvenuto: La mia carta d’identità speciale", page: 8, tag: "Attività" },
+                    { title: "Lezione 1: Chi sono io? La scoperta di sé", page: 12, tag: "Lezione" },
+                    { title: "Lezione 2: Cosa mi piace fare? Le mie passioni", page: 15, tag: "Lezione" },
+                    { title: "Lezione 3: I miei superpoteri interiori", page: 18, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il super-cartellone della classe", page: 22, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 1", page: 23, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-2",
+                title: "Percorso 2: Io e gli altri: l’empatia e l’amicizia",
+                page: 24,
+                items: [
+                    { title: "Lezione 4: Che cos’è l’empatia? Mettersi nei panni degli altri", page: 28, tag: "Lezione" },
+                    { title: "Lezione 5: L’ascolto attivo: sentire davvero chi parla", page: 31, tag: "Lezione" },
+                    { title: "Lezione 6: Il valore dell’amicizia", page: 34, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il barattolo dei complimenti", page: 38, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 2", page: 39, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-3",
+                title: "Percorso 3: La diversità è una ricchezza",
+                page: 40,
+                items: [
+                    { title: "Lezione 7: Tante culture, una sola umanità", page: 44, tag: "Lezione" },
+                    { title: "Lezione 8: Superare gli stereotipi e i pregiudizi", page: 47, tag: "Lezione" },
+                    { title: "Lezione 9: L’inclusione: nessuno resta indietro", page: 50, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il mega-mosaico dell’inclusione", page: 54, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 3", page: 55, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-4",
+                title: "Percorso 4: Emozioni: conoscerle ed esprimerle",
+                page: 56,
+                items: [
+                    { title: "Lezione 10: La ruota delle emozioni di Plutchik", page: 60, tag: "Lezione" },
+                    { title: "Lezione 11: Come gestire la rabbia e la frustrazione", page: 63, tag: "Lezione" },
+                    { title: "Lezione 12: La paura: un’amica che protegge", page: 66, tag: "Lezione" },
+                    { title: "Laboratorio creativo: La ruota dei talenti e dei sentimenti", page: 70, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 4", page: 71, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-5",
+                title: "Percorso 5: La comunicazione efficace e non violenta",
+                page: 72,
+                items: [
+                    { title: "Lezione 13: Le parole pesano: il linguaggio che cura e che ferisce", page: 76, tag: "Lezione" },
+                    { title: "Lezione 14: La Comunicazione Non Violenta (CNV) di Rosenberg", page: 79, tag: "Lezione" },
+                    { title: "Lezione 15: Il litigio: come risolverlo senza vincitori né vinti", page: 82, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il decalogo della comunicazione gentile", page: 86, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 5", page: 87, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-6",
+                title: "Percorso 6: Regole, diritti e doveri: vivere insieme",
+                page: 88,
+                items: [
+                    { title: "Lezione 16: Perché esistono le regole? La Costituzione a scuola", page: 92, tag: "Lezione" },
+                    { title: "Lezione 17: I diritti dei bambini: la Convenzione ONU del 1989", page: 95, tag: "Lezione" },
+                    { title: "Lezione 18: Libertà e responsabilità: il confine della mia libertà", page: 98, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il nostro manifesto dei diritti e doveri", page: 102, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 6", page: 103, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-7",
+                title: "Percorso 7: La terra è di tutti: ecologia e sostenibilità",
+                page: 104,
+                items: [
+                    { title: "Lezione 19: L’impronta ecologica: quanto pesiamo sul pianeta?", page: 108, tag: "Lezione" },
+                    { title: "Lezione 20: L’Agenda 2030: 17 obiettivi per il mondo", page: 111, tag: "Lezione" },
+                    { title: "Lezione 21: Cosa posso fare io? Piccole azioni quotidiane", page: 114, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il diario ecologico della settimana", page: 118, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 7", page: 119, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-8",
+                title: "Percorso 8: Pensare con la propria testa: spirito critico",
+                page: 120,
+                items: [
+                    { title: "Lezione 22: Fatto o opinione? Imparare a distinguere", page: 124, tag: "Lezione" },
+                    { title: "Lezione 23: Fake news: non credere a tutto ciò che vedi", page: 127, tag: "Lezione" },
+                    { title: "Lezione 24: Il dubbio come forza: Socrate e la filosofia per tutti", page: 130, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il grande murale del pensiero libero", page: 134, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 8", page: 135, tag: "Test" }
+                ]
+            }
+        ];
+
+        // Mappatura degli hotspot cliccabili sulle pagine 3, 4 e 5 dell'indice cartaceo
+        // Valori percentuali (top, height, title, targetPage)
+        const HOTSPOTS_MAP = {
+            3: [
+                { top: 18, height: 6, title: "Percorso 1: Benvenuti nella materia alternativa!", targetPage: 7 },
+                { top: 25, height: 4, title: "La mia carta d’identità speciale", targetPage: 8 },
+                { top: 30, height: 4, title: "Lezione 1: Chi sono io?", targetPage: 12 },
+                { top: 35, height: 4, title: "Lezione 2: Cosa mi piace fare?", targetPage: 15 },
+                { top: 40, height: 4, title: "Lezione 3: I miei superpoteri interiori", targetPage: 18 },
+                { top: 45, height: 4, title: "Laboratorio: Super-cartellone", targetPage: 22 },
+                { top: 50, height: 4, title: "Test fine percorso 1", targetPage: 23 },
+                { top: 57, height: 6, title: "Percorso 2: Io e gli altri", targetPage: 24 },
+                { top: 64, height: 4, title: "Lezione 4: Che cos’è l’empatia?", targetPage: 28 },
+                { top: 69, height: 4, title: "Lezione 5: L’ascolto attivo", targetPage: 31 },
+                { top: 74, height: 4, title: "Lezione 6: Il valore dell’amicizia", targetPage: 34 },
+                { top: 79, height: 4, title: "Laboratorio: Il barattolo dei complimenti", targetPage: 38 },
+                { top: 84, height: 4, title: "Test fine percorso 2", targetPage: 39 }
+            ],
+            4: [
+                { top: 14, height: 5, title: "Percorso 3: La diversità è una ricchezza", targetPage: 40 },
+                { top: 20, height: 3.5, title: "Lezione 7: Tante culture, una sola umanità", targetPage: 44 },
+                { top: 24, height: 3.5, title: "Lezione 8: Stereotipi e pregiudizi", targetPage: 47 },
+                { top: 28, height: 3.5, title: "Lezione 9: L’inclusione", targetPage: 50 },
+                { top: 32, height: 3.5, title: "Laboratorio: Mega-mosaico", targetPage: 54 },
+                { top: 36, height: 3.5, title: "Test fine percorso 3", targetPage: 55 },
+                { top: 42, height: 5, title: "Percorso 4: Emozioni: conoscerle ed esprimerle", targetPage: 56 },
+                { top: 48, height: 3.5, title: "Lezione 10: La ruota delle emozioni", targetPage: 60 },
+                { top: 52, height: 3.5, title: "Lezione 11: Gestire rabbia e frustrazione", targetPage: 63 },
+                { top: 56, height: 3.5, title: "Lezione 12: La paura", targetPage: 66 },
+                { top: 60, height: 3.5, title: "Laboratorio: Ruota talenti e sentimenti", targetPage: 70 },
+                { top: 64, height: 3.5, title: "Test fine percorso 4", targetPage: 71 },
+                { top: 70, height: 5, title: "Percorso 5: Comunicazione efficace", targetPage: 72 },
+                { top: 76, height: 3.5, title: "Lezione 13: Le parole pesano", targetPage: 76 },
+                { top: 80, height: 3.5, title: "Lezione 14: Comunicazione Non Violenta", targetPage: 79 },
+                { top: 84, height: 3.5, title: "Lezione 15: Il litigio", targetPage: 82 },
+                { top: 88, height: 3.5, title: "Laboratorio: Decalogo gentile", targetPage: 86 }
+            ],
+            5: [
+                { top: 14, height: 5, title: "Percorso 6: Regole, diritti e doveri", targetPage: 88 },
+                { top: 20, height: 3.5, title: "Lezione 16: Perché esistono le regole?", targetPage: 92 },
+                { top: 24, height: 3.5, title: "Lezione 17: I diritti dei bambini", targetPage: 95 },
+                { top: 28, height: 3.5, title: "Lezione 18: Libertà e responsabilità", targetPage: 98 },
+                { top: 32, height: 3.5, title: "Laboratorio: Manifesto diritti", targetPage: 102 },
+                { top: 36, height: 3.5, title: "Test fine percorso 6", targetPage: 103 },
+                { top: 42, height: 5, title: "Percorso 7: La terra è di tutti", targetPage: 104 },
+                { top: 48, height: 3.5, title: "Lezione 19: L'impronta ecologica", targetPage: 108 },
+                { top: 52, height: 3.5, title: "Lezione 20: L'Agenda 2030", targetPage: 111 },
+                { top: 56, height: 3.5, title: "Lezione 21: Piccole azioni quotidiane", targetPage: 114 },
+                { top: 60, height: 3.5, title: "Laboratorio: Diario ecologico", targetPage: 118 },
+                { top: 64, height: 3.5, title: "Test fine percorso 7", targetPage: 119 },
+                { top: 70, height: 5, title: "Percorso 8: Pensare con la propria testa", targetPage: 120 },
+                { top: 76, height: 3.5, title: "Lezione 22: Fatto o opinione?", targetPage: 124 },
+                { top: 80, height: 3.5, title: "Lezione 23: Fake news", targetPage: 127 },
+                { top: 84, height: 3.5, title: "Lezione 24: Il dubbio come forza (Socrate)", targetPage: 130 },
+                { top: 88, height: 3.5, title: "Laboratorio: Murale del pensiero libero", targetPage: 134 }
+            ]
+        };
+
+        // --- STATO DEL LETTORE & ANNOTAZIONI ---
         const PDF_URL = 'contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf';
+        const EDITION_ID = 'classe-1';
         
         let pdfDoc = null;
         let currentPageNum = 1;
         let totalPages = 1;
-        let isTwoPageMode = (window.innerWidth >= 1200); // Default 2 pagine su desktop/LIM
+        let isTwoPageMode = (window.innerWidth >= 1200);
         let zoomLevel = 1.0;
         let isRendering = false;
         let renderPendingPage = null;
+
+        // Modalità Disegno / Scrittura
+        let isDrawMode = false;
+        let activeTool = 'pen'; // 'pen', 'highlighter', 'text', 'eraser'
+        let activeColor = '#1e293b';
+        let activeStrokeWidth = 2;
+        let isDrawing = false;
+        let currentStroke = null;
+        let currentDrawPage = null;
+
+        // Store Annotazioni Vettoriali in memoria: { [pageNum]: Array<Item> }
+        // Item: { type: 'stroke', tool: 'pen'|'highlighter', color: '#...', width: number, points: [[nx, ny], ...] }
+        //       { type: 'text', text: '...', nx: 0.1, ny: 0.2, color: '#...', fontSize: 16 }
+        let annotationsStore = {};
+        let undoStack = {}; // { [pageNum]: Array<Array<Item>> }
+        let redoStack = {}; // { [pageNum]: Array<Array<Item>> }
+
+        // Identificativo Studente
+        let currentStudentId = localStorage.getItem('pm_student_id') || 'studente_default';
+        let currentStudentName = localStorage.getItem('pm_student_name') || 'Il mio Quaderno';
 
         // Elementi DOM
         const stage = document.getElementById('reader-stage');
@@ -466,6 +1348,10 @@
         const pageRightWrapper = document.getElementById('page-wrapper-right');
         const canvasLeft = document.getElementById('canvas-page-left');
         const canvasRight = document.getElementById('canvas-page-right');
+        const canvasDrawLeft = document.getElementById('canvas-draw-left');
+        const canvasDrawRight = document.getElementById('canvas-draw-right');
+        const hotspotLayerLeft = document.getElementById('hotspot-layer-left');
+        const hotspotLayerRight = document.getElementById('hotspot-layer-right');
         const spine = document.getElementById('book-spine');
         const loader = document.getElementById('reader-loader');
         
@@ -483,10 +1369,88 @@
         const btnZoomFit = document.getElementById('btn-zoom-fit');
         const btnFullscreen = document.getElementById('btn-fullscreen');
 
-        // Caricamento Documento PDF
+        // TOC Elements
+        const btnToggleToc = document.getElementById('btn-toggle-toc');
+        const btnCloseToc = document.getElementById('btn-close-toc');
+        const tocDrawer = document.getElementById('toc-drawer');
+        const tocBackdrop = document.getElementById('toc-backdrop');
+        const tocList = document.getElementById('toc-list');
+        const tocSearchInput = document.getElementById('toc-search-input');
+
+        // Drawing Toolbar Elements
+        const drawingToolbar = document.getElementById('drawing-toolbar');
+        const btnToggleDrawMode = document.getElementById('btn-toggle-draw-mode');
+        const labelDrawMode = document.getElementById('label-draw-mode');
+        const colorPalette = document.getElementById('color-palette');
+        const btnUndo = document.getElementById('btn-undo');
+        const btnRedo = document.getElementById('btn-redo');
+        const btnClearPage = document.getElementById('btn-clear-page');
+
+        // Student Profile & Sync Elements
+        const studentProfilePill = document.getElementById('student-profile-pill');
+        const studentNameLabel = document.getElementById('student-name-label');
+        const syncStatusBadge = document.getElementById('sync-status-badge');
+        const studentModal = document.getElementById('student-name-modal');
+        const studentNameInput = document.getElementById('student-name-input');
+        const btnSaveStudent = document.getElementById('btn-save-student');
+        const btnCancelStudent = document.getElementById('btn-cancel-student');
+
+        // --- GESTIONE PROFILO STUDENTE & PERSISTENZA ---
+        function initStudentProfile() {
+            studentNameLabel.textContent = currentStudentName;
+            loadAnnotationsFromStorage();
+        }
+
+        function getStorageKey() {
+            return `pm_quaderno_${EDITION_ID}_${currentStudentId}`;
+        }
+
+        function loadAnnotationsFromStorage() {
+            try {
+                const raw = localStorage.getItem(getStorageKey());
+                if (raw) {
+                    annotationsStore = JSON.parse(raw);
+                } else {
+                    annotationsStore = {};
+                }
+            } catch (e) {
+                console.warn("Impossibile caricare annotazioni locali:", e);
+                annotationsStore = {};
+            }
+        }
+
+        let saveDebounceTimer = null;
+        function saveAnnotationsToStorage() {
+            setSyncStatus('saving');
+            clearTimeout(saveDebounceTimer);
+            saveDebounceTimer = setTimeout(() => {
+                try {
+                    localStorage.setItem(getStorageKey(), JSON.stringify(annotationsStore));
+                    setSyncStatus('saved');
+                } catch (e) {
+                    console.error("Errore salvataggio annotazioni:", e);
+                    setSyncStatus('saved');
+                }
+            }, 800);
+        }
+
+        function setSyncStatus(state) {
+            if (state === 'saving') {
+                syncStatusBadge.classList.add('saving');
+                syncStatusBadge.innerHTML = '<i class="ph ph-arrows-clockwise"></i> <span>Salvataggio…</span>';
+            } else {
+                syncStatusBadge.classList.remove('saving');
+                syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i> <span>Salvato</span>';
+            }
+        }
+
+        // --- CARICAMENTO PDF ---
         async function loadPdf() {
             try {
                 showLoader(true);
+                initStudentProfile();
+                renderTocList();
+                
                 const loadingTask = pdfjsLib.getDocument(PDF_URL);
                 pdfDoc = await loadingTask.promise;
                 totalPages = pdfDoc.numPages;
@@ -501,7 +1465,7 @@
                 loader.innerHTML = `
                     <div style="color: #ef4444; font-size: 2rem;"><i class="ph ph-warning-circle"></i></div>
                     <div style="font-weight: 700; color: #f87171;">Impossibile aprire il quaderno</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8; max-width: 400px; text-align: center;">${err.message || 'Verifica la connessione o i permessi del browser.'}</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; max-width: 400px; text-align: center;">${err.message || 'Verifica la connessione.'}</div>
                     <a href="quaderno-alternativo.html" class="reader-btn" style="margin-top: 10px;">Torna Indietro</a>
                 `;
             } finally {
@@ -509,7 +1473,7 @@
             }
         }
 
-        // Renderizza la pagina o la coppia di pagine
+        // --- RENDERING PAGINE PDF & OVERLAYS ---
         async function renderCurrentPages() {
             if (!pdfDoc) return;
             if (isRendering) {
@@ -519,20 +1483,16 @@
             isRendering = true;
 
             try {
-                // Calcola dimensioni disponibili nello stage
                 const stageWidth = stage.clientWidth - 40;
                 const stageHeight = stage.clientHeight - 40;
 
-                // Pagina 1 è sempre visualizzata a destra se siamo in modalità libro, o singola
                 const leftPageNum = currentPageNum;
                 const hasSecondPage = isTwoPageMode && (leftPageNum + 1 <= totalPages);
                 const rightPageNum = hasSecondPage ? leftPageNum + 1 : null;
 
-                // Recupera prima pagina
                 const page1 = await pdfDoc.getPage(leftPageNum);
                 const baseViewport1 = page1.getViewport({ scale: 1.0 });
 
-                // Calcola il fattore di scala ottimale per adattare al viewport senza scroll parassita (Art. 12 Pilastro 1)
                 let targetScale;
                 if (isTwoPageMode && hasSecondPage) {
                     const spreadWidth = baseViewport1.width * 2;
@@ -552,6 +1512,10 @@
                 const ctx1 = canvasLeft.getContext('2d');
                 await page1.render({ canvasContext: ctx1, viewport: viewport1 }).promise;
 
+                // Sync and redraw left draw canvas
+                setupDrawCanvas(canvasDrawLeft, leftPageNum, viewport1.width, viewport1.height);
+                setupHotspots(hotspotLayerLeft, leftPageNum);
+
                 // Render Right Page (se attiva)
                 if (isTwoPageMode && hasSecondPage) {
                     pageRightWrapper.style.display = 'flex';
@@ -564,13 +1528,18 @@
                     canvasRight.height = viewport2.height;
                     const ctx2 = canvasRight.getContext('2d');
                     await page2.render({ canvasContext: ctx2, viewport: viewport2 }).promise;
+
+                    setupDrawCanvas(canvasDrawRight, rightPageNum, viewport2.width, viewport2.height);
+                    setupHotspots(hotspotLayerRight, rightPageNum);
                 } else {
                     pageRightWrapper.style.display = 'none';
                     spine.style.display = 'none';
                     pageLeftWrapper.classList.remove('left-page');
+                    clearHotspots(hotspotLayerRight);
                 }
 
                 updateNavState();
+                updateTocActiveHighlight();
             } catch (err) {
                 console.error("Errore rendering pagina:", err);
             } finally {
@@ -583,6 +1552,422 @@
             }
         }
 
+        // --- MOTORE DI DISEGNO & ANNOTAZIONI VETTORIALI ---
+        function setupDrawCanvas(drawCanvas, pageNum, width, height) {
+            drawCanvas.width = width;
+            drawCanvas.height = height;
+            drawCanvas.dataset.pageNum = pageNum;
+            
+            if (isDrawMode) {
+                drawCanvas.classList.add('active');
+                updateCanvasCursor(drawCanvas);
+            } else {
+                drawCanvas.classList.remove('active');
+            }
+
+            redrawPageAnnotations(pageNum, drawCanvas);
+        }
+
+        function updateCanvasCursor(canvas) {
+            canvas.classList.remove('tool-text', 'tool-eraser');
+            if (activeTool === 'text') canvas.classList.add('tool-text');
+            else if (activeTool === 'eraser') canvas.classList.add('tool-eraser');
+        }
+
+        function redrawPageAnnotations(pageNum, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const items = annotationsStore[pageNum] || [];
+            const w = canvas.width;
+            const h = canvas.height;
+
+            items.forEach(item => {
+                if (item.type === 'stroke') {
+                    if (!item.points || item.points.length < 2) return;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = item.color;
+                    ctx.lineWidth = item.width * (w / 800); // Scala proporzionale crisp
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    if (item.tool === 'highlighter') {
+                        ctx.globalAlpha = 0.35;
+                        ctx.lineWidth = Math.max(14, item.width * 3.5 * (w / 800));
+                    }
+
+                    const startX = item.points[0][0] * w;
+                    const startY = item.points[0][1] * h;
+                    ctx.moveTo(startX, startY);
+
+                    for (let i = 1; i < item.points.length; i++) {
+                        ctx.lineTo(item.points[i][0] * w, item.points[i][1] * h);
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+                } else if (item.type === 'text') {
+                    ctx.save();
+                    const scaledSize = Math.max(12, item.fontSize * (w / 800));
+                    ctx.font = `600 ${scaledSize}px 'Inter', sans-serif`;
+                    ctx.fillStyle = item.color || '#1e293b';
+                    
+                    // Disegna sfondo morbido per leggibilità
+                    const lines = item.text.split('\n');
+                    const textX = item.nx * w;
+                    let textY = item.ny * h;
+
+                    lines.forEach(line => {
+                        ctx.fillText(line, textX, textY);
+                        textY += (scaledSize * 1.3);
+                    });
+                    ctx.restore();
+                }
+            });
+        }
+
+        // Pointer Events per Canvas di Disegno
+        function handlePointerDown(e, canvas) {
+            if (!isDrawMode) return;
+            e.preventDefault();
+            const pageNum = parseInt(canvas.dataset.pageNum, 10);
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const nx = x / canvas.width;
+            const ny = y / canvas.height;
+
+            if (activeTool === 'pen' || activeTool === 'highlighter') {
+                isDrawing = true;
+                currentDrawPage = pageNum;
+                currentStroke = {
+                    type: 'stroke',
+                    tool: activeTool,
+                    color: activeColor,
+                    width: activeStrokeWidth,
+                    points: [[nx, ny]]
+                };
+            } else if (activeTool === 'text') {
+                promptTextInput(canvas, pageNum, x, y, nx, ny);
+            } else if (activeTool === 'eraser') {
+                eraseAtPoint(pageNum, nx, ny, canvas);
+            }
+        }
+
+        function handlePointerMove(e, canvas) {
+            if (!isDrawing || !currentStroke) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const nx = (e.clientX - rect.left) / canvas.width;
+            const ny = (e.clientY - rect.top) / canvas.height;
+            currentStroke.points.push([nx, ny]);
+
+            // Disegna l'ultimo segmento in tempo reale
+            const ctx = canvas.getContext('2d');
+            const pts = currentStroke.points;
+            if (pts.length >= 2) {
+                const p1 = pts[pts.length - 2];
+                const p2 = pts[pts.length - 1];
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = currentStroke.color;
+                ctx.lineWidth = currentStroke.width * (canvas.width / 800);
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                if (currentStroke.tool === 'highlighter') {
+                    ctx.globalAlpha = 0.35;
+                    ctx.lineWidth = Math.max(14, currentStroke.width * 3.5 * (canvas.width / 800));
+                }
+                ctx.moveTo(p1[0] * canvas.width, p1[1] * canvas.height);
+                ctx.lineTo(p2[0] * canvas.width, p2[1] * canvas.height);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function handlePointerUp(e, canvas) {
+            if (!isDrawing || !currentStroke) return;
+            isDrawing = false;
+            const pageNum = currentDrawPage;
+            
+            if (!annotationsStore[pageNum]) annotationsStore[pageNum] = [];
+            pushToUndo(pageNum);
+            annotationsStore[pageNum].push(currentStroke);
+            currentStroke = null;
+            currentDrawPage = null;
+
+            saveAnnotationsToStorage();
+        }
+
+        // Input Testo Fluttuante per Scrittura DSA
+        function promptTextInput(canvas, pageNum, px, py, nx, ny) {
+            // Rimuovi eventuali box precedenti
+            const existing = document.querySelector('.text-editor-box');
+            if (existing) existing.remove();
+
+            const box = document.createElement('div');
+            box.className = 'text-editor-box';
+            box.style.left = `${px}px`;
+            box.style.top = `${py}px`;
+
+            box.innerHTML = `
+                <div style="font-size: 0.72rem; font-weight: 700; color: #7c3aed;">SCRIVI LA TUA RISPOSTA:</div>
+                <textarea placeholder="Digita qui il tuo testo…"></textarea>
+                <div class="text-editor-actions">
+                    <button class="btn-text-action btn-text-cancel">Annulla</button>
+                    <button class="btn-text-action btn-text-confirm">Inserisci</button>
+                </div>
+            `;
+
+            canvas.parentElement.appendChild(box);
+            const textarea = box.querySelector('textarea');
+            textarea.focus();
+
+            const closeBox = () => box.remove();
+
+            box.querySelector('.btn-text-cancel').addEventListener('click', closeBox);
+            box.querySelector('.btn-text-confirm').addEventListener('click', () => {
+                const val = textarea.value.trim();
+                if (val) {
+                    if (!annotationsStore[pageNum]) annotationsStore[pageNum] = [];
+                    pushToUndo(pageNum);
+                    annotationsStore[pageNum].push({
+                        type: 'text',
+                        text: val,
+                        nx: nx,
+                        ny: ny,
+                        color: activeColor,
+                        fontSize: 16
+                    });
+                    redrawPageAnnotations(pageNum, canvas);
+                    saveAnnotationsToStorage();
+                }
+                closeBox();
+            });
+        }
+
+        // Gomma per cancellazione selettiva
+        function eraseAtPoint(pageNum, nx, ny, canvas) {
+            const items = annotationsStore[pageNum];
+            if (!items || items.length === 0) return;
+
+            const threshold = 0.04; // Tolleranza raggio di click
+            let foundIndex = -1;
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                const item = items[i];
+                if (item.type === 'text') {
+                    if (Math.abs(item.nx - nx) < threshold && Math.abs(item.ny - ny) < threshold) {
+                        foundIndex = i;
+                        break;
+                    }
+                } else if (item.type === 'stroke') {
+                    const hit = item.points.some(p => Math.hypot(p[0] - nx, p[1] - ny) < threshold);
+                    if (hit) {
+                        foundIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (foundIndex !== -1) {
+                pushToUndo(pageNum);
+                items.splice(foundIndex, 1);
+                redrawPageAnnotations(pageNum, canvas);
+                saveAnnotationsToStorage();
+            }
+        }
+
+        // Undo & Redo System
+        function pushToUndo(pageNum) {
+            if (!undoStack[pageNum]) undoStack[pageNum] = [];
+            const clone = JSON.parse(JSON.stringify(annotationsStore[pageNum] || []));
+            undoStack[pageNum].push(clone);
+            redoStack[pageNum] = []; // Azzera redo dopo nuova azione
+        }
+
+        function undoAction() {
+            const leftPageNum = currentPageNum;
+            const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
+            
+            // Undo sulla pagina di sinistra o destra
+            [leftPageNum, rightPageNum].forEach(pageNum => {
+                if (!pageNum || !undoStack[pageNum] || undoStack[pageNum].length === 0) return;
+                if (!redoStack[pageNum]) redoStack[pageNum] = [];
+                redoStack[pageNum].push(JSON.parse(JSON.stringify(annotationsStore[pageNum] || [])));
+
+                annotationsStore[pageNum] = undoStack[pageNum].pop();
+                const targetCanvas = (pageNum === leftPageNum) ? canvasDrawLeft : canvasDrawRight;
+                if (targetCanvas) redrawPageAnnotations(pageNum, targetCanvas);
+            });
+            saveAnnotationsToStorage();
+        }
+
+        function redoAction() {
+            const leftPageNum = currentPageNum;
+            const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
+
+            [leftPageNum, rightPageNum].forEach(pageNum => {
+                if (!pageNum || !redoStack[pageNum] || redoStack[pageNum].length === 0) return;
+                if (!undoStack[pageNum]) undoStack[pageNum] = [];
+                undoStack[pageNum].push(JSON.parse(JSON.stringify(annotationsStore[pageNum] || [])));
+
+                annotationsStore[pageNum] = redoStack[pageNum].pop();
+                const targetCanvas = (pageNum === leftPageNum) ? canvasDrawLeft : canvasDrawRight;
+                if (targetCanvas) redrawPageAnnotations(pageNum, targetCanvas);
+            });
+            saveAnnotationsToStorage();
+        }
+
+        function clearCurrentPageAnnotations() {
+            const leftPageNum = currentPageNum;
+            const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
+
+            if (confirm("Sei sicuro di voler cancellare tutti gli appunti e i disegni di questa pagina?")) {
+                [leftPageNum, rightPageNum].forEach(pageNum => {
+                    if (pageNum && annotationsStore[pageNum] && annotationsStore[pageNum].length > 0) {
+                        pushToUndo(pageNum);
+                        annotationsStore[pageNum] = [];
+                        const targetCanvas = (pageNum === leftPageNum) ? canvasDrawLeft : canvasDrawRight;
+                        if (targetCanvas) redrawPageAnnotations(pageNum, targetCanvas);
+                    }
+                });
+                saveAnnotationsToStorage();
+            }
+        }
+
+        // Registrazione listener sui canvas di disegno
+        [canvasDrawLeft, canvasDrawRight].forEach(c => {
+            c.addEventListener('pointerdown', (e) => handlePointerDown(e, c));
+            c.addEventListener('pointermove', (e) => handlePointerMove(e, c));
+            c.addEventListener('pointerup', (e) => handlePointerUp(e, c));
+            c.addEventListener('pointercancel', (e) => handlePointerUp(e, c));
+        });
+
+        // --- HOTSPOTS CLICCABILI SULL'INDICE CARTACEO (PAGINE 3, 4, 5) ---
+        function setupHotspots(container, pageNum) {
+            clearHotspots(container);
+            const hotspots = HOTSPOTS_MAP[pageNum];
+            if (!hotspots || hotspots.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            hotspots.forEach(spot => {
+                const link = document.createElement('div');
+                link.className = 'hotspot-link';
+                link.style.top = `${spot.top}%`;
+                link.style.height = `${spot.height}%`;
+                link.style.left = '8%';
+                link.style.width = '84%';
+                link.title = `Vai a: ${spot.title} (Pagina ${spot.targetPage})`;
+                link.innerHTML = `<span>Pag. ${spot.targetPage} ➔</span>`;
+                
+                link.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    goToPage(spot.targetPage);
+                });
+                container.appendChild(link);
+            });
+        }
+
+        function clearHotspots(container) {
+            container.innerHTML = '';
+            container.style.display = 'none';
+        }
+
+        // --- TOC DRAWER GENERATION & BEHAVIOR ---
+        function renderTocList(filterQuery = '') {
+            tocList.innerHTML = '';
+            const q = filterQuery.toLowerCase().trim();
+
+            TOC_DATA.forEach(group => {
+                const matchingItems = group.items.filter(item => {
+                    if (!q) return true;
+                    return item.title.toLowerCase().includes(q) || 
+                           group.title.toLowerCase().includes(q) ||
+                           (item.tag && item.tag.toLowerCase().includes(q));
+                });
+
+                if (matchingItems.length === 0) return;
+
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'toc-group';
+
+                const groupTitle = document.createElement('div');
+                groupTitle.className = 'toc-group-title';
+                groupTitle.innerHTML = `
+                    <span>${group.title}</span>
+                    <span class="badge-page">Pag. ${group.page}</span>
+                `;
+                groupTitle.addEventListener('click', () => {
+                    goToPage(group.page);
+                    if (window.innerWidth < 900) closeTocDrawer();
+                });
+
+                const sublist = document.createElement('div');
+                sublist.className = 'toc-items-sublist';
+
+                matchingItems.forEach(item => {
+                    const itemLink = document.createElement('div');
+                    itemLink.className = 'toc-item';
+                    itemLink.dataset.page = item.page;
+
+                    let tagClass = '';
+                    if (item.tag === 'Laboratorio') tagClass = 'tag-laboratorio';
+                    else if (item.tag === 'Test') tagClass = 'tag-test';
+
+                    itemLink.innerHTML = `
+                        <span class="item-title">${item.title}</span>
+                        ${item.tag ? `<span class="item-tag ${tagClass}">${item.tag}</span>` : ''}
+                        <span style="font-weight: 700; color: #cbd5e1; font-size: 0.75rem;">${item.page}</span>
+                    `;
+
+                    itemLink.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        goToPage(item.page);
+                        if (window.innerWidth < 900) closeTocDrawer();
+                    });
+
+                    sublist.appendChild(itemLink);
+                });
+
+                groupDiv.appendChild(groupTitle);
+                groupDiv.appendChild(sublist);
+                tocList.appendChild(groupDiv);
+            });
+        }
+
+        function updateTocActiveHighlight() {
+            const items = tocList.querySelectorAll('.toc-item');
+            items.forEach(el => {
+                const p = parseInt(el.dataset.page, 10);
+                if (isTwoPageMode) {
+                    if (p === currentPageNum || p === currentPageNum + 1) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                } else {
+                    if (p === currentPageNum) el.classList.add('active');
+                    else el.classList.remove('active');
+                }
+            });
+        }
+
+        function openTocDrawer() {
+            tocDrawer.classList.add('open');
+            tocBackdrop.classList.add('open');
+            tocSearchInput.focus();
+        }
+
+        function closeTocDrawer() {
+            tocDrawer.classList.remove('open');
+            tocBackdrop.classList.remove('open');
+        }
+
+        // --- GESTIONE NAVIGAZIONE & VIEW MODE ---
         function updateNavState() {
             pageInput.value = currentPageNum;
             const hasPrev = currentPageNum > 1;
@@ -593,6 +1978,17 @@
             stagePrev.disabled = !hasPrev;
             btnNext.disabled = !hasNext;
             stageNext.disabled = !hasNext;
+        }
+
+        function goToPage(target) {
+            let p = parseInt(target, 10);
+            if (isNaN(p)) return;
+            p = Math.max(1, Math.min(totalPages, p));
+            if (isTwoPageMode && p > 1 && p % 2 === 0) {
+                p = p - 1; // Allinea a pagina sinistra
+            }
+            currentPageNum = p;
+            renderCurrentPages();
         }
 
         function goToPrevPage() {
@@ -612,7 +2008,6 @@
 
         function toggleViewMode() {
             isTwoPageMode = !isTwoPageMode;
-            // Se eravamo su una pagina pari in 2-page mode, allinea a dispari
             if (isTwoPageMode && currentPageNum % 2 === 0) {
                 currentPageNum = Math.max(1, currentPageNum - 1);
             }
@@ -630,6 +2025,25 @@
             }
         }
 
+        function toggleDrawMode() {
+            isDrawMode = !isDrawMode;
+            if (isDrawMode) {
+                btnToggleDrawMode.classList.add('active');
+                labelDrawMode.textContent = 'Modalità Lettura';
+                drawingToolbar.classList.add('visible');
+                canvasDrawLeft.classList.add('active');
+                canvasDrawRight.classList.add('active');
+                updateCanvasCursor(canvasDrawLeft);
+                updateCanvasCursor(canvasDrawRight);
+            } else {
+                btnToggleDrawMode.classList.remove('active');
+                labelDrawMode.textContent = 'Disegna e Scrivi';
+                drawingToolbar.classList.remove('visible');
+                canvasDrawLeft.classList.remove('active');
+                canvasDrawRight.classList.remove('active');
+            }
+        }
+
         function showLoader(visible) {
             if (loader) {
                 loader.style.opacity = visible ? '1' : '0';
@@ -637,16 +2051,13 @@
             }
         }
 
-        // Gestione Fullscreen
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.warn("Fullscreen request error:", err);
+                    console.warn("Fullscreen error:", err);
                 });
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
             }
         }
 
@@ -658,12 +2069,13 @@
             setTimeout(renderCurrentPages, 100);
         });
 
-        // Event Listeners
+        // --- EVENT LISTENERS GENERALI ---
         btnPrev.addEventListener('click', goToPrevPage);
         stagePrev.addEventListener('click', goToPrevPage);
         btnNext.addEventListener('click', goToNextPage);
         stageNext.addEventListener('click', goToNextPage);
         btnToggleSpread.addEventListener('click', toggleViewMode);
+        btnToggleDrawMode.addEventListener('click', toggleDrawMode);
         btnFullscreen.addEventListener('click', toggleFullscreen);
 
         btnZoomIn.addEventListener('click', () => {
@@ -682,16 +2094,78 @@
         });
 
         pageInput.addEventListener('change', () => {
-            let val = parseInt(pageInput.value, 10);
-            if (isNaN(val)) val = 1;
-            val = Math.max(1, Math.min(totalPages, val));
-            currentPageNum = val;
-            renderCurrentPages();
+            goToPage(pageInput.value);
         });
 
-        // Tasti Freccia e Shortcut Tastiera
+        // TOC Listeners
+        btnToggleToc.addEventListener('click', openTocDrawer);
+        btnCloseToc.addEventListener('click', closeTocDrawer);
+        tocBackdrop.addEventListener('click', closeTocDrawer);
+        tocSearchInput.addEventListener('input', (e) => {
+            renderTocList(e.target.value);
+        });
+
+        // Drawing Toolbar Listeners
+        document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeTool = btn.dataset.tool;
+                updateCanvasCursor(canvasDrawLeft);
+                updateCanvasCursor(canvasDrawRight);
+            });
+        });
+
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+                swatch.classList.add('active');
+                activeColor = swatch.dataset.color;
+            });
+        });
+
+        document.querySelectorAll('.stroke-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                document.querySelectorAll('.stroke-dot').forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+                activeStrokeWidth = parseInt(dot.dataset.width, 10);
+            });
+        });
+
+        btnUndo.addEventListener('click', undoAction);
+        btnRedo.addEventListener('click', redoAction);
+        btnClearPage.addEventListener('click', clearCurrentPageAnnotations);
+
+        // Student Profile Modal Listeners
+        studentProfilePill.addEventListener('click', () => {
+            studentNameInput.value = currentStudentName;
+            studentModal.classList.add('open');
+            studentNameInput.focus();
+        });
+
+        btnCancelStudent.addEventListener('click', () => {
+            studentModal.classList.remove('open');
+        });
+
+        btnSaveStudent.addEventListener('click', () => {
+            const val = studentNameInput.value.trim();
+            if (val) {
+                currentStudentName = val;
+                currentStudentId = val.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                localStorage.setItem('pm_student_name', currentStudentName);
+                localStorage.setItem('pm_student_id', currentStudentId);
+                studentNameLabel.textContent = currentStudentName;
+                loadAnnotationsFromStorage();
+                renderCurrentPages();
+            }
+            studentModal.classList.remove('open');
+        });
+
+        // Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
-            if (document.activeElement === pageInput) return;
+            if (document.activeElement === pageInput || document.activeElement === tocSearchInput || document.activeElement.tagName === 'TEXTAREA') {
+                return;
+            }
             if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
                 e.preventDefault();
                 goToPrevPage();
@@ -700,15 +2174,24 @@
                 goToNextPage();
             } else if (e.key === 'f' || e.key === 'F') {
                 toggleFullscreen();
+            } else if (e.key === 'Escape') {
+                closeTocDrawer();
+                studentModal.classList.remove('open');
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+                e.preventDefault();
+                if (e.shiftKey) redoAction();
+                else undoAction();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
+                e.preventDefault();
+                redoAction();
             }
         });
 
-        // Resize responsive
+        // Resize Responsive
         let resizeDebounce = null;
         window.addEventListener('resize', () => {
             clearTimeout(resizeDebounce);
             resizeDebounce = setTimeout(() => {
-                // Auto switch a singola pagina su schermi stretti (< 900px)
                 if (window.innerWidth < 900 && isTwoPageMode) {
                     isTwoPageMode = false;
                     updateViewModeUI();
@@ -717,16 +2200,16 @@
             }, 150);
         });
 
-        // Touch Swipe per Tablet e LIM Touch
+        // Touch Swipe
         let touchStartX = 0;
         let touchEndX = 0;
         stage.addEventListener('touchstart', (e) => {
-            if (e.touches && e.touches[0]) {
-                touchStartX = e.touches[0].clientX;
-            }
+            if (isDrawMode) return; // In modalità disegno i tocchi disegnano
+            if (e.touches && e.touches[0]) touchStartX = e.touches[0].clientX;
         }, { passive: true });
 
         stage.addEventListener('touchend', (e) => {
+            if (isDrawMode) return;
             if (e.changedTouches && e.changedTouches[0]) {
                 touchEndX = e.changedTouches[0].clientX;
                 const diffX = touchEndX - touchStartX;
@@ -737,7 +2220,7 @@
             }
         }, { passive: true });
 
-        // Avvio
+        // Start
         window.addEventListener('DOMContentLoaded', loadPdf);
     </script>
 </body>

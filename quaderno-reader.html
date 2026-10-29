@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,19 +8,21 @@
     <!-- Favicon & Touch Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
-    
+
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js?v=20260814_1225"></script>
-    
+
     <style>
         :root {
             --reader-bg: #1e293b;
@@ -41,7 +44,8 @@
             -webkit-user-select: none;
         }
 
-        html, body {
+        html,
+        body {
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -110,8 +114,8 @@
         }
 
         .header-quaderno-logo {
-            height: 44px;
-            max-width: 380px;
+            height: 38px;
+            max-width: 320px;
             object-fit: contain;
             filter: invert(1);
         }
@@ -123,7 +127,9 @@
         }
 
         .header-prof-logo-wrap {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.2s ease;
         }
 
@@ -132,13 +138,12 @@
         }
 
         .header-prof-logo {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid var(--reader-accent);
-            box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
-            object-fit: cover;
+            height: 54px;
+            width: auto;
+            max-width: 140px;
+            object-fit: contain;
             display: block;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
         }
 
         .topbar-right {
@@ -665,7 +670,8 @@
             height: 100%;
             z-index: 15;
             touch-action: none;
-            pointer-events: none; /* Attivato dinamicamente in drawMode */
+            pointer-events: none;
+            /* Attivato dinamicamente in drawMode */
         }
 
         canvas.draw-canvas.active {
@@ -713,7 +719,7 @@
             left: 50%;
             width: 20px;
             transform: translateX(-50%);
-            background: linear-gradient(to right, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.12) 100%);
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.12) 100%);
             pointer-events: none;
             z-index: 20;
         }
@@ -743,7 +749,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Watermark & Footer info */
@@ -792,8 +800,13 @@
             cursor: not-allowed;
         }
 
-        .stage-nav-left { left: 20px; }
-        .stage-nav-right { right: 20px; }
+        .stage-nav-left {
+            left: 20px;
+        }
+
+        .stage-nav-right {
+            right: 20px;
+        }
 
         /* ========================================================
            TOC DRAWER (CASSETTO LATERALE INDICE)
@@ -1025,7 +1038,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
             border-radius: 30px;
             padding: 6px 14px;
-            display: none; /* Attivata con drawMode */
+            display: none;
+            /* Attivata con drawMode */
             align-items: center;
             gap: 10px;
             z-index: 100;
@@ -1038,8 +1052,15 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translate(-50%, 15px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
+            from {
+                opacity: 0;
+                transform: translate(-50%, 15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
         }
 
         .tool-btn {
@@ -1118,11 +1139,23 @@
             transition: all 0.12s;
         }
 
-        .stroke-dot.size-fine { width: 6px; height: 6px; }
-        .stroke-dot.size-medium { width: 10px; height: 10px; }
-        .stroke-dot.size-thick { width: 14px; height: 14px; }
+        .stroke-dot.size-fine {
+            width: 6px;
+            height: 6px;
+        }
 
-        .stroke-dot:hover, .stroke-dot.active {
+        .stroke-dot.size-medium {
+            width: 10px;
+            height: 10px;
+        }
+
+        .stroke-dot.size-thick {
+            width: 14px;
+            height: 14px;
+        }
+
+        .stroke-dot:hover,
+        .stroke-dot.active {
             background: #ffffff;
             box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
         }
@@ -1207,7 +1240,7 @@
             padding: 1.5rem;
             max-width: 400px;
             width: 100%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
 
@@ -1241,39 +1274,80 @@
         }
 
         @media (max-width: 900px) {
-            .header-quaderno-logo-wrap { display: none; }
-            .floating-toc-btn span { display: none; }
-            .floating-toc-btn { padding: 8px 10px; border-radius: 50%; }
-            .dock-btn span { display: none; }
-            .dock-btn { padding: 6px 9px; }
-            .stage-nav-arrow { display: none; }
-            .reader-footer-left p { font-size: 0.7rem; }
+            .header-quaderno-logo-wrap {
+                display: none;
+            }
+
+            .floating-toc-btn span {
+                display: none;
+            }
+
+            .floating-toc-btn {
+                padding: 8px 10px;
+                border-radius: 50%;
+            }
+
+            .dock-btn span {
+                display: none;
+            }
+
+            .dock-btn {
+                padding: 6px 9px;
+            }
+
+            .stage-nav-arrow {
+                display: none;
+            }
+
+            .reader-footer-left p {
+                font-size: 0.7rem;
+            }
         }
 
         @media (max-width: 640px) {
-            .reader-back-btn span.full-text { display: none; }
-            .reader-back-btn span.short-text { display: inline !important; }
-            .reader-footer { display: none; }
-            .dock-fit-btn span { display: none; }
-            .dock-fit-btn { width: 34px; height: 34px; padding: 0; }
-            .bottom-pagination-bar { 
-                bottom: 12px; 
-                padding: 4px 10px; 
-                gap: 6px; 
-                max-width: 95vw; 
+            .reader-back-btn span.full-text {
+                display: none;
             }
-            .floating-controls-dock { 
-                bottom: 66px; 
-                right: 12px; 
-                gap: 6px; 
+
+            .reader-back-btn span.short-text {
+                display: inline !important;
             }
-            .floating-toc-btn { 
-                top: 14px; 
-                left: 12px; 
-                padding: 6px 10px; 
+
+            .reader-footer {
+                display: none;
             }
-            #drawing-toolbar { 
-                bottom: 118px; 
+
+            .dock-fit-btn span {
+                display: none;
+            }
+
+            .dock-fit-btn {
+                width: 34px;
+                height: 34px;
+                padding: 0;
+            }
+
+            .bottom-pagination-bar {
+                bottom: 12px;
+                padding: 4px 10px;
+                gap: 6px;
+                max-width: 95vw;
+            }
+
+            .floating-controls-dock {
+                bottom: 66px;
+                right: 12px;
+                gap: 6px;
+            }
+
+            .floating-toc-btn {
+                top: 14px;
+                left: 12px;
+                padding: 6px 10px;
+            }
+
+            #drawing-toolbar {
+                bottom: 118px;
                 padding: 4px 8px;
                 gap: 6px;
                 max-width: 95vw;
@@ -1283,6 +1357,7 @@
         }
     </style>
 </head>
+
 <body oncontextmenu="return false;" ondragstart="return false;">
 
     <div id="reader-app">
@@ -1296,28 +1371,31 @@
                     <span class="short-text" style="display: none;">Vetrina</span>
                 </a>
                 <div class="header-quaderno-logo-wrap" title="Il mio quaderno alternativo - Classe Prima">
-                    <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo - Classe Prima" class="header-quaderno-logo">
+                    <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo - Classe Prima"
+                        class="header-quaderno-logo">
                 </div>
             </div>
 
-            <!-- Center: Logo Avatar Prof. Memmo -->
+            <!-- Center: Logo Prof. Memmo con Scritta Bianca Ufficiale -->
             <div class="topbar-center">
                 <a href="index.html" class="header-prof-logo-wrap" title="Torna alla Home Prof. Memmo Games">
-                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Avatar" class="header-prof-logo" onerror="this.onerror=null; this.src='assets/prof_memmo.png'">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-logo-white.png" alt="Prof. Memmo Logo" class="header-prof-logo" onerror="this.onerror=null; this.src='assets/prof-memmo-logo-white.png'">
                 </a>
             </div>
 
             <!-- Right: Menu Profilo Utente Ecosistema & Dropdown -->
             <div class="topbar-right">
                 <div class="user-menu-container" id="header-user-container">
-                    <div class="user-menu-trigger" id="header-user-menu-trigger" onclick="event.stopPropagation(); toggleUserDropdown(event);">
+                    <div class="user-menu-trigger" id="header-user-menu-trigger"
+                        onclick="event.stopPropagation(); toggleUserDropdown(event);">
                         <div class="user-avatar-circle">
-                            <img id="header-user-avatar-img" src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png" alt="Avatar" onerror="this.onerror=null; this.src='assets/prof_memmo.png'">
+                            <img id="header-user-avatar-img"
+                                src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png"
+                                alt="Avatar" onerror="this.onerror=null; this.src='assets/prof-memmo-avatar.png'">
                         </div>
                         <div class="user-trigger-text">
                             <span class="user-trigger-name" id="header-user-name">ACCEDI</span>
                             <span class="user-trigger-role" id="header-user-role">OSPITE</span>
-                            <span id="student-name-label" style="display: none;"></span>
                         </div>
                         <span class="user-trigger-chevron"><i class="ph ph-caret-down"></i></span>
                     </div>
@@ -1330,21 +1408,27 @@
                         </div>
 
                         <!-- Golden Pill Login Button -->
-                        <button class="dropdown-pill-btn" id="btn-login-hub-dropdown" style="background: #d4af37; color: #0f172a; font-weight: 800;" onclick="window.goToHubPortal()">
+                        <button class="dropdown-pill-btn" id="btn-login-hub-dropdown"
+                            style="background: #d4af37; color: #0f172a; font-weight: 800;"
+                            onclick="window.goToHubPortal()">
                             <i class="ph ph-sign-in"></i> Accedi tramite Hub
                         </button>
 
                         <!-- Modifica nome studente per annotazioni -->
-                        <button class="dropdown-pill-btn" id="btn-student-name-dropdown" onclick="openStudentModalFromDropdown()">
-                            <i class="ph ph-identification-card"></i> <span id="dropdown-student-action">Nome Quaderno Personale</span>
+                        <button class="dropdown-pill-btn" id="btn-student-name-dropdown"
+                            onclick="openStudentModalFromDropdown()">
+                            <i class="ph ph-identification-card"></i> <span id="dropdown-student-action">Nome Quaderno
+                                Personale</span>
                         </button>
 
-                        <button class="dropdown-pill-btn" id="btn-profile-dropdown" style="display: none;" onclick="closeUserDropdown(); window.open('https://prof-memmo.github.io/games/profilo.html', '_blank');">
+                        <button class="dropdown-pill-btn" id="btn-profile-dropdown" style="display: none;"
+                            onclick="closeUserDropdown(); window.open('https://prof-memmo.github.io/games/profilo.html', '_blank');">
                             <i class="ph ph-user-gear"></i> Modifica Profilo Hub
                         </button>
 
                         <div class="dropdown-bottom-row" id="dropdown-bottom-row" style="display: none;">
-                            <button class="dropdown-pill-btn btn-esci-pill" id="btn-logout-dropdown" onclick="closeUserDropdown(); logoutEcosistema();">
+                            <button class="dropdown-pill-btn btn-esci-pill" id="btn-logout-dropdown"
+                                onclick="closeUserDropdown(); logoutEcosistema();">
                                 <i class="ph ph-power"></i> Esci
                             </button>
                         </div>
@@ -1363,7 +1447,9 @@
 
             <!-- Stage Nav Left -->
             <button id="stage-prev" class="stage-nav-arrow stage-nav-left" title="Pagina Precedente">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
             </button>
 
             <!-- Book Viewport -->
@@ -1386,7 +1472,9 @@
 
             <!-- Stage Nav Right -->
             <button id="stage-next" class="stage-nav-arrow stage-nav-right" title="Pagina Successiva">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
             </button>
 
             <!-- Paginazione Fluttuante in Basso al Centro -->
@@ -1402,7 +1490,8 @@
                 <button id="btn-next" class="reader-nav-btn" title="Pagina Successiva (Freccia Destra)">
                     <i class="ph ph-caret-right"></i>
                 </button>
-                <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
+                <div id="sync-status-badge" class="sync-badge"
+                    title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
                     <i class="ph ph-cloud-check"></i>
                     <span>Salvato</span>
                 </div>
@@ -1412,7 +1501,8 @@
             <div id="floating-controls-dock" class="floating-controls-dock">
                 <!-- Livello 3 (in alto): Possibilità di scrittura / disegno -->
                 <div class="dock-group">
-                    <button id="btn-toggle-draw-mode" class="dock-btn dock-btn-accent" title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                    <button id="btn-toggle-draw-mode" class="dock-btn dock-btn-accent"
+                        title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
                         <i class="ph ph-pencil-simple"></i>
                         <span id="label-draw-mode">Disegna e Scrivi</span>
                     </button>
@@ -1450,14 +1540,15 @@
         <footer class="reader-footer" id="reader-footer">
             <div class="reader-footer-content">
                 <div class="reader-footer-left">
-                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png" alt="Patamu Logo" class="patamu-logo-img" onerror="this.src='assets/patamu.png'">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png"
+                        alt="Patamu Logo" class="patamu-logo-img" onerror="this.src='assets/patamu.png'">
                     <p class="reader-footer-text">
-                        &copy; 2026 Guglielmo Piersanti. Tutti i contenuti sono di proprietà dell'autore, protetti tramite deposito e marcatura temporale presso Patamu e distribuiti con licenza Creative Commons CC BY-NC-ND 4.0.
+                        &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0).
                     </p>
                 </div>
                 <div class="reader-footer-links">
-                    <a href="javascript:void(0)" onclick="openSharedModal('privacy')">Privacy Policy</a>
-                    <a href="javascript:void(0)" onclick="openSharedModal('termini')">Termini e Condizioni</a>
+                    <a href="javascript:void(0)" onclick="openSharedModal('privacy')" data-legal="privacy">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openSharedModal('termini')" data-legal="terms">Termini e Condizioni</a>
                 </div>
             </div>
         </footer>
@@ -1496,12 +1587,16 @@
 
             <!-- Tavolozza Colori -->
             <div class="color-palette" id="color-palette">
-                <div class="color-swatch active" data-color="#1e293b" style="background: #1e293b;" title="Nero Grafite"></div>
+                <div class="color-swatch active" data-color="#1e293b" style="background: #1e293b;" title="Nero Grafite">
+                </div>
                 <div class="color-swatch" data-color="#2563eb" style="background: #2563eb;" title="Blu Scuola"></div>
                 <div class="color-swatch" data-color="#7c3aed" style="background: #7c3aed;" title="Viola Memmo"></div>
-                <div class="color-swatch" data-color="#dc2626" style="background: #dc2626;" title="Rosso Correzione"></div>
-                <div class="color-swatch" data-color="#facc15" style="background: #facc15;" title="Giallo Evidenziatore"></div>
-                <div class="color-swatch" data-color="#4ade80" style="background: #4ade80;" title="Verde Evidenziatore"></div>
+                <div class="color-swatch" data-color="#dc2626" style="background: #dc2626;" title="Rosso Correzione">
+                </div>
+                <div class="color-swatch" data-color="#facc15" style="background: #facc15;"
+                    title="Giallo Evidenziatore"></div>
+                <div class="color-swatch" data-color="#4ade80" style="background: #4ade80;" title="Verde Evidenziatore">
+                </div>
             </div>
 
             <div class="tool-divider"></div>
@@ -1555,11 +1650,14 @@
         <div id="student-name-modal">
             <div class="modal-card">
                 <h3>Il tuo Quaderno Personale</h3>
-                <p>Inserisci il tuo nome o pseudonimo. Tutti i disegni e gli appunti scritti sul libro rimarranno collegati al tuo profilo!</p>
-                <input type="text" id="student-name-input" class="modal-input" placeholder="Es. Marco R." maxlength="30">
+                <p>Inserisci il tuo nome o pseudonimo. Tutti i disegni e gli appunti scritti sul libro rimarranno
+                    collegati al tuo profilo!</p>
+                <input type="text" id="student-name-input" class="modal-input" placeholder="Es. Marco R."
+                    maxlength="30">
                 <div style="display: flex; gap: 8px; justify-content: center;">
                     <button id="btn-cancel-student" class="reader-btn" style="flex: 1;">Annulla</button>
-                    <button id="btn-save-student" class="reader-btn reader-btn-primary" style="flex: 1;">Salva Profilo</button>
+                    <button id="btn-save-student" class="reader-btn reader-btn-primary" style="flex: 1;">Salva
+                        Profilo</button>
                 </div>
             </div>
         </div>
@@ -1769,7 +1867,7 @@
 
         const currentEditionMeta = EDITIONS_META[EDITION_ID] || EDITIONS_META['classe-1'];
         const PDF_URL = currentEditionMeta.pdfUrl;
-        
+
         let pdfDoc = null;
         let currentPageNum = 1;
         let totalPages = 1;
@@ -1800,15 +1898,15 @@
             let id = localStorage.getItem('pm_student_id');
 
             if (!name) {
-                name = localStorage.getItem('hub_user_name') || 
-                       localStorage.getItem('corte_user') || 
-                       localStorage.getItem('fanta_user_name');
+                name = localStorage.getItem('hub_user_name') ||
+                    localStorage.getItem('corte_user') ||
+                    localStorage.getItem('fanta_user_name');
                 if (!name) {
                     try {
                         const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
                         if (u && (u.displayName || u.nome || u.name)) name = u.displayName || u.nome || u.name;
                         else if (u && u.email) name = u.email.split('@')[0];
-                    } catch (e) {}
+                    } catch (e) { }
                 }
             }
 
@@ -1818,7 +1916,7 @@
                 try {
                     const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
                     if (u && (u.uid || u.id)) id = u.uid || u.id;
-                } catch (e) {}
+                } catch (e) { }
                 if (!id) {
                     id = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
                     if (!id) id = 'studente_default';
@@ -1845,14 +1943,14 @@
         const hotspotLayerRight = document.getElementById('hotspot-layer-right');
         const spine = document.getElementById('book-spine');
         const loader = document.getElementById('reader-loader');
-        
+
         const btnPrev = document.getElementById('btn-prev');
         const btnNext = document.getElementById('btn-next');
         const stagePrev = document.getElementById('stage-prev');
         const stageNext = document.getElementById('stage-next');
         const pageInput = document.getElementById('page-num-input');
         const pageCountTotal = document.getElementById('page-count-total');
-        
+
         const btnToggleSpread = document.getElementById('btn-toggle-spread');
         const labelSpread = document.getElementById('label-spread');
         const btnZoomIn = document.getElementById('btn-zoom-in');
@@ -1888,15 +1986,7 @@
 
         // --- GESTIONE PROFILO STUDENTE & PERSISTENZA ---
         function initStudentProfile() {
-            if (studentNameLabel) studentNameLabel.textContent = currentStudentName;
-            const headerUserName = document.getElementById('header-user-name');
-            if (headerUserName && !localStorage.getItem('hub_user_name')) {
-                headerUserName.textContent = currentStudentName.toUpperCase();
-            }
-            const ddTitle = document.getElementById('dropdown-user-title');
-            if (ddTitle && !localStorage.getItem('hub_user_name')) {
-                ddTitle.textContent = currentStudentName.toUpperCase();
-            }
+            studentNameLabel.textContent = currentStudentName;
             loadAnnotationsFromStorage();
         }
 
@@ -1970,14 +2060,14 @@
                 }
 
                 renderTocList();
-                
+
                 const loadingTask = pdfjsLib.getDocument(PDF_URL);
                 pdfDoc = await loadingTask.promise;
                 totalPages = pdfDoc.numPages;
-                
+
                 pageCountTotal.textContent = totalPages;
                 pageInput.max = totalPages;
-                
+
                 updateViewModeUI();
                 await renderCurrentPages();
             } catch (err) {
@@ -2077,7 +2167,7 @@
             drawCanvas.width = width;
             drawCanvas.height = height;
             drawCanvas.dataset.pageNum = pageNum;
-            
+
             if (isDrawMode) {
                 drawCanvas.classList.add('active');
                 updateCanvasCursor(drawCanvas);
@@ -2131,7 +2221,7 @@
                     const scaledSize = Math.max(12, item.fontSize * (w / 800));
                     ctx.font = `600 ${scaledSize}px 'Inter', sans-serif`;
                     ctx.fillStyle = item.color || '#1e293b';
-                    
+
                     // Disegna sfondo morbido per leggibilità
                     const lines = item.text.split('\n');
                     const textX = item.nx * w;
@@ -2209,7 +2299,7 @@
             if (!isDrawing || !currentStroke) return;
             isDrawing = false;
             const pageNum = currentDrawPage;
-            
+
             if (!annotationsStore[pageNum]) annotationsStore[pageNum] = [];
             pushToUndo(pageNum);
             annotationsStore[pageNum].push(currentStroke);
@@ -2309,7 +2399,7 @@
         function undoAction() {
             const leftPageNum = currentPageNum;
             const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
-            
+
             // Undo sulla pagina di sinistra o destra
             [leftPageNum, rightPageNum].forEach(pageNum => {
                 if (!pageNum || !undoStack[pageNum] || undoStack[pageNum].length === 0) return;
@@ -2384,7 +2474,7 @@
                 link.title = `Vai a: ${spot.title} (Pagina ${spot.targetPage})`;
                 // Nessuna scritta o badge sovrapposto: scansione cartacea pulita e hotspot trasparente
                 link.innerHTML = '';
-                
+
                 link.addEventListener('click', (e) => {
                     e.stopPropagation();
                     goToPage(spot.targetPage);
@@ -2406,9 +2496,9 @@
             TOC_DATA.forEach(group => {
                 const matchingItems = group.items.filter(item => {
                     if (!q) return true;
-                    return item.title.toLowerCase().includes(q) || 
-                           group.title.toLowerCase().includes(q) ||
-                           (item.tag && item.tag.toLowerCase().includes(q));
+                    return item.title.toLowerCase().includes(q) ||
+                        group.title.toLowerCase().includes(q) ||
+                        (item.tag && item.tag.toLowerCase().includes(q));
                 });
 
                 if (matchingItems.length === 0) return;
@@ -2584,7 +2674,7 @@
 
         document.addEventListener('fullscreenchange', () => {
             const isFull = !!document.fullscreenElement;
-            btnFullscreen.innerHTML = isFull 
+            btnFullscreen.innerHTML = isFull
                 ? '<i class="ph ph-corners-in"></i> <span>Esci Schermo Intero</span>'
                 : '<i class="ph ph-corners-out"></i> <span>Schermo Intero</span>';
             setTimeout(renderCurrentPages, 100);
@@ -2666,7 +2756,7 @@
             });
         }
 
-        window.openStudentModalFromDropdown = function() {
+        window.openStudentModalFromDropdown = function () {
             window.closeUserDropdown();
             if (studentModal && studentNameInput) {
                 studentNameInput.value = currentStudentName;
@@ -2759,55 +2849,56 @@
         }, { passive: true });
 
         // --- ECOSYSTEM USER MENU & AUTH ---
-        window.goToHubPortal = function() {
+        window.goToHubPortal = function () {
             var isPrev = window.location.pathname.indexOf('/preview') !== -1;
-            var portalUrl = isPrev 
-              ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html?redirect=quaderno-reader'
-              : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html?redirect=quaderno-reader';
+            var portalUrl = isPrev
+                ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html?redirect=quaderno-reader'
+                : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html?redirect=quaderno-reader';
             window.location.href = portalUrl;
         };
 
-        window.toggleUserDropdown = function(e) {
+        window.toggleUserDropdown = function (e) {
             if (e) e.stopPropagation();
             var dd = document.getElementById('header-user-dropdown');
             if (dd) dd.classList.toggle('hidden');
         };
 
-        window.closeUserDropdown = function() {
+        window.closeUserDropdown = function () {
             var dd = document.getElementById('header-user-dropdown');
             if (dd) dd.classList.add('hidden');
         };
 
-        window.logoutEcosistema = function() {
+        window.logoutEcosistema = function () {
             try {
                 if (typeof firebase !== 'undefined' && firebase.auth) {
                     firebase.auth().signOut();
                 }
-            } catch(e) {}
+            } catch (e) { }
             localStorage.removeItem('hub_user_name');
             localStorage.removeItem('hub_user_role');
             localStorage.removeItem('hub_user_avatar');
             localStorage.removeItem('hub_user_id');
+            localStorage.removeItem('hub_user_email');
             window.location.reload();
         };
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             var userCont = document.getElementById('header-user-container');
             if (userCont && !userCont.contains(e.target)) {
                 window.closeUserDropdown();
             }
         });
 
-        // Anti-flicker immediate user sync
-        (function() {
+        // Anti-flicker immediate user sync (lettura sincrona istantanea da localStorage)
+        (function () {
             try {
-                var av = localStorage.getItem('hub_user_avatar') || localStorage.getItem('pm_user_avatar');
+                var av = localStorage.getItem('hub_user_avatar') || localStorage.getItem('pm_user_avatar') || localStorage.getItem('fanta_user_avatar');
                 if (av) {
                     var elA = document.getElementById('header-user-avatar-img');
                     if (elA) elA.src = av;
                 }
-                var nm = localStorage.getItem('hub_user_name') || localStorage.getItem('pm_user_name') || localStorage.getItem('pm_student_name');
-                var rl = localStorage.getItem('hub_user_role') || localStorage.getItem('pm_user_role');
+                var nm = localStorage.getItem('hub_user_name') || localStorage.getItem('pm_user_name') || localStorage.getItem('fanta_user_name') || localStorage.getItem('pm_student_name');
+                var rl = localStorage.getItem('hub_user_role') || localStorage.getItem('pm_user_role') || localStorage.getItem('fanta_user_role');
                 if (nm) {
                     var elN = document.getElementById('header-user-name');
                     if (elN) elN.textContent = nm.toUpperCase();
@@ -2815,12 +2906,15 @@
                     if (elT) elT.textContent = nm.toUpperCase();
                 }
                 if (rl) {
-                    var roleText = (rl === 'docente' || rl === 'admin') ? (rl === 'admin' ? 'AMMINISTRATORE' : 'DOCENTE') : (rl === 'studente' ? 'STUDENTE' : 'OSPITE');
+                    var isAdm = (rl === 'admin' || rl === 'superadmin' || rl === 'AMMINISTRATORE');
+                    var isDoc = (rl === 'docente' || rl === 'teacher' || rl === 'DOCENTE');
+                    var isStu = (rl === 'studente' || rl === 'student' || rl === 'STUDENTE');
+                    var roleText = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE REGISTRATO' : (isStu ? 'STUDENTE' : 'OSPITE'));
                     var elR = document.getElementById('header-user-role');
-                    if (elR) elR.textContent = roleText;
+                    if (elR) elR.textContent = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE' : (isStu ? 'STUDENTE' : 'OSPITE'));
                     var elSub = document.getElementById('dropdown-user-subtitle');
                     if (elSub) elSub.textContent = roleText;
-                    if (rl === 'docente' || rl === 'admin' || rl === 'studente') {
+                    if (isAdm || isDoc || isStu) {
                         var btnLogin = document.getElementById('btn-login-hub-dropdown');
                         if (btnLogin) btnLogin.style.display = 'none';
                         var btnProf = document.getElementById('btn-profile-dropdown');
@@ -2829,44 +2923,87 @@
                         if (rowBot) rowBot.style.display = 'flex';
                     }
                 }
-            } catch(e) {}
+            } catch (e) { }
         })();
 
-        // Firebase live sync
+        // Firebase live sync & Hub User Interception
         if (typeof firebase !== 'undefined' && firebase.auth) {
             try {
-                firebase.auth().onAuthStateChanged(function(user) {
+                firebase.auth().onAuthStateChanged(async function (user) {
                     if (user) {
                         var db = firebase.firestore();
-                        db.collection('users').doc(user.uid).get().then(function(doc) {
-                            var data = doc.exists ? doc.data() : {};
-                            var name = data.nome || data.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Utente');
-                            var role = data.ruolo || 'docente';
-                            var avatar = data.avatarUrl || user.photoURL || 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png';
-                            
-                            var elN = document.getElementById('header-user-name');
-                            if (elN) elN.textContent = name.toUpperCase();
-                            var elR = document.getElementById('header-user-role');
-                            if (elR) elR.textContent = (role === 'admin' ? 'AMMINISTRATORE' : (role === 'studente' ? 'STUDENTE' : 'DOCENTE'));
-                            var elA = document.getElementById('header-user-avatar-img');
-                            if (elA) elA.src = avatar;
-                            var elT = document.getElementById('dropdown-user-title');
-                            if (elT) elT.textContent = name.toUpperCase();
-                            var elSub = document.getElementById('dropdown-user-subtitle');
-                            if (elSub) elSub.textContent = (role === 'admin' ? 'AMMINISTRATORE' : (role === 'studente' ? 'STUDENTE' : 'DOCENTE REGISTRATO'));
-                            
-                            var btnLogin = document.getElementById('btn-login-hub-dropdown');
-                            if (btnLogin) btnLogin.style.display = 'none';
-                            var btnProf = document.getElementById('btn-profile-dropdown');
-                            if (btnProf) btnProf.style.display = 'flex';
-                            var rowBot = document.getElementById('dropdown-bottom-row');
-                            if (rowBot) rowBot.style.display = 'flex';
-                        }).catch(function(err){
-                            console.warn("Auth sync error:", err);
-                        });
+                        var email = (user.email || '').toLowerCase();
+                        var isSuperAdmin = (email === "prof.memmo@gmail.com");
+                        var hubData = {};
+
+                        try {
+                            var hubDoc = await db.collection('hub_users').doc(user.uid).get();
+                            if (hubDoc.exists) {
+                                hubData = hubDoc.data();
+                            } else {
+                                var userDoc = await db.collection('users').doc(user.uid).get();
+                                if (userDoc.exists) hubData = userDoc.data();
+                            }
+                        } catch (err) {
+                            console.warn("Hub query fallback:", err);
+                        }
+
+                        var name = hubData.nome || hubData.name || hubData.displayName || user.displayName || (email ? email.split('@')[0] : 'Utente');
+                        var role = isSuperAdmin ? 'admin' : (hubData.role || hubData.ruolo || 'docente');
+                        var avatar = hubData.avatarUrl || hubData.photoURL || user.photoURL || 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png';
+
+                        localStorage.setItem('hub_user_name', name);
+                        localStorage.setItem('hub_user_role', role);
+                        localStorage.setItem('hub_user_avatar', avatar);
+                        localStorage.setItem('hub_user_id', user.uid);
+                        localStorage.setItem('hub_user_email', email);
+
+                        var elN = document.getElementById('header-user-name');
+                        if (elN) elN.textContent = name.toUpperCase();
+                        var isAdm = (role === 'admin' || isSuperAdmin);
+                        var isDoc = (role === 'docente' || role === 'teacher');
+                        var isStu = (role === 'studente' || role === 'student');
+                        var roleBadge = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE' : (isStu ? 'STUDENTE' : 'OSPITE'));
+
+                        var elR = document.getElementById('header-user-role');
+                        if (elR) elR.textContent = roleBadge;
+                        var elA = document.getElementById('header-user-avatar-img');
+                        if (elA) elA.src = avatar;
+                        var elT = document.getElementById('dropdown-user-title');
+                        if (elT) elT.textContent = name.toUpperCase();
+                        var elSub = document.getElementById('dropdown-user-subtitle');
+                        if (elSub) elSub.textContent = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE REGISTRATO' : (isStu ? 'STUDENTE' : 'OSPITE'));
+
+                        var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                        if (btnLogin) btnLogin.style.display = 'none';
+                        var btnProf = document.getElementById('btn-profile-dropdown');
+                        if (btnProf) btnProf.style.display = 'flex';
+                        var rowBot = document.getElementById('dropdown-bottom-row');
+                        if (rowBot) rowBot.style.display = 'flex';
+
+                        // Sincronizza automaticamente il quaderno personale con l'identità autenticata
+                        if (!currentStudentName || currentStudentName === 'Studente') {
+                            currentStudentName = name;
+                            currentStudentId = 'user_' + user.uid;
+                            localStorage.setItem('pm_student_name', currentStudentName);
+                            localStorage.setItem('pm_student_id', currentStudentId);
+                            var actionBtn = document.getElementById('dropdown-student-action');
+                            if (actionBtn) actionBtn.textContent = 'Quaderno di ' + currentStudentName;
+                            if (typeof loadAnnotations === 'function') loadAnnotations();
+                        }
+                    } else {
+                        // Utente non loggato: reset a stato Ospite
+                        var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                        if (btnLogin) btnLogin.style.display = 'flex';
+                        var btnProf = document.getElementById('btn-profile-dropdown');
+                        if (btnProf) btnProf.style.display = 'none';
+                        var rowBot = document.getElementById('dropdown-bottom-row');
+                        if (rowBot) rowBot.style.display = 'none';
                     }
                 });
-            } catch(e) {}
+            } catch (e) {
+                console.warn("Firebase live auth init error:", e);
+            }
         }
 
         // Start
@@ -2875,4 +3012,5 @@
     <!-- Modali condivisi ecosistema Prof. Memmo -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
 </body>
+
 </html>

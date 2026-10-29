@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 pill.classList.remove('is-live');
-                if (titleEl) titleEl.textContent = `${activeRelease.number}ª Giornata FantaLetteratura`;
+                if (titleEl) titleEl.textContent = `${activeRelease.number}ª Giornata`;
                 if (iconEl) {
                     if (iconEl.classList.contains('ph')) {
                         iconEl.className = 'ph ph-hourglass-high fanta-hourglass-icon';

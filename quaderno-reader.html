@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Il mio quaderno alternativo — Sfoglia il Libro</title>
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        :root {
+            --reader-bg: #1e293b;
+            --reader-bar-bg: #0f172a;
+            --reader-border: #334155;
+            --reader-text: #f8fafc;
+            --reader-text-muted: #94a3b8;
+            --reader-accent: #7c3aed;
+            --reader-accent-hover: #6d28d9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--reader-bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--reader-text);
+        }
+
+        /* App Wrapper */
+        #reader-app {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .reader-topbar {
+            height: 60px;
+            background-color: var(--reader-bar-bg);
+            border-bottom: 1px solid var(--reader-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            z-index: 50;
+            flex-shrink: 0;
+            gap: 1rem;
+        }
+
+        .topbar-left, .topbar-center, .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .topbar-center {
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        /* Buttons & Badges */
+        .reader-btn {
+            background: #1e293b;
+            color: var(--reader-text);
+            border: 1px solid var(--reader-border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            min-height: 42px;
+        }
+
+        .reader-btn:hover {
+            background: #334155;
+            color: #ffffff;
+            border-color: #475569;
+        }
+
+        .reader-btn:active {
+            transform: scale(0.97);
+        }
+
+        .reader-btn-primary {
+            background: var(--reader-accent);
+            border-color: var(--reader-accent);
+            color: white;
+        }
+
+        .reader-btn-primary:hover {
+            background: var(--reader-accent-hover);
+            border-color: var(--reader-accent-hover);
+        }
+
+        .reader-title-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reader-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+
+        .reader-badge {
+            background: rgba(124, 58, 237, 0.2);
+            color: #c4b5fd;
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Nav controls */
+        .reader-nav-btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.15s ease;
+        }
+
+        .reader-nav-btn:hover:not(:disabled) {
+            background: var(--reader-accent);
+            border-color: var(--reader-accent);
+            transform: scale(1.05);
+        }
+
+        .reader-nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .page-control-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--reader-border);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--reader-text-muted);
+        }
+
+        .page-input {
+            width: 48px;
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 4px 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .page-input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        /* Main Viewport Stage */
+        #reader-stage {
+            flex-grow: 1;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* Book Spread */
+        #book-viewport {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            position: relative;
+            transform-origin: center center;
+            transition: transform 0.2s ease-out;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .page-wrapper {
+            position: relative;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-wrapper.left-page {
+            border-right: 1px solid #e2e8f0;
+            box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-wrapper.right-page {
+            box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        canvas.pdf-canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            pointer-events: none;
+        }
+
+        /* Spina centrale del libro */
+        .book-spine-shadow {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 20px;
+            transform: translateX(-50%);
+            background: linear-gradient(to right, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.12) 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Loading Spinner */
+        #reader-loader {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+            transition: opacity 0.2s ease;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(124, 58, 237, 0.2);
+            border-top-color: var(--reader-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Watermark & Footer info */
+        .reader-footer-info {
+            position: absolute;
+            bottom: 12px;
+            right: 18px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Floating Nav Buttons on Stage */
+        .stage-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 30;
+            transition: all 0.2s;
+        }
+
+        .stage-nav-arrow:hover:not(:disabled) {
+            background: var(--reader-accent);
+            border-color: var(--reader-accent);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .stage-nav-arrow:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .stage-nav-left { left: 24px; }
+        .stage-nav-right { right: 24px; }
+
+        @media (max-width: 900px) {
+            .reader-title-box .reader-title { display: none; }
+            .topbar-right .reader-btn span { display: none; }
+            .stage-nav-arrow { display: none; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;">
+
+    <div id="reader-app">
+        <!-- Top Toolbar -->
+        <header class="reader-topbar">
+            <!-- Left: Back & Title -->
+            <div class="topbar-left">
+                <a href="quaderno-alternativo.html" class="reader-btn" title="Torna a Scegli il tuo Quaderno">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    <span>Indietro</span>
+                </a>
+                <div class="reader-title-box">
+                    <span class="reader-title">Il mio quaderno alternativo</span>
+                    <span class="reader-badge">Classe Prima</span>
+                </div>
+            </div>
+
+            <!-- Center: Page Navigation -->
+            <div class="topbar-center">
+                <button id="btn-prev" class="reader-nav-btn" title="Pagina Precedente (Freccia Sinistra)">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <div class="page-control-box">
+                    <span>Pag.</span>
+                    <input type="number" id="page-num-input" class="page-input" min="1" max="1" value="1">
+                    <span>di <span id="page-count-total">--</span></span>
+                </div>
+                <button id="btn-next" class="reader-nav-btn" title="Pagina Successiva (Freccia Destra)">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- Right: View Mode, Zoom & Fullscreen -->
+            <div class="topbar-right">
+                <button id="btn-toggle-spread" class="reader-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    <span id="label-spread">Vista Libro</span>
+                </button>
+                <button id="btn-zoom-out" class="reader-btn" title="Riduci Zoom">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M8 11h6"/></svg>
+                </button>
+                <button id="btn-zoom-fit" class="reader-btn" title="Adatta allo Schermo">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                </button>
+                <button id="btn-zoom-in" class="reader-btn" title="Ingrandisci Zoom">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                </button>
+                <button id="btn-fullscreen" class="reader-btn reader-btn-primary" title="Schermo Intero (Ottimale per LIM)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8V3m0 0h5M3 3l6 6m12-6h-5m5 0v5m0-5l-6 6M3 16v5m0 0h5m-5 0l6-6m12 6l-6-6m6 6v-5m0 5h-5"/></svg>
+                    <span>Schermo Intero</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Viewport Stage -->
+        <main id="reader-stage">
+            <!-- Stage Nav Left -->
+            <button id="stage-prev" class="stage-nav-arrow stage-nav-left" title="Pagina Precedente">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+
+            <!-- Book Viewport -->
+            <div id="book-viewport">
+                <!-- Page Left / Single -->
+                <div id="page-wrapper-left" class="page-wrapper left-page">
+                    <canvas id="canvas-page-left" class="pdf-canvas"></canvas>
+                </div>
+                <!-- Spina libro (visibile in spread mode) -->
+                <div id="book-spine" class="book-spine-shadow" style="display: none;"></div>
+                <!-- Page Right (in spread mode) -->
+                <div id="page-wrapper-right" class="page-wrapper right-page" style="display: none;">
+                    <canvas id="canvas-page-right" class="pdf-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Stage Nav Right -->
+            <button id="stage-next" class="stage-nav-arrow stage-nav-right" title="Pagina Successiva">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+
+            <!-- Loader Overlay -->
+            <div id="reader-loader">
+                <div class="spinner"></div>
+                <div style="font-weight: 600; font-size: 0.95rem; color: #e2e8f0;">Caricamento Quaderno in corso…</div>
+            </div>
+
+            <!-- Footer Watermark & Protection notice -->
+            <div class="reader-footer-info">
+                <span>&copy; Prof. Memmo &bull; Deposito Patamu protetto</span>
+                <span>Visualizzazione protetta per la didattica</span>
+            </div>
+        </main>
+    </div>
+
+    <!-- Local PDF.js Engine (Scuole & LIM Offline Resilient) -->
+    <script src="js/vendor/pdf.min.js"></script>
+    <script>
+        // Configura il worker PDF.js locale
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/vendor/pdf.worker.min.js';
+        }
+
+        // --- STATO DEL LETTORE QUADERNO ---
+        const PDF_URL = 'contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf';
+        
+        let pdfDoc = null;
+        let currentPageNum = 1;
+        let totalPages = 1;
+        let isTwoPageMode = (window.innerWidth >= 1200); // Default 2 pagine su desktop/LIM
+        let zoomLevel = 1.0;
+        let isRendering = false;
+        let renderPendingPage = null;
+
+        // Elementi DOM
+        const stage = document.getElementById('reader-stage');
+        const bookViewport = document.getElementById('book-viewport');
+        const pageLeftWrapper = document.getElementById('page-wrapper-left');
+        const pageRightWrapper = document.getElementById('page-wrapper-right');
+        const canvasLeft = document.getElementById('canvas-page-left');
+        const canvasRight = document.getElementById('canvas-page-right');
+        const spine = document.getElementById('book-spine');
+        const loader = document.getElementById('reader-loader');
+        
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const stagePrev = document.getElementById('stage-prev');
+        const stageNext = document.getElementById('stage-next');
+        const pageInput = document.getElementById('page-num-input');
+        const pageCountTotal = document.getElementById('page-count-total');
+        
+        const btnToggleSpread = document.getElementById('btn-toggle-spread');
+        const labelSpread = document.getElementById('label-spread');
+        const btnZoomIn = document.getElementById('btn-zoom-in');
+        const btnZoomOut = document.getElementById('btn-zoom-out');
+        const btnZoomFit = document.getElementById('btn-zoom-fit');
+        const btnFullscreen = document.getElementById('btn-fullscreen');
+
+        // Caricamento Documento PDF
+        async function loadPdf() {
+            try {
+                showLoader(true);
+                const loadingTask = pdfjsLib.getDocument(PDF_URL);
+                pdfDoc = await loadingTask.promise;
+                totalPages = pdfDoc.numPages;
+                
+                pageCountTotal.textContent = totalPages;
+                pageInput.max = totalPages;
+                
+                updateViewModeUI();
+                await renderCurrentPages();
+            } catch (err) {
+                console.error("Errore caricamento PDF Quaderno:", err);
+                loader.innerHTML = `
+                    <div style="color: #ef4444; font-size: 2rem;"><i class="ph ph-warning-circle"></i></div>
+                    <div style="font-weight: 700; color: #f87171;">Impossibile aprire il quaderno</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; max-width: 400px; text-align: center;">${err.message || 'Verifica la connessione o i permessi del browser.'}</div>
+                    <a href="quaderno-alternativo.html" class="reader-btn" style="margin-top: 10px;">Torna Indietro</a>
+                `;
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Renderizza la pagina o la coppia di pagine
+        async function renderCurrentPages() {
+            if (!pdfDoc) return;
+            if (isRendering) {
+                renderPendingPage = currentPageNum;
+                return;
+            }
+            isRendering = true;
+
+            try {
+                // Calcola dimensioni disponibili nello stage
+                const stageWidth = stage.clientWidth - 40;
+                const stageHeight = stage.clientHeight - 40;
+
+                // Pagina 1 è sempre visualizzata a destra se siamo in modalità libro, o singola
+                const leftPageNum = currentPageNum;
+                const hasSecondPage = isTwoPageMode && (leftPageNum + 1 <= totalPages);
+                const rightPageNum = hasSecondPage ? leftPageNum + 1 : null;
+
+                // Recupera prima pagina
+                const page1 = await pdfDoc.getPage(leftPageNum);
+                const baseViewport1 = page1.getViewport({ scale: 1.0 });
+
+                // Calcola il fattore di scala ottimale per adattare al viewport senza scroll parassita (Art. 12 Pilastro 1)
+                let targetScale;
+                if (isTwoPageMode && hasSecondPage) {
+                    const spreadWidth = baseViewport1.width * 2;
+                    const scaleW = stageWidth / spreadWidth;
+                    const scaleH = stageHeight / baseViewport1.height;
+                    targetScale = Math.min(scaleW, scaleH) * zoomLevel;
+                } else {
+                    const scaleW = stageWidth / baseViewport1.width;
+                    const scaleH = stageHeight / baseViewport1.height;
+                    targetScale = Math.min(scaleW, scaleH) * zoomLevel;
+                }
+
+                // Render Left Page
+                const viewport1 = page1.getViewport({ scale: targetScale });
+                canvasLeft.width = viewport1.width;
+                canvasLeft.height = viewport1.height;
+                const ctx1 = canvasLeft.getContext('2d');
+                await page1.render({ canvasContext: ctx1, viewport: viewport1 }).promise;
+
+                // Render Right Page (se attiva)
+                if (isTwoPageMode && hasSecondPage) {
+                    pageRightWrapper.style.display = 'flex';
+                    spine.style.display = 'block';
+                    pageLeftWrapper.classList.add('left-page');
+
+                    const page2 = await pdfDoc.getPage(rightPageNum);
+                    const viewport2 = page2.getViewport({ scale: targetScale });
+                    canvasRight.width = viewport2.width;
+                    canvasRight.height = viewport2.height;
+                    const ctx2 = canvasRight.getContext('2d');
+                    await page2.render({ canvasContext: ctx2, viewport: viewport2 }).promise;
+                } else {
+                    pageRightWrapper.style.display = 'none';
+                    spine.style.display = 'none';
+                    pageLeftWrapper.classList.remove('left-page');
+                }
+
+                updateNavState();
+            } catch (err) {
+                console.error("Errore rendering pagina:", err);
+            } finally {
+                isRendering = false;
+                if (renderPendingPage !== null) {
+                    const next = renderPendingPage;
+                    renderPendingPage = null;
+                    renderCurrentPages();
+                }
+            }
+        }
+
+        function updateNavState() {
+            pageInput.value = currentPageNum;
+            const hasPrev = currentPageNum > 1;
+            const step = isTwoPageMode ? 2 : 1;
+            const hasNext = (currentPageNum + step) <= totalPages;
+
+            btnPrev.disabled = !hasPrev;
+            stagePrev.disabled = !hasPrev;
+            btnNext.disabled = !hasNext;
+            stageNext.disabled = !hasNext;
+        }
+
+        function goToPrevPage() {
+            if (currentPageNum <= 1) return;
+            const step = isTwoPageMode ? 2 : 1;
+            currentPageNum = Math.max(1, currentPageNum - step);
+            renderCurrentPages();
+        }
+
+        function goToNextPage() {
+            const step = isTwoPageMode ? 2 : 1;
+            if (currentPageNum + step > totalPages && !isTwoPageMode) return;
+            if (currentPageNum >= totalPages) return;
+            currentPageNum = Math.min(totalPages, currentPageNum + step);
+            renderCurrentPages();
+        }
+
+        function toggleViewMode() {
+            isTwoPageMode = !isTwoPageMode;
+            // Se eravamo su una pagina pari in 2-page mode, allinea a dispari
+            if (isTwoPageMode && currentPageNum % 2 === 0) {
+                currentPageNum = Math.max(1, currentPageNum - 1);
+            }
+            updateViewModeUI();
+            renderCurrentPages();
+        }
+
+        function updateViewModeUI() {
+            if (isTwoPageMode) {
+                labelSpread.textContent = 'Libro (2 Pag.)';
+                btnToggleSpread.title = 'Passa a visualizzazione singola pagina';
+            } else {
+                labelSpread.textContent = 'Singola Pagina';
+                btnToggleSpread.title = 'Passa a visualizzazione 2 pagine (Libro)';
+            }
+        }
+
+        function showLoader(visible) {
+            if (loader) {
+                loader.style.opacity = visible ? '1' : '0';
+                loader.style.pointerEvents = visible ? 'auto' : 'none';
+            }
+        }
+
+        // Gestione Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.warn("Fullscreen request error:", err);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            const isFull = !!document.fullscreenElement;
+            btnFullscreen.innerHTML = isFull 
+                ? '<i class="ph ph-corners-in"></i> <span>Esci Schermo Intero</span>'
+                : '<i class="ph ph-corners-out"></i> <span>Schermo Intero</span>';
+            setTimeout(renderCurrentPages, 100);
+        });
+
+        // Event Listeners
+        btnPrev.addEventListener('click', goToPrevPage);
+        stagePrev.addEventListener('click', goToPrevPage);
+        btnNext.addEventListener('click', goToNextPage);
+        stageNext.addEventListener('click', goToNextPage);
+        btnToggleSpread.addEventListener('click', toggleViewMode);
+        btnFullscreen.addEventListener('click', toggleFullscreen);
+
+        btnZoomIn.addEventListener('click', () => {
+            zoomLevel = Math.min(2.5, zoomLevel + 0.15);
+            renderCurrentPages();
+        });
+
+        btnZoomOut.addEventListener('click', () => {
+            zoomLevel = Math.max(0.6, zoomLevel - 0.15);
+            renderCurrentPages();
+        });
+
+        btnZoomFit.addEventListener('click', () => {
+            zoomLevel = 1.0;
+            renderCurrentPages();
+        });
+
+        pageInput.addEventListener('change', () => {
+            let val = parseInt(pageInput.value, 10);
+            if (isNaN(val)) val = 1;
+            val = Math.max(1, Math.min(totalPages, val));
+            currentPageNum = val;
+            renderCurrentPages();
+        });
+
+        // Tasti Freccia e Shortcut Tastiera
+        window.addEventListener('keydown', (e) => {
+            if (document.activeElement === pageInput) return;
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                goToPrevPage();
+            } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                goToNextPage();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // Resize responsive
+        let resizeDebounce = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeDebounce);
+            resizeDebounce = setTimeout(() => {
+                // Auto switch a singola pagina su schermi stretti (< 900px)
+                if (window.innerWidth < 900 && isTwoPageMode) {
+                    isTwoPageMode = false;
+                    updateViewModeUI();
+                }
+                renderCurrentPages();
+            }, 150);
+        });
+
+        // Touch Swipe per Tablet e LIM Touch
+        let touchStartX = 0;
+        let touchEndX = 0;
+        stage.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches[0]) {
+                touchStartX = e.touches[0].clientX;
+            }
+        }, { passive: true });
+
+        stage.addEventListener('touchend', (e) => {
+            if (e.changedTouches && e.changedTouches[0]) {
+                touchEndX = e.changedTouches[0].clientX;
+                const diffX = touchEndX - touchStartX;
+                if (Math.abs(diffX) > 60) {
+                    if (diffX < 0) goToNextPage();
+                    else goToPrevPage();
+                }
+            }
+        }, { passive: true });
+
+        // Avvio
+        window.addEventListener('DOMContentLoaded', loadPdf);
+    </script>
+</body>
+</html>

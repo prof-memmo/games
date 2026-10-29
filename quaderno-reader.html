@@ -315,101 +315,53 @@
             border-color: #dc2626;
         }
 
-        /* Floating TOC Button (Sinistra) */
-        .floating-toc-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 45;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--reader-border);
-            color: #f8fafc;
-            border-radius: 24px;
-            padding: 8px 16px;
-            font-size: 0.88rem;
-            font-weight: 700;
+        /* Header TOC Button */
+        .reader-header-toc-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(124, 58, 237, 0.16);
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            color: #ddd6fe;
+            font-size: 0.84rem;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            transition: all 0.2s ease;
+            transition: all 0.18s ease;
+            white-space: nowrap;
         }
 
-        .floating-toc-btn:hover {
-            background: var(--reader-accent);
+        .reader-header-toc-btn:hover {
+            background: rgba(124, 58, 237, 0.32);
             border-color: var(--reader-accent);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
-        }
-
-        /* Bottom Floating Pagination Bar (Centro) */
-        .bottom-pagination-bar {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 45;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--reader-border);
-            border-radius: 30px;
-            padding: 5px 14px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-        }
-
-        .reader-nav-btn {
-            background: #334155;
-            border: 1px solid #475569;
             color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.15rem;
-            transition: all 0.15s ease;
+            transform: translateY(-1px);
         }
 
-        .reader-nav-btn:hover:not(:disabled) {
-            background: var(--reader-accent);
-            border-color: var(--reader-accent);
-            transform: scale(1.05);
-        }
-
-        .reader-nav-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
-
+        /* Page Control Input & Sync Badge */
         .page-control-box {
             display: flex;
             align-items: center;
-            gap: 6px;
-            background: #1e293b;
-            padding: 3px 10px;
-            border-radius: 20px;
+            gap: 5px;
+            background: #0f172a;
+            padding: 2px 8px;
+            border-radius: 16px;
             border: 1px solid var(--reader-border);
-            font-size: 0.86rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: var(--reader-text-muted);
         }
 
         .page-input {
-            width: 44px;
-            background: #0f172a;
-            border: 1px solid var(--reader-border);
+            width: 40px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: white;
             text-align: center;
-            border-radius: 6px;
-            padding: 2px 0;
-            font-size: 0.88rem;
+            border-radius: 5px;
+            padding: 1px 0;
+            font-size: 0.84rem;
             font-weight: 700;
         }
 
@@ -421,13 +373,13 @@
         .sync-badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.74rem;
+            gap: 4px;
+            font-size: 0.72rem;
             color: #10b981;
             font-weight: 600;
             background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 3px 8px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 2px 8px;
             border-radius: 12px;
             transition: opacity 0.2s ease;
         }
@@ -438,116 +390,18 @@
             border-color: rgba(245, 158, 11, 0.3);
         }
 
-        /* Floating Vertical Controls Dock (Destra, 3 Livelli) */
-        .floating-controls-dock {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 45;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-            pointer-events: auto;
-        }
-
-        .dock-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--reader-border);
-            border-radius: 25px;
-            padding: 4px 6px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-        }
-
-        .dock-btn {
-            background: transparent;
-            color: #f8fafc;
-            border: 1px solid transparent;
-            border-radius: 18px;
-            padding: 6px 12px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            white-space: nowrap;
-        }
-
-        .dock-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .dock-btn-accent {
-            background: var(--reader-accent);
-            border-color: var(--reader-accent);
-            color: white;
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
-        }
-
-        .dock-btn-accent:hover {
-            background: var(--reader-accent-hover);
-            border-color: var(--reader-accent-hover);
-            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.5);
-        }
-
-        .dock-btn-accent.active {
-            background: #0284c7;
-            border-color: #0284c7;
-            box-shadow: 0 0 14px rgba(2, 132, 199, 0.6);
-        }
-
-        .dock-icon-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: transparent;
-            border: 1px solid transparent;
-            color: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .dock-icon-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: scale(1.05);
-        }
-
-        .dock-fit-btn {
-            width: auto;
-            border-radius: 16px;
-            padding: 0 10px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            gap: 4px;
-        }
-
-        /* Reader Legal Footer (Patamu Ufficiale) */
+        /* Dedicated Reader Footer Bar (Zero Overlap on Book Stage) */
         .reader-footer {
             background-color: var(--reader-bar-bg);
             border-top: 1px solid var(--reader-border);
-            padding: 8px 1.5rem;
+            padding: 6px 1.5rem;
             z-index: 40;
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 0.76rem;
-            color: #94a3b8;
+            justify-content: space-between;
+            min-height: 50px;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
         }
 
         .reader-footer-content {
@@ -555,37 +409,35 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 1300px;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+            gap: 1.25rem;
         }
 
         .reader-footer-left {
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-grow: 1;
-            min-width: 260px;
+            flex-shrink: 0;
         }
 
         .patamu-logo-img {
-            height: 34px;
+            height: 32px;
             object-fit: contain;
             flex-shrink: 0;
         }
 
         .reader-footer-text {
-            font-size: 0.74rem;
+            font-size: 0.73rem;
             line-height: 1.35;
             color: #94a3b8;
             margin: 0;
+            max-width: 440px;
         }
 
         .reader-footer-links {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
-            white-space: nowrap;
+            gap: 0.85rem;
+            font-size: 0.75rem;
         }
 
         .reader-footer-links a {
@@ -599,15 +451,156 @@
             color: var(--reader-accent);
         }
 
-        /* Fullscreen handling: hide topbar & footer on LIM */
-        :fullscreen #reader-topbar,
-        :fullscreen #reader-footer {
+        .reader-footer-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .footer-divider {
+            width: 1px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .reader-footer-pagination {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2px 6px;
+        }
+
+        .footer-nav-btn {
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.15s ease;
+        }
+
+        .footer-nav-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .footer-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .reader-footer-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer-tool-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .footer-tool-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .footer-tool-btn.active {
+            background: var(--reader-accent);
+            border-color: var(--reader-accent);
+            color: white;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+        }
+
+        .footer-draw-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+            border-color: #8b5cf6;
+            color: white;
+            font-weight: 700;
+        }
+
+        .footer-draw-btn:hover {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+        }
+
+        /* PDF Interactive Links Layer */
+        .pdf-links-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 22;
+        }
+
+        .pdf-link-annot {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.12);
+            border-bottom: 2px dashed rgba(212, 175, 55, 0.6);
+            transition: all 0.18s ease;
+        }
+
+        .pdf-link-annot:hover {
+            background: rgba(212, 175, 55, 0.3);
+            border-bottom-color: #d4af37;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .pdf-link-annot.is-video-link {
+            background: rgba(239, 68, 68, 0.14);
+            border-bottom: 2px dashed rgba(239, 68, 68, 0.7);
+        }
+
+        .pdf-link-annot.is-video-link:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-bottom-color: #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
+        }
+
+        /* Fullscreen handling: keep reader footer slim & accessible on LIM */
+        :fullscreen #reader-topbar {
             display: none !important;
         }
 
-        :-webkit-full-screen #reader-topbar,
-        :-webkit-full-screen #reader-footer {
+        :fullscreen #reader-footer {
+            padding: 4px 1.5rem;
+            min-height: 42px;
+        }
+
+        :-webkit-full-screen #reader-topbar {
             display: none !important;
+        }
+
+        :-webkit-full-screen #reader-footer {
+            padding: 4px 1.5rem;
+            min-height: 42px;
         }
 
         /* Main Viewport Stage */
@@ -768,45 +761,7 @@
             z-index: 25;
         }
 
-        /* Floating Nav Buttons on Stage */
-        .stage-nav-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            cursor: pointer;
-            z-index: 30;
-            transition: all 0.2s;
-        }
 
-        .stage-nav-arrow:hover:not(:disabled) {
-            background: var(--reader-accent);
-            border-color: var(--reader-accent);
-            transform: translateY(-50%) scale(1.08);
-        }
-
-        .stage-nav-arrow:disabled {
-            opacity: 0.2;
-            cursor: not-allowed;
-        }
-
-        .stage-nav-left {
-            left: 20px;
-        }
-
-        .stage-nav-right {
-            right: 20px;
-        }
 
         /* ========================================================
            TOC DRAWER (CASSETTO LATERALE INDICE)
@@ -1278,29 +1233,16 @@
                 display: none;
             }
 
-            .floating-toc-btn span {
+            .reader-footer-text {
                 display: none;
             }
 
-            .floating-toc-btn {
-                padding: 8px 10px;
-                border-radius: 50%;
-            }
-
-            .dock-btn span {
+            .btn-label-desktop {
                 display: none;
             }
 
-            .dock-btn {
-                padding: 6px 9px;
-            }
-
-            .stage-nav-arrow {
-                display: none;
-            }
-
-            .reader-footer-left p {
-                font-size: 0.7rem;
+            .footer-tool-btn {
+                padding: 5px 8px;
             }
         }
 
@@ -1313,41 +1255,31 @@
                 display: inline !important;
             }
 
+            .reader-footer-left {
+                display: none;
+            }
+
             .reader-footer {
-                display: none;
+                padding: 4px 8px;
+                min-height: 44px;
             }
 
-            .dock-fit-btn span {
-                display: none;
-            }
-
-            .dock-fit-btn {
-                width: 34px;
-                height: 34px;
-                padding: 0;
-            }
-
-            .bottom-pagination-bar {
-                bottom: 12px;
-                padding: 4px 10px;
-                gap: 6px;
-                max-width: 95vw;
-            }
-
-            .floating-controls-dock {
-                bottom: 66px;
-                right: 12px;
+            .reader-footer-right {
+                width: 100%;
+                justify-content: space-between;
                 gap: 6px;
             }
 
-            .floating-toc-btn {
-                top: 14px;
-                left: 12px;
-                padding: 6px 10px;
+            .footer-divider {
+                display: none;
+            }
+
+            #sync-status-badge {
+                display: none;
             }
 
             #drawing-toolbar {
-                bottom: 118px;
+                bottom: 54px;
                 padding: 4px 8px;
                 gap: 6px;
                 max-width: 95vw;
@@ -1363,13 +1295,17 @@
     <div id="reader-app">
         <!-- Unified Ecosystem Header -->
         <header class="reader-topbar" id="reader-topbar">
-            <!-- Left: Back to Showcase & Quaderno Header Logo -->
+            <!-- Left: Back to Showcase, TOC trigger & Quaderno Header Logo -->
             <div class="topbar-left">
                 <a href="quaderno-alternativo.html" class="reader-back-btn" title="Torna a Scegli il tuo Quaderno">
                     <i class="ph ph-caret-left" style="font-size: 1.1rem;"></i>
                     <span class="full-text">Torna alla Vetrina</span>
                     <span class="short-text" style="display: none;">Vetrina</span>
                 </a>
+                <button id="btn-toggle-toc" class="reader-header-toc-btn" title="Apri Indice dei Percorsi e Lezioni">
+                    <i class="ph ph-list-bullets" style="font-size: 1.15rem;"></i>
+                    <span>Indice</span>
+                </button>
                 <div class="header-quaderno-logo-wrap" title="Il mio quaderno alternativo - Classe Prima">
                     <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo - Classe Prima"
                         class="header-quaderno-logo">
@@ -1437,27 +1373,15 @@
             </div>
         </header>
 
-        <!-- Main Viewport Stage -->
+        <!-- Main Viewport Stage: 100% Zero-Overlap, No Floating HUD Buttons -->
         <main id="reader-stage">
-            <!-- Pulsante Indice Fluttuante a Sinistra -->
-            <button id="btn-toggle-toc" class="floating-toc-btn" title="Apri Indice dei Percorsi e Lezioni">
-                <i class="ph ph-list-bullets" style="font-size: 1.15rem;"></i>
-                <span>Indice</span>
-            </button>
-
-            <!-- Stage Nav Left -->
-            <button id="stage-prev" class="stage-nav-arrow stage-nav-left" title="Pagina Precedente">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-
             <!-- Book Viewport -->
             <div id="book-viewport">
                 <!-- Page Left / Single -->
                 <div id="page-wrapper-left" class="page-wrapper left-page">
                     <canvas id="canvas-page-left" class="pdf-canvas"></canvas>
                     <canvas id="canvas-draw-left" class="draw-canvas"></canvas>
+                    <div id="links-layer-left" class="pdf-links-layer"></div>
                     <div id="hotspot-layer-left" class="hotspot-layer" style="display: none;"></div>
                 </div>
                 <!-- Spina libro (visibile in spread mode) -->
@@ -1466,89 +1390,83 @@
                 <div id="page-wrapper-right" class="page-wrapper right-page" style="display: none;">
                     <canvas id="canvas-page-right" class="pdf-canvas"></canvas>
                     <canvas id="canvas-draw-right" class="draw-canvas"></canvas>
+                    <div id="links-layer-right" class="pdf-links-layer"></div>
                     <div id="hotspot-layer-right" class="hotspot-layer" style="display: none;"></div>
-                </div>
-            </div>
-
-            <!-- Stage Nav Right -->
-            <button id="stage-next" class="stage-nav-arrow stage-nav-right" title="Pagina Successiva">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-
-            <!-- Paginazione Fluttuante in Basso al Centro -->
-            <div id="bottom-pagination-bar" class="bottom-pagination-bar">
-                <button id="btn-prev" class="reader-nav-btn" title="Pagina Precedente (Freccia Sinistra)">
-                    <i class="ph ph-caret-left"></i>
-                </button>
-                <div class="page-control-box">
-                    <span>Pag.</span>
-                    <input type="number" id="page-num-input" class="page-input" min="1" max="1" value="1">
-                    <span>di <span id="page-count-total">--</span></span>
-                </div>
-                <button id="btn-next" class="reader-nav-btn" title="Pagina Successiva (Freccia Destra)">
-                    <i class="ph ph-caret-right"></i>
-                </button>
-                <div id="sync-status-badge" class="sync-badge"
-                    title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
-                    <i class="ph ph-cloud-check"></i>
-                    <span>Salvato</span>
-                </div>
-            </div>
-
-            <!-- Dock Fluttuante a Destra in Basso (3 Livelli) -->
-            <div id="floating-controls-dock" class="floating-controls-dock">
-                <!-- Livello 3 (in alto): Possibilità di scrittura / disegno -->
-                <div class="dock-group">
-                    <button id="btn-toggle-draw-mode" class="dock-btn dock-btn-accent"
-                        title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
-                        <i class="ph ph-pencil-simple"></i>
-                        <span id="label-draw-mode">Disegna e Scrivi</span>
-                    </button>
-                </div>
-
-                <!-- Livello 2 (in mezzo): Opzioni di visualizzazione (Libro 2 pag / 1 pag, Schermo intero LIM) -->
-                <div class="dock-group">
-                    <button id="btn-toggle-spread" class="dock-btn" title="Alterna Vista 1 Pagina / 2 Pagine (Libro)">
-                        <i class="ph ph-book-open"></i>
-                        <span id="label-spread">Vista Libro</span>
-                    </button>
-                    <button id="btn-fullscreen" class="dock-btn" title="Schermo Intero (Ottimale per LIM)">
-                        <i class="ph ph-corners-out"></i>
-                        <span>Schermo Intero</span>
-                    </button>
-                </div>
-
-                <!-- Livello 1 (in basso): Ingrandimento / Zoom (+ / Adatta / -) -->
-                <div class="dock-group">
-                    <button id="btn-zoom-out" class="dock-icon-btn" title="Riduci Zoom">
-                        <i class="ph ph-minus"></i>
-                    </button>
-                    <button id="btn-zoom-fit" class="dock-icon-btn dock-fit-btn" title="Adatta allo Schermo">
-                        <i class="ph ph-arrows-in-simple"></i>
-                        <span>Adatta</span>
-                    </button>
-                    <button id="btn-zoom-in" class="dock-icon-btn" title="Ingrandisci Zoom">
-                        <i class="ph ph-plus"></i>
-                    </button>
                 </div>
             </div>
         </main>
 
-        <!-- Official Patamu Footer -->
+        <!-- Dedicated Reader Footer Bar: Zero Overlap on Book Stage -->
         <footer class="reader-footer" id="reader-footer">
             <div class="reader-footer-content">
+                <!-- Left: Official Patamu Legal Badge & Copyright -->
                 <div class="reader-footer-left">
                     <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png"
-                        alt="Patamu Logo" class="patamu-logo-img" onerror="this.src='assets/patamu.png'">
+                        alt="Patamu Logo" class="patamu-logo-img" onerror="this.onerror=null; this.src='assets/patamu.png'">
                     <p class="reader-footer-text">
-                        &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0).
+                        &copy; 2026 Guglielmo Piersanti. Contenuti protetti da marcatura Patamu (CC BY-NC-ND 4.0).
                     </p>
+                    <div class="reader-footer-links">
+                        <a href="javascript:void(0)" onclick="openSharedModal('privacy')" data-legal="privacy">Privacy</a>
+                        <a href="javascript:void(0)" onclick="openSharedModal('termini')" data-legal="terms">Termini</a>
+                    </div>
                 </div>
-                <div class="reader-footer-links">
-                    <a href="javascript:void(0)" onclick="openSharedModal('privacy')" data-legal="privacy">Privacy Policy</a>
-                    <a href="javascript:void(0)" onclick="openSharedModal('termini')" data-legal="terms">Termini e Condizioni</a>
+
+                <!-- Right: Dedicated Reader Control Toolbar -->
+                <div class="reader-footer-right">
+                    <!-- Status Salvataggio Cloud -->
+                    <div id="sync-status-badge" class="sync-badge" title="Annotazioni e disegni salvati nel tuo profilo">
+                        <i class="ph ph-cloud-check"></i>
+                        <span>Salvato</span>
+                    </div>
+
+                    <!-- Selettore Pagina ergonomico a destra -->
+                    <div class="reader-footer-pagination">
+                        <button id="btn-prev" class="footer-nav-btn" title="Pagina Precedente (←)">
+                            <i class="ph ph-caret-left"></i>
+                        </button>
+                        <div class="page-control-box">
+                            <span>Pag.</span>
+                            <input type="number" id="page-num-input" class="page-input" min="1" max="1" value="1">
+                            <span>/ <span id="page-count-total">--</span></span>
+                        </div>
+                        <button id="btn-next" class="footer-nav-btn" title="Pagina Successiva (→)">
+                            <i class="ph ph-caret-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="footer-divider"></div>
+
+                    <!-- Controlli Zoom -->
+                    <div class="reader-footer-group">
+                        <button id="btn-zoom-out" class="footer-tool-btn" title="Riduci Zoom (-)">
+                            <i class="ph ph-minus"></i>
+                        </button>
+                        <button id="btn-zoom-fit" class="footer-tool-btn" title="Adatta allo Schermo">
+                            <i class="ph ph-arrows-in-simple"></i>
+                            <span class="btn-label-desktop">Adatta</span>
+                        </button>
+                        <button id="btn-zoom-in" class="footer-tool-btn" title="Aumenta Zoom (+)">
+                            <i class="ph ph-plus"></i>
+                        </button>
+                    </div>
+
+                    <div class="footer-divider"></div>
+
+                    <!-- Visualizzazione e Strumenti -->
+                    <div class="reader-footer-group">
+                        <button id="btn-toggle-spread" class="footer-tool-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
+                            <i class="ph ph-book-open"></i>
+                            <span class="btn-label-desktop" id="label-spread">Vista Libro</span>
+                        </button>
+                        <button id="btn-fullscreen" class="footer-tool-btn" title="Schermo Intero (Ottimale per LIM)">
+                            <i class="ph ph-corners-out"></i>
+                        </button>
+                        <button id="btn-toggle-draw-mode" class="footer-tool-btn footer-draw-btn" title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                            <i class="ph ph-pencil-simple"></i>
+                            <span class="btn-label-desktop" id="label-draw-mode">Disegna</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>
@@ -1939,6 +1857,8 @@
         const canvasRight = document.getElementById('canvas-page-right');
         const canvasDrawLeft = document.getElementById('canvas-draw-left');
         const canvasDrawRight = document.getElementById('canvas-draw-right');
+        const linksLayerLeft = document.getElementById('links-layer-left');
+        const linksLayerRight = document.getElementById('links-layer-right');
         const hotspotLayerLeft = document.getElementById('hotspot-layer-left');
         const hotspotLayerRight = document.getElementById('hotspot-layer-right');
         const spine = document.getElementById('book-spine');
@@ -1986,7 +1906,9 @@
 
         // --- GESTIONE PROFILO STUDENTE & PERSISTENZA ---
         function initStudentProfile() {
-            studentNameLabel.textContent = currentStudentName;
+            if (studentNameLabel) {
+                studentNameLabel.textContent = currentStudentName;
+            }
             loadAnnotationsFromStorage();
         }
 
@@ -2125,6 +2047,7 @@
                 // Sync and redraw left draw canvas
                 setupDrawCanvas(canvasDrawLeft, leftPageNum, viewport1.width, viewport1.height);
                 setupHotspots(hotspotLayerLeft, leftPageNum);
+                await setupPdfLinks(linksLayerLeft, page1, viewport1);
 
                 // Render Right Page (se attiva)
                 if (isTwoPageMode && hasSecondPage) {
@@ -2141,11 +2064,13 @@
 
                     setupDrawCanvas(canvasDrawRight, rightPageNum, viewport2.width, viewport2.height);
                     setupHotspots(hotspotLayerRight, rightPageNum);
+                    await setupPdfLinks(linksLayerRight, page2, viewport2);
                 } else {
                     pageRightWrapper.style.display = 'none';
                     spine.style.display = 'none';
                     pageLeftWrapper.classList.remove('left-page');
                     clearHotspots(hotspotLayerRight);
+                    clearPdfLinks(linksLayerRight);
                 }
 
                 updateNavState();
@@ -2484,8 +2409,77 @@
         }
 
         function clearHotspots(container) {
-            container.innerHTML = '';
-            container.style.display = 'none';
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
+        }
+
+        // --- COLLEGAMENTI INTERATTIVI PDF & VIDEO DIDATTICI (YOUTUBE / APPROFONDIMENTI) ---
+        async function setupPdfLinks(container, page, viewport) {
+            clearPdfLinks(container);
+            if (!container || !page) return;
+
+            try {
+                const annotations = await page.getAnnotations();
+                if (!annotations || annotations.length === 0) {
+                    container.style.display = 'none';
+                    return;
+                }
+
+                let foundLinks = 0;
+                annotations.forEach(annot => {
+                    if (annot.subtype === 'Link' && (annot.url || annot.unsafeUrl)) {
+                        const targetUrl = annot.url || annot.unsafeUrl;
+                        if (!targetUrl) return;
+
+                        // Calcola coordinate esatte nel viewport scalato
+                        const rect = viewport.convertToViewportRectangle(annot.rect);
+                        const left = Math.min(rect[0], rect[2]);
+                        const top = Math.min(rect[1], rect[3]);
+                        const width = Math.abs(rect[2] - rect[0]);
+                        const height = Math.abs(rect[3] - rect[1]);
+
+                        const linkEl = document.createElement('a');
+                        linkEl.className = 'pdf-link-annot';
+                        linkEl.href = targetUrl;
+                        linkEl.target = '_blank';
+                        linkEl.rel = 'noopener noreferrer';
+                        linkEl.title = 'Apri risorsa: ' + targetUrl;
+                        linkEl.style.left = `${left}px`;
+                        linkEl.style.top = `${top}px`;
+                        linkEl.style.width = `${width}px`;
+                        linkEl.style.height = `${height}px`;
+
+                        const lower = targetUrl.toLowerCase();
+                        if (lower.includes('youtube') || lower.includes('youtu.be') || lower.includes('video') || lower.includes('ilcinemainsegna')) {
+                            linkEl.classList.add('is-video-link');
+                            linkEl.title = '▶ Guarda il video didattico: ' + targetUrl;
+                        }
+
+                        linkEl.addEventListener('click', (e) => {
+                            if (isDrawMode) {
+                                e.preventDefault();
+                                return;
+                            }
+                        });
+
+                        container.appendChild(linkEl);
+                        foundLinks++;
+                    }
+                });
+
+                container.style.display = foundLinks > 0 ? 'block' : 'none';
+            } catch (err) {
+                console.warn("Errore lettura annotazioni link PDF:", err);
+            }
+        }
+
+        function clearPdfLinks(container) {
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
         }
 
         // --- TOC DRAWER GENERATION & BEHAVIOR ---
@@ -2580,15 +2574,15 @@
 
         // --- GESTIONE NAVIGAZIONE & VIEW MODE ---
         function updateNavState() {
-            pageInput.value = currentPageNum;
+            if (pageInput) pageInput.value = currentPageNum;
             const hasPrev = currentPageNum > 1;
             const step = isTwoPageMode ? 2 : 1;
             const hasNext = (currentPageNum + step) <= totalPages;
 
-            btnPrev.disabled = !hasPrev;
-            stagePrev.disabled = !hasPrev;
-            btnNext.disabled = !hasNext;
-            stageNext.disabled = !hasNext;
+            if (btnPrev) btnPrev.disabled = !hasPrev;
+            if (stagePrev) stagePrev.disabled = !hasPrev;
+            if (btnNext) btnNext.disabled = !hasNext;
+            if (stageNext) stageNext.disabled = !hasNext;
         }
 
         function goToPage(target) {
@@ -2628,11 +2622,11 @@
 
         function updateViewModeUI() {
             if (isTwoPageMode) {
-                labelSpread.textContent = 'Libro (2 Pag.)';
-                btnToggleSpread.title = 'Passa a visualizzazione singola pagina';
+                if (labelSpread) labelSpread.textContent = 'Vista Libro';
+                if (btnToggleSpread) btnToggleSpread.title = 'Passa a visualizzazione singola pagina';
             } else {
-                labelSpread.textContent = 'Singola Pagina';
-                btnToggleSpread.title = 'Passa a visualizzazione 2 pagine (Libro)';
+                if (labelSpread) labelSpread.textContent = '1 Pagina';
+                if (btnToggleSpread) btnToggleSpread.title = 'Passa a visualizzazione 2 pagine (Libro)';
             }
         }
 
@@ -2640,7 +2634,7 @@
             isDrawMode = !isDrawMode;
             if (isDrawMode) {
                 btnToggleDrawMode.classList.add('active');
-                labelDrawMode.textContent = 'Modalità Lettura';
+                if (labelDrawMode) labelDrawMode.textContent = 'Lettura';
                 drawingToolbar.classList.add('visible');
                 canvasDrawLeft.classList.add('active');
                 canvasDrawRight.classList.add('active');
@@ -2648,7 +2642,7 @@
                 updateCanvasCursor(canvasDrawRight);
             } else {
                 btnToggleDrawMode.classList.remove('active');
-                labelDrawMode.textContent = 'Disegna e Scrivi';
+                if (labelDrawMode) labelDrawMode.textContent = 'Disegna';
                 drawingToolbar.classList.remove('visible');
                 canvasDrawLeft.classList.remove('active');
                 canvasDrawRight.classList.remove('active');
@@ -2675,42 +2669,50 @@
         document.addEventListener('fullscreenchange', () => {
             const isFull = !!document.fullscreenElement;
             btnFullscreen.innerHTML = isFull
-                ? '<i class="ph ph-corners-in"></i> <span>Esci Schermo Intero</span>'
-                : '<i class="ph ph-corners-out"></i> <span>Schermo Intero</span>';
+                ? '<i class="ph ph-corners-in"></i> <span class="btn-label-desktop">Esci Schermo Intero</span>'
+                : '<i class="ph ph-corners-out"></i> <span class="btn-label-desktop">Schermo Intero</span>';
             setTimeout(renderCurrentPages, 100);
         });
 
         // --- EVENT LISTENERS GENERALI ---
-        btnPrev.addEventListener('click', goToPrevPage);
-        stagePrev.addEventListener('click', goToPrevPage);
-        btnNext.addEventListener('click', goToNextPage);
-        stageNext.addEventListener('click', goToNextPage);
-        btnToggleSpread.addEventListener('click', toggleViewMode);
-        btnToggleDrawMode.addEventListener('click', toggleDrawMode);
-        btnFullscreen.addEventListener('click', toggleFullscreen);
+        if (btnPrev) btnPrev.addEventListener('click', goToPrevPage);
+        if (stagePrev) stagePrev.addEventListener('click', goToPrevPage);
+        if (btnNext) btnNext.addEventListener('click', goToNextPage);
+        if (stageNext) stageNext.addEventListener('click', goToNextPage);
+        if (btnToggleSpread) btnToggleSpread.addEventListener('click', toggleViewMode);
+        if (btnToggleDrawMode) btnToggleDrawMode.addEventListener('click', toggleDrawMode);
+        if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
 
-        btnZoomIn.addEventListener('click', () => {
-            zoomLevel = Math.min(2.5, zoomLevel + 0.15);
-            renderCurrentPages();
-        });
+        if (btnZoomIn) {
+            btnZoomIn.addEventListener('click', () => {
+                zoomLevel = Math.min(2.5, zoomLevel + 0.15);
+                renderCurrentPages();
+            });
+        }
 
-        btnZoomOut.addEventListener('click', () => {
-            zoomLevel = Math.max(0.6, zoomLevel - 0.15);
-            renderCurrentPages();
-        });
+        if (btnZoomOut) {
+            btnZoomOut.addEventListener('click', () => {
+                zoomLevel = Math.max(0.6, zoomLevel - 0.15);
+                renderCurrentPages();
+            });
+        }
 
-        btnZoomFit.addEventListener('click', () => {
-            zoomLevel = 1.0;
-            renderCurrentPages();
-        });
+        if (btnZoomFit) {
+            btnZoomFit.addEventListener('click', () => {
+                zoomLevel = 1.0;
+                renderCurrentPages();
+            });
+        }
 
-        pageInput.addEventListener('change', () => {
-            goToPage(pageInput.value);
-        });
+        if (pageInput) {
+            pageInput.addEventListener('change', () => {
+                goToPage(pageInput.value);
+            });
+        }
 
         // TOC Listeners
-        btnToggleToc.addEventListener('click', openTocDrawer);
-        btnCloseToc.addEventListener('click', closeTocDrawer);
+        if (btnToggleToc) btnToggleToc.addEventListener('click', openTocDrawer);
+        if (btnCloseToc) btnCloseToc.addEventListener('click', closeTocDrawer);
         tocBackdrop.addEventListener('click', closeTocDrawer);
         tocSearchInput.addEventListener('input', (e) => {
             renderTocList(e.target.value);

@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -76,12 +76,14 @@
             z-index: 50;
             flex-shrink: 0;
             gap: 1rem;
+            position: relative;
         }
 
         .topbar-left {
             display: flex;
             align-items: center;
             gap: 12px;
+            z-index: 2;
         }
 
         .reader-back-btn {
@@ -121,12 +123,19 @@
         }
 
         .topbar-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .header-prof-logo-wrap {
+            pointer-events: auto;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -340,36 +349,6 @@
         }
 
         /* Page Control Input & Sync Badge */
-        .page-control-box {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: #0f172a;
-            padding: 2px 8px;
-            border-radius: 16px;
-            border: 1px solid var(--reader-border);
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--reader-text-muted);
-        }
-
-        .page-input {
-            width: 40px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            text-align: center;
-            border-radius: 5px;
-            padding: 1px 0;
-            font-size: 0.84rem;
-            font-weight: 700;
-        }
-
-        .page-input:focus {
-            outline: none;
-            border-color: var(--reader-accent);
-        }
-
         .sync-badge {
             display: inline-flex;
             align-items: center;
@@ -379,7 +358,7 @@
             font-weight: 600;
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 12px;
             transition: opacity 0.2s ease;
         }
@@ -390,91 +369,36 @@
             border-color: rgba(245, 158, 11, 0.3);
         }
 
-        /* Dedicated Reader Footer Bar (Zero Overlap on Book Stage) */
-        .reader-footer {
-            background-color: var(--reader-bar-bg);
-            border-top: 1px solid var(--reader-border);
-            padding: 6px 1.5rem;
-            z-index: 40;
-            flex-shrink: 0;
+        /* Reader Control Bar: Pinned In Basso a Destra */
+        .reader-controls-dock {
+            position: absolute;
+            bottom: 16px;
+            right: 20px;
+            z-index: 45;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            min-height: 50px;
-            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
+            gap: 8px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            border-radius: 30px;
+            padding: 4px 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
         }
 
-        .reader-footer-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            gap: 1.25rem;
-        }
-
-        .reader-footer-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .patamu-logo-img {
-            height: 32px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-
-        .reader-footer-text {
-            font-size: 0.73rem;
-            line-height: 1.35;
-            color: #94a3b8;
-            margin: 0;
-            max-width: 440px;
-        }
-
-        .reader-footer-links {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            font-size: 0.75rem;
-        }
-
-        .reader-footer-links a {
-            color: #cbd5e1;
-            text-decoration: underline;
-            transition: color 0.15s;
-            cursor: pointer;
-        }
-
-        .reader-footer-links a:hover {
-            color: var(--reader-accent);
-        }
-
-        .reader-footer-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .footer-divider {
-            width: 1px;
-            height: 22px;
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .reader-footer-pagination {
+        .dock-pagination {
             display: flex;
             align-items: center;
             gap: 4px;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 2px 6px;
         }
 
-        .footer-nav-btn {
+        .dock-nav-btn {
             background: transparent;
             border: none;
             color: #e2e8f0;
@@ -489,23 +413,56 @@
             transition: all 0.15s ease;
         }
 
-        .footer-nav-btn:hover:not(:disabled) {
+        .dock-nav-btn:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.15);
             color: white;
         }
 
-        .footer-nav-btn:disabled {
+        .dock-nav-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
         }
 
-        .reader-footer-group {
+        .dock-page-box {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--reader-text-muted);
+            padding: 0 4px;
+        }
+
+        .dock-page-input {
+            width: 40px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 1px 0;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .dock-page-input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        .dock-divider {
+            width: 1px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .dock-tools {
             display: flex;
             align-items: center;
             gap: 5px;
         }
 
-        .footer-tool-btn {
+        .dock-tool-btn {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #e2e8f0;
@@ -520,30 +477,98 @@
             transition: all 0.15s ease;
         }
 
-        .footer-tool-btn:hover {
+        .dock-tool-btn:hover {
             background: rgba(255, 255, 255, 0.14);
             color: white;
             border-color: rgba(255, 255, 255, 0.25);
             transform: translateY(-1px);
         }
 
-        .footer-tool-btn.active {
+        .dock-tool-btn.active {
             background: var(--reader-accent);
             border-color: var(--reader-accent);
             color: white;
             box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
         }
 
-        .footer-draw-btn {
+        .dock-draw-btn {
             background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
             border-color: #8b5cf6;
             color: white;
             font-weight: 700;
         }
 
-        .footer-draw-btn:hover {
+        .dock-draw-btn:hover {
             background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
             box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+        }
+
+        /* Patamu Official Footer: Harmonized with other sites, Julius Sans One, Never Disappears */
+        .reader-patamu-footer {
+            background: #0b1120;
+            border-top: 1px solid var(--reader-border);
+            padding: 12px 1.5rem;
+            z-index: 30;
+            flex-shrink: 0;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .footer-legal-links {
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px 22px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            font-family: 'Julius Sans One', sans-serif !important;
+        }
+
+        .footer-legal-links a {
+            color: #94a3b8;
+            text-decoration: underline;
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+
+        .footer-legal-links a:hover {
+            color: #d4af37;
+        }
+
+        .footer-patamu-row {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            width: 100%;
+            max-width: 950px;
+            flex-wrap: wrap;
+        }
+
+        .patamu-logo-img {
+            height: 48px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .patamu-text {
+            text-align: left;
+            font-size: 0.76rem;
+            line-height: 1.45;
+            color: #94a3b8;
+            margin: 0;
+            flex: 1;
+            min-width: 260px;
+            font-family: 'Julius Sans One', sans-serif !important;
+            letter-spacing: 0.3px;
         }
 
         /* PDF Interactive Links Layer */
@@ -1233,16 +1258,28 @@
                 display: none;
             }
 
-            .reader-footer-text {
-                display: none;
-            }
-
             .btn-label-desktop {
                 display: none;
             }
 
-            .footer-tool-btn {
-                padding: 5px 8px;
+            .reader-controls-dock {
+                bottom: 12px;
+                right: 12px;
+                padding: 3px 8px;
+            }
+
+            .reader-patamu-footer {
+                padding: 8px 12px;
+            }
+
+            .patamu-text {
+                font-size: 0.7rem;
+                line-height: 1.35;
+            }
+
+            .footer-legal-links {
+                gap: 8px 16px;
+                font-size: 0.72rem;
             }
         }
 
@@ -1255,23 +1292,33 @@
                 display: inline !important;
             }
 
-            .reader-footer-left {
-                display: none;
+            .reader-controls-dock {
+                bottom: 8px;
+                right: 8px;
+                gap: 4px;
+                padding: 2px 6px;
             }
 
-            .reader-footer {
-                padding: 4px 8px;
-                min-height: 44px;
+            .dock-pagination {
+                padding: 1px 4px;
             }
 
-            .reader-footer-right {
-                width: 100%;
-                justify-content: space-between;
-                gap: 6px;
+            .reader-patamu-footer {
+                padding: 6px 8px;
             }
 
-            .footer-divider {
-                display: none;
+            .patamu-logo-img {
+                height: 36px;
+            }
+
+            .patamu-text {
+                font-size: 0.68rem;
+                text-align: center;
+            }
+
+            .footer-legal-links {
+                gap: 6px 12px;
+                font-size: 0.68rem;
             }
 
             #sync-status-badge {
@@ -1279,7 +1326,7 @@
             }
 
             #drawing-toolbar {
-                bottom: 54px;
+                bottom: 60px;
                 padding: 4px 8px;
                 gap: 6px;
                 max-width: 95vw;
@@ -1394,80 +1441,81 @@
                     <div id="hotspot-layer-right" class="hotspot-layer" style="display: none;"></div>
                 </div>
             </div>
+
+            <!-- Floating Reader Control Bar: In Basso a Destra -->
+            <div id="reader-controls-dock" class="reader-controls-dock">
+                <!-- Sync status badge -->
+                <div id="sync-status-badge" class="sync-badge" title="Annotazioni e disegni salvati nel tuo profilo">
+                    <i class="ph ph-cloud-check"></i>
+                    <span>Salvato</span>
+                </div>
+
+                <!-- Selettore Pagina in Basso a Destra -->
+                <div class="dock-pagination">
+                    <button id="btn-prev" class="dock-nav-btn" title="Pagina Precedente (←)">
+                        <i class="ph ph-caret-left"></i>
+                    </button>
+                    <div class="dock-page-box">
+                        <span>Pag.</span>
+                        <input type="number" id="page-num-input" class="dock-page-input" min="1" max="1" value="1">
+                        <span>/ <span id="page-count-total">--</span></span>
+                    </div>
+                    <button id="btn-next" class="dock-nav-btn" title="Pagina Successiva (→)">
+                        <i class="ph ph-caret-right"></i>
+                    </button>
+                </div>
+
+                <div class="dock-divider"></div>
+
+                <!-- Controlli Zoom e Vista -->
+                <div class="dock-tools">
+                    <button id="btn-zoom-out" class="dock-tool-btn" title="Riduci Zoom (-)">
+                        <i class="ph ph-minus"></i>
+                    </button>
+                    <button id="btn-zoom-fit" class="dock-tool-btn" title="Adatta allo Schermo">
+                        <i class="ph ph-arrows-in-simple"></i>
+                        <span class="btn-label-desktop">Adatta</span>
+                    </button>
+                    <button id="btn-zoom-in" class="dock-tool-btn" title="Aumenta Zoom (+)">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                    <button id="btn-toggle-spread" class="dock-tool-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
+                        <i class="ph ph-book-open"></i>
+                        <span class="btn-label-desktop" id="label-spread">Vista Libro</span>
+                    </button>
+                    <button id="btn-fullscreen" class="dock-tool-btn" title="Schermo Intero (Ottimale per LIM)">
+                        <i class="ph ph-corners-out"></i>
+                    </button>
+                    <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn"
+                        title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                        <i class="ph ph-pencil-simple"></i>
+                        <span class="btn-label-desktop" id="label-draw-mode">Disegna</span>
+                    </button>
+                </div>
+            </div>
         </main>
 
-        <!-- Dedicated Reader Footer Bar: Zero Overlap on Book Stage -->
-        <footer class="reader-footer" id="reader-footer">
-            <div class="reader-footer-content">
-                <!-- Left: Official Patamu Legal Badge & Copyright -->
-                <div class="reader-footer-left">
-                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png"
-                        alt="Patamu Logo" class="patamu-logo-img" onerror="this.onerror=null; this.src='assets/patamu.png'">
-                    <p class="reader-footer-text">
-                        &copy; 2026 Guglielmo Piersanti. Contenuti protetti da marcatura Patamu (CC BY-NC-ND 4.0).
-                    </p>
-                    <div class="reader-footer-links">
-                        <a href="javascript:void(0)" onclick="openSharedModal('privacy')" data-legal="privacy">Privacy</a>
-                        <a href="javascript:void(0)" onclick="openSharedModal('termini')" data-legal="terms">Termini</a>
-                    </div>
-                </div>
-
-                <!-- Right: Dedicated Reader Control Toolbar -->
-                <div class="reader-footer-right">
-                    <!-- Status Salvataggio Cloud -->
-                    <div id="sync-status-badge" class="sync-badge" title="Annotazioni e disegni salvati nel tuo profilo">
-                        <i class="ph ph-cloud-check"></i>
-                        <span>Salvato</span>
-                    </div>
-
-                    <!-- Selettore Pagina ergonomico a destra -->
-                    <div class="reader-footer-pagination">
-                        <button id="btn-prev" class="footer-nav-btn" title="Pagina Precedente (←)">
-                            <i class="ph ph-caret-left"></i>
-                        </button>
-                        <div class="page-control-box">
-                            <span>Pag.</span>
-                            <input type="number" id="page-num-input" class="page-input" min="1" max="1" value="1">
-                            <span>/ <span id="page-count-total">--</span></span>
-                        </div>
-                        <button id="btn-next" class="footer-nav-btn" title="Pagina Successiva (→)">
-                            <i class="ph ph-caret-right"></i>
-                        </button>
-                    </div>
-
-                    <div class="footer-divider"></div>
-
-                    <!-- Controlli Zoom -->
-                    <div class="reader-footer-group">
-                        <button id="btn-zoom-out" class="footer-tool-btn" title="Riduci Zoom (-)">
-                            <i class="ph ph-minus"></i>
-                        </button>
-                        <button id="btn-zoom-fit" class="footer-tool-btn" title="Adatta allo Schermo">
-                            <i class="ph ph-arrows-in-simple"></i>
-                            <span class="btn-label-desktop">Adatta</span>
-                        </button>
-                        <button id="btn-zoom-in" class="footer-tool-btn" title="Aumenta Zoom (+)">
-                            <i class="ph ph-plus"></i>
-                        </button>
-                    </div>
-
-                    <div class="footer-divider"></div>
-
-                    <!-- Visualizzazione e Strumenti -->
-                    <div class="reader-footer-group">
-                        <button id="btn-toggle-spread" class="footer-tool-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
-                            <i class="ph ph-book-open"></i>
-                            <span class="btn-label-desktop" id="label-spread">Vista Libro</span>
-                        </button>
-                        <button id="btn-fullscreen" class="footer-tool-btn" title="Schermo Intero (Ottimale per LIM)">
-                            <i class="ph ph-corners-out"></i>
-                        </button>
-                        <button id="btn-toggle-draw-mode" class="footer-tool-btn footer-draw-btn" title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
-                            <i class="ph ph-pencil-simple"></i>
-                            <span class="btn-label-desktop" id="label-draw-mode">Disegna</span>
-                        </button>
-                    </div>
-                </div>
+        <!-- Patamu Official Footer: Harmonized with other sites, Julius Sans One, Never Disappears -->
+        <footer class="reader-patamu-footer" id="reader-footer">
+            <div class="footer-legal-links">
+                <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('privacy');"
+                    data-legal="privacy">Privacy Policy</a>
+                <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('termini');"
+                    data-legal="terms">Termini e Condizioni</a>
+                <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('contatti');"
+                    data-legal="contatti">Contatti</a>
+                <a href="https://prof-memmo.github.io/games/condividi-esperienza.html" target="_blank"
+                    rel="noopener noreferrer">Condividi Esperienza</a>
+            </div>
+            <div class="footer-patamu-row">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png"
+                    alt="Patamu" class="patamu-logo-img" onerror="this.onerror=null; this.src='assets/patamu.png'">
+                <p class="patamu-text">
+                    &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà
+                    dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono
+                    inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+                    International (CC BY-NC-ND 4.0).
+                </p>
             </div>
         </footer>
 
@@ -1983,25 +2031,42 @@
 
                 renderTocList();
 
-                const loadingTask = pdfjsLib.getDocument(PDF_URL);
-                pdfDoc = await loadingTask.promise;
+                // Tentativo di caricamento PDF con fallback automatico
+                let pdfSource = PDF_URL;
+                let loadingTask = pdfjsLib.getDocument(pdfSource);
+                try {
+                    pdfDoc = await loadingTask.promise;
+                } catch (pdfErr) {
+                    console.warn("Caricamento PDF relativo fallito, provo fallback da GitHub:", pdfErr);
+                    pdfSource = 'https://prof-memmo.github.io/games/' + PDF_URL;
+                    loadingTask = pdfjsLib.getDocument(pdfSource);
+                    pdfDoc = await loadingTask.promise;
+                }
+
                 totalPages = pdfDoc.numPages;
 
-                pageCountTotal.textContent = totalPages;
-                pageInput.max = totalPages;
+                if (pageCountTotal) pageCountTotal.textContent = totalPages;
+                if (pageInput) pageInput.max = totalPages;
 
                 updateViewModeUI();
                 await renderCurrentPages();
+                showLoader(false);
             } catch (err) {
                 console.error("Errore caricamento PDF Quaderno:", err);
+                loader.style.opacity = '1';
+                loader.style.pointerEvents = 'auto';
                 loader.innerHTML = `
-                    <div style="color: #ef4444; font-size: 2rem;"><i class="ph ph-warning-circle"></i></div>
-                    <div style="font-weight: 700; color: #f87171;">Impossibile aprire il quaderno</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8; max-width: 400px; text-align: center;">${err.message || 'Verifica la connessione.'}</div>
-                    <a href="quaderno-alternativo.html" class="reader-btn" style="margin-top: 10px;">Torna Indietro</a>
+                    <div style="color: #ef4444; font-size: 2.2rem;"><i class="ph ph-warning-circle"></i></div>
+                    <div style="font-weight: 700; font-size: 1.2rem; color: #f87171; margin-top: 6px;">Impossibile aprire il quaderno</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; max-width: 440px; text-align: center; margin: 8px 0 16px 0; line-height: 1.5;">
+                        ${err.message || 'Errore di connessione o accesso al documento.'}<br>
+                        Se stai eseguendo il file in locale, ricarica la pagina o verifica la connessione internet.
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="window.location.reload()" class="reader-btn reader-btn-primary"><i class="ph ph-arrow-clockwise"></i> Ricarica Pagina</button>
+                        <a href="quaderno-alternativo.html" class="reader-btn">Torna alla Vetrina</a>
+                    </div>
                 `;
-            } finally {
-                showLoader(false);
             }
         }
 
@@ -2015,8 +2080,8 @@
             isRendering = true;
 
             try {
-                const stageWidth = stage.clientWidth - 40;
-                const stageHeight = stage.clientHeight - 40;
+                const stageWidth = Math.max(280, (stage.clientWidth || window.innerWidth) - 40);
+                const stageHeight = Math.max(350, (stage.clientHeight || window.innerHeight) - 40);
 
                 const leftPageNum = currentPageNum;
                 const hasSecondPage = isTwoPageMode && (leftPageNum + 1 <= totalPages);

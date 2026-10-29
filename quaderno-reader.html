@@ -110,10 +110,10 @@
         }
 
         .header-quaderno-logo {
-            height: 38px;
-            max-width: 320px;
+            height: 44px;
+            max-width: 380px;
             object-fit: contain;
-            filter: brightness(0) invert(1);
+            filter: invert(1);
         }
 
         .topbar-center {
@@ -1303,7 +1303,7 @@
             <!-- Center: Logo Avatar Prof. Memmo -->
             <div class="topbar-center">
                 <a href="index.html" class="header-prof-logo-wrap" title="Torna alla Home Prof. Memmo Games">
-                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Avatar" class="header-prof-logo" onerror="this.src='https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png'">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Avatar" class="header-prof-logo" onerror="this.onerror=null; this.src='assets/prof_memmo.png'">
                 </a>
             </div>
 
@@ -1312,11 +1312,12 @@
                 <div class="user-menu-container" id="header-user-container">
                     <div class="user-menu-trigger" id="header-user-menu-trigger" onclick="event.stopPropagation(); toggleUserDropdown(event);">
                         <div class="user-avatar-circle">
-                            <img id="header-user-avatar-img" src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png" alt="Avatar">
+                            <img id="header-user-avatar-img" src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png" alt="Avatar" onerror="this.onerror=null; this.src='assets/prof_memmo.png'">
                         </div>
                         <div class="user-trigger-text">
                             <span class="user-trigger-name" id="header-user-name">ACCEDI</span>
                             <span class="user-trigger-role" id="header-user-role">OSPITE</span>
+                            <span id="student-name-label" style="display: none;"></span>
                         </div>
                         <span class="user-trigger-chevron"><i class="ph ph-caret-down"></i></span>
                     </div>
@@ -1887,7 +1888,15 @@
 
         // --- GESTIONE PROFILO STUDENTE & PERSISTENZA ---
         function initStudentProfile() {
-            studentNameLabel.textContent = currentStudentName;
+            if (studentNameLabel) studentNameLabel.textContent = currentStudentName;
+            const headerUserName = document.getElementById('header-user-name');
+            if (headerUserName && !localStorage.getItem('hub_user_name')) {
+                headerUserName.textContent = currentStudentName.toUpperCase();
+            }
+            const ddTitle = document.getElementById('dropdown-user-title');
+            if (ddTitle && !localStorage.getItem('hub_user_name')) {
+                ddTitle.textContent = currentStudentName.toUpperCase();
+            }
             loadAnnotationsFromStorage();
         }
 

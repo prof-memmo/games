@@ -630,29 +630,31 @@
 
         /* Main Viewport Stage */
         #reader-stage {
-            flex-grow: 1;
+            flex: 1 1 auto;
+            min-height: 0;
+            min-width: 0;
             position: relative;
             overflow: auto;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
+            padding: 24px 75px;
             background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Book Spread */
         #book-viewport {
+            margin: auto;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0;
             position: relative;
-            transform-origin: center center;
-            transition: transform 0.2s ease-out;
+            flex-shrink: 0;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             border-radius: 6px;
-            overflow: hidden;
             background: #ffffff;
+            transition: width 0.15s ease-out, height 0.15s ease-out;
         }
 
         .page-wrapper {
@@ -661,6 +663,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .page-wrapper.left-page {
@@ -674,9 +677,54 @@
 
         canvas.pdf-canvas {
             display: block;
-            max-width: 100%;
-            height: auto;
             pointer-events: none;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        /* Floating Nav Buttons on Stage Sides (Frecce Sinistra e Destra) */
+        .stage-nav-arrow {
+            position: absolute;
+            top: calc(50% + 5px);
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid var(--reader-border);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            cursor: pointer;
+            z-index: 40;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .stage-nav-arrow:hover:not(:disabled) {
+            background: var(--reader-accent);
+            border-color: #a78bfa;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 24px rgba(124, 58, 237, 0.6);
+        }
+
+        .stage-nav-arrow:disabled {
+            opacity: 0.18;
+            cursor: not-allowed;
+            transform: translateY(-50%);
+        }
+
+        .stage-nav-left {
+            left: 18px;
+        }
+
+        .stage-nav-right {
+            right: 18px;
         }
 
         /* Draw Canvas Layer */
@@ -1284,6 +1332,24 @@
         }
 
         @media (max-width: 640px) {
+            #reader-stage {
+                padding: 16px 46px;
+            }
+
+            .stage-nav-arrow {
+                width: 38px;
+                height: 38px;
+                font-size: 1.25rem;
+            }
+
+            .stage-nav-left {
+                left: 8px;
+            }
+
+            .stage-nav-right {
+                right: 8px;
+            }
+
             .reader-back-btn span.full-text {
                 display: none;
             }
@@ -1420,7 +1486,15 @@
             </div>
         </header>
 
-        <!-- Main Viewport Stage: 100% Zero-Overlap, No Floating HUD Buttons -->
+        <!-- Frecce Navigazione Laterali (Sinistra e Destra) -->
+        <button id="stage-prev" class="stage-nav-arrow stage-nav-left" title="Pagina Precedente (←)">
+            <i class="ph ph-caret-left"></i>
+        </button>
+        <button id="stage-next" class="stage-nav-arrow stage-nav-right" title="Pagina Successiva (→)">
+            <i class="ph ph-caret-right"></i>
+        </button>
+
+        <!-- Main Viewport Stage -->
         <main id="reader-stage">
             <!-- Book Viewport -->
             <div id="book-viewport">
@@ -2080,8 +2154,10 @@
             isRendering = true;
 
             try {
-                const stageWidth = Math.max(280, (stage.clientWidth || window.innerWidth) - 40);
-                const stageHeight = Math.max(350, (stage.clientHeight || window.innerHeight) - 40);
+                const padX = (window.innerWidth < 640) ? 92 : 150;
+                const padY = 50;
+                const stageWidth = Math.max(280, (stage.clientWidth || window.innerWidth) - padX);
+                const stageHeight = Math.max(350, (stage.clientHeight || window.innerHeight) - padY);
 
                 const leftPageNum = currentPageNum;
                 const hasSecondPage = isTwoPageMode && (leftPageNum + 1 <= totalPages);
@@ -2090,29 +2166,47 @@
                 const page1 = await pdfDoc.getPage(leftPageNum);
                 const baseViewport1 = page1.getViewport({ scale: 1.0 });
 
-                let targetScale;
+                let baseScale;
                 if (isTwoPageMode && hasSecondPage) {
                     const spreadWidth = baseViewport1.width * 2;
                     const scaleW = stageWidth / spreadWidth;
                     const scaleH = stageHeight / baseViewport1.height;
-                    targetScale = Math.min(scaleW, scaleH) * zoomLevel;
+                    baseScale = Math.min(scaleW, scaleH);
                 } else {
                     const scaleW = stageWidth / baseViewport1.width;
                     const scaleH = stageHeight / baseViewport1.height;
-                    targetScale = Math.min(scaleW, scaleH) * zoomLevel;
+                    baseScale = Math.min(scaleW, scaleH);
                 }
 
-                // Render Left Page
-                const viewport1 = page1.getViewport({ scale: targetScale });
-                canvasLeft.width = viewport1.width;
-                canvasLeft.height = viewport1.height;
-                const ctx1 = canvasLeft.getContext('2d');
-                await page1.render({ canvasContext: ctx1, viewport: viewport1 }).promise;
+                const targetScale = baseScale * zoomLevel;
+                // DPR per supporto Retina (nitidezza assoluta su Mac, iPad, display 4K)
+                const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
 
-                // Sync and redraw left draw canvas
-                setupDrawCanvas(canvasDrawLeft, leftPageNum, viewport1.width, viewport1.height);
+                // Viewport CSS
+                const cssViewport1 = page1.getViewport({ scale: targetScale });
+                const cssW1 = Math.round(cssViewport1.width);
+                const cssH1 = Math.round(cssViewport1.height);
+
+                // Viewport render HiDPI moltiplicato per DPR
+                const renderViewport1 = page1.getViewport({ scale: targetScale * dpr });
+                canvasLeft.width = Math.round(renderViewport1.width);
+                canvasLeft.height = Math.round(renderViewport1.height);
+                canvasLeft.style.width = cssW1 + 'px';
+                canvasLeft.style.height = cssH1 + 'px';
+
+                pageLeftWrapper.style.width = cssW1 + 'px';
+                pageLeftWrapper.style.height = cssH1 + 'px';
+
+                const ctx1 = canvasLeft.getContext('2d', { alpha: false });
+                await page1.render({ canvasContext: ctx1, viewport: renderViewport1 }).promise;
+
+                // Sync e ridisegno canvas disegno, hotspot e link
+                setupDrawCanvas(canvasDrawLeft, leftPageNum, cssW1, cssH1, dpr);
                 setupHotspots(hotspotLayerLeft, leftPageNum);
-                await setupPdfLinks(linksLayerLeft, page1, viewport1);
+                await setupPdfLinks(linksLayerLeft, page1, cssViewport1);
+
+                let totalBookWidth = cssW1;
+                let maxBookHeight = cssH1;
 
                 // Render Right Page (se attiva)
                 if (isTwoPageMode && hasSecondPage) {
@@ -2121,15 +2215,28 @@
                     pageLeftWrapper.classList.add('left-page');
 
                     const page2 = await pdfDoc.getPage(rightPageNum);
-                    const viewport2 = page2.getViewport({ scale: targetScale });
-                    canvasRight.width = viewport2.width;
-                    canvasRight.height = viewport2.height;
-                    const ctx2 = canvasRight.getContext('2d');
-                    await page2.render({ canvasContext: ctx2, viewport: viewport2 }).promise;
+                    const cssViewport2 = page2.getViewport({ scale: targetScale });
+                    const cssW2 = Math.round(cssViewport2.width);
+                    const cssH2 = Math.round(cssViewport2.height);
 
-                    setupDrawCanvas(canvasDrawRight, rightPageNum, viewport2.width, viewport2.height);
+                    const renderViewport2 = page2.getViewport({ scale: targetScale * dpr });
+                    canvasRight.width = Math.round(renderViewport2.width);
+                    canvasRight.height = Math.round(renderViewport2.height);
+                    canvasRight.style.width = cssW2 + 'px';
+                    canvasRight.style.height = cssH2 + 'px';
+
+                    pageRightWrapper.style.width = cssW2 + 'px';
+                    pageRightWrapper.style.height = cssH2 + 'px';
+
+                    const ctx2 = canvasRight.getContext('2d', { alpha: false });
+                    await page2.render({ canvasContext: ctx2, viewport: renderViewport2 }).promise;
+
+                    setupDrawCanvas(canvasDrawRight, rightPageNum, cssW2, cssH2, dpr);
                     setupHotspots(hotspotLayerRight, rightPageNum);
-                    await setupPdfLinks(linksLayerRight, page2, viewport2);
+                    await setupPdfLinks(linksLayerRight, page2, cssViewport2);
+
+                    totalBookWidth = cssW1 + cssW2;
+                    maxBookHeight = Math.max(cssH1, cssH2);
                 } else {
                     pageRightWrapper.style.display = 'none';
                     spine.style.display = 'none';
@@ -2137,6 +2244,9 @@
                     clearHotspots(hotspotLayerRight);
                     clearPdfLinks(linksLayerRight);
                 }
+
+                bookViewport.style.width = totalBookWidth + 'px';
+                bookViewport.style.height = maxBookHeight + 'px';
 
                 updateNavState();
                 updateTocActiveHighlight();
@@ -2153,9 +2263,11 @@
         }
 
         // --- MOTORE DI DISEGNO & ANNOTAZIONI VETTORIALI ---
-        function setupDrawCanvas(drawCanvas, pageNum, width, height) {
-            drawCanvas.width = width;
-            drawCanvas.height = height;
+        function setupDrawCanvas(drawCanvas, pageNum, cssWidth, cssHeight, dpr) {
+            drawCanvas.width = Math.round(cssWidth * dpr);
+            drawCanvas.height = Math.round(cssHeight * dpr);
+            drawCanvas.style.width = cssWidth + 'px';
+            drawCanvas.style.height = cssHeight + 'px';
             drawCanvas.dataset.pageNum = pageNum;
 
             if (isDrawMode) {
@@ -2234,8 +2346,8 @@
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const nx = x / canvas.width;
-            const ny = y / canvas.height;
+            const nx = Math.max(0, Math.min(1, x / rect.width));
+            const ny = Math.max(0, Math.min(1, y / rect.height));
 
             if (activeTool === 'pen' || activeTool === 'highlighter') {
                 isDrawing = true;
@@ -2258,8 +2370,8 @@
             if (!isDrawing || !currentStroke) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            const nx = (e.clientX - rect.left) / canvas.width;
-            const ny = (e.clientY - rect.top) / canvas.height;
+            const nx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            const ny = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
             currentStroke.points.push([nx, ny]);
 
             // Disegna l'ultimo segmento in tempo reale
@@ -2658,6 +2770,7 @@
                 p = p - 1; // Allinea a pagina sinistra
             }
             currentPageNum = p;
+            if (stage) stage.scrollTop = 0;
             renderCurrentPages();
         }
 
@@ -2665,6 +2778,7 @@
             if (currentPageNum <= 1) return;
             const step = isTwoPageMode ? 2 : 1;
             currentPageNum = Math.max(1, currentPageNum - step);
+            if (stage) stage.scrollTop = 0;
             renderCurrentPages();
         }
 
@@ -2673,6 +2787,7 @@
             if (currentPageNum + step > totalPages && !isTwoPageMode) return;
             if (currentPageNum >= totalPages) return;
             currentPageNum = Math.min(totalPages, currentPageNum + step);
+            if (stage) stage.scrollTop = 0;
             renderCurrentPages();
         }
 
@@ -2750,14 +2865,14 @@
 
         if (btnZoomIn) {
             btnZoomIn.addEventListener('click', () => {
-                zoomLevel = Math.min(2.5, zoomLevel + 0.15);
+                zoomLevel = Math.min(2.5, +(zoomLevel + 0.15).toFixed(2));
                 renderCurrentPages();
             });
         }
 
         if (btnZoomOut) {
             btnZoomOut.addEventListener('click', () => {
-                zoomLevel = Math.max(0.6, zoomLevel - 0.15);
+                zoomLevel = Math.max(0.6, +(zoomLevel - 0.15).toFixed(2));
                 renderCurrentPages();
             });
         }
@@ -2765,6 +2880,10 @@
         if (btnZoomFit) {
             btnZoomFit.addEventListener('click', () => {
                 zoomLevel = 1.0;
+                if (stage) {
+                    stage.scrollTop = 0;
+                    stage.scrollLeft = 0;
+                }
                 renderCurrentPages();
             });
         }

@@ -1337,9 +1337,43 @@
         let undoStack = {}; // { [pageNum]: Array<Array<Item>> }
         let redoStack = {}; // { [pageNum]: Array<Array<Item>> }
 
-        // Identificativo Studente
-        let currentStudentId = localStorage.getItem('pm_student_id') || 'studente_default';
-        let currentStudentName = localStorage.getItem('pm_student_name') || 'Il mio Quaderno';
+        // Identificativo Studente (Auto-rilevamento sessione utente dell'ecosistema)
+        function resolveInitialStudentInfo() {
+            let name = localStorage.getItem('pm_student_name');
+            let id = localStorage.getItem('pm_student_id');
+
+            if (!name) {
+                name = localStorage.getItem('hub_user_name') || 
+                       localStorage.getItem('corte_user') || 
+                       localStorage.getItem('fanta_user_name');
+                if (!name) {
+                    try {
+                        const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                        if (u && (u.displayName || u.nome || u.name)) name = u.displayName || u.nome || u.name;
+                        else if (u && u.email) name = u.email.split('@')[0];
+                    } catch (e) {}
+                }
+            }
+
+            if (!name) name = 'Mio Quaderno';
+
+            if (!id) {
+                try {
+                    const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                    if (u && (u.uid || u.id)) id = u.uid || u.id;
+                } catch (e) {}
+                if (!id) {
+                    id = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                    if (!id) id = 'studente_default';
+                }
+            }
+
+            return { name, id };
+        }
+
+        const initialStudent = resolveInitialStudentInfo();
+        let currentStudentId = initialStudent.id;
+        let currentStudentName = initialStudent.name;
 
         // Elementi DOM
         const stage = document.getElementById('reader-stage');

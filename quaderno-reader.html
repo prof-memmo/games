@@ -14,6 +14,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260814_1225"></script>
+    
     <style>
         :root {
             --reader-bg: #1e293b;
@@ -54,7 +60,7 @@
             position: relative;
         }
 
-        /* Top Bar */
+        /* Ecosystem Top Bar */
         .reader-topbar {
             height: 60px;
             background-color: var(--reader-bar-bg);
@@ -68,97 +74,295 @@
             gap: 1rem;
         }
 
-        .topbar-left, .topbar-center, .topbar-right {
+        .topbar-left {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 12px;
         }
 
-        .topbar-center {
-            justify-content: center;
-            flex-grow: 1;
-        }
-
-        /* Buttons & Badges */
-        .reader-btn {
+        .reader-back-btn {
             background: #1e293b;
-            color: var(--reader-text);
+            color: #ffffff;
             border: 1px solid var(--reader-border);
-            border-radius: 8px;
-            padding: 7px 12px;
-            font-size: 0.86rem;
-            font-weight: 600;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.84rem;
+            font-weight: 700;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 6px;
             cursor: pointer;
             transition: all 0.15s ease;
             text-decoration: none;
-            min-height: 40px;
-        }
-
-        .reader-btn:hover {
-            background: #334155;
-            color: #ffffff;
-            border-color: #475569;
-        }
-
-        .reader-btn:active {
-            transform: scale(0.97);
-        }
-
-        .reader-btn-primary {
-            background: var(--reader-accent);
-            border-color: var(--reader-accent);
-            color: white;
-        }
-
-        .reader-btn-primary:hover {
-            background: var(--reader-accent-hover);
-            border-color: var(--reader-accent-hover);
-        }
-
-        .reader-btn-mode.active {
-            background: #0284c7;
-            border-color: #0284c7;
-            color: white;
-            box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
-        }
-
-        .reader-title-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .reader-title {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
             white-space: nowrap;
         }
 
-        .reader-badge {
-            background: rgba(124, 58, 237, 0.2);
-            color: #c4b5fd;
-            border: 1px solid rgba(124, 58, 237, 0.4);
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
+        .reader-back-btn:hover {
+            background: #334155;
+            border-color: #64748b;
+            transform: translateX(-2px);
         }
 
-        /* Nav controls */
+        .header-quaderno-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-quaderno-logo {
+            height: 32px;
+            max-width: 260px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .topbar-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-prof-logo-wrap {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .header-prof-logo-wrap:hover {
+            transform: scale(1.08);
+        }
+
+        .header-prof-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--reader-accent);
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+            object-fit: cover;
+            display: block;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Ecosystem User Profile Menu */
+        .user-menu-container {
+            position: relative;
+            z-index: 2600;
+        }
+
+        .user-menu-trigger {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: #0f172a;
+            padding: 4px 13px 4px 5px;
+            border-radius: 50px;
+            border: 1.8px solid var(--reader-accent);
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            user-select: none;
+        }
+
+        .user-menu-trigger:hover {
+            background: #1e1b4b;
+            border-color: #a78bfa;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+        }
+
+        .user-avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1.5px solid var(--reader-accent);
+            flex-shrink: 0;
+        }
+
+        .user-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-trigger-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.15;
+        }
+
+        .user-trigger-name {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            max-width: 130px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-trigger-role {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #c4b5fd;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .user-trigger-chevron {
+            font-size: 0.75rem;
+            color: #c4b5fd;
+            margin-left: 2px;
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 280px;
+            background: #0f172a;
+            border: 1.8px solid var(--reader-accent);
+            border-radius: 18px;
+            padding: 16px 14px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3000;
+            backdrop-filter: blur(15px);
+        }
+
+        .user-dropdown.hidden {
+            display: none !important;
+        }
+
+        .dropdown-user-header {
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--reader-border);
+        }
+
+        .dropdown-user-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .dropdown-user-subtitle {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #c4b5fd;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .dropdown-pill-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--reader-border);
+            background: #1e293b;
+            color: #ffffff;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .dropdown-pill-btn:hover {
+            background: #334155;
+            border-color: #64748b;
+        }
+
+        .dropdown-bottom-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-esci-pill {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.4);
+            color: #fca5a5;
+        }
+
+        .btn-esci-pill:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        /* Floating TOC Button (Sinistra) */
+        .floating-toc-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 45;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            color: #f8fafc;
+            border-radius: 24px;
+            padding: 8px 16px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .floating-toc-btn:hover {
+            background: var(--reader-accent);
+            border-color: var(--reader-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
+        }
+
+        /* Bottom Floating Pagination Bar (Centro) */
+        .bottom-pagination-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 45;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            border-radius: 30px;
+            padding: 5px 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+
         .reader-nav-btn {
             background: #334155;
             border: 1px solid #475569;
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -184,7 +388,7 @@
             align-items: center;
             gap: 6px;
             background: #1e293b;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 20px;
             border: 1px solid var(--reader-border);
             font-size: 0.86rem;
@@ -193,14 +397,14 @@
         }
 
         .page-input {
-            width: 46px;
+            width: 44px;
             background: #0f172a;
             border: 1px solid var(--reader-border);
             color: white;
             text-align: center;
             border-radius: 6px;
-            padding: 3px 0;
-            font-size: 0.9rem;
+            padding: 2px 0;
+            font-size: 0.88rem;
             font-weight: 700;
         }
 
@@ -209,32 +413,11 @@
             border-color: var(--reader-accent);
         }
 
-        /* Save & Student Badge */
-        .student-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid #334155;
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.78rem;
-            color: #cbd5e1;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-
-        .student-pill:hover {
-            border-color: var(--reader-accent);
-            color: white;
-            background: #334155;
-        }
-
         .sync-badge {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             color: #10b981;
             font-weight: 600;
             background: rgba(16, 185, 129, 0.1);
@@ -248,6 +431,178 @@
             color: #f59e0b;
             background: rgba(245, 158, 11, 0.1);
             border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        /* Floating Vertical Controls Dock (Destra, 3 Livelli) */
+        .floating-controls-dock {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 45;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .dock-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            border-radius: 25px;
+            padding: 4px 6px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .dock-btn {
+            background: transparent;
+            color: #f8fafc;
+            border: 1px solid transparent;
+            border-radius: 18px;
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .dock-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .dock-btn-accent {
+            background: var(--reader-accent);
+            border-color: var(--reader-accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+        }
+
+        .dock-btn-accent:hover {
+            background: var(--reader-accent-hover);
+            border-color: var(--reader-accent-hover);
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.5);
+        }
+
+        .dock-btn-accent.active {
+            background: #0284c7;
+            border-color: #0284c7;
+            box-shadow: 0 0 14px rgba(2, 132, 199, 0.6);
+        }
+
+        .dock-icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .dock-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .dock-fit-btn {
+            width: auto;
+            border-radius: 16px;
+            padding: 0 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            gap: 4px;
+        }
+
+        /* Reader Legal Footer (Patamu Ufficiale) */
+        .reader-footer {
+            background-color: var(--reader-bar-bg);
+            border-top: 1px solid var(--reader-border);
+            padding: 8px 1.5rem;
+            z-index: 40;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.76rem;
+            color: #94a3b8;
+        }
+
+        .reader-footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1300px;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .reader-footer-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1;
+            min-width: 260px;
+        }
+
+        .patamu-logo-img {
+            height: 34px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .reader-footer-text {
+            font-size: 0.74rem;
+            line-height: 1.35;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        .reader-footer-links {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            white-space: nowrap;
+        }
+
+        .reader-footer-links a {
+            color: #cbd5e1;
+            text-decoration: underline;
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+
+        .reader-footer-links a:hover {
+            color: var(--reader-accent);
+        }
+
+        /* Fullscreen handling: hide topbar & footer on LIM */
+        :fullscreen #reader-topbar,
+        :fullscreen #reader-footer {
+            display: none !important;
+        }
+
+        :-webkit-full-screen #reader-topbar,
+        :-webkit-full-screen #reader-footer {
+            display: none !important;
         }
 
         /* Main Viewport Stage */
@@ -339,33 +694,15 @@
 
         .hotspot-link {
             position: absolute;
-            border-radius: 6px;
-            background: rgba(124, 58, 237, 0.06);
-            border: 1px dashed rgba(124, 58, 237, 0.3);
+            border-radius: 4px;
+            background: transparent;
+            border: none;
             cursor: pointer;
-            transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 8px;
-            color: #7c3aed;
-            font-weight: 700;
-            font-size: 0.78rem;
+            transition: background 0.15s ease;
         }
 
         .hotspot-link:hover {
-            background: rgba(124, 58, 237, 0.22);
-            border-color: #7c3aed;
-            box-shadow: 0 0 10px rgba(124, 58, 237, 0.35);
-        }
-
-        .hotspot-link span {
-            background: #ffffff;
-            color: #7c3aed;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.72rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: rgba(124, 58, 237, 0.12);
         }
 
         /* Spina centrale del libro */
@@ -680,19 +1017,19 @@
            ======================================================== */
         #drawing-toolbar {
             position: absolute;
-            bottom: 24px;
+            bottom: 74px;
             left: 50%;
             transform: translateX(-50%);
             background: #0f172a;
             border: 1px solid var(--reader-border);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
             border-radius: 30px;
             padding: 6px 14px;
             display: none; /* Attivata con drawMode */
             align-items: center;
             gap: 10px;
             z-index: 100;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
         }
 
         #drawing-toolbar.visible {
@@ -904,94 +1241,125 @@
         }
 
         @media (max-width: 900px) {
-            .reader-title-box .reader-title { display: none; }
-            .topbar-right .reader-btn span { display: none; }
+            .header-quaderno-logo-wrap { display: none; }
+            .floating-toc-btn span { display: none; }
+            .floating-toc-btn { padding: 8px 10px; border-radius: 50%; }
+            .dock-btn span { display: none; }
+            .dock-btn { padding: 6px 9px; }
             .stage-nav-arrow { display: none; }
-            .student-pill span { display: none; }
+            .reader-footer-left p { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 640px) {
+            .reader-back-btn span.full-text { display: none; }
+            .reader-back-btn span.short-text { display: inline !important; }
+            .reader-footer { display: none; }
+            .dock-fit-btn span { display: none; }
+            .dock-fit-btn { width: 34px; height: 34px; padding: 0; }
+            .bottom-pagination-bar { 
+                bottom: 12px; 
+                padding: 4px 10px; 
+                gap: 6px; 
+                max-width: 95vw; 
+            }
+            .floating-controls-dock { 
+                bottom: 66px; 
+                right: 12px; 
+                gap: 6px; 
+            }
+            .floating-toc-btn { 
+                top: 14px; 
+                left: 12px; 
+                padding: 6px 10px; 
+            }
+            #drawing-toolbar { 
+                bottom: 118px; 
+                padding: 4px 8px;
+                gap: 6px;
+                max-width: 95vw;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;">
 
     <div id="reader-app">
-        <!-- Top Toolbar -->
-        <header class="reader-topbar">
-            <!-- Left: Back & Table of Contents & Title -->
+        <!-- Unified Ecosystem Header -->
+        <header class="reader-topbar" id="reader-topbar">
+            <!-- Left: Back to Showcase & Quaderno Header Logo -->
             <div class="topbar-left">
-                <a href="quaderno-alternativo.html" class="reader-btn" title="Torna a Scegli il tuo Quaderno">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                    <span>Indietro</span>
+                <a href="quaderno-alternativo.html" class="reader-back-btn" title="Torna a Scegli il tuo Quaderno">
+                    <i class="ph ph-caret-left" style="font-size: 1.1rem;"></i>
+                    <span class="full-text">Torna alla Vetrina</span>
+                    <span class="short-text" style="display: none;">Vetrina</span>
                 </a>
-                
-                <!-- Pulsante Indice -->
-                <button id="btn-toggle-toc" class="reader-btn reader-btn-primary" title="Apri Indice dei Percorsi e Lezioni">
-                    <i class="ph ph-list-bullets" style="font-size: 1.1rem;"></i>
-                    <span>Indice</span>
-                </button>
-
-                <div class="reader-title-box">
-                    <span class="reader-title">Il mio quaderno alternativo</span>
-                    <span class="reader-badge">Classe Prima</span>
+                <div class="header-quaderno-logo-wrap" title="Il mio quaderno alternativo - Classe Prima">
+                    <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo - Classe Prima" class="header-quaderno-logo">
                 </div>
             </div>
 
-            <!-- Center: Page Navigation & Student Sync Status -->
+            <!-- Center: Logo Avatar Prof. Memmo -->
             <div class="topbar-center">
-                <button id="btn-prev" class="reader-nav-btn" title="Pagina Precedente (Freccia Sinistra)">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                </button>
-                <div class="page-control-box">
-                    <span>Pag.</span>
-                    <input type="number" id="page-num-input" class="page-input" min="1" max="1" value="1">
-                    <span>di <span id="page-count-total">--</span></span>
-                </div>
-                <button id="btn-next" class="reader-nav-btn" title="Pagina Successiva (Freccia Destra)">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <!-- Student Profile Pill & Autosave status -->
-                <div id="student-profile-pill" class="student-pill" title="Clicca per cambiare nome dello studente">
-                    <i class="ph ph-user"></i>
-                    <span id="student-name-label">Mio Quaderno</span>
-                </div>
-                <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
-                    <i class="ph ph-cloud-check"></i>
-                    <span>Salvato</span>
-                </div>
+                <a href="index.html" class="header-prof-logo-wrap" title="Torna alla Home Prof. Memmo Games">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Avatar" class="header-prof-logo" onerror="this.src='https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png'">
+                </a>
             </div>
 
-            <!-- Right: Mode Switch (Sfoglia vs Disegna), Spread, Zoom & Fullscreen -->
+            <!-- Right: Menu Profilo Utente Ecosistema & Dropdown -->
             <div class="topbar-right">
-                <!-- Toggle Modalità Disegno / Scrittura -->
-                <button id="btn-toggle-draw-mode" class="reader-btn reader-btn-mode" title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
-                    <i class="ph ph-pencil-simple" style="font-size: 1.1rem;"></i>
-                    <span id="label-draw-mode">Disegna e Scrivi</span>
-                </button>
+                <div class="user-menu-container" id="header-user-container">
+                    <div class="user-menu-trigger" id="header-user-menu-trigger" onclick="event.stopPropagation(); toggleUserDropdown(event);">
+                        <div class="user-avatar-circle">
+                            <img id="header-user-avatar-img" src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png" alt="Avatar">
+                        </div>
+                        <div class="user-trigger-text">
+                            <span class="user-trigger-name" id="header-user-name">ACCEDI</span>
+                            <span class="user-trigger-role" id="header-user-role">OSPITE</span>
+                        </div>
+                        <span class="user-trigger-chevron"><i class="ph ph-caret-down"></i></span>
+                    </div>
 
-                <button id="btn-toggle-spread" class="reader-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    <span id="label-spread">Vista Libro</span>
-                </button>
+                    <!-- Dropdown Menu Ecosistema -->
+                    <div class="user-dropdown hidden" id="header-user-dropdown" onclick="event.stopPropagation()">
+                        <div class="dropdown-user-header">
+                            <div class="dropdown-user-title" id="dropdown-user-title">OSPITE</div>
+                            <div class="dropdown-user-subtitle" id="dropdown-user-subtitle">NON AUTENTICATO</div>
+                        </div>
 
-                <button id="btn-zoom-out" class="reader-btn" title="Riduci Zoom">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M8 11h6"/></svg>
-                </button>
-                <button id="btn-zoom-fit" class="reader-btn" title="Adatta allo Schermo">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
-                </button>
-                <button id="btn-zoom-in" class="reader-btn" title="Ingrandisci Zoom">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
-                </button>
-                
-                <button id="btn-fullscreen" class="reader-btn reader-btn-primary" title="Schermo Intero (Ottimale per LIM)">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8V3m0 0h5M3 3l6 6m12-6h-5m5 0v5m0-5l-6 6M3 16v5m0 0h5m-5 0l6-6m12 6l-6-6m6 6v-5m0 5h-5"/></svg>
-                    <span>Schermo Intero</span>
-                </button>
+                        <!-- Golden Pill Login Button -->
+                        <button class="dropdown-pill-btn" id="btn-login-hub-dropdown" style="background: #d4af37; color: #0f172a; font-weight: 800;" onclick="window.goToHubPortal()">
+                            <i class="ph ph-sign-in"></i> Accedi tramite Hub
+                        </button>
+
+                        <!-- Modifica nome studente per annotazioni -->
+                        <button class="dropdown-pill-btn" id="btn-student-name-dropdown" onclick="openStudentModalFromDropdown()">
+                            <i class="ph ph-identification-card"></i> <span id="dropdown-student-action">Nome Quaderno Personale</span>
+                        </button>
+
+                        <button class="dropdown-pill-btn" id="btn-profile-dropdown" style="display: none;" onclick="closeUserDropdown(); window.open('https://prof-memmo.github.io/games/profilo.html', '_blank');">
+                            <i class="ph ph-user-gear"></i> Modifica Profilo Hub
+                        </button>
+
+                        <div class="dropdown-bottom-row" id="dropdown-bottom-row" style="display: none;">
+                            <button class="dropdown-pill-btn btn-esci-pill" id="btn-logout-dropdown" onclick="closeUserDropdown(); logoutEcosistema();">
+                                <i class="ph ph-power"></i> Esci
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
         <!-- Main Viewport Stage -->
         <main id="reader-stage">
+            <!-- Pulsante Indice Fluttuante a Sinistra -->
+            <button id="btn-toggle-toc" class="floating-toc-btn" title="Apri Indice dei Percorsi e Lezioni">
+                <i class="ph ph-list-bullets" style="font-size: 1.15rem;"></i>
+                <span>Indice</span>
+            </button>
+
             <!-- Stage Nav Left -->
             <button id="stage-prev" class="stage-nav-arrow stage-nav-left" title="Pagina Precedente">
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -1020,12 +1388,78 @@
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </button>
 
-            <!-- Footer Watermark & Protection notice -->
-            <div class="reader-footer-info">
-                <span>&copy; Prof. Memmo &bull; Deposito Patamu protetto</span>
-                <span>Visualizzazione didattica protetta</span>
+            <!-- Paginazione Fluttuante in Basso al Centro -->
+            <div id="bottom-pagination-bar" class="bottom-pagination-bar">
+                <button id="btn-prev" class="reader-nav-btn" title="Pagina Precedente (Freccia Sinistra)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="page-control-box">
+                    <span>Pag.</span>
+                    <input type="number" id="page-num-input" class="page-input" min="1" max="1" value="1">
+                    <span>di <span id="page-count-total">--</span></span>
+                </div>
+                <button id="btn-next" class="reader-nav-btn" title="Pagina Successiva (Freccia Destra)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+                <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
+                    <i class="ph ph-cloud-check"></i>
+                    <span>Salvato</span>
+                </div>
+            </div>
+
+            <!-- Dock Fluttuante a Destra in Basso (3 Livelli) -->
+            <div id="floating-controls-dock" class="floating-controls-dock">
+                <!-- Livello 3 (in alto): Possibilità di scrittura / disegno -->
+                <div class="dock-group">
+                    <button id="btn-toggle-draw-mode" class="dock-btn dock-btn-accent" title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                        <i class="ph ph-pencil-simple"></i>
+                        <span id="label-draw-mode">Disegna e Scrivi</span>
+                    </button>
+                </div>
+
+                <!-- Livello 2 (in mezzo): Opzioni di visualizzazione (Libro 2 pag / 1 pag, Schermo intero LIM) -->
+                <div class="dock-group">
+                    <button id="btn-toggle-spread" class="dock-btn" title="Alterna Vista 1 Pagina / 2 Pagine (Libro)">
+                        <i class="ph ph-book-open"></i>
+                        <span id="label-spread">Vista Libro</span>
+                    </button>
+                    <button id="btn-fullscreen" class="dock-btn" title="Schermo Intero (Ottimale per LIM)">
+                        <i class="ph ph-corners-out"></i>
+                        <span>Schermo Intero</span>
+                    </button>
+                </div>
+
+                <!-- Livello 1 (in basso): Ingrandimento / Zoom (+ / Adatta / -) -->
+                <div class="dock-group">
+                    <button id="btn-zoom-out" class="dock-icon-btn" title="Riduci Zoom">
+                        <i class="ph ph-minus"></i>
+                    </button>
+                    <button id="btn-zoom-fit" class="dock-icon-btn dock-fit-btn" title="Adatta allo Schermo">
+                        <i class="ph ph-arrows-in-simple"></i>
+                        <span>Adatta</span>
+                    </button>
+                    <button id="btn-zoom-in" class="dock-icon-btn" title="Ingrandisci Zoom">
+                        <i class="ph ph-plus"></i>
+                    </button>
+                </div>
             </div>
         </main>
+
+        <!-- Official Patamu Footer -->
+        <footer class="reader-footer" id="reader-footer">
+            <div class="reader-footer-content">
+                <div class="reader-footer-left">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png" alt="Patamu Logo" class="patamu-logo-img" onerror="this.src='assets/patamu.png'">
+                    <p class="reader-footer-text">
+                        &copy; 2026 Guglielmo Piersanti. Tutti i contenuti sono di proprietà dell'autore, protetti tramite deposito e marcatura temporale presso Patamu e distribuiti con licenza Creative Commons CC BY-NC-ND 4.0.
+                    </p>
+                </div>
+                <div class="reader-footer-links">
+                    <a href="javascript:void(0)" onclick="openSharedModal('privacy')">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openSharedModal('termini')">Termini e Condizioni</a>
+                </div>
+            </div>
+        </footer>
 
         <!-- Loader & Notice Overlay -->
         <div id="reader-loader">
@@ -1939,7 +2373,8 @@
                 link.style.left = '8%';
                 link.style.width = '84%';
                 link.title = `Vai a: ${spot.title} (Pagina ${spot.targetPage})`;
-                link.innerHTML = `<span>Pag. ${spot.targetPage} ➔</span>`;
+                // Nessuna scritta o badge sovrapposto: scansione cartacea pulita e hotspot trasparente
+                link.innerHTML = '';
                 
                 link.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2214,11 +2649,22 @@
         btnClearPage.addEventListener('click', clearCurrentPageAnnotations);
 
         // Student Profile Modal Listeners
-        studentProfilePill.addEventListener('click', () => {
-            studentNameInput.value = currentStudentName;
-            studentModal.classList.add('open');
-            studentNameInput.focus();
-        });
+        if (studentProfilePill) {
+            studentProfilePill.addEventListener('click', () => {
+                studentNameInput.value = currentStudentName;
+                studentModal.classList.add('open');
+                studentNameInput.focus();
+            });
+        }
+
+        window.openStudentModalFromDropdown = function() {
+            window.closeUserDropdown();
+            if (studentModal && studentNameInput) {
+                studentNameInput.value = currentStudentName;
+                studentModal.classList.add('open');
+                studentNameInput.focus();
+            }
+        };
 
         btnCancelStudent.addEventListener('click', () => {
             studentModal.classList.remove('open');
@@ -2231,7 +2677,13 @@
                 currentStudentId = val.toLowerCase().replace(/[^a-z0-9]/g, '_');
                 localStorage.setItem('pm_student_name', currentStudentName);
                 localStorage.setItem('pm_student_id', currentStudentId);
-                studentNameLabel.textContent = currentStudentName;
+                if (studentNameLabel) studentNameLabel.textContent = currentStudentName;
+                if (!localStorage.getItem('hub_user_name')) {
+                    const headerUserName = document.getElementById('header-user-name');
+                    if (headerUserName) headerUserName.textContent = currentStudentName.toUpperCase();
+                    const dropdownUserTitle = document.getElementById('dropdown-user-title');
+                    if (dropdownUserTitle) dropdownUserTitle.textContent = currentStudentName.toUpperCase();
+                }
                 loadAnnotationsFromStorage();
                 renderCurrentPages();
             }
@@ -2297,8 +2749,121 @@
             }
         }, { passive: true });
 
+        // --- ECOSYSTEM USER MENU & AUTH ---
+        window.goToHubPortal = function() {
+            var isPrev = window.location.pathname.indexOf('/preview') !== -1;
+            var portalUrl = isPrev 
+              ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html?redirect=quaderno-reader'
+              : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html?redirect=quaderno-reader';
+            window.location.href = portalUrl;
+        };
+
+        window.toggleUserDropdown = function(e) {
+            if (e) e.stopPropagation();
+            var dd = document.getElementById('header-user-dropdown');
+            if (dd) dd.classList.toggle('hidden');
+        };
+
+        window.closeUserDropdown = function() {
+            var dd = document.getElementById('header-user-dropdown');
+            if (dd) dd.classList.add('hidden');
+        };
+
+        window.logoutEcosistema = function() {
+            try {
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut();
+                }
+            } catch(e) {}
+            localStorage.removeItem('hub_user_name');
+            localStorage.removeItem('hub_user_role');
+            localStorage.removeItem('hub_user_avatar');
+            localStorage.removeItem('hub_user_id');
+            window.location.reload();
+        };
+
+        document.addEventListener('click', function(e) {
+            var userCont = document.getElementById('header-user-container');
+            if (userCont && !userCont.contains(e.target)) {
+                window.closeUserDropdown();
+            }
+        });
+
+        // Anti-flicker immediate user sync
+        (function() {
+            try {
+                var av = localStorage.getItem('hub_user_avatar') || localStorage.getItem('pm_user_avatar');
+                if (av) {
+                    var elA = document.getElementById('header-user-avatar-img');
+                    if (elA) elA.src = av;
+                }
+                var nm = localStorage.getItem('hub_user_name') || localStorage.getItem('pm_user_name') || localStorage.getItem('pm_student_name');
+                var rl = localStorage.getItem('hub_user_role') || localStorage.getItem('pm_user_role');
+                if (nm) {
+                    var elN = document.getElementById('header-user-name');
+                    if (elN) elN.textContent = nm.toUpperCase();
+                    var elT = document.getElementById('dropdown-user-title');
+                    if (elT) elT.textContent = nm.toUpperCase();
+                }
+                if (rl) {
+                    var roleText = (rl === 'docente' || rl === 'admin') ? (rl === 'admin' ? 'AMMINISTRATORE' : 'DOCENTE') : (rl === 'studente' ? 'STUDENTE' : 'OSPITE');
+                    var elR = document.getElementById('header-user-role');
+                    if (elR) elR.textContent = roleText;
+                    var elSub = document.getElementById('dropdown-user-subtitle');
+                    if (elSub) elSub.textContent = roleText;
+                    if (rl === 'docente' || rl === 'admin' || rl === 'studente') {
+                        var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                        if (btnLogin) btnLogin.style.display = 'none';
+                        var btnProf = document.getElementById('btn-profile-dropdown');
+                        if (btnProf) btnProf.style.display = 'flex';
+                        var rowBot = document.getElementById('dropdown-bottom-row');
+                        if (rowBot) rowBot.style.display = 'flex';
+                    }
+                }
+            } catch(e) {}
+        })();
+
+        // Firebase live sync
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            try {
+                firebase.auth().onAuthStateChanged(function(user) {
+                    if (user) {
+                        var db = firebase.firestore();
+                        db.collection('users').doc(user.uid).get().then(function(doc) {
+                            var data = doc.exists ? doc.data() : {};
+                            var name = data.nome || data.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Utente');
+                            var role = data.ruolo || 'docente';
+                            var avatar = data.avatarUrl || user.photoURL || 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png';
+                            
+                            var elN = document.getElementById('header-user-name');
+                            if (elN) elN.textContent = name.toUpperCase();
+                            var elR = document.getElementById('header-user-role');
+                            if (elR) elR.textContent = (role === 'admin' ? 'AMMINISTRATORE' : (role === 'studente' ? 'STUDENTE' : 'DOCENTE'));
+                            var elA = document.getElementById('header-user-avatar-img');
+                            if (elA) elA.src = avatar;
+                            var elT = document.getElementById('dropdown-user-title');
+                            if (elT) elT.textContent = name.toUpperCase();
+                            var elSub = document.getElementById('dropdown-user-subtitle');
+                            if (elSub) elSub.textContent = (role === 'admin' ? 'AMMINISTRATORE' : (role === 'studente' ? 'STUDENTE' : 'DOCENTE REGISTRATO'));
+                            
+                            var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                            if (btnLogin) btnLogin.style.display = 'none';
+                            var btnProf = document.getElementById('btn-profile-dropdown');
+                            if (btnProf) btnProf.style.display = 'flex';
+                            var rowBot = document.getElementById('dropdown-bottom-row');
+                            if (rowBot) rowBot.style.display = 'flex';
+                        }).catch(function(err){
+                            console.warn("Auth sync error:", err);
+                        });
+                    }
+                });
+            } catch(e) {}
+        }
+
         // Start
         window.addEventListener('DOMContentLoaded', loadPdf);
     </script>
+    <!-- Modali condivisi ecosistema Prof. Memmo -->
+    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
 </body>
 </html>

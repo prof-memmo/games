@@ -131,10 +131,13 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 2.5rem;">
                 
                 <!-- Scheda 1 — materiali disponibili -->
-                <div class="version-card" style="border-top: 8px solid #7c3aed;">
+                <div class="version-card" data-edition="classe-1" style="border-top: 8px solid #7c3aed;">
                     <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block;">
                     <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #7c3aed;">Classe Prima</span></h3>
                     <div class="version-subtitle">Materia alternativa alla religione</div>
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem; display: none;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
                     <p class="version-desc">
                         Il percorso per le classi prime. Attività guidate per riflettere su identità, valori, convivenza civile e scoperta di sé attraverso domande aperte e laboratori creativi.
                     </p>
@@ -150,11 +153,11 @@
                 </div>
 
                 <!-- Scheda 2 — in arrivo -->
-                <div class="version-card" style="border-top: 8px solid #0891b2; opacity: 0.85;">
+                <div class="version-card" data-edition="classe-2" style="border-top: 8px solid #0891b2; opacity: 0.85;">
                 <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block; opacity: 0.6;">
                     <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #0891b2;">Classe Seconda</span></h3>
                     <div class="version-subtitle">Materia alternativa alla religione</div>
-                    <div style="text-align:center; margin-bottom: 1rem;">
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem;">
                         <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
                     </div>
                     <p class="version-desc">
@@ -168,11 +171,11 @@
                 </div>
 
                 <!-- Scheda 3 — in arrivo -->
-                <div class="version-card" style="border-top: 8px solid #b45309; opacity: 0.85;">
+                <div class="version-card" data-edition="classe-3" style="border-top: 8px solid #b45309; opacity: 0.85;">
                 <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block; opacity: 0.6;">
                     <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #b45309;">Classe Terza</span></h3>
                     <div class="version-subtitle">Materia alternativa alla religione</div>
-                    <div style="text-align:center; margin-bottom: 1rem;">
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem;">
                         <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
                     </div>
                     <p class="version-desc">
@@ -247,14 +250,15 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // WIP modal
+            // WIP modal (Event Delegation per supportare aggiornamenti dinamici da Firestore)
             const wipModal = document.getElementById('wip-modal');
             if (wipModal) {
-                document.querySelectorAll('.wip-link').forEach(link => {
-                    link.addEventListener('click', (e) => {
+                document.addEventListener('click', (e) => {
+                    const wip = e.target.closest('.wip-link');
+                    if (wip) {
                         e.preventDefault();
                         wipModal.classList.add('active');
-                    });
+                    }
                 });
                 const wipClose = document.getElementById('wip-close');
                 if (wipClose) {
@@ -262,6 +266,9 @@
                         wipModal.classList.remove('active');
                     });
                 }
+                wipModal.addEventListener('click', (e) => {
+                    if (e.target === wipModal) wipModal.classList.remove('active');
+                });
             }
 
             // Controllo download Quaderno riservato a Piano Ecosistema
@@ -295,15 +302,68 @@
                         }
                     });
                 }
+
+                // Sincronizzazione dinamica stato edizioni da Firestore (Hub Admin)
+                db.collection('games_status').doc('il-mio-quaderno-alternativo').onSnapshot(doc => {
+                    if (!doc.exists) return;
+                    const gameData = doc.data() || {};
+                    const editions = gameData.editions || {};
+
+                    const editionConfigs = {
+                        'classe-1': {
+                            color: '#7c3aed',
+                            activeBtn: `<a href="contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf" download="Il mio quaderno alternativo - Classe Prima.pdf" target="_blank" class="btn btn-primary btn-download" style="background-color: #7c3aed; border-color: #7c3aed;"><i class="ph ph-download-simple"></i> Scarica il Quaderno</a>`
+                        },
+                        'classe-2': {
+                            color: '#0891b2',
+                            activeBtn: `<a href="#" class="btn btn-primary btn-download" style="background-color: #0891b2; border-color: #0891b2;"><i class="ph ph-download-simple"></i> Scarica il Quaderno</a>`
+                        },
+                        'classe-3': {
+                            color: '#b45309',
+                            activeBtn: `<a href="#" class="btn btn-primary btn-download" style="background-color: #b45309; border-color: #b45309;"><i class="ph ph-download-simple"></i> Scarica il Quaderno</a>`
+                        }
+                    };
+
+                    Object.keys(editionConfigs).forEach(editionKey => {
+                        const card = document.querySelector(`.version-card[data-edition="${editionKey}"]`);
+                        if (!card) return;
+
+                        const edData = editions[editionKey];
+                        const defaultActive = (editionKey === 'classe-1');
+                        const isActive = edData ? edData.isActive !== false : defaultActive;
+
+                        const badgeCont = card.querySelector('.edition-badge-container');
+                        const btnCont = card.querySelector('.buttons-container');
+                        const img = card.querySelector('img');
+                        const cfg = editionConfigs[editionKey];
+
+                        if (isActive) {
+                            card.style.opacity = '1';
+                            if (img) img.style.opacity = '1';
+                            if (badgeCont) badgeCont.style.display = 'none';
+                            if (btnCont) btnCont.innerHTML = cfg.activeBtn;
+                        } else {
+                            card.style.opacity = '0.85';
+                            if (img) img.style.opacity = '0.6';
+                            if (badgeCont) badgeCont.style.display = 'block';
+                            if (btnCont) {
+                                btnCont.innerHTML = `<button class="btn btn-outline btn-download wip-link" style="border-color: ${cfg.color}; color: ${cfg.color};"><i class="ph ph-clock"></i> Stiamo lavorando…</button>`;
+                            }
+                        }
+                    });
+                }, err => {
+                    console.warn("Notice listener quaderno editions:", err.message);
+                });
             }
 
-            document.querySelectorAll('.btn-download:not(.wip-link)').forEach(btn => {
-                btn.addEventListener('click', function(e) {
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('.btn-download:not(.wip-link)');
+                if (btn) {
                     if (monetizzazioneAttiva && userSubscription !== 'ecosistema') {
                         e.preventDefault();
                         if (ecoModal) ecoModal.classList.add('active');
                     }
-                });
+                }
             });
         });
     </script>

@@ -352,28 +352,30 @@
         .sync-badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.72rem;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 1.05rem;
             color: #10b981;
-            font-weight: 600;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 3px 8px;
-            border-radius: 12px;
-            transition: opacity 0.2s ease;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: help;
         }
 
         .sync-badge.saving {
             color: #f59e0b;
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(245, 158, 11, 0.12);
+            border-color: rgba(245, 158, 11, 0.35);
         }
 
-        /* Reader Control Bar: Pinned In Basso a Destra */
-        .reader-controls-dock {
+        /* Reader Pager Dock: In Basso a Sinistra */
+        .reader-page-dock {
             position: absolute;
-            bottom: 16px;
-            right: 20px;
+            bottom: 18px;
+            left: 20px;
             z-index: 45;
             display: flex;
             align-items: center;
@@ -398,31 +400,6 @@
             padding: 2px 6px;
         }
 
-        .dock-nav-btn {
-            background: transparent;
-            border: none;
-            color: #e2e8f0;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            transition: all 0.15s ease;
-        }
-
-        .dock-nav-btn:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-        }
-
-        .dock-nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
         .dock-page-box {
             display: flex;
             align-items: center;
@@ -434,13 +411,13 @@
         }
 
         .dock-page-input {
-            width: 40px;
+            width: 42px;
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             text-align: center;
-            border-radius: 5px;
-            padding: 1px 0;
+            border-radius: 6px;
+            padding: 2px 0;
             font-size: 0.84rem;
             font-weight: 700;
         }
@@ -450,57 +427,97 @@
             border-color: var(--reader-accent);
         }
 
-        .dock-divider {
-            width: 1px;
-            height: 22px;
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .dock-tools {
+        /* Reader Tools Dock: In Basso a Destra (Solo Icone con Ingrandimento e Tooltip dinamico) */
+        .reader-tools-dock {
+            position: absolute;
+            bottom: 18px;
+            right: 20px;
+            z-index: 45;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 7px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            border-radius: 30px;
+            padding: 5px 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
         }
 
         .dock-tool-btn {
+            position: relative;
             background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #e2e8f0;
-            padding: 5px 10px;
-            border-radius: 16px;
-            font-size: 0.78rem;
-            font-weight: 600;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            transition: all 0.15s ease;
+            justify-content: center;
+            font-size: 1.15rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
         }
 
         .dock-tool-btn:hover {
-            background: rgba(255, 255, 255, 0.14);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: scale(1.18);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+
+        /* Tooltip a comparsa fluida sopra al pulsante al passaggio del mouse */
+        .dock-tool-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 60;
+        }
+
+        .dock-tool-btn:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
 
         .dock-tool-btn.active {
             background: var(--reader-accent);
-            border-color: var(--reader-accent);
+            border-color: #a78bfa;
             color: white;
-            box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.55);
         }
 
         .dock-draw-btn {
             background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
             border-color: #8b5cf6;
             color: white;
-            font-weight: 700;
         }
 
         .dock-draw-btn:hover {
             background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.65);
         }
 
         /* Patamu Official Footer: Harmonized with other sites, Julius Sans One, Never Disappears */
@@ -1306,14 +1323,23 @@
                 display: none;
             }
 
-            .btn-label-desktop {
-                display: none;
+            .reader-page-dock {
+                bottom: 12px;
+                left: 12px;
+                padding: 3px 8px;
             }
 
-            .reader-controls-dock {
+            .reader-tools-dock {
                 bottom: 12px;
                 right: 12px;
                 padding: 3px 8px;
+                gap: 5px;
+            }
+
+            .dock-tool-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1.05rem;
             }
 
             .reader-patamu-footer {
@@ -1358,11 +1384,23 @@
                 display: inline !important;
             }
 
-            .reader-controls-dock {
+            .reader-page-dock {
+                bottom: 8px;
+                left: 8px;
+                padding: 2px 6px;
+            }
+
+            .reader-tools-dock {
                 bottom: 8px;
                 right: 8px;
                 gap: 4px;
                 padding: 2px 6px;
+            }
+
+            .dock-tool-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.95rem;
             }
 
             .dock-pagination {
@@ -1516,15 +1554,14 @@
                 </div>
             </div>
 
-            <!-- Floating Reader Control Bar: In Basso a Destra -->
-            <div id="reader-controls-dock" class="reader-controls-dock">
-                <!-- Sync status badge -->
-                <div id="sync-status-badge" class="sync-badge" title="Annotazioni e disegni salvati nel tuo profilo">
+            <!-- Floating Page Dock: In Basso a Sinistra -->
+            <div id="reader-page-dock" class="reader-page-dock">
+                <!-- Sync status badge (solo icona con tooltip) -->
+                <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
                     <i class="ph ph-cloud-check"></i>
-                    <span>Salvato</span>
                 </div>
 
-                <!-- Selettore Pagina in Basso a Destra -->
+                <!-- Selettore Pagina -->
                 <div class="dock-pagination">
                     <button id="btn-prev" class="dock-nav-btn" title="Pagina Precedente (←)">
                         <i class="ph ph-caret-left"></i>
@@ -1538,34 +1575,29 @@
                         <i class="ph ph-caret-right"></i>
                     </button>
                 </div>
+            </div>
 
-                <div class="dock-divider"></div>
-
-                <!-- Controlli Zoom e Vista -->
-                <div class="dock-tools">
-                    <button id="btn-zoom-out" class="dock-tool-btn" title="Riduci Zoom (-)">
-                        <i class="ph ph-minus"></i>
-                    </button>
-                    <button id="btn-zoom-fit" class="dock-tool-btn" title="Adatta allo Schermo">
-                        <i class="ph ph-arrows-in-simple"></i>
-                        <span class="btn-label-desktop">Adatta</span>
-                    </button>
-                    <button id="btn-zoom-in" class="dock-tool-btn" title="Aumenta Zoom (+)">
-                        <i class="ph ph-plus"></i>
-                    </button>
-                    <button id="btn-toggle-spread" class="dock-tool-btn" title="Alterna Vista 1 Pagina / 2 Pagine">
-                        <i class="ph ph-book-open"></i>
-                        <span class="btn-label-desktop" id="label-spread">Vista Libro</span>
-                    </button>
-                    <button id="btn-fullscreen" class="dock-tool-btn" title="Schermo Intero (Ottimale per LIM)">
-                        <i class="ph ph-corners-out"></i>
-                    </button>
-                    <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn"
-                        title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
-                        <i class="ph ph-pencil-simple"></i>
-                        <span class="btn-label-desktop" id="label-draw-mode">Disegna</span>
-                    </button>
-                </div>
+            <!-- Floating Tools Dock: In Basso a Destra (Solo Icone che si ingrandiscono al passaggio del mouse con tooltip) -->
+            <div id="reader-tools-dock" class="reader-tools-dock">
+                <button id="btn-zoom-out" class="dock-tool-btn" data-tooltip="Riduci Zoom (-)" title="Riduci Zoom (-)">
+                    <i class="ph ph-minus"></i>
+                </button>
+                <button id="btn-zoom-fit" class="dock-tool-btn" data-tooltip="Adatta allo Schermo" title="Adatta allo Schermo">
+                    <i class="ph ph-arrows-in-simple"></i>
+                </button>
+                <button id="btn-zoom-in" class="dock-tool-btn" data-tooltip="Aumenta Zoom (+)" title="Aumenta Zoom (+)">
+                    <i class="ph ph-plus"></i>
+                </button>
+                <button id="btn-toggle-spread" class="dock-tool-btn" data-tooltip="Vista Libro / 1 Pag" title="Alterna Vista 1 Pagina / 2 Pagine">
+                    <i class="ph ph-book-open"></i>
+                </button>
+                <button id="btn-fullscreen" class="dock-tool-btn" data-tooltip="Schermo Intero LIM" title="Schermo Intero (Ottimale per LIM)">
+                    <i class="ph ph-corners-out"></i>
+                </button>
+                <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn" data-tooltip="Disegna e Scrivi"
+                    title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                    <i class="ph ph-pencil-simple"></i>
+                </button>
             </div>
         </main>
 
@@ -2802,11 +2834,15 @@
 
         function updateViewModeUI() {
             if (isTwoPageMode) {
-                if (labelSpread) labelSpread.textContent = 'Vista Libro';
-                if (btnToggleSpread) btnToggleSpread.title = 'Passa a visualizzazione singola pagina';
+                if (btnToggleSpread) {
+                    btnToggleSpread.title = 'Passa a visualizzazione 1 pagina';
+                    btnToggleSpread.setAttribute('data-tooltip', '1 Pagina');
+                }
             } else {
-                if (labelSpread) labelSpread.textContent = '1 Pagina';
-                if (btnToggleSpread) btnToggleSpread.title = 'Passa a visualizzazione 2 pagine (Libro)';
+                if (btnToggleSpread) {
+                    btnToggleSpread.title = 'Passa a visualizzazione 2 pagine (Libro)';
+                    btnToggleSpread.setAttribute('data-tooltip', 'Vista Libro');
+                }
             }
         }
 
@@ -2814,7 +2850,8 @@
             isDrawMode = !isDrawMode;
             if (isDrawMode) {
                 btnToggleDrawMode.classList.add('active');
-                if (labelDrawMode) labelDrawMode.textContent = 'Lettura';
+                btnToggleDrawMode.setAttribute('data-tooltip', 'Torna a Lettura');
+                btnToggleDrawMode.title = 'Disattiva disegno e torna a sfogliare';
                 drawingToolbar.classList.add('visible');
                 canvasDrawLeft.classList.add('active');
                 canvasDrawRight.classList.add('active');
@@ -2822,7 +2859,8 @@
                 updateCanvasCursor(canvasDrawRight);
             } else {
                 btnToggleDrawMode.classList.remove('active');
-                if (labelDrawMode) labelDrawMode.textContent = 'Disegna';
+                btnToggleDrawMode.setAttribute('data-tooltip', 'Disegna e Scrivi');
+                btnToggleDrawMode.title = 'Attiva Penna, Evidenziatore e Scrittura';
                 drawingToolbar.classList.remove('visible');
                 canvasDrawLeft.classList.remove('active');
                 canvasDrawRight.classList.remove('active');
@@ -2848,9 +2886,13 @@
 
         document.addEventListener('fullscreenchange', () => {
             const isFull = !!document.fullscreenElement;
-            btnFullscreen.innerHTML = isFull
-                ? '<i class="ph ph-corners-in"></i> <span class="btn-label-desktop">Esci Schermo Intero</span>'
-                : '<i class="ph ph-corners-out"></i> <span class="btn-label-desktop">Schermo Intero</span>';
+            if (btnFullscreen) {
+                btnFullscreen.innerHTML = isFull
+                    ? '<i class="ph ph-corners-in"></i>'
+                    : '<i class="ph ph-corners-out"></i>';
+                btnFullscreen.setAttribute('data-tooltip', isFull ? 'Esci Schermo Intero' : 'Schermo Intero LIM');
+                btnFullscreen.title = isFull ? 'Esci da schermo intero' : 'Schermo Intero (Ottimale per LIM)';
+            }
             setTimeout(renderCurrentPages, 100);
         });
 

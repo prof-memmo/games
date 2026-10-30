@@ -1450,6 +1450,206 @@
             border-color: var(--reader-accent);
         }
 
+        /* Ecosistema Upgrade Modal & Preview Pill (Soluzione B) */
+        .reader-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 30, 0.82);
+            backdrop-filter: blur(8px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .reader-modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .reader-modal-card {
+            background: linear-gradient(135deg, #1e1e38 0%, #0f172a 100%);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 35px rgba(124, 58, 237, 0.2);
+            border-radius: 20px;
+            padding: 2.2rem 2rem;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            text-align: center;
+            color: #f8fafc;
+            animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPopIn {
+            0% { transform: scale(0.92) translateY(12px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .reader-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reader-modal-close:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+        }
+
+        .upgrade-icon-wrap {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.35);
+        }
+
+        .upgrade-badge-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #c4b5fd;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .upgrade-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 8px;
+        }
+
+        .upgrade-desc {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin: 0 0 1.25rem;
+        }
+
+        .upgrade-features-list {
+            text-align: left;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .upgrade-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: #e2e8f0;
+        }
+
+        .upgrade-feature-item i {
+            color: #10b981;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .upgrade-modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .upgrade-cta-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%) !important;
+            border: 1px solid #a78bfa !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            padding: 11px 18px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .upgrade-cta-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.55);
+        }
+
+        .reader-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .reader-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        /* Preview Pill in Left Dock */
+        .dock-preview-pill {
+            margin-top: 6px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            color: #fbbf24;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .dock-preview-pill:hover {
+            background: rgba(245, 158, 11, 0.28);
+            border-color: #fbbf24;
+            transform: translateY(-1px);
+        }
+
         /* Protezione Anti-Sovrapposizione per Schermi Medi/Bassi (Laptop, 768p, 800p e schermi ridotti in altezza <= 820px) */
         @media (max-height: 820px) {
             .reader-tools-dock {
@@ -1951,6 +2151,48 @@
             </div>
         </div>
 
+        <!-- Modal: Riservato Piano Ecosistema Completo (Soluzione B - Anteprima Read-Only) -->
+        <div id="ecosistema-upgrade-modal" class="reader-modal-overlay">
+            <div class="reader-modal-card">
+                <button class="reader-modal-close" onclick="closeEcosistemaModal()" aria-label="Chiudi"><i class="ph ph-x"></i></button>
+                <div class="upgrade-icon-wrap">
+                    <i class="ph-fill ph-sparkle"></i>
+                </div>
+                <div class="upgrade-badge-pill">PIANO ECOSISTEMA COMPLETO</div>
+                <h3 class="upgrade-title">Edizione Completa (142 Pagine)</h3>
+                <p class="upgrade-desc">
+                    Hai raggiunto il termine dell'<strong>anteprima gratuita di 15 pagine</strong>.<br>
+                    Sblocca l'accesso illimitato all'intero quaderno didattico e a tutti gli strumenti interattivi.
+                </p>
+                <div class="upgrade-features-list">
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Tutte le 142 pagine ad alta risoluzione</strong> per tutto l'anno scolastico</span>
+                    </div>
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Strumenti interattivi LIM</strong>: penna, evidenziatore, note e cancellino</span>
+                    </div>
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Salvataggio Cloud</strong> delle annotazioni per te e i tuoi studenti</span>
+                    </div>
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Tutte le piattaforme e giochi didattici</strong> dell'Ecosistema Prof. Memmo</span>
+                    </div>
+                </div>
+                <div class="upgrade-modal-actions">
+                    <a href="prezzi.html" class="reader-btn reader-btn-primary upgrade-cta-btn">
+                        <i class="ph-fill ph-crown"></i> Passa a Ecosistema Completo (€34.99/anno)
+                    </a>
+                    <button class="reader-btn reader-btn-secondary" onclick="closeEcosistemaModal()">
+                        Rimani nell'anteprima
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Local PDF.js Engine (Scuole & LIM Offline Resilient) -->
@@ -2219,6 +2461,52 @@
         let currentStudentId = initialStudent.id;
         let currentStudentName = initialStudent.name;
 
+        // --- CONTROLLO ACCESSO PIANO ECOSISTEMA & ANTEPRIMA READ-ONLY (Soluzione B) ---
+        const PREVIEW_MAX_PAGE = 15;
+        let hasEcosistemaAccess = false;
+
+        function checkLocalEcosistemaAccess() {
+            try {
+                var email = (localStorage.getItem('hub_user_email') || '').toLowerCase();
+                if (email === 'prof.memmo@gmail.com') return true;
+                var role = (localStorage.getItem('hub_user_role') || '').toLowerCase();
+                if (role === 'admin' || role === 'superadmin') return true;
+                var plan = (localStorage.getItem('hub_user_plan') || localStorage.getItem('hub_user_subscription') || '').toLowerCase();
+                if (plan === 'ecosistema' || plan === 'docente_ecosistema') return true;
+            } catch (e) { }
+            return false;
+        }
+
+        hasEcosistemaAccess = checkLocalEcosistemaAccess();
+
+        function openEcosistemaUpgradeModal(reason) {
+            const modal = document.getElementById('ecosistema-upgrade-modal');
+            if (!modal) return;
+            const titleEl = modal.querySelector('.upgrade-title');
+            const descEl = modal.querySelector('.upgrade-desc');
+
+            if (reason === 'draw') {
+                if (titleEl) titleEl.textContent = "Disegno e LIM con Ecosistema";
+                if (descEl) descEl.innerHTML = "La modalità disegno, testo e annotazione su LIM è uno strumento didattico avanzato incluso nel <strong>Piano Ecosistema Completo</strong>.<br>Attiva il piano per annotare il quaderno durante le lezioni!";
+            } else if (reason === 'cloud') {
+                if (titleEl) titleEl.textContent = "Salvataggio Cloud con Ecosistema";
+                if (descEl) descEl.innerHTML = "Il salvataggio e la sincronizzazione cloud di disegni e note su tutti i tuoi dispositivi sono inclusi nel <strong>Piano Ecosistema Completo</strong>.";
+            } else if (typeof reason === 'number') {
+                if (titleEl) titleEl.textContent = `Pagina ${reason} • Edizione Completa`;
+                if (descEl) descEl.innerHTML = `Questa pagina fa parte dell'<strong>Edizione Completa di 142 pagine</strong>. Stai consultando l'anteprima gratuita (prime 15 pagine).<br>Passa al Piano Ecosistema Completo per sbloccare l'intero percorso didattico annuale!`;
+            } else {
+                if (titleEl) titleEl.textContent = "Edizione Completa (142 Pagine)";
+                if (descEl) descEl.innerHTML = "Hai raggiunto il termine dell'<strong>anteprima gratuita di 15 pagine</strong>.<br>Sblocca l'accesso illimitato a tutte le 142 pagine ad alta risoluzione del Quaderno per l'intero anno scolastico con il <strong>Piano Ecosistema Completo</strong>.";
+            }
+
+            modal.classList.add('open');
+        }
+
+        function closeEcosistemaModal() {
+            const modal = document.getElementById('ecosistema-upgrade-modal');
+            if (modal) modal.classList.remove('open');
+        }
+
         // Elementi DOM
         const stage = document.getElementById('reader-stage');
         const bookViewport = document.getElementById('book-viewport');
@@ -2317,13 +2605,62 @@
         }
 
         function setSyncStatus(state) {
+            if (!syncStatusBadge) return;
+            if (!hasEcosistemaAccess) {
+                syncStatusBadge.classList.remove('saving');
+                syncStatusBadge.innerHTML = '<i class="ph ph-cloud-slash"></i>';
+                syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio Cloud attivo nel Piano Ecosistema');
+                return;
+            }
             if (state === 'saving') {
                 syncStatusBadge.classList.add('saving');
-                syncStatusBadge.innerHTML = '<i class="ph ph-arrows-clockwise"></i> <span>Salvataggio…</span>';
+                syncStatusBadge.innerHTML = '<i class="ph ph-arrows-clockwise"></i>';
+                syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio modifiche in corso…');
             } else {
                 syncStatusBadge.classList.remove('saving');
-                syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i> <span>Salvato</span>';
+                syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i>';
+                syncStatusBadge.setAttribute('data-tooltip', 'Modifiche sincronizzate nel Cloud');
             }
+        }
+
+        function updateAccessModeUI() {
+            const pageDock = document.getElementById('reader-page-dock');
+            let previewPill = document.getElementById('dock-preview-pill');
+
+            if (!hasEcosistemaAccess) {
+                if (pageCountTotal) pageCountTotal.textContent = `${PREVIEW_MAX_PAGE} (Anteprima)`;
+                if (pageInput) pageInput.max = PREVIEW_MAX_PAGE;
+
+                if (!previewPill && pageDock) {
+                    previewPill = document.createElement('div');
+                    previewPill.id = 'dock-preview-pill';
+                    previewPill.className = 'dock-preview-pill';
+                    previewPill.setAttribute('data-tooltip', "Anteprima Gratuita (15 pag.) • Clicca per sbloccare l'Edizione Completa");
+                    previewPill.innerHTML = '<i class="ph-fill ph-lock-key"></i> <span>Anteprima</span>';
+                    previewPill.addEventListener('click', () => openEcosistemaUpgradeModal());
+                    pageDock.appendChild(previewPill);
+                }
+
+                if (syncStatusBadge) {
+                    syncStatusBadge.innerHTML = '<i class="ph ph-cloud-slash"></i>';
+                    syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio Cloud attivo nel Piano Ecosistema');
+                    syncStatusBadge.onclick = () => openEcosistemaUpgradeModal('cloud');
+                }
+            } else {
+                if (pageCountTotal) pageCountTotal.textContent = totalPages;
+                if (pageInput) pageInput.max = totalPages;
+
+                if (previewPill) previewPill.remove();
+
+                if (syncStatusBadge) {
+                    syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i>';
+                    syncStatusBadge.setAttribute('data-tooltip', 'Modifiche sincronizzate nel Cloud');
+                    syncStatusBadge.onclick = null;
+                }
+            }
+
+            if (typeof renderTocList === 'function') renderTocList();
+            if (typeof updateNavState === 'function') updateNavState();
         }
 
         // --- CARICAMENTO PDF ---
@@ -2331,6 +2668,7 @@
             try {
                 showLoader(true);
                 initStudentProfile();
+                updateAccessModeUI();
 
                 // Aggiorna badge edizione nell'header
                 const badgeEl = document.querySelector('.reader-title-box .reader-badge');
@@ -2368,9 +2706,7 @@
 
                 totalPages = pdfDoc.numPages;
 
-                if (pageCountTotal) pageCountTotal.textContent = totalPages;
-                if (pageInput) pageInput.max = totalPages;
-
+                updateAccessModeUI();
                 updateViewModeUI();
                 await renderCurrentPages();
                 showLoader(false);
@@ -2926,11 +3262,14 @@
                 const groupDiv = document.createElement('div');
                 groupDiv.className = 'toc-group';
 
+                const isGroupLocked = (!hasEcosistemaAccess && group.page > PREVIEW_MAX_PAGE);
                 const groupTitle = document.createElement('div');
                 groupTitle.className = 'toc-group-title';
                 groupTitle.innerHTML = `
                     <span>${group.title}</span>
-                    <span class="badge-page">Pag. ${group.page}</span>
+                    <span class="badge-page" ${isGroupLocked ? 'style="border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;"' : ''}>
+                        ${isGroupLocked ? '<i class="ph-fill ph-lock-key"></i> ' : ''}Pag. ${group.page}
+                    </span>
                 `;
                 groupTitle.addEventListener('click', () => {
                     goToPage(group.page);
@@ -2945,6 +3284,7 @@
                     itemLink.className = 'toc-item';
                     itemLink.dataset.page = item.page;
 
+                    const isItemLocked = (!hasEcosistemaAccess && item.page > PREVIEW_MAX_PAGE);
                     let tagClass = '';
                     if (item.tag === 'Laboratorio') tagClass = 'tag-laboratorio';
                     else if (item.tag === 'Test') tagClass = 'tag-test';
@@ -2952,7 +3292,9 @@
                     itemLink.innerHTML = `
                         <span class="item-title">${item.title}</span>
                         ${item.tag ? `<span class="item-tag ${tagClass}">${item.tag}</span>` : ''}
-                        <span style="font-weight: 700; color: #cbd5e1; font-size: 0.75rem;">${item.page}</span>
+                        <span style="font-weight: 700; color: ${isItemLocked ? '#fbbf24' : '#cbd5e1'}; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 3px;">
+                            ${isItemLocked ? '<i class="ph-fill ph-lock-key"></i>' : ''} ${item.page}
+                        </span>
                     `;
 
                     itemLink.addEventListener('click', (e) => {
@@ -3001,26 +3343,37 @@
         // --- GESTIONE NAVIGAZIONE & VIEW MODE ---
         function updateNavState() {
             if (pageInput) pageInput.value = currentPageNum;
+            const maxPage = hasEcosistemaAccess ? totalPages : PREVIEW_MAX_PAGE;
             const hasPrev = currentPageNum > 1;
             const step = isTwoPageMode ? 2 : 1;
-            const hasNext = (currentPageNum + step) <= totalPages;
+            const hasNext = (currentPageNum + step) <= maxPage;
 
             if (btnPrev) btnPrev.disabled = !hasPrev;
             if (stagePrev) {
                 stagePrev.disabled = !hasPrev;
                 stagePrev.setAttribute('data-tooltip', hasPrev ? 'Pagina Precedente (←)' : 'Prima Pagina (inizio)');
             }
-            if (btnNext) btnNext.disabled = !hasNext;
+            if (btnNext) btnNext.disabled = (!hasNext && hasEcosistemaAccess);
             if (stageNext) {
-                stageNext.disabled = !hasNext;
-                stageNext.setAttribute('data-tooltip', hasNext ? 'Pagina Successiva (→)' : 'Ultima Pagina (fine)');
+                if (!hasEcosistemaAccess && !hasNext) {
+                    stageNext.disabled = false;
+                    stageNext.setAttribute('data-tooltip', 'Edizione Completa 142 Pag. (Piano Ecosistema)');
+                } else {
+                    stageNext.disabled = !hasNext;
+                    stageNext.setAttribute('data-tooltip', hasNext ? 'Pagina Successiva (→)' : 'Ultima Pagina (fine)');
+                }
             }
         }
 
         function goToPage(target) {
             let p = parseInt(target, 10);
             if (isNaN(p)) return;
-            p = Math.max(1, Math.min(totalPages, p));
+            const maxPage = hasEcosistemaAccess ? totalPages : PREVIEW_MAX_PAGE;
+            if (!hasEcosistemaAccess && p > maxPage) {
+                openEcosistemaUpgradeModal(p);
+                return;
+            }
+            p = Math.max(1, Math.min(maxPage, p));
             if (isTwoPageMode && p > 1 && p % 2 === 0) {
                 p = p - 1; // Allinea a pagina sinistra
             }
@@ -3039,9 +3392,17 @@
 
         function goToNextPage() {
             const step = isTwoPageMode ? 2 : 1;
-            if (currentPageNum + step > totalPages && !isTwoPageMode) return;
-            if (currentPageNum >= totalPages) return;
-            currentPageNum = Math.min(totalPages, currentPageNum + step);
+            const maxPage = hasEcosistemaAccess ? totalPages : PREVIEW_MAX_PAGE;
+            if (!hasEcosistemaAccess) {
+                const isAtEnd = isTwoPageMode ? (currentPageNum + 1 >= maxPage || currentPageNum >= maxPage) : (currentPageNum >= maxPage);
+                if (isAtEnd) {
+                    openEcosistemaUpgradeModal(currentPageNum + step);
+                    return;
+                }
+            }
+            if (currentPageNum + step > maxPage && !isTwoPageMode) return;
+            if (currentPageNum >= maxPage) return;
+            currentPageNum = Math.min(maxPage, currentPageNum + step);
             if (stage) stage.scrollTop = 0;
             renderCurrentPages();
         }
@@ -3070,6 +3431,10 @@
         }
 
         function toggleDrawMode() {
+            if (!hasEcosistemaAccess) {
+                openEcosistemaUpgradeModal('draw');
+                return;
+            }
             isDrawMode = !isDrawMode;
             if (isDrawMode) {
                 btnToggleDrawMode.classList.add('active');
@@ -3264,6 +3629,7 @@
             } else if (e.key === 'Escape') {
                 closeTocDrawer();
                 studentModal.classList.remove('open');
+                closeEcosistemaModal();
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
                 e.preventDefault();
                 if (e.shiftKey) redoAction();
@@ -3440,6 +3806,14 @@
                         var btnLogout = document.getElementById('btn-logout-dropdown');
                         if (btnLogout) btnLogout.style.display = 'flex';
 
+                        // Aggiorna stato abbonamento Piano Ecosistema
+                        var plan = (hubData.abbonamento || hubData.subscription || hubData.plan || 'base').toLowerCase();
+                        var isEcosistema = (isSuperAdmin || role === 'admin' || role === 'superadmin' || plan === 'ecosistema' || plan === 'docente_ecosistema');
+                        hasEcosistemaAccess = isEcosistema;
+                        localStorage.setItem('hub_user_plan', plan);
+                        localStorage.setItem('hub_user_subscription', plan);
+                        if (typeof updateAccessModeUI === 'function') updateAccessModeUI();
+
                         // Sincronizza automaticamente il quaderno personale con l'identità autenticata
                         if (!currentStudentName || currentStudentName === 'Studente') {
                             currentStudentName = name;
@@ -3451,7 +3825,9 @@
                             if (typeof loadAnnotations === 'function') loadAnnotations();
                         }
                     } else {
-                        // Utente non loggato: reset a stato Ospite
+                        // Utente non loggato: reset a stato Ospite e Anteprima Read-Only
+                        hasEcosistemaAccess = false;
+                        if (typeof updateAccessModeUI === 'function') updateAccessModeUI();
                         var btnLogin = document.getElementById('btn-login-hub-dropdown');
                         if (btnLogin) btnLogin.style.display = 'flex';
                         var btnProf = document.getElementById('btn-profile-dropdown');

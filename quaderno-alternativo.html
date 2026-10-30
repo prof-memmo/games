@@ -156,6 +156,9 @@
                            style="background-color: #7c3aed; border-color: #7c3aed;">
                             <i class="ph ph-book-open"></i> Sfoglia il Quaderno Online
                         </a>
+                        <div style="margin-top: 8px; font-size: 0.78rem; color: #64748b; text-align: center;">
+                            <i class="ph ph-sparkle" style="color: #7c3aed;"></i> Anteprima gratuita (15 pag.) • Edizione completa 142 pag. con Piano Ecosistema
+                        </div>
                     </div>
                 </div>
 
@@ -363,15 +366,8 @@
                 });
             }
 
-            document.addEventListener('click', function(e) {
-                const btn = e.target.closest('.btn-download:not(.wip-link)');
-                if (btn) {
-                    if (monetizzazioneAttiva && userSubscription !== 'ecosistema') {
-                        e.preventDefault();
-                        if (ecoModal) ecoModal.classList.add('active');
-                    }
-                }
-            });
+            // Con la Soluzione B, tutti gli utenti possono aprire il lettore per consultare l'anteprima gratuita di 15 pagine.
+            // L'eventuale sblocco dell'Edizione Completa 142 pag. viene gestito direttamente all'interno del lettore.
         });
     </script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->

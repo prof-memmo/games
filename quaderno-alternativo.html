@@ -115,11 +115,17 @@
         <div class="container">
             
             <!-- Hero -->
-            <div style="background: white; border-radius: var(--border-radius-lg); padding: 4rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
-                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo Logo" style="max-height: 160px; max-width: 100%; margin: 0 auto 2rem auto; display: block; object-fit: contain;">
-                <p class="lead" style="max-width: 800px; margin: 0 auto; color: var(--color-text-base);">
-                    Un percorso alternativo pensato per gli studenti che non si avvalgono dell'insegnamento della religione cattolica. Quaderni strutturati per esplorare temi etici, filosofici e civici in modo attivo e creativo.
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 3rem 2rem; box-shadow: var(--shadow-sm); text-align: center; margin-bottom: 4rem;">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo Logo" style="max-height: 160px; max-width: 100%; margin: 0 auto 1.5rem auto; display: block; object-fit: contain;">
+                <p class="lead" style="max-width: 820px; margin: 0 auto 1rem auto; color: var(--color-text-base); font-size: 1.15rem; line-height: 1.7;">
+                    Un percorso didattico completo pensato per gli studenti che non si avvalgono dell'insegnamento della religione cattolica. <strong>Ogni quaderno è personale ed è fruibile direttamente online da ciascuno studente</strong>: permette di sfogliare i contenuti, scrivere riflessioni personali, disegnare ed eseguire le attività interattive su LIM, tablet e PC senza necessità di stampa o download, con salvataggio sicuro sul cloud.
                 </p>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 1.25rem;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.08); color: #7c3aed; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;"><i class="ph ph-user-circle"></i> Quaderno Personale Studente</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.08); color: #7c3aed; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;"><i class="ph ph-laptop"></i> 100% Online Senza Download</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.08); color: #7c3aed; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;"><i class="ph ph-pencil-simple-line"></i> Scrivi, Disegna ed Evidenzia</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.08); color: #7c3aed; padding: 6px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem;"><i class="ph ph-chalkboard-simple"></i> Pronto per la LIM di Classe</span>
+                </div>
             </div>
 
             <!-- Intestazione schede -->
@@ -131,30 +137,37 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 2.5rem;">
                 
                 <!-- Scheda 1 — materiali disponibili -->
-                <div class="version-card" style="border-top: 8px solid #7c3aed;">
-                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block;">
+                <div class="version-card" data-edition="classe-1" style="border-top: 8px solid #7c3aed;">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1rem auto; display: block;">
                     <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #7c3aed;">Classe Prima</span></h3>
                     <div class="version-subtitle">Materia alternativa alla religione</div>
+                    <div style="text-align: center; margin-bottom: 1.25rem;">
+                        <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.1); color: #7c3aed; border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; font-weight: 700;"><i class="ph ph-globe"></i> Quaderno Personale Digitale · Fruibile Online</span>
+                    </div>
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem; display: none;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
                     <p class="version-desc">
-                        Il percorso per le classi prime. Attività guidate per riflettere su identità, valori, convivenza civile e scoperta di sé attraverso domande aperte e laboratori creativi.
+                        Il percorso per le classi prime: 142 pagine di attività guidate per riflettere su identità, valori, convivenza civile e scoperta di sé. Ogni studente può aprirlo e lavorarci direttamente online, con strumenti per scrivere, disegnare e salvare le proprie note.
                     </p>
                     <div class="buttons-container">
-                        <a href="contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf" 
-                           download="Il mio quaderno alternativo - Classe Prima.pdf" 
-                           target="_blank" 
+                        <a href="quaderno-reader.html?edition=classe-1" 
                            class="btn btn-primary btn-download" 
                            style="background-color: #7c3aed; border-color: #7c3aed;">
-                            <i class="ph ph-download-simple"></i> Scarica il Quaderno
+                            <i class="ph ph-book-open"></i> Sfoglia il Quaderno Online
                         </a>
+                        <div style="margin-top: 8px; font-size: 0.78rem; color: #64748b; text-align: center;">
+                            <i class="ph ph-sparkle" style="color: #7c3aed;"></i> Anteprima gratuita (15 pag.) • Edizione completa 142 pag. con Piano Ecosistema
+                        </div>
                     </div>
                 </div>
 
                 <!-- Scheda 2 — in arrivo -->
-                <div class="version-card" style="border-top: 8px solid #0891b2; opacity: 0.85;">
+                <div class="version-card" data-edition="classe-2" style="border-top: 8px solid #0891b2; opacity: 0.85;">
                 <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block; opacity: 0.6;">
                     <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #0891b2;">Classe Seconda</span></h3>
                     <div class="version-subtitle">Materia alternativa alla religione</div>
-                    <div style="text-align:center; margin-bottom: 1rem;">
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem;">
                         <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
                     </div>
                     <p class="version-desc">
@@ -168,11 +181,11 @@
                 </div>
 
                 <!-- Scheda 3 — in arrivo -->
-                <div class="version-card" style="border-top: 8px solid #b45309; opacity: 0.85;">
+                <div class="version-card" data-edition="classe-3" style="border-top: 8px solid #b45309; opacity: 0.85;">
                 <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/games/quaderno-alternativo-badge.png" alt="Il mio quaderno alternativo" style="max-height: 90px; max-width: 80%; object-fit: contain; margin: 0 auto 1.5rem auto; display: block; opacity: 0.6;">
                     <h3 class="version-title">Il mio quaderno alternativo<br><span style="color: #b45309;">Classe Terza</span></h3>
                     <div class="version-subtitle">Materia alternativa alla religione</div>
-                    <div style="text-align:center; margin-bottom: 1rem;">
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem;">
                         <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
                     </div>
                     <p class="version-desc">
@@ -228,8 +241,8 @@
             <div class="wip-modal-emoji">📄</div>
             <h3 style="color: #7c3aed;">Piano Ecosistema Completo</h3>
             <p style="font-size: 0.95rem; color: #475569; line-height: 1.5;">
-                I quaderni didattici completi e tutti i materiali scaricabili in PDF sono inclusi nel <strong>Piano Ecosistema Completo</strong>.<br><br>
-                Attiva il tuo piano per scaricare liberamente tutte le dispense e le risorse didattiche dell'anno!
+                I quaderni didattici completi e tutti i percorsi a schermo intero sono inclusi nel <strong>Piano Ecosistema Completo</strong>.<br><br>
+                Attiva il tuo piano per sfogliare liberamente tutti i quaderni e le risorse didattiche dell'anno!
             </p>
             <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
                 <a href="prezzi.html" class="btn btn-primary" style="background-color: #7c3aed; border-color: #7c3aed; padding: 0.6rem 1.2rem; font-size: 0.9rem;">Scopri i Piani</a>
@@ -247,14 +260,15 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // WIP modal
+            // WIP modal (Event Delegation per supportare aggiornamenti dinamici da Firestore)
             const wipModal = document.getElementById('wip-modal');
             if (wipModal) {
-                document.querySelectorAll('.wip-link').forEach(link => {
-                    link.addEventListener('click', (e) => {
+                document.addEventListener('click', (e) => {
+                    const wip = e.target.closest('.wip-link');
+                    if (wip) {
                         e.preventDefault();
                         wipModal.classList.add('active');
-                    });
+                    }
                 });
                 const wipClose = document.getElementById('wip-close');
                 if (wipClose) {
@@ -262,6 +276,9 @@
                         wipModal.classList.remove('active');
                     });
                 }
+                wipModal.addEventListener('click', (e) => {
+                    if (e.target === wipModal) wipModal.classList.remove('active');
+                });
             }
 
             // Controllo download Quaderno riservato a Piano Ecosistema
@@ -295,16 +312,62 @@
                         }
                     });
                 }
+
+                // Sincronizzazione dinamica stato edizioni da Firestore (Hub Admin)
+                db.collection('games_status').doc('il-mio-quaderno-alternativo').onSnapshot(doc => {
+                    if (!doc.exists) return;
+                    const gameData = doc.data() || {};
+                    const editions = gameData.editions || {};
+
+                    const editionConfigs = {
+                        'classe-1': {
+                            color: '#7c3aed',
+                            activeBtn: `<a href="quaderno-reader.html?edition=classe-1" class="btn btn-primary btn-download" style="background-color: #7c3aed; border-color: #7c3aed;"><i class="ph ph-book-open"></i> Sfoglia il Quaderno</a>`
+                        },
+                        'classe-2': {
+                            color: '#0891b2',
+                            activeBtn: `<a href="quaderno-reader.html?edition=classe-2" class="btn btn-primary btn-download" style="background-color: #0891b2; border-color: #0891b2;"><i class="ph ph-book-open"></i> Sfoglia il Quaderno</a>`
+                        },
+                        'classe-3': {
+                            color: '#b45309',
+                            activeBtn: `<a href="quaderno-reader.html?edition=classe-3" class="btn btn-primary btn-download" style="background-color: #b45309; border-color: #b45309;"><i class="ph ph-book-open"></i> Sfoglia il Quaderno</a>`
+                        }
+                    };
+
+                    Object.keys(editionConfigs).forEach(editionKey => {
+                        const card = document.querySelector(`.version-card[data-edition="${editionKey}"]`);
+                        if (!card) return;
+
+                        const edData = editions[editionKey];
+                        const defaultActive = (editionKey === 'classe-1');
+                        const isActive = edData ? edData.isActive !== false : defaultActive;
+
+                        const badgeCont = card.querySelector('.edition-badge-container');
+                        const btnCont = card.querySelector('.buttons-container');
+                        const img = card.querySelector('img');
+                        const cfg = editionConfigs[editionKey];
+
+                        if (isActive) {
+                            card.style.opacity = '1';
+                            if (img) img.style.opacity = '1';
+                            if (badgeCont) badgeCont.style.display = 'none';
+                            if (btnCont) btnCont.innerHTML = cfg.activeBtn;
+                        } else {
+                            card.style.opacity = '0.85';
+                            if (img) img.style.opacity = '0.6';
+                            if (badgeCont) badgeCont.style.display = 'block';
+                            if (btnCont) {
+                                btnCont.innerHTML = `<button class="btn btn-outline btn-download wip-link" style="border-color: ${cfg.color}; color: ${cfg.color};"><i class="ph ph-clock"></i> Stiamo lavorando…</button>`;
+                            }
+                        }
+                    });
+                }, err => {
+                    console.warn("Notice listener quaderno editions:", err.message);
+                });
             }
 
-            document.querySelectorAll('.btn-download:not(.wip-link)').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    if (monetizzazioneAttiva && userSubscription !== 'ecosistema') {
-                        e.preventDefault();
-                        if (ecoModal) ecoModal.classList.add('active');
-                    }
-                });
-            });
+            // Con la Soluzione B, tutti gli utenti possono aprire il lettore per consultare l'anteprima gratuita di 15 pagine.
+            // L'eventuale sblocco dell'Edizione Completa 142 pag. viene gestito direttamente all'interno del lettore.
         });
     </script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->

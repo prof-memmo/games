@@ -1,0 +1,3851 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Il mio quaderno alternativo — Sfoglia il Libro</title>
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260814_1225"></script>
+
+    <style>
+        :root {
+            --reader-bg: #1e293b;
+            --reader-bar-bg: #0f172a;
+            --reader-border: #334155;
+            --reader-text: #f8fafc;
+            --reader-text-muted: #94a3b8;
+            --reader-accent: #7c3aed;
+            --reader-accent-hover: #6d28d9;
+            --reader-accent-light: rgba(124, 58, 237, 0.15);
+            --reader-surface: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--reader-bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--reader-text);
+        }
+
+        /* App Wrapper */
+        #reader-app {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Ecosystem Top Bar */
+        .reader-topbar {
+            height: 60px;
+            background-color: var(--reader-bar-bg);
+            border-bottom: 1px solid var(--reader-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            z-index: 50;
+            flex-shrink: 0;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .reader-back-btn {
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid var(--reader-border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        .reader-back-btn:hover {
+            background: #334155;
+            border-color: #64748b;
+            transform: translateX(-2px);
+        }
+
+        .header-quaderno-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-quaderno-logo {
+            height: 38px;
+            max-width: 320px;
+            object-fit: contain;
+            filter: invert(1);
+        }
+
+        .topbar-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .header-prof-logo-wrap {
+            pointer-events: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .header-prof-logo-wrap:hover {
+            transform: scale(1.08);
+        }
+
+        .header-prof-logo {
+            height: 54px;
+            width: auto;
+            max-width: 140px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Ecosystem User Profile Menu */
+        .user-menu-container {
+            position: relative;
+            z-index: 2600;
+        }
+
+        .user-menu-trigger {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: #0f172a;
+            padding: 4px 13px 4px 5px;
+            border-radius: 50px;
+            border: 1.8px solid var(--reader-accent);
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            user-select: none;
+        }
+
+        .user-menu-trigger:hover {
+            background: #1e1b4b;
+            border-color: #a78bfa;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+        }
+
+        .user-avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1.5px solid var(--reader-accent);
+            flex-shrink: 0;
+        }
+
+        .user-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-trigger-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.15;
+        }
+
+        .user-trigger-name {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            max-width: 130px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-trigger-role {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #c4b5fd;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .user-trigger-chevron {
+            font-size: 0.75rem;
+            color: #c4b5fd;
+            margin-left: 2px;
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 290px;
+            background: #0f172a;
+            border: 1.8px solid var(--reader-accent);
+            border-radius: 18px;
+            padding: 16px 14px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            z-index: 3000;
+            backdrop-filter: blur(15px);
+        }
+
+        .user-dropdown.hidden {
+            display: none !important;
+        }
+
+        .dropdown-user-header {
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--reader-border);
+        }
+
+        .dropdown-user-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .dropdown-user-subtitle {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #c4b5fd;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .dropdown-pill-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--reader-border);
+            background: #1e293b;
+            color: #ffffff;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .dropdown-pill-btn:hover {
+            background: #334155;
+            border-color: #64748b;
+        }
+
+        .dropdown-bottom-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .dropdown-bottom-row .dropdown-pill-btn {
+            flex: 1;
+        }
+
+        .btn-notifiche-pill {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        .btn-notifiche-pill:hover {
+            background: #334155;
+            border-color: #64748b;
+        }
+
+        .badge-notif-pill {
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+
+        .btn-esci-pill {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.4);
+            color: #fca5a5;
+        }
+
+        .btn-esci-pill:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        /* Header TOC Button */
+        .reader-header-toc-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(124, 58, 237, 0.16);
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            color: #ddd6fe;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .reader-header-toc-btn:hover {
+            background: rgba(124, 58, 237, 0.32);
+            border-color: var(--reader-accent);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Page Control Input & Sync Badge */
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.15rem;
+            color: #34d399;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sync-badge:hover,
+        .sync-badge:focus-visible {
+            transform: scale(1.15);
+            background: rgba(16, 185, 129, 0.28);
+            border-color: #34d399;
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.45);
+            outline: none;
+        }
+
+        /* Tooltip a comparsa a DESTRA per la colonna di sinistra */
+        .sync-badge::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 10px);
+            transform: translateY(-50%) scale(0.92);
+            background: #090d16;
+            color: #ffffff;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding: 5px 11px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 100;
+        }
+
+        .sync-badge:hover::after,
+        .sync-badge:focus-visible::after,
+        .sync-badge.touch-active::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scale(1);
+        }
+
+        .sync-badge.saving {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        /* Reader Pager Dock: In Basso a Sinistra (Colonna Verticale compatta) */
+        .reader-page-dock {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            border-radius: 20px;
+            padding: 8px 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
+        .dock-pagination {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 6px 8px;
+        }
+
+        .dock-page-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--reader-text-muted);
+            text-align: center;
+        }
+
+        .dock-page-input {
+            width: 44px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 3px 0;
+            font-size: 0.88rem;
+            font-weight: 800;
+            transition: all 0.15s ease;
+        }
+
+        .dock-page-input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+            background: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+        }
+
+        .dock-page-total {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        /* Reader Tools Dock: In Basso a Destra (Colonna Verticale dall'alto in basso, Solo Icone con Tooltip a Sinistra) */
+        .reader-tools-dock {
+            position: absolute;
+            bottom: 18px;
+            right: 18px;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--reader-border);
+            border-radius: 28px;
+            padding: 7px 6px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
+        .dock-tool-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .dock-tool-btn:hover,
+        .dock-tool-btn:focus-visible {
+            background: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.45);
+            transform: scale(1.18);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            z-index: 25;
+            outline: none;
+        }
+
+        /* Tooltip a comparsa fluida a SINISTRA del pulsante per la colonna di destra */
+        .dock-tool-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 50%;
+            right: calc(100% + 10px);
+            transform: translateY(-50%) scale(0.92);
+            background: #090d16;
+            color: #ffffff;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding: 5px 11px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 100;
+        }
+
+        .dock-tool-btn:hover::after,
+        .dock-tool-btn:focus-visible::after,
+        .dock-tool-btn.touch-active::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scale(1);
+        }
+
+        .dock-tool-btn.active {
+            background: var(--reader-accent);
+            border-color: #a78bfa;
+            color: white;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.55);
+        }
+
+        .dock-draw-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+            border-color: #8b5cf6;
+            color: white;
+        }
+
+        .dock-draw-btn:hover {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.65);
+        }
+
+        /* Patamu Official Footer: Harmonized with other sites, Julius Sans One, Edge-to-Edge */
+        .reader-patamu-footer {
+            background: #0b1120;
+            border-top: 1px solid var(--reader-border);
+            padding: 10px 24px;
+            z-index: 30;
+            flex-shrink: 0;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .footer-legal-links {
+            display: flex !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px 24px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            width: 100%;
+            font-family: 'Julius Sans One', sans-serif !important;
+        }
+
+        .footer-legal-links a {
+            color: #94a3b8;
+            text-decoration: underline;
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+
+        .footer-legal-links a:hover {
+            color: #d4af37;
+        }
+
+        .footer-patamu-row {
+            display: flex !important;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+            width: 100%;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .patamu-logo-img {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .patamu-text {
+            text-align: left;
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: #94a3b8;
+            margin: 0;
+            flex: 1;
+            width: 100%;
+            font-family: 'Julius Sans One', sans-serif !important;
+            letter-spacing: 0.3px;
+        }
+
+        /* PDF Interactive Links Layer */
+        .pdf-links-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 22;
+        }
+
+        .pdf-link-annot {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.12);
+            border-bottom: 2px dashed rgba(212, 175, 55, 0.6);
+            transition: all 0.18s ease;
+        }
+
+        .pdf-link-annot:hover {
+            background: rgba(212, 175, 55, 0.3);
+            border-bottom-color: #d4af37;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .pdf-link-annot.is-video-link {
+            background: rgba(239, 68, 68, 0.14);
+            border-bottom: 2px dashed rgba(239, 68, 68, 0.7);
+        }
+
+        .pdf-link-annot.is-video-link:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-bottom-color: #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
+        }
+
+        /* Fullscreen handling: keep reader footer slim & accessible on LIM */
+        :fullscreen #reader-topbar {
+            display: none !important;
+        }
+
+        :fullscreen #reader-footer {
+            padding: 4px 1.5rem;
+            min-height: 42px;
+        }
+
+        :-webkit-full-screen #reader-topbar {
+            display: none !important;
+        }
+
+        :-webkit-full-screen #reader-footer {
+            padding: 4px 1.5rem;
+            min-height: 42px;
+        }
+
+        /* Main Viewport Stage */
+        #reader-stage {
+            flex: 1 1 auto;
+            min-height: 0;
+            min-width: 0;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            padding: 24px 75px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Book Spread */
+        #book-viewport {
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border-radius: 6px;
+            background: #ffffff;
+            transition: width 0.15s ease-out, height 0.15s ease-out;
+        }
+
+        .page-wrapper {
+            position: relative;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .page-wrapper.left-page {
+            border-right: 1px solid #e2e8f0;
+            box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-wrapper.right-page {
+            box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        canvas.pdf-canvas {
+            display: block;
+            pointer-events: none;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        /* Floating Nav Buttons on Stage Sides (Frecce Sinistra e Destra) */
+        .stage-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid var(--reader-border);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.55rem;
+            cursor: pointer;
+            z-index: 60;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .stage-nav-arrow:hover:not(:disabled),
+        .stage-nav-arrow:focus-visible:not(:disabled) {
+            background: var(--reader-accent);
+            border-color: #a78bfa;
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 0 24px rgba(124, 58, 237, 0.65);
+            outline: none;
+        }
+
+        .stage-nav-arrow:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            background: rgba(15, 23, 42, 0.7);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.45);
+            transform: translateY(-50%);
+            box-shadow: none;
+        }
+
+        .stage-nav-left {
+            left: 18px;
+        }
+
+        .stage-nav-right {
+            right: 18px;
+        }
+
+        /* Tooltip per Frecce Laterali */
+        .stage-nav-arrow::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) scale(0.92);
+            background: #090d16;
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 100;
+        }
+
+        .stage-nav-left::after {
+            left: calc(100% + 12px);
+        }
+
+        .stage-nav-right::after {
+            right: calc(100% + 12px);
+        }
+
+        .stage-nav-arrow:hover::after,
+        .stage-nav-arrow:focus-visible::after,
+        .stage-nav-arrow.touch-active::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scale(1);
+        }
+
+        /* Draw Canvas Layer */
+        canvas.draw-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 15;
+            touch-action: none;
+            pointer-events: none;
+            /* Attivato dinamicamente in drawMode */
+        }
+
+        canvas.draw-canvas.active {
+            pointer-events: auto;
+            cursor: crosshair;
+        }
+
+        canvas.draw-canvas.tool-text {
+            cursor: text;
+        }
+
+        canvas.draw-canvas.tool-eraser {
+            cursor: cell;
+        }
+
+        /* Hotspot Layer per Indice Stampato (Pagine 3, 4, 5) */
+        .hotspot-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 12;
+            pointer-events: auto;
+        }
+
+        .hotspot-link {
+            position: absolute;
+            border-radius: 4px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .hotspot-link:hover {
+            background: rgba(124, 58, 237, 0.12);
+        }
+
+        /* Spina centrale del libro */
+        .book-spine-shadow {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 20px;
+            transform: translateX(-50%);
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.12) 100%);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Loading Spinner */
+        #reader-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            z-index: 250;
+            transition: opacity 0.2s ease;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(124, 58, 237, 0.2);
+            border-top-color: var(--reader-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Watermark & Footer info */
+        .reader-footer-info {
+            position: absolute;
+            bottom: 10px;
+            right: 16px;
+            font-size: 0.74rem;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            z-index: 25;
+        }
+
+
+
+        /* ========================================================
+           TOC DRAWER (CASSETTO LATERALE INDICE)
+           ======================================================== */
+        #toc-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: min(90vw, 420px);
+            background: #0f172a;
+            border-right: 1px solid var(--reader-border);
+            z-index: 200;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #toc-drawer.open {
+            transform: translateX(0);
+        }
+
+        #toc-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 190;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #toc-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .toc-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--reader-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #1e293b;
+        }
+
+        .toc-header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toc-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-brand img {
+            max-height: 38px;
+            max-width: 140px;
+            object-fit: contain;
+        }
+
+        .toc-close-btn {
+            background: transparent;
+            border: 1px solid var(--reader-border);
+            color: #94a3b8;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.15s;
+        }
+
+        .toc-close-btn:hover {
+            color: white;
+            background: #334155;
+        }
+
+        .toc-search-box {
+            position: relative;
+        }
+
+        .toc-search-box input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            color: white;
+            padding: 8px 12px 8px 34px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .toc-search-box input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        .toc-search-box i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .toc-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-group {
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            overflow: hidden;
+        }
+
+        .toc-group-title {
+            padding: 10px 14px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        .toc-group-title:hover {
+            color: #ffffff;
+            background: rgba(124, 58, 237, 0.15);
+        }
+
+        .toc-group-title .badge-page {
+            background: var(--reader-accent);
+            color: white;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .toc-items-sublist {
+            padding: 6px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toc-item {
+            padding: 8px 14px 8px 24px;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.12s;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-item:hover {
+            background: rgba(124, 58, 237, 0.12);
+            color: #ffffff;
+            border-left-color: var(--reader-accent);
+        }
+
+        .toc-item.active {
+            background: rgba(124, 58, 237, 0.2);
+            color: #c4b5fd;
+            font-weight: 600;
+            border-left-color: var(--reader-accent);
+        }
+
+        .toc-item .item-title {
+            flex-grow: 1;
+            line-height: 1.35;
+        }
+
+        .toc-item .item-tag {
+            font-size: 0.68rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #334155;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .toc-item .item-tag.tag-laboratorio {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .toc-item .item-tag.tag-test {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        /* ========================================================
+           DRAWING & ANNOTATION TOOLBAR (BARRA STRUMENTI DISEGNO)
+           ======================================================== */
+        #drawing-toolbar {
+            position: absolute;
+            bottom: 74px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border-radius: 30px;
+            padding: 6px 14px;
+            display: none;
+            /* Attivata con drawMode */
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        #drawing-toolbar.visible {
+            display: flex;
+            animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .tool-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #cbd5e1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tool-btn:hover {
+            background: #1e293b;
+            color: white;
+            border-color: #334155;
+        }
+
+        .tool-btn.active {
+            background: var(--reader-accent);
+            color: white;
+            border-color: var(--reader-accent);
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+        }
+
+        .tool-divider {
+            width: 1px;
+            height: 24px;
+            background: #334155;
+            margin: 0 2px;
+        }
+
+        /* Color Swatches */
+        .color-palette {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-swatch {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.12s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.15);
+        }
+
+        .color-swatch.active {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px var(--reader-accent);
+            transform: scale(1.1);
+        }
+
+        /* Stroke Size Select */
+        .stroke-size-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stroke-dot {
+            border-radius: 50%;
+            background: #94a3b8;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.12s;
+        }
+
+        .stroke-dot.size-fine {
+            width: 6px;
+            height: 6px;
+        }
+
+        .stroke-dot.size-medium {
+            width: 10px;
+            height: 10px;
+        }
+
+        .stroke-dot.size-thick {
+            width: 14px;
+            height: 14px;
+        }
+
+        .stroke-dot:hover,
+        .stroke-dot.active {
+            background: #ffffff;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Inline Text Input Overlay on Page */
+        .text-editor-box {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--reader-accent);
+            border-radius: 6px;
+            padding: 6px 10px;
+            z-index: 50;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .text-editor-box textarea {
+            width: 220px;
+            height: 70px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #0f172a;
+            resize: both;
+        }
+
+        .text-editor-box textarea:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        .text-editor-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .btn-text-action {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-text-confirm {
+            background: var(--reader-accent);
+            color: white;
+        }
+
+        .btn-text-cancel {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        /* Student Name Prompt Modal */
+        #student-name-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #student-name-modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #1e293b;
+            border: 1px solid var(--reader-border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .modal-card h3 {
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .modal-card p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--reader-border);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--reader-accent);
+        }
+
+        /* Ecosistema Upgrade Modal & Preview Pill (Soluzione B) */
+        .reader-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 30, 0.82);
+            backdrop-filter: blur(8px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .reader-modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .reader-modal-card {
+            background: linear-gradient(135deg, #1e1e38 0%, #0f172a 100%);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 35px rgba(124, 58, 237, 0.2);
+            border-radius: 20px;
+            padding: 2.2rem 2rem;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            text-align: center;
+            color: #f8fafc;
+            animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPopIn {
+            0% { transform: scale(0.92) translateY(12px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .reader-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reader-modal-close:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+        }
+
+        .upgrade-icon-wrap {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.35);
+        }
+
+        .upgrade-badge-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #c4b5fd;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .upgrade-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 8px;
+        }
+
+        .upgrade-desc {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin: 0 0 1.25rem;
+        }
+
+        .upgrade-features-list {
+            text-align: left;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .upgrade-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: #e2e8f0;
+        }
+
+        .upgrade-feature-item i {
+            color: #10b981;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .upgrade-modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .upgrade-cta-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%) !important;
+            border: 1px solid #a78bfa !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            padding: 11px 18px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .upgrade-cta-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.55);
+        }
+
+        .reader-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .reader-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        /* Preview Pill in Left Dock */
+        .dock-preview-pill {
+            margin-top: 6px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            color: #fbbf24;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .dock-preview-pill:hover {
+            background: rgba(245, 158, 11, 0.28);
+            border-color: #fbbf24;
+            transform: translateY(-1px);
+        }
+
+        /* Protezione Anti-Sovrapposizione per Schermi Medi/Bassi (Laptop, 768p, 800p e schermi ridotti in altezza <= 820px) */
+        @media (max-height: 820px) {
+            .reader-tools-dock {
+                bottom: 12px;
+                right: 12px;
+                display: grid;
+                grid-template-columns: repeat(2, 34px);
+                gap: 5px;
+                padding: 5px;
+                border-radius: 16px;
+            }
+
+            .dock-tool-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1.05rem;
+            }
+
+            .dock-tool-btn::after {
+                font-size: 0.72rem;
+                padding: 4px 8px;
+            }
+
+            .reader-page-dock {
+                bottom: 12px;
+                left: 12px;
+                gap: 4px;
+                padding: 4px 6px;
+                border-radius: 16px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header-quaderno-logo-wrap {
+                display: none;
+            }
+
+            .reader-page-dock {
+                bottom: 12px;
+                left: 12px;
+                padding: 4px 6px;
+                gap: 5px;
+            }
+
+            .reader-tools-dock {
+                bottom: 12px;
+                right: 12px;
+                padding: 5px;
+                gap: 5px;
+            }
+
+            .dock-tool-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1.05rem;
+            }
+
+            .dock-tool-btn::after {
+                font-size: 0.72rem;
+                padding: 4px 8px;
+            }
+
+            .reader-patamu-footer {
+                padding: 8px 16px;
+            }
+
+            .footer-patamu-row {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                gap: 16px;
+                width: 100% !important;
+            }
+
+            .patamu-text {
+                font-size: 0.72rem;
+                line-height: 1.35;
+                text-align: left !important;
+            }
+
+            .footer-legal-links {
+                gap: 8px 16px;
+                font-size: 0.72rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            #reader-stage {
+                padding: 16px 46px;
+            }
+
+            .stage-nav-arrow {
+                width: 38px;
+                height: 38px;
+                font-size: 1.25rem;
+            }
+
+            .stage-nav-left {
+                left: 8px;
+            }
+
+            .stage-nav-right {
+                right: 8px;
+            }
+
+            .stage-nav-arrow::after {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+
+            .reader-back-btn span.full-text {
+                display: none;
+            }
+
+            .reader-back-btn span.short-text {
+                display: inline !important;
+            }
+
+            .reader-page-dock {
+                bottom: 8px;
+                left: 8px;
+                padding: 3px 5px;
+                gap: 3px;
+            }
+
+            .reader-tools-dock {
+                bottom: 8px;
+                right: 8px;
+                gap: 4px;
+                padding: 4px;
+            }
+
+            .dock-tool-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.95rem;
+            }
+
+            .dock-tool-btn::after {
+                font-size: 0.68rem;
+                padding: 3px 7px;
+            }
+
+            .dock-pagination {
+                padding: 2px 4px;
+            }
+
+            .dock-page-input {
+                width: 36px;
+                font-size: 0.78rem;
+                padding: 2px 0;
+            }
+
+            #sync-status-badge {
+                display: inline-flex !important;
+                width: 26px;
+                height: 26px;
+                font-size: 0.95rem;
+            }
+
+            .reader-patamu-footer {
+                padding: 6px 12px;
+            }
+
+            .footer-patamu-row {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                gap: 12px;
+                width: 100% !important;
+            }
+
+            .patamu-logo-img {
+                height: 38px;
+                flex-shrink: 0;
+            }
+
+            .patamu-text {
+                font-size: 0.68rem;
+                line-height: 1.35;
+                text-align: left !important;
+                flex: 1;
+            }
+
+            .footer-legal-links {
+                gap: 6px 12px;
+                font-size: 0.68rem;
+            }
+
+            #drawing-toolbar {
+                bottom: 60px;
+                padding: 4px 8px;
+                gap: 6px;
+                max-width: 95vw;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;" ondragstart="return false;">
+
+    <div id="reader-app">
+        <!-- Unified Ecosystem Header -->
+        <header class="reader-topbar" id="reader-topbar">
+            <!-- Left: Back to Showcase, TOC trigger & Quaderno Header Logo -->
+            <div class="topbar-left">
+                <a href="quaderno-alternativo.html" class="reader-back-btn" title="Torna a Scegli il tuo Quaderno">
+                    <i class="ph ph-caret-left" style="font-size: 1.1rem;"></i>
+                    <span class="full-text">Torna alla Vetrina</span>
+                    <span class="short-text" style="display: none;">Vetrina</span>
+                </a>
+                <button id="btn-toggle-toc" class="reader-header-toc-btn" title="Apri Indice dei Percorsi e Lezioni">
+                    <i class="ph ph-list-bullets" style="font-size: 1.15rem;"></i>
+                    <span>Indice</span>
+                </button>
+                <div class="header-quaderno-logo-wrap" title="Il mio quaderno alternativo - Classe Prima">
+                    <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo - Classe Prima"
+                        class="header-quaderno-logo">
+                </div>
+            </div>
+
+            <!-- Center: Logo Prof. Memmo con Scritta Bianca Ufficiale -->
+            <div class="topbar-center">
+                <a href="index.html" class="header-prof-logo-wrap" title="Torna alla Home Prof. Memmo Games">
+                    <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-logo-white.png" alt="Prof. Memmo Logo" class="header-prof-logo" onerror="this.onerror=null; this.src='assets/prof-memmo-logo-white.png'">
+                </a>
+            </div>
+
+            <!-- Right: Menu Profilo Utente Ecosistema & Dropdown -->
+            <div class="topbar-right">
+                <div class="user-menu-container" id="header-user-container">
+                    <div class="user-menu-trigger" id="header-user-menu-trigger"
+                        onclick="event.stopPropagation(); toggleUserDropdown(event);">
+                        <div class="user-avatar-circle">
+                            <img id="header-user-avatar-img"
+                                src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png"
+                                alt="Avatar" onerror="this.onerror=null; this.src='assets/prof-memmo-avatar.png'">
+                        </div>
+                        <div class="user-trigger-text">
+                            <span class="user-trigger-name" id="header-user-name">ACCEDI</span>
+                            <span class="user-trigger-role" id="header-user-role">OSPITE</span>
+                        </div>
+                        <span class="user-trigger-chevron"><i class="ph ph-caret-down"></i></span>
+                    </div>
+
+                    <!-- Dropdown Menu Ecosistema -->
+                    <div class="user-dropdown hidden" id="header-user-dropdown" onclick="event.stopPropagation()">
+                        <div class="dropdown-user-header">
+                            <div class="dropdown-user-title" id="dropdown-user-title">OSPITE</div>
+                            <div class="dropdown-user-subtitle" id="dropdown-user-subtitle">NON AUTENTICATO</div>
+                        </div>
+
+                        <!-- Golden Pill Login Button (visibile per ospiti) -->
+                        <button class="dropdown-pill-btn" id="btn-login-hub-dropdown"
+                            style="background: #d4af37; color: #0f172a; font-weight: 800;"
+                            onclick="closeUserDropdown(); window.goToHubPortal();">
+                            <i class="ph ph-sign-in"></i> Accedi tramite Hub
+                        </button>
+
+                        <!-- Modifica Profilo Hub (visibile se autenticato) -->
+                        <button class="dropdown-pill-btn" id="btn-profile-dropdown" style="display: none;"
+                            onclick="closeUserDropdown(); window.open('https://prof-memmo.github.io/games/profilo.html', '_blank');">
+                            <i class="ph ph-user-gear"></i> Modifica Profilo
+                        </button>
+
+                        <!-- Invita un Collega (condiviso ecosistema) -->
+                        <button class="dropdown-pill-btn" id="btn-invite-dropdown"
+                            onclick="closeUserDropdown(); if(window.openSharedModal) window.openSharedModal('invita');">
+                            <i class="ph ph-paper-plane"></i> Invita un Collega
+                        </button>
+
+                        <!-- Modifica nome studente per annotazioni del Quaderno -->
+                        <button class="dropdown-pill-btn" id="btn-student-name-dropdown"
+                            onclick="openStudentModalFromDropdown()">
+                            <i class="ph ph-identification-card"></i> <span id="dropdown-student-action">Nome Quaderno Personale</span>
+                        </button>
+
+                        <!-- Riga inferiore: Notifiche e Logout -->
+                        <div class="dropdown-bottom-row" id="dropdown-bottom-row">
+                            <button class="dropdown-pill-btn btn-notifiche-pill" id="btn-notifiche-dropdown"
+                                onclick="closeUserDropdown(); if(window.openSharedModal) window.openSharedModal('notifiche');">
+                                <i class="ph ph-bell"></i> Notifiche <span id="dropdown-notif-badge" class="badge-notif-pill" style="display:none;">0</span>
+                            </button>
+                            <button class="dropdown-pill-btn btn-esci-pill" id="btn-logout-dropdown" style="display: none;"
+                                onclick="closeUserDropdown(); logoutEcosistema();">
+                                <i class="ph ph-power"></i> Esci
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Frecce Navigazione Laterali (Sinistra e Destra) -->
+        <button id="stage-prev" class="stage-nav-arrow stage-nav-left" data-tooltip="Pagina Precedente (←)" aria-label="Pagina Precedente">
+            <i class="ph ph-caret-left"></i>
+        </button>
+        <button id="stage-next" class="stage-nav-arrow stage-nav-right" data-tooltip="Pagina Successiva (→)" aria-label="Pagina Successiva">
+            <i class="ph ph-caret-right"></i>
+        </button>
+
+        <!-- Main Viewport Stage -->
+        <main id="reader-stage">
+            <!-- Book Viewport -->
+            <div id="book-viewport">
+                <!-- Page Left / Single -->
+                <div id="page-wrapper-left" class="page-wrapper left-page">
+                    <canvas id="canvas-page-left" class="pdf-canvas"></canvas>
+                    <canvas id="canvas-draw-left" class="draw-canvas"></canvas>
+                    <div id="links-layer-left" class="pdf-links-layer"></div>
+                    <div id="hotspot-layer-left" class="hotspot-layer" style="display: none;"></div>
+                </div>
+                <!-- Spina libro (visibile in spread mode) -->
+                <div id="book-spine" class="book-spine-shadow" style="display: none;"></div>
+                <!-- Page Right (in spread mode) -->
+                <div id="page-wrapper-right" class="page-wrapper right-page" style="display: none;">
+                    <canvas id="canvas-page-right" class="pdf-canvas"></canvas>
+                    <canvas id="canvas-draw-right" class="draw-canvas"></canvas>
+                    <div id="links-layer-right" class="pdf-links-layer"></div>
+                    <div id="hotspot-layer-right" class="hotspot-layer" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Floating Page Dock: In Basso a Sinistra (Colonna: Input Pagina in alto, Icona Cloud in basso) -->
+            <div id="reader-page-dock" class="reader-page-dock">
+                <!-- Selettore Pagina (Senza frecce laterali nel dock) -->
+                <div class="dock-pagination">
+                    <div class="dock-page-box">
+                        <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a78bfa;">Pagina</span>
+                        <input type="number" id="page-num-input" class="dock-page-input" min="1" max="1" value="1" title="Digita il numero di pagina e premi Invio" aria-label="Numero di pagina">
+                        <span class="dock-page-total">di <span id="page-count-total">--</span></span>
+                    </div>
+                </div>
+
+                <!-- Sync status badge (solo icona con tooltip) posizionata sotto -->
+                <div id="sync-status-badge" class="sync-badge" data-tooltip="Modifiche sincronizzate nel Cloud" aria-label="Stato salvataggio Cloud">
+                    <i class="ph ph-cloud-check"></i>
+                </div>
+            </div>
+
+            <!-- Floating Tools Dock: In Basso a Destra (Colonna Verticale: Disegna, LIM, Vista, Zoom +, Adatta, Zoom -) -->
+            <div id="reader-tools-dock" class="reader-tools-dock">
+                <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn" data-tooltip="Disegna e Scrivi"
+                    aria-label="Disegna e Scrivi">
+                    <i class="ph ph-pencil-simple"></i>
+                </button>
+                <button id="btn-fullscreen" class="dock-tool-btn" data-tooltip="Schermo Intero LIM" aria-label="Schermo Intero LIM">
+                    <i class="ph ph-corners-out"></i>
+                </button>
+                <button id="btn-toggle-spread" class="dock-tool-btn" data-tooltip="Vista Libro / 1 Pag" aria-label="Vista Libro / 1 Pagina">
+                    <i class="ph ph-book-open"></i>
+                </button>
+                <button id="btn-zoom-in" class="dock-tool-btn" data-tooltip="Aumenta Zoom (+)" aria-label="Aumenta Zoom">
+                    <i class="ph ph-plus"></i>
+                </button>
+                <button id="btn-zoom-fit" class="dock-tool-btn" data-tooltip="Adatta allo Schermo" aria-label="Adatta allo Schermo">
+                    <i class="ph ph-arrows-in-simple"></i>
+                </button>
+                <button id="btn-zoom-out" class="dock-tool-btn" data-tooltip="Riduci Zoom (-)" aria-label="Riduci Zoom">
+                    <i class="ph ph-minus"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Patamu Official Footer: Harmonized with other sites, Julius Sans One, Never Disappears -->
+        <footer class="reader-patamu-footer" id="reader-footer">
+            <div class="footer-legal-links">
+                <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('privacy');"
+                    data-legal="privacy">Privacy Policy</a>
+                <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('termini');"
+                    data-legal="terms">Termini e Condizioni</a>
+                <a href="javascript:void(0)" onclick="if(window.openSharedModal) window.openSharedModal('contatti');"
+                    data-legal="contatti">Contatti</a>
+                <a href="https://prof-memmo.github.io/games/condividi-esperienza.html" target="_blank"
+                    rel="noopener noreferrer">Condividi Esperienza</a>
+            </div>
+            <div class="footer-patamu-row">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png"
+                    alt="Patamu" class="patamu-logo-img" onerror="this.onerror=null; this.src='assets/patamu.png'">
+                <p class="patamu-text">
+                    &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà
+                    dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono
+                    inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+                    International (CC BY-NC-ND 4.0).
+                </p>
+            </div>
+        </footer>
+
+        <!-- Loader & Notice Overlay -->
+        <div id="reader-loader">
+            <div class="spinner"></div>
+            <div style="font-weight: 600; font-size: 0.95rem; color: #e2e8f0;">Caricamento Quaderno in corso…</div>
+        </div>
+
+        <!-- ========================================================
+             FLOATING DRAWING & WRITING TOOLBAR
+             ======================================================== -->
+        <div id="drawing-toolbar">
+            <!-- Penna / Matita -->
+            <button class="tool-btn active" data-tool="pen" title="Penna per scrivere a mano o disegnare">
+                <i class="ph ph-pencil-simple-line"></i>
+            </button>
+
+            <!-- Evidenziatore -->
+            <button class="tool-btn" data-tool="highlighter" title="Evidenziatore fluorescente">
+                <i class="ph ph-highlighter"></i>
+            </button>
+
+            <!-- Testo Digitato per DSA -->
+            <button class="tool-btn" data-tool="text" title="Testo digitato da tastiera (Accessibile DSA)">
+                <i class="ph ph-text-t"></i>
+            </button>
+
+            <!-- Gomma -->
+            <button class="tool-btn" data-tool="eraser" title="Gomma per cancellare">
+                <i class="ph ph-eraser"></i>
+            </button>
+
+            <div class="tool-divider"></div>
+
+            <!-- Tavolozza Colori -->
+            <div class="color-palette" id="color-palette">
+                <div class="color-swatch active" data-color="#1e293b" style="background: #1e293b;" title="Nero Grafite">
+                </div>
+                <div class="color-swatch" data-color="#2563eb" style="background: #2563eb;" title="Blu Scuola"></div>
+                <div class="color-swatch" data-color="#7c3aed" style="background: #7c3aed;" title="Viola Memmo"></div>
+                <div class="color-swatch" data-color="#dc2626" style="background: #dc2626;" title="Rosso Correzione">
+                </div>
+                <div class="color-swatch" data-color="#facc15" style="background: #facc15;"
+                    title="Giallo Evidenziatore"></div>
+                <div class="color-swatch" data-color="#4ade80" style="background: #4ade80;" title="Verde Evidenziatore">
+                </div>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Selettore Spessore -->
+            <div class="stroke-size-selector">
+                <span class="stroke-dot size-fine active" data-width="2" title="Tratto Sottile"></span>
+                <span class="stroke-dot size-medium" data-width="5" title="Tratto Medio"></span>
+                <span class="stroke-dot size-thick" data-width="10" title="Tratto Spesso"></span>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Undo / Redo / Clear -->
+            <button class="tool-btn" id="btn-undo" title="Annulla ultimo tratto (Ctrl+Z)">
+                <i class="ph ph-arrow-u-up-left"></i>
+            </button>
+            <button class="tool-btn" id="btn-redo" title="Ripristina tratto (Ctrl+Y)">
+                <i class="ph ph-arrow-u-up-right"></i>
+            </button>
+            <button class="tool-btn" id="btn-clear-page" title="Cancella tutte le note di questa pagina">
+                <i class="ph ph-trash"></i>
+            </button>
+        </div>
+
+        <!-- ========================================================
+             TOC DRAWER & BACKDROP
+             ======================================================== -->
+        <div id="toc-backdrop"></div>
+        <aside id="toc-drawer">
+            <div class="toc-header">
+                <div class="toc-header-top">
+                    <div class="toc-brand">
+                        <img src="loghi/quaderno-alternativo-header.png" alt="Il mio quaderno alternativo">
+                    </div>
+                    <button id="btn-close-toc" class="toc-close-btn" title="Chiudi Indice (Esc)">
+                        <i class="ph ph-x"></i>
+                    </button>
+                </div>
+                <div class="toc-search-box">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input type="text" id="toc-search-input" placeholder="Cerca percorso, lezione o laboratorio…">
+                </div>
+            </div>
+            <div class="toc-list-container" id="toc-list">
+                <!-- Generato dinamicamente via JS -->
+            </div>
+        </aside>
+
+        <!-- Modal Cambio Nome Studente -->
+        <div id="student-name-modal">
+            <div class="modal-card">
+                <h3>Il tuo Quaderno Personale</h3>
+                <p>Inserisci il tuo nome o pseudonimo. Tutti i disegni e gli appunti scritti sul libro rimarranno
+                    collegati al tuo profilo!</p>
+                <input type="text" id="student-name-input" class="modal-input" placeholder="Es. Marco R."
+                    maxlength="30">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <button id="btn-cancel-student" class="reader-btn" style="flex: 1;">Annulla</button>
+                    <button id="btn-save-student" class="reader-btn reader-btn-primary" style="flex: 1;">Salva
+                        Profilo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Riservato Piano Ecosistema Completo (Soluzione B - Anteprima Read-Only) -->
+        <div id="ecosistema-upgrade-modal" class="reader-modal-overlay">
+            <div class="reader-modal-card">
+                <button class="reader-modal-close" onclick="closeEcosistemaModal()" aria-label="Chiudi"><i class="ph ph-x"></i></button>
+                <div class="upgrade-icon-wrap">
+                    <i class="ph-fill ph-sparkle"></i>
+                </div>
+                <div class="upgrade-badge-pill">PIANO ECOSISTEMA COMPLETO</div>
+                <h3 class="upgrade-title">Edizione Completa (142 Pagine)</h3>
+                <p class="upgrade-desc">
+                    Hai raggiunto il termine dell'<strong>anteprima gratuita di 15 pagine</strong>.<br>
+                    Sblocca l'accesso illimitato all'intero quaderno didattico e a tutti gli strumenti interattivi.
+                </p>
+                <div class="upgrade-features-list">
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Tutte le 142 pagine ad alta risoluzione</strong> per tutto l'anno scolastico</span>
+                    </div>
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Strumenti interattivi LIM</strong>: penna, evidenziatore, note e cancellino</span>
+                    </div>
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Salvataggio Cloud</strong> delle annotazioni per te e i tuoi studenti</span>
+                    </div>
+                    <div class="upgrade-feature-item">
+                        <i class="ph-fill ph-check-circle"></i>
+                        <span><strong>Tutte le piattaforme e giochi didattici</strong> dell'Ecosistema Prof. Memmo</span>
+                    </div>
+                </div>
+                <div class="upgrade-modal-actions">
+                    <a href="prezzi.html" class="reader-btn reader-btn-primary upgrade-cta-btn">
+                        <i class="ph-fill ph-crown"></i> Passa a Ecosistema Completo (€34.99/anno)
+                    </a>
+                    <button class="reader-btn reader-btn-secondary" onclick="closeEcosistemaModal()">
+                        Rimani nell'anteprima
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Local PDF.js Engine (Scuole & LIM Offline Resilient) -->
+    <script src="js/vendor/pdf.min.js"></script>
+    <script>
+        // Configura il worker PDF.js locale
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/vendor/pdf.worker.min.js';
+        }
+
+        // --- DATASET INDICE GENERALE DEI PERCORSI ---
+        const TOC_DATA = [
+            {
+                id: "intro-group",
+                title: "Introduzione & Indice",
+                page: 1,
+                items: [
+                    { title: "Copertina del Libro", page: 1, tag: "Copertina" },
+                    { title: "Presentazione del percorso", page: 2, tag: "Intro" },
+                    { title: "Indice Generale Stampato (Percorsi 1 e 2)", page: 3, tag: "Indice" },
+                    { title: "Indice Generale Stampato (Percorsi 3, 4 e 5)", page: 4, tag: "Indice" },
+                    { title: "Indice Generale Stampato (Percorsi 6, 7 e 8)", page: 5, tag: "Indice" }
+                ]
+            },
+            {
+                id: "percorso-1",
+                title: "Percorso 1: Benvenuti nella materia alternativa!",
+                page: 7,
+                items: [
+                    { title: "Attività di benvenuto: La mia carta d’identità speciale", page: 8, tag: "Attività" },
+                    { title: "Lezione 1: Chi sono io? La scoperta di sé", page: 12, tag: "Lezione" },
+                    { title: "Lezione 2: Cosa mi piace fare? Le mie passioni", page: 15, tag: "Lezione" },
+                    { title: "Lezione 3: I miei superpoteri interiori", page: 18, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il super-cartellone della classe", page: 22, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 1", page: 23, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-2",
+                title: "Percorso 2: Io e gli altri: l’empatia e l’amicizia",
+                page: 24,
+                items: [
+                    { title: "Lezione 4: Che cos’è l’empatia? Mettersi nei panni degli altri", page: 28, tag: "Lezione" },
+                    { title: "Lezione 5: L’ascolto attivo: sentire davvero chi parla", page: 31, tag: "Lezione" },
+                    { title: "Lezione 6: Il valore dell’amicizia", page: 34, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il barattolo dei complimenti", page: 38, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 2", page: 39, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-3",
+                title: "Percorso 3: La diversità è una ricchezza",
+                page: 40,
+                items: [
+                    { title: "Lezione 7: Tante culture, una sola umanità", page: 44, tag: "Lezione" },
+                    { title: "Lezione 8: Superare gli stereotipi e i pregiudizi", page: 47, tag: "Lezione" },
+                    { title: "Lezione 9: L’inclusione: nessuno resta indietro", page: 50, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il mega-mosaico dell’inclusione", page: 54, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 3", page: 55, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-4",
+                title: "Percorso 4: Emozioni: conoscerle ed esprimerle",
+                page: 56,
+                items: [
+                    { title: "Lezione 10: La ruota delle emozioni di Plutchik", page: 60, tag: "Lezione" },
+                    { title: "Lezione 11: Come gestire la rabbia e la frustrazione", page: 63, tag: "Lezione" },
+                    { title: "Lezione 12: La paura: un’amica che protegge", page: 66, tag: "Lezione" },
+                    { title: "Laboratorio creativo: La ruota dei talenti e dei sentimenti", page: 70, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 4", page: 71, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-5",
+                title: "Percorso 5: La comunicazione efficace e non violenta",
+                page: 72,
+                items: [
+                    { title: "Lezione 13: Le parole pesano: il linguaggio che cura e che ferisce", page: 76, tag: "Lezione" },
+                    { title: "Lezione 14: La Comunicazione Non Violenta (CNV) di Rosenberg", page: 79, tag: "Lezione" },
+                    { title: "Lezione 15: Il litigio: come risolverlo senza vincitori né vinti", page: 82, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il decalogo della comunicazione gentile", page: 86, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 5", page: 87, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-6",
+                title: "Percorso 6: Regole, diritti e doveri: vivere insieme",
+                page: 88,
+                items: [
+                    { title: "Lezione 16: Perché esistono le regole? La Costituzione a scuola", page: 92, tag: "Lezione" },
+                    { title: "Lezione 17: I diritti dei bambini: la Convenzione ONU del 1989", page: 95, tag: "Lezione" },
+                    { title: "Lezione 18: Libertà e responsabilità: il confine della mia libertà", page: 98, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il nostro manifesto dei diritti e doveri", page: 102, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 6", page: 103, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-7",
+                title: "Percorso 7: La terra è di tutti: ecologia e sostenibilità",
+                page: 104,
+                items: [
+                    { title: "Lezione 19: L’impronta ecologica: quanto pesiamo sul pianeta?", page: 108, tag: "Lezione" },
+                    { title: "Lezione 20: L’Agenda 2030: 17 obiettivi per il mondo", page: 111, tag: "Lezione" },
+                    { title: "Lezione 21: Cosa posso fare io? Piccole azioni quotidiane", page: 114, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il diario ecologico della settimana", page: 118, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 7", page: 119, tag: "Test" }
+                ]
+            },
+            {
+                id: "percorso-8",
+                title: "Percorso 8: Pensare con la propria testa: spirito critico",
+                page: 120,
+                items: [
+                    { title: "Lezione 22: Fatto o opinione? Imparare a distinguere", page: 124, tag: "Lezione" },
+                    { title: "Lezione 23: Fake news: non credere a tutto ciò che vedi", page: 127, tag: "Lezione" },
+                    { title: "Lezione 24: Il dubbio come forza: Socrate e la filosofia per tutti", page: 130, tag: "Lezione" },
+                    { title: "Laboratorio creativo: Il grande murale del pensiero libero", page: 134, tag: "Laboratorio" },
+                    { title: "Test di fine percorso 8", page: 135, tag: "Test" }
+                ]
+            }
+        ];
+
+        // Mappatura degli hotspot cliccabili sulle pagine 3, 4 e 5 dell'indice cartaceo
+        // Valori percentuali (top, height, title, targetPage)
+        const HOTSPOTS_MAP = {
+            3: [
+                { top: 18, height: 6, title: "Percorso 1: Benvenuti nella materia alternativa!", targetPage: 7 },
+                { top: 25, height: 4, title: "La mia carta d’identità speciale", targetPage: 8 },
+                { top: 30, height: 4, title: "Lezione 1: Chi sono io?", targetPage: 12 },
+                { top: 35, height: 4, title: "Lezione 2: Cosa mi piace fare?", targetPage: 15 },
+                { top: 40, height: 4, title: "Lezione 3: I miei superpoteri interiori", targetPage: 18 },
+                { top: 45, height: 4, title: "Laboratorio: Super-cartellone", targetPage: 22 },
+                { top: 50, height: 4, title: "Test fine percorso 1", targetPage: 23 },
+                { top: 57, height: 6, title: "Percorso 2: Io e gli altri", targetPage: 24 },
+                { top: 64, height: 4, title: "Lezione 4: Che cos’è l’empatia?", targetPage: 28 },
+                { top: 69, height: 4, title: "Lezione 5: L’ascolto attivo", targetPage: 31 },
+                { top: 74, height: 4, title: "Lezione 6: Il valore dell’amicizia", targetPage: 34 },
+                { top: 79, height: 4, title: "Laboratorio: Il barattolo dei complimenti", targetPage: 38 },
+                { top: 84, height: 4, title: "Test fine percorso 2", targetPage: 39 }
+            ],
+            4: [
+                { top: 14, height: 5, title: "Percorso 3: La diversità è una ricchezza", targetPage: 40 },
+                { top: 20, height: 3.5, title: "Lezione 7: Tante culture, una sola umanità", targetPage: 44 },
+                { top: 24, height: 3.5, title: "Lezione 8: Stereotipi e pregiudizi", targetPage: 47 },
+                { top: 28, height: 3.5, title: "Lezione 9: L’inclusione", targetPage: 50 },
+                { top: 32, height: 3.5, title: "Laboratorio: Mega-mosaico", targetPage: 54 },
+                { top: 36, height: 3.5, title: "Test fine percorso 3", targetPage: 55 },
+                { top: 42, height: 5, title: "Percorso 4: Emozioni: conoscerle ed esprimerle", targetPage: 56 },
+                { top: 48, height: 3.5, title: "Lezione 10: La ruota delle emozioni", targetPage: 60 },
+                { top: 52, height: 3.5, title: "Lezione 11: Gestire rabbia e frustrazione", targetPage: 63 },
+                { top: 56, height: 3.5, title: "Lezione 12: La paura", targetPage: 66 },
+                { top: 60, height: 3.5, title: "Laboratorio: Ruota talenti e sentimenti", targetPage: 70 },
+                { top: 64, height: 3.5, title: "Test fine percorso 4", targetPage: 71 },
+                { top: 70, height: 5, title: "Percorso 5: Comunicazione efficace", targetPage: 72 },
+                { top: 76, height: 3.5, title: "Lezione 13: Le parole pesano", targetPage: 76 },
+                { top: 80, height: 3.5, title: "Lezione 14: Comunicazione Non Violenta", targetPage: 79 },
+                { top: 84, height: 3.5, title: "Lezione 15: Il litigio", targetPage: 82 },
+                { top: 88, height: 3.5, title: "Laboratorio: Decalogo gentile", targetPage: 86 }
+            ],
+            5: [
+                { top: 14, height: 5, title: "Percorso 6: Regole, diritti e doveri", targetPage: 88 },
+                { top: 20, height: 3.5, title: "Lezione 16: Perché esistono le regole?", targetPage: 92 },
+                { top: 24, height: 3.5, title: "Lezione 17: I diritti dei bambini", targetPage: 95 },
+                { top: 28, height: 3.5, title: "Lezione 18: Libertà e responsabilità", targetPage: 98 },
+                { top: 32, height: 3.5, title: "Laboratorio: Manifesto diritti", targetPage: 102 },
+                { top: 36, height: 3.5, title: "Test fine percorso 6", targetPage: 103 },
+                { top: 42, height: 5, title: "Percorso 7: La terra è di tutti", targetPage: 104 },
+                { top: 48, height: 3.5, title: "Lezione 19: L'impronta ecologica", targetPage: 108 },
+                { top: 52, height: 3.5, title: "Lezione 20: L'Agenda 2030", targetPage: 111 },
+                { top: 56, height: 3.5, title: "Lezione 21: Piccole azioni quotidiane", targetPage: 114 },
+                { top: 60, height: 3.5, title: "Laboratorio: Diario ecologico", targetPage: 118 },
+                { top: 64, height: 3.5, title: "Test fine percorso 7", targetPage: 119 },
+                { top: 70, height: 5, title: "Percorso 8: Pensare con la propria testa", targetPage: 120 },
+                { top: 76, height: 3.5, title: "Lezione 22: Fatto o opinione?", targetPage: 124 },
+                { top: 80, height: 3.5, title: "Lezione 23: Fake news", targetPage: 127 },
+                { top: 84, height: 3.5, title: "Lezione 24: Il dubbio come forza (Socrate)", targetPage: 130 },
+                { top: 88, height: 3.5, title: "Laboratorio: Murale del pensiero libero", targetPage: 134 }
+            ]
+        };
+
+        // --- STATO DEL LETTORE & ANNOTAZIONI ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const EDITION_ID = urlParams.get('edition') || 'classe-1';
+
+        const EDITIONS_META = {
+            'classe-1': {
+                title: 'Classe Prima',
+                pdfUrl: 'contenuti%20aggiuntivi/IL%20MIO%20QUADERNO%20ALTERNATIVO%20-%20CLASSE%20PRIMA.pdf',
+                available: true
+            },
+            'classe-2': {
+                title: 'Classe Seconda',
+                pdfUrl: null,
+                available: false
+            },
+            'classe-3': {
+                title: 'Classe Terza',
+                pdfUrl: null,
+                available: false
+            }
+        };
+
+        const currentEditionMeta = EDITIONS_META[EDITION_ID] || EDITIONS_META['classe-1'];
+        const PDF_URL = currentEditionMeta.pdfUrl;
+
+        let pdfDoc = null;
+        let currentPageNum = 1;
+        let totalPages = 1;
+        let isTwoPageMode = (window.innerWidth >= 1200);
+        let zoomLevel = 1.0;
+        let isRendering = false;
+        let renderPendingPage = null;
+
+        // Modalità Disegno / Scrittura
+        let isDrawMode = false;
+        let activeTool = 'pen'; // 'pen', 'highlighter', 'text', 'eraser'
+        let activeColor = '#1e293b';
+        let activeStrokeWidth = 2;
+        let isDrawing = false;
+        let currentStroke = null;
+        let currentDrawPage = null;
+
+        // Store Annotazioni Vettoriali in memoria: { [pageNum]: Array<Item> }
+        // Item: { type: 'stroke', tool: 'pen'|'highlighter', color: '#...', width: number, points: [[nx, ny], ...] }
+        //       { type: 'text', text: '...', nx: 0.1, ny: 0.2, color: '#...', fontSize: 16 }
+        let annotationsStore = {};
+        let undoStack = {}; // { [pageNum]: Array<Array<Item>> }
+        let redoStack = {}; // { [pageNum]: Array<Array<Item>> }
+
+        // Identificativo Studente (Auto-rilevamento sessione utente dell'ecosistema)
+        function resolveInitialStudentInfo() {
+            let name = localStorage.getItem('pm_student_name');
+            let id = localStorage.getItem('pm_student_id');
+
+            if (!name) {
+                name = localStorage.getItem('hub_user_name') ||
+                    localStorage.getItem('corte_user') ||
+                    localStorage.getItem('fanta_user_name');
+                if (!name) {
+                    try {
+                        const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                        if (u && (u.displayName || u.nome || u.name)) name = u.displayName || u.nome || u.name;
+                        else if (u && u.email) name = u.email.split('@')[0];
+                    } catch (e) { }
+                }
+            }
+
+            if (!name) name = 'Mio Quaderno';
+
+            if (!id) {
+                try {
+                    const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                    if (u && (u.uid || u.id)) id = u.uid || u.id;
+                } catch (e) { }
+                if (!id) {
+                    id = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                    if (!id) id = 'studente_default';
+                }
+            }
+
+            return { name, id };
+        }
+
+        const initialStudent = resolveInitialStudentInfo();
+        let currentStudentId = initialStudent.id;
+        let currentStudentName = initialStudent.name;
+
+        // --- CONTROLLO ACCESSO PIANO ECOSISTEMA & ANTEPRIMA READ-ONLY (Soluzione B) ---
+        const PREVIEW_MAX_PAGE = 15;
+        let hasEcosistemaAccess = false;
+
+        function checkLocalEcosistemaAccess() {
+            try {
+                var email = (localStorage.getItem('hub_user_email') || '').toLowerCase();
+                if (email === 'prof.memmo@gmail.com') return true;
+                var role = (localStorage.getItem('hub_user_role') || '').toLowerCase();
+                if (role === 'admin' || role === 'superadmin') return true;
+                var plan = (localStorage.getItem('hub_user_plan') || localStorage.getItem('hub_user_subscription') || '').toLowerCase();
+                if (plan === 'ecosistema' || plan === 'docente_ecosistema') return true;
+            } catch (e) { }
+            return false;
+        }
+
+        hasEcosistemaAccess = checkLocalEcosistemaAccess();
+
+        function openEcosistemaUpgradeModal(reason) {
+            const modal = document.getElementById('ecosistema-upgrade-modal');
+            if (!modal) return;
+            const titleEl = modal.querySelector('.upgrade-title');
+            const descEl = modal.querySelector('.upgrade-desc');
+
+            if (reason === 'draw') {
+                if (titleEl) titleEl.textContent = "Disegno e LIM con Ecosistema";
+                if (descEl) descEl.innerHTML = "La modalità disegno, testo e annotazione su LIM è uno strumento didattico avanzato incluso nel <strong>Piano Ecosistema Completo</strong>.<br>Attiva il piano per annotare il quaderno durante le lezioni!";
+            } else if (reason === 'cloud') {
+                if (titleEl) titleEl.textContent = "Salvataggio Cloud con Ecosistema";
+                if (descEl) descEl.innerHTML = "Il salvataggio e la sincronizzazione cloud di disegni e note su tutti i tuoi dispositivi sono inclusi nel <strong>Piano Ecosistema Completo</strong>.";
+            } else if (typeof reason === 'number') {
+                if (titleEl) titleEl.textContent = `Pagina ${reason} • Edizione Completa`;
+                if (descEl) descEl.innerHTML = `Questa pagina fa parte dell'<strong>Edizione Completa di 142 pagine</strong>. Stai consultando l'anteprima gratuita (prime 15 pagine).<br>Passa al Piano Ecosistema Completo per sbloccare l'intero percorso didattico annuale!`;
+            } else {
+                if (titleEl) titleEl.textContent = "Edizione Completa (142 Pagine)";
+                if (descEl) descEl.innerHTML = "Hai raggiunto il termine dell'<strong>anteprima gratuita di 15 pagine</strong>.<br>Sblocca l'accesso illimitato a tutte le 142 pagine ad alta risoluzione del Quaderno per l'intero anno scolastico con il <strong>Piano Ecosistema Completo</strong>.";
+            }
+
+            modal.classList.add('open');
+        }
+
+        function closeEcosistemaModal() {
+            const modal = document.getElementById('ecosistema-upgrade-modal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        // Elementi DOM
+        const stage = document.getElementById('reader-stage');
+        const bookViewport = document.getElementById('book-viewport');
+        const pageLeftWrapper = document.getElementById('page-wrapper-left');
+        const pageRightWrapper = document.getElementById('page-wrapper-right');
+        const canvasLeft = document.getElementById('canvas-page-left');
+        const canvasRight = document.getElementById('canvas-page-right');
+        const canvasDrawLeft = document.getElementById('canvas-draw-left');
+        const canvasDrawRight = document.getElementById('canvas-draw-right');
+        const linksLayerLeft = document.getElementById('links-layer-left');
+        const linksLayerRight = document.getElementById('links-layer-right');
+        const hotspotLayerLeft = document.getElementById('hotspot-layer-left');
+        const hotspotLayerRight = document.getElementById('hotspot-layer-right');
+        const spine = document.getElementById('book-spine');
+        const loader = document.getElementById('reader-loader');
+
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const stagePrev = document.getElementById('stage-prev');
+        const stageNext = document.getElementById('stage-next');
+        const pageInput = document.getElementById('page-num-input');
+        const pageCountTotal = document.getElementById('page-count-total');
+
+        const btnToggleSpread = document.getElementById('btn-toggle-spread');
+        const labelSpread = document.getElementById('label-spread');
+        const btnZoomIn = document.getElementById('btn-zoom-in');
+        const btnZoomOut = document.getElementById('btn-zoom-out');
+        const btnZoomFit = document.getElementById('btn-zoom-fit');
+        const btnFullscreen = document.getElementById('btn-fullscreen');
+
+        // TOC Elements
+        const btnToggleToc = document.getElementById('btn-toggle-toc');
+        const btnCloseToc = document.getElementById('btn-close-toc');
+        const tocDrawer = document.getElementById('toc-drawer');
+        const tocBackdrop = document.getElementById('toc-backdrop');
+        const tocList = document.getElementById('toc-list');
+        const tocSearchInput = document.getElementById('toc-search-input');
+
+        // Drawing Toolbar Elements
+        const drawingToolbar = document.getElementById('drawing-toolbar');
+        const btnToggleDrawMode = document.getElementById('btn-toggle-draw-mode');
+        const labelDrawMode = document.getElementById('label-draw-mode');
+        const colorPalette = document.getElementById('color-palette');
+        const btnUndo = document.getElementById('btn-undo');
+        const btnRedo = document.getElementById('btn-redo');
+        const btnClearPage = document.getElementById('btn-clear-page');
+
+        // Student Profile & Sync Elements
+        const studentProfilePill = document.getElementById('student-profile-pill');
+        const studentNameLabel = document.getElementById('student-name-label');
+        const syncStatusBadge = document.getElementById('sync-status-badge');
+        const studentModal = document.getElementById('student-name-modal');
+        const studentNameInput = document.getElementById('student-name-input');
+        const btnSaveStudent = document.getElementById('btn-save-student');
+        const btnCancelStudent = document.getElementById('btn-cancel-student');
+
+        // --- GESTIONE PROFILO STUDENTE & PERSISTENZA ---
+        function initStudentProfile() {
+            if (studentNameLabel) {
+                studentNameLabel.textContent = currentStudentName;
+            }
+            loadAnnotationsFromStorage();
+        }
+
+        function getStorageKey() {
+            return `pm_quaderno_${EDITION_ID}_${currentStudentId}`;
+        }
+
+        function loadAnnotationsFromStorage() {
+            try {
+                const raw = localStorage.getItem(getStorageKey());
+                if (raw) {
+                    annotationsStore = JSON.parse(raw);
+                } else {
+                    annotationsStore = {};
+                }
+            } catch (e) {
+                console.warn("Impossibile caricare annotazioni locali:", e);
+                annotationsStore = {};
+            }
+        }
+
+        let saveDebounceTimer = null;
+        function saveAnnotationsToStorage() {
+            setSyncStatus('saving');
+            clearTimeout(saveDebounceTimer);
+            saveDebounceTimer = setTimeout(() => {
+                try {
+                    localStorage.setItem(getStorageKey(), JSON.stringify(annotationsStore));
+                    setSyncStatus('saved');
+                } catch (e) {
+                    console.error("Errore salvataggio annotazioni:", e);
+                    setSyncStatus('saved');
+                }
+            }, 800);
+        }
+
+        function setSyncStatus(state) {
+            if (!syncStatusBadge) return;
+            if (!hasEcosistemaAccess) {
+                syncStatusBadge.classList.remove('saving');
+                syncStatusBadge.innerHTML = '<i class="ph ph-cloud-slash"></i>';
+                syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio Cloud attivo nel Piano Ecosistema');
+                return;
+            }
+            if (state === 'saving') {
+                syncStatusBadge.classList.add('saving');
+                syncStatusBadge.innerHTML = '<i class="ph ph-arrows-clockwise"></i>';
+                syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio modifiche in corso…');
+            } else {
+                syncStatusBadge.classList.remove('saving');
+                syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i>';
+                syncStatusBadge.setAttribute('data-tooltip', 'Modifiche sincronizzate nel Cloud');
+            }
+        }
+
+        function updateAccessModeUI() {
+            const pageDock = document.getElementById('reader-page-dock');
+            let previewPill = document.getElementById('dock-preview-pill');
+
+            if (!hasEcosistemaAccess) {
+                if (pageCountTotal) pageCountTotal.textContent = `${PREVIEW_MAX_PAGE} (Anteprima)`;
+                if (pageInput) pageInput.max = PREVIEW_MAX_PAGE;
+
+                if (!previewPill && pageDock) {
+                    previewPill = document.createElement('div');
+                    previewPill.id = 'dock-preview-pill';
+                    previewPill.className = 'dock-preview-pill';
+                    previewPill.setAttribute('data-tooltip', "Anteprima Gratuita (15 pag.) • Clicca per sbloccare l'Edizione Completa");
+                    previewPill.innerHTML = '<i class="ph-fill ph-lock-key"></i> <span>Anteprima</span>';
+                    previewPill.addEventListener('click', () => openEcosistemaUpgradeModal());
+                    pageDock.appendChild(previewPill);
+                }
+
+                if (syncStatusBadge) {
+                    syncStatusBadge.innerHTML = '<i class="ph ph-cloud-slash"></i>';
+                    syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio Cloud attivo nel Piano Ecosistema');
+                    syncStatusBadge.onclick = () => openEcosistemaUpgradeModal('cloud');
+                }
+            } else {
+                if (pageCountTotal) pageCountTotal.textContent = totalPages;
+                if (pageInput) pageInput.max = totalPages;
+
+                if (previewPill) previewPill.remove();
+
+                if (syncStatusBadge) {
+                    syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i>';
+                    syncStatusBadge.setAttribute('data-tooltip', 'Modifiche sincronizzate nel Cloud');
+                    syncStatusBadge.onclick = null;
+                }
+            }
+
+            if (typeof renderTocList === 'function') renderTocList();
+            if (typeof updateNavState === 'function') updateNavState();
+        }
+
+        // --- CARICAMENTO PDF ---
+        async function loadPdf() {
+            try {
+                showLoader(true);
+                initStudentProfile();
+                updateAccessModeUI();
+
+                // Aggiorna badge edizione nell'header
+                const badgeEl = document.querySelector('.reader-title-box .reader-badge');
+                if (badgeEl) badgeEl.textContent = currentEditionMeta.title;
+
+                if (!currentEditionMeta.available || !PDF_URL) {
+                    showLoader(false);
+                    loader.style.opacity = '1';
+                    loader.style.pointerEvents = 'auto';
+                    loader.innerHTML = `
+                        <div style="margin-bottom: 0.5rem;"><img src="assets/avatars/16.png" alt="Capibara al lavoro" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); background: #fef3c7; padding: 4px; border: 3px solid #f59e0b;"></div>
+                        <div style="font-weight: 700; font-size: 1.25rem; color: #ffffff;">${currentEditionMeta.title} in lavorazione</div>
+                        <div style="font-size: 0.88rem; color: #94a3b8; max-width: 440px; text-align: center; line-height: 1.5; margin: 0.4rem 0 1.25rem 0;">I materiali didattici di questa classe sono in fase di completamento. Sfoglia il quaderno di Classe Prima oppure torna alla pagina principale.</div>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="quaderno-alternativo.html" class="reader-btn">Torna Indietro</a>
+                            <a href="quaderno-reader.html?edition=classe-1" class="reader-btn reader-btn-primary">Apri Classe Prima</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderTocList();
+
+                // Tentativo di caricamento PDF con fallback automatico
+                let pdfSource = PDF_URL;
+                let loadingTask = pdfjsLib.getDocument(pdfSource);
+                try {
+                    pdfDoc = await loadingTask.promise;
+                } catch (pdfErr) {
+                    console.warn("Caricamento PDF relativo fallito, provo fallback da GitHub:", pdfErr);
+                    pdfSource = 'https://prof-memmo.github.io/games/' + PDF_URL;
+                    loadingTask = pdfjsLib.getDocument(pdfSource);
+                    pdfDoc = await loadingTask.promise;
+                }
+
+                totalPages = pdfDoc.numPages;
+
+                updateAccessModeUI();
+                updateViewModeUI();
+                await renderCurrentPages();
+                showLoader(false);
+            } catch (err) {
+                console.error("Errore caricamento PDF Quaderno:", err);
+                loader.style.opacity = '1';
+                loader.style.pointerEvents = 'auto';
+                loader.innerHTML = `
+                    <div style="color: #ef4444; font-size: 2.2rem;"><i class="ph ph-warning-circle"></i></div>
+                    <div style="font-weight: 700; font-size: 1.2rem; color: #f87171; margin-top: 6px;">Impossibile aprire il quaderno</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; max-width: 440px; text-align: center; margin: 8px 0 16px 0; line-height: 1.5;">
+                        ${err.message || 'Errore di connessione o accesso al documento.'}<br>
+                        Se stai eseguendo il file in locale, ricarica la pagina o verifica la connessione internet.
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="window.location.reload()" class="reader-btn reader-btn-primary"><i class="ph ph-arrow-clockwise"></i> Ricarica Pagina</button>
+                        <a href="quaderno-alternativo.html" class="reader-btn">Torna alla Vetrina</a>
+                    </div>
+                `;
+            }
+        }
+
+        // --- RENDERING PAGINE PDF & OVERLAYS ---
+        async function renderCurrentPages() {
+            if (!pdfDoc) return;
+            if (isRendering) {
+                renderPendingPage = currentPageNum;
+                return;
+            }
+            isRendering = true;
+
+            try {
+                const padX = (window.innerWidth < 640) ? 92 : 150;
+                const padY = 50;
+                const stageWidth = Math.max(280, (stage.clientWidth || window.innerWidth) - padX);
+                const stageHeight = Math.max(350, (stage.clientHeight || window.innerHeight) - padY);
+
+                const leftPageNum = currentPageNum;
+                const hasSecondPage = isTwoPageMode && (leftPageNum + 1 <= totalPages);
+                const rightPageNum = hasSecondPage ? leftPageNum + 1 : null;
+
+                const page1 = await pdfDoc.getPage(leftPageNum);
+                const baseViewport1 = page1.getViewport({ scale: 1.0 });
+
+                let baseScale;
+                if (isTwoPageMode && hasSecondPage) {
+                    const spreadWidth = baseViewport1.width * 2;
+                    const scaleW = stageWidth / spreadWidth;
+                    const scaleH = stageHeight / baseViewport1.height;
+                    baseScale = Math.min(scaleW, scaleH);
+                } else {
+                    const scaleW = stageWidth / baseViewport1.width;
+                    const scaleH = stageHeight / baseViewport1.height;
+                    baseScale = Math.min(scaleW, scaleH);
+                }
+
+                const targetScale = baseScale * zoomLevel;
+                // DPR per supporto Retina (nitidezza assoluta su Mac, iPad, display 4K)
+                const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+                // Viewport CSS
+                const cssViewport1 = page1.getViewport({ scale: targetScale });
+                const cssW1 = Math.round(cssViewport1.width);
+                const cssH1 = Math.round(cssViewport1.height);
+
+                // Viewport render HiDPI moltiplicato per DPR
+                const renderViewport1 = page1.getViewport({ scale: targetScale * dpr });
+                canvasLeft.width = Math.round(renderViewport1.width);
+                canvasLeft.height = Math.round(renderViewport1.height);
+                canvasLeft.style.width = cssW1 + 'px';
+                canvasLeft.style.height = cssH1 + 'px';
+
+                pageLeftWrapper.style.width = cssW1 + 'px';
+                pageLeftWrapper.style.height = cssH1 + 'px';
+
+                const ctx1 = canvasLeft.getContext('2d', { alpha: false });
+                await page1.render({ canvasContext: ctx1, viewport: renderViewport1 }).promise;
+
+                // Sync e ridisegno canvas disegno, hotspot e link
+                setupDrawCanvas(canvasDrawLeft, leftPageNum, cssW1, cssH1, dpr);
+                setupHotspots(hotspotLayerLeft, leftPageNum);
+                await setupPdfLinks(linksLayerLeft, page1, cssViewport1);
+
+                let totalBookWidth = cssW1;
+                let maxBookHeight = cssH1;
+
+                // Render Right Page (se attiva)
+                if (isTwoPageMode && hasSecondPage) {
+                    pageRightWrapper.style.display = 'flex';
+                    spine.style.display = 'block';
+                    pageLeftWrapper.classList.add('left-page');
+
+                    const page2 = await pdfDoc.getPage(rightPageNum);
+                    const cssViewport2 = page2.getViewport({ scale: targetScale });
+                    const cssW2 = Math.round(cssViewport2.width);
+                    const cssH2 = Math.round(cssViewport2.height);
+
+                    const renderViewport2 = page2.getViewport({ scale: targetScale * dpr });
+                    canvasRight.width = Math.round(renderViewport2.width);
+                    canvasRight.height = Math.round(renderViewport2.height);
+                    canvasRight.style.width = cssW2 + 'px';
+                    canvasRight.style.height = cssH2 + 'px';
+
+                    pageRightWrapper.style.width = cssW2 + 'px';
+                    pageRightWrapper.style.height = cssH2 + 'px';
+
+                    const ctx2 = canvasRight.getContext('2d', { alpha: false });
+                    await page2.render({ canvasContext: ctx2, viewport: renderViewport2 }).promise;
+
+                    setupDrawCanvas(canvasDrawRight, rightPageNum, cssW2, cssH2, dpr);
+                    setupHotspots(hotspotLayerRight, rightPageNum);
+                    await setupPdfLinks(linksLayerRight, page2, cssViewport2);
+
+                    totalBookWidth = cssW1 + cssW2;
+                    maxBookHeight = Math.max(cssH1, cssH2);
+                } else {
+                    pageRightWrapper.style.display = 'none';
+                    spine.style.display = 'none';
+                    pageLeftWrapper.classList.remove('left-page');
+                    clearHotspots(hotspotLayerRight);
+                    clearPdfLinks(linksLayerRight);
+                }
+
+                bookViewport.style.width = totalBookWidth + 'px';
+                bookViewport.style.height = maxBookHeight + 'px';
+
+                updateNavState();
+                updateTocActiveHighlight();
+            } catch (err) {
+                console.error("Errore rendering pagina:", err);
+            } finally {
+                isRendering = false;
+                if (renderPendingPage !== null) {
+                    const next = renderPendingPage;
+                    renderPendingPage = null;
+                    renderCurrentPages();
+                }
+            }
+        }
+
+        // --- MOTORE DI DISEGNO & ANNOTAZIONI VETTORIALI ---
+        function setupDrawCanvas(drawCanvas, pageNum, cssWidth, cssHeight, dpr) {
+            drawCanvas.width = Math.round(cssWidth * dpr);
+            drawCanvas.height = Math.round(cssHeight * dpr);
+            drawCanvas.style.width = cssWidth + 'px';
+            drawCanvas.style.height = cssHeight + 'px';
+            drawCanvas.dataset.pageNum = pageNum;
+
+            if (isDrawMode) {
+                drawCanvas.classList.add('active');
+                updateCanvasCursor(drawCanvas);
+            } else {
+                drawCanvas.classList.remove('active');
+            }
+
+            redrawPageAnnotations(pageNum, drawCanvas);
+        }
+
+        function updateCanvasCursor(canvas) {
+            canvas.classList.remove('tool-text', 'tool-eraser');
+            if (activeTool === 'text') canvas.classList.add('tool-text');
+            else if (activeTool === 'eraser') canvas.classList.add('tool-eraser');
+        }
+
+        function redrawPageAnnotations(pageNum, canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const items = annotationsStore[pageNum] || [];
+            const w = canvas.width;
+            const h = canvas.height;
+
+            items.forEach(item => {
+                if (item.type === 'stroke') {
+                    if (!item.points || item.points.length < 2) return;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = item.color;
+                    ctx.lineWidth = item.width * (w / 800); // Scala proporzionale crisp
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    if (item.tool === 'highlighter') {
+                        ctx.globalAlpha = 0.35;
+                        ctx.lineWidth = Math.max(14, item.width * 3.5 * (w / 800));
+                    }
+
+                    const startX = item.points[0][0] * w;
+                    const startY = item.points[0][1] * h;
+                    ctx.moveTo(startX, startY);
+
+                    for (let i = 1; i < item.points.length; i++) {
+                        ctx.lineTo(item.points[i][0] * w, item.points[i][1] * h);
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+                } else if (item.type === 'text') {
+                    ctx.save();
+                    const scaledSize = Math.max(12, item.fontSize * (w / 800));
+                    ctx.font = `600 ${scaledSize}px 'Inter', sans-serif`;
+                    ctx.fillStyle = item.color || '#1e293b';
+
+                    // Disegna sfondo morbido per leggibilità
+                    const lines = item.text.split('\n');
+                    const textX = item.nx * w;
+                    let textY = item.ny * h;
+
+                    lines.forEach(line => {
+                        ctx.fillText(line, textX, textY);
+                        textY += (scaledSize * 1.3);
+                    });
+                    ctx.restore();
+                }
+            });
+        }
+
+        // Pointer Events per Canvas di Disegno
+        function handlePointerDown(e, canvas) {
+            if (!isDrawMode) return;
+            e.preventDefault();
+            const pageNum = parseInt(canvas.dataset.pageNum, 10);
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const nx = Math.max(0, Math.min(1, x / rect.width));
+            const ny = Math.max(0, Math.min(1, y / rect.height));
+
+            if (activeTool === 'pen' || activeTool === 'highlighter') {
+                isDrawing = true;
+                currentDrawPage = pageNum;
+                currentStroke = {
+                    type: 'stroke',
+                    tool: activeTool,
+                    color: activeColor,
+                    width: activeStrokeWidth,
+                    points: [[nx, ny]]
+                };
+            } else if (activeTool === 'text') {
+                promptTextInput(canvas, pageNum, x, y, nx, ny);
+            } else if (activeTool === 'eraser') {
+                eraseAtPoint(pageNum, nx, ny, canvas);
+            }
+        }
+
+        function handlePointerMove(e, canvas) {
+            if (!isDrawing || !currentStroke) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const nx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            const ny = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+            currentStroke.points.push([nx, ny]);
+
+            // Disegna l'ultimo segmento in tempo reale
+            const ctx = canvas.getContext('2d');
+            const pts = currentStroke.points;
+            if (pts.length >= 2) {
+                const p1 = pts[pts.length - 2];
+                const p2 = pts[pts.length - 1];
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = currentStroke.color;
+                ctx.lineWidth = currentStroke.width * (canvas.width / 800);
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                if (currentStroke.tool === 'highlighter') {
+                    ctx.globalAlpha = 0.35;
+                    ctx.lineWidth = Math.max(14, currentStroke.width * 3.5 * (canvas.width / 800));
+                }
+                ctx.moveTo(p1[0] * canvas.width, p1[1] * canvas.height);
+                ctx.lineTo(p2[0] * canvas.width, p2[1] * canvas.height);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function handlePointerUp(e, canvas) {
+            if (!isDrawing || !currentStroke) return;
+            isDrawing = false;
+            const pageNum = currentDrawPage;
+
+            if (!annotationsStore[pageNum]) annotationsStore[pageNum] = [];
+            pushToUndo(pageNum);
+            annotationsStore[pageNum].push(currentStroke);
+            currentStroke = null;
+            currentDrawPage = null;
+
+            saveAnnotationsToStorage();
+        }
+
+        // Input Testo Fluttuante per Scrittura DSA
+        function promptTextInput(canvas, pageNum, px, py, nx, ny) {
+            // Rimuovi eventuali box precedenti
+            const existing = document.querySelector('.text-editor-box');
+            if (existing) existing.remove();
+
+            const box = document.createElement('div');
+            box.className = 'text-editor-box';
+            box.style.left = `${px}px`;
+            box.style.top = `${py}px`;
+
+            box.innerHTML = `
+                <div style="font-size: 0.72rem; font-weight: 700; color: #7c3aed;">SCRIVI LA TUA RISPOSTA:</div>
+                <textarea placeholder="Digita qui il tuo testo…"></textarea>
+                <div class="text-editor-actions">
+                    <button class="btn-text-action btn-text-cancel">Annulla</button>
+                    <button class="btn-text-action btn-text-confirm">Inserisci</button>
+                </div>
+            `;
+
+            canvas.parentElement.appendChild(box);
+            const textarea = box.querySelector('textarea');
+            textarea.focus();
+
+            const closeBox = () => box.remove();
+
+            box.querySelector('.btn-text-cancel').addEventListener('click', closeBox);
+            box.querySelector('.btn-text-confirm').addEventListener('click', () => {
+                const val = textarea.value.trim();
+                if (val) {
+                    if (!annotationsStore[pageNum]) annotationsStore[pageNum] = [];
+                    pushToUndo(pageNum);
+                    annotationsStore[pageNum].push({
+                        type: 'text',
+                        text: val,
+                        nx: nx,
+                        ny: ny,
+                        color: activeColor,
+                        fontSize: 16
+                    });
+                    redrawPageAnnotations(pageNum, canvas);
+                    saveAnnotationsToStorage();
+                }
+                closeBox();
+            });
+        }
+
+        // Gomma per cancellazione selettiva
+        function eraseAtPoint(pageNum, nx, ny, canvas) {
+            const items = annotationsStore[pageNum];
+            if (!items || items.length === 0) return;
+
+            const threshold = 0.04; // Tolleranza raggio di click
+            let foundIndex = -1;
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                const item = items[i];
+                if (item.type === 'text') {
+                    if (Math.abs(item.nx - nx) < threshold && Math.abs(item.ny - ny) < threshold) {
+                        foundIndex = i;
+                        break;
+                    }
+                } else if (item.type === 'stroke') {
+                    const hit = item.points.some(p => Math.hypot(p[0] - nx, p[1] - ny) < threshold);
+                    if (hit) {
+                        foundIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (foundIndex !== -1) {
+                pushToUndo(pageNum);
+                items.splice(foundIndex, 1);
+                redrawPageAnnotations(pageNum, canvas);
+                saveAnnotationsToStorage();
+            }
+        }
+
+        // Undo & Redo System
+        function pushToUndo(pageNum) {
+            if (!undoStack[pageNum]) undoStack[pageNum] = [];
+            const clone = JSON.parse(JSON.stringify(annotationsStore[pageNum] || []));
+            undoStack[pageNum].push(clone);
+            redoStack[pageNum] = []; // Azzera redo dopo nuova azione
+        }
+
+        function undoAction() {
+            const leftPageNum = currentPageNum;
+            const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
+
+            // Undo sulla pagina di sinistra o destra
+            [leftPageNum, rightPageNum].forEach(pageNum => {
+                if (!pageNum || !undoStack[pageNum] || undoStack[pageNum].length === 0) return;
+                if (!redoStack[pageNum]) redoStack[pageNum] = [];
+                redoStack[pageNum].push(JSON.parse(JSON.stringify(annotationsStore[pageNum] || [])));
+
+                annotationsStore[pageNum] = undoStack[pageNum].pop();
+                const targetCanvas = (pageNum === leftPageNum) ? canvasDrawLeft : canvasDrawRight;
+                if (targetCanvas) redrawPageAnnotations(pageNum, targetCanvas);
+            });
+            saveAnnotationsToStorage();
+        }
+
+        function redoAction() {
+            const leftPageNum = currentPageNum;
+            const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
+
+            [leftPageNum, rightPageNum].forEach(pageNum => {
+                if (!pageNum || !redoStack[pageNum] || redoStack[pageNum].length === 0) return;
+                if (!undoStack[pageNum]) undoStack[pageNum] = [];
+                undoStack[pageNum].push(JSON.parse(JSON.stringify(annotationsStore[pageNum] || [])));
+
+                annotationsStore[pageNum] = redoStack[pageNum].pop();
+                const targetCanvas = (pageNum === leftPageNum) ? canvasDrawLeft : canvasDrawRight;
+                if (targetCanvas) redrawPageAnnotations(pageNum, targetCanvas);
+            });
+            saveAnnotationsToStorage();
+        }
+
+        function clearCurrentPageAnnotations() {
+            const leftPageNum = currentPageNum;
+            const rightPageNum = isTwoPageMode ? leftPageNum + 1 : null;
+
+            if (confirm("Sei sicuro di voler cancellare tutti gli appunti e i disegni di questa pagina?")) {
+                [leftPageNum, rightPageNum].forEach(pageNum => {
+                    if (pageNum && annotationsStore[pageNum] && annotationsStore[pageNum].length > 0) {
+                        pushToUndo(pageNum);
+                        annotationsStore[pageNum] = [];
+                        const targetCanvas = (pageNum === leftPageNum) ? canvasDrawLeft : canvasDrawRight;
+                        if (targetCanvas) redrawPageAnnotations(pageNum, targetCanvas);
+                    }
+                });
+                saveAnnotationsToStorage();
+            }
+        }
+
+        // Registrazione listener sui canvas di disegno
+        [canvasDrawLeft, canvasDrawRight].forEach(c => {
+            c.addEventListener('pointerdown', (e) => handlePointerDown(e, c));
+            c.addEventListener('pointermove', (e) => handlePointerMove(e, c));
+            c.addEventListener('pointerup', (e) => handlePointerUp(e, c));
+            c.addEventListener('pointercancel', (e) => handlePointerUp(e, c));
+        });
+
+        // --- HOTSPOTS CLICCABILI SULL'INDICE CARTACEO (PAGINE 3, 4, 5) ---
+        function setupHotspots(container, pageNum) {
+            clearHotspots(container);
+            const hotspots = HOTSPOTS_MAP[pageNum];
+            if (!hotspots || hotspots.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            hotspots.forEach(spot => {
+                const link = document.createElement('div');
+                link.className = 'hotspot-link';
+                link.style.top = `${spot.top}%`;
+                link.style.height = `${spot.height}%`;
+                link.style.left = '8%';
+                link.style.width = '84%';
+                link.title = `Vai a: ${spot.title} (Pagina ${spot.targetPage})`;
+                // Nessuna scritta o badge sovrapposto: scansione cartacea pulita e hotspot trasparente
+                link.innerHTML = '';
+
+                link.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    goToPage(spot.targetPage);
+                });
+                container.appendChild(link);
+            });
+        }
+
+        function clearHotspots(container) {
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
+        }
+
+        // --- COLLEGAMENTI INTERATTIVI PDF & VIDEO DIDATTICI (YOUTUBE / APPROFONDIMENTI) ---
+        async function setupPdfLinks(container, page, viewport) {
+            clearPdfLinks(container);
+            if (!container || !page) return;
+
+            try {
+                const annotations = await page.getAnnotations();
+                if (!annotations || annotations.length === 0) {
+                    container.style.display = 'none';
+                    return;
+                }
+
+                let foundLinks = 0;
+                annotations.forEach(annot => {
+                    if (annot.subtype === 'Link' && (annot.url || annot.unsafeUrl)) {
+                        const targetUrl = annot.url || annot.unsafeUrl;
+                        if (!targetUrl) return;
+
+                        // Calcola coordinate esatte nel viewport scalato
+                        const rect = viewport.convertToViewportRectangle(annot.rect);
+                        const left = Math.min(rect[0], rect[2]);
+                        const top = Math.min(rect[1], rect[3]);
+                        const width = Math.abs(rect[2] - rect[0]);
+                        const height = Math.abs(rect[3] - rect[1]);
+
+                        const linkEl = document.createElement('a');
+                        linkEl.className = 'pdf-link-annot';
+                        linkEl.href = targetUrl;
+                        linkEl.target = '_blank';
+                        linkEl.rel = 'noopener noreferrer';
+                        linkEl.title = 'Apri risorsa: ' + targetUrl;
+                        linkEl.style.left = `${left}px`;
+                        linkEl.style.top = `${top}px`;
+                        linkEl.style.width = `${width}px`;
+                        linkEl.style.height = `${height}px`;
+
+                        const lower = targetUrl.toLowerCase();
+                        if (lower.includes('youtube') || lower.includes('youtu.be') || lower.includes('video') || lower.includes('ilcinemainsegna')) {
+                            linkEl.classList.add('is-video-link');
+                            linkEl.title = '▶ Guarda il video didattico: ' + targetUrl;
+                        }
+
+                        linkEl.addEventListener('click', (e) => {
+                            if (isDrawMode) {
+                                e.preventDefault();
+                                return;
+                            }
+                        });
+
+                        container.appendChild(linkEl);
+                        foundLinks++;
+                    }
+                });
+
+                container.style.display = foundLinks > 0 ? 'block' : 'none';
+            } catch (err) {
+                console.warn("Errore lettura annotazioni link PDF:", err);
+            }
+        }
+
+        function clearPdfLinks(container) {
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
+        }
+
+        // --- TOC DRAWER GENERATION & BEHAVIOR ---
+        function renderTocList(filterQuery = '') {
+            tocList.innerHTML = '';
+            const q = filterQuery.toLowerCase().trim();
+
+            TOC_DATA.forEach(group => {
+                const matchingItems = group.items.filter(item => {
+                    if (!q) return true;
+                    return item.title.toLowerCase().includes(q) ||
+                        group.title.toLowerCase().includes(q) ||
+                        (item.tag && item.tag.toLowerCase().includes(q));
+                });
+
+                if (matchingItems.length === 0) return;
+
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'toc-group';
+
+                const isGroupLocked = (!hasEcosistemaAccess && group.page > PREVIEW_MAX_PAGE);
+                const groupTitle = document.createElement('div');
+                groupTitle.className = 'toc-group-title';
+                groupTitle.innerHTML = `
+                    <span>${group.title}</span>
+                    <span class="badge-page" ${isGroupLocked ? 'style="border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;"' : ''}>
+                        ${isGroupLocked ? '<i class="ph-fill ph-lock-key"></i> ' : ''}Pag. ${group.page}
+                    </span>
+                `;
+                groupTitle.addEventListener('click', () => {
+                    goToPage(group.page);
+                    if (window.innerWidth < 900) closeTocDrawer();
+                });
+
+                const sublist = document.createElement('div');
+                sublist.className = 'toc-items-sublist';
+
+                matchingItems.forEach(item => {
+                    const itemLink = document.createElement('div');
+                    itemLink.className = 'toc-item';
+                    itemLink.dataset.page = item.page;
+
+                    const isItemLocked = (!hasEcosistemaAccess && item.page > PREVIEW_MAX_PAGE);
+                    let tagClass = '';
+                    if (item.tag === 'Laboratorio') tagClass = 'tag-laboratorio';
+                    else if (item.tag === 'Test') tagClass = 'tag-test';
+
+                    itemLink.innerHTML = `
+                        <span class="item-title">${item.title}</span>
+                        ${item.tag ? `<span class="item-tag ${tagClass}">${item.tag}</span>` : ''}
+                        <span style="font-weight: 700; color: ${isItemLocked ? '#fbbf24' : '#cbd5e1'}; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 3px;">
+                            ${isItemLocked ? '<i class="ph-fill ph-lock-key"></i>' : ''} ${item.page}
+                        </span>
+                    `;
+
+                    itemLink.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        goToPage(item.page);
+                        if (window.innerWidth < 900) closeTocDrawer();
+                    });
+
+                    sublist.appendChild(itemLink);
+                });
+
+                groupDiv.appendChild(groupTitle);
+                groupDiv.appendChild(sublist);
+                tocList.appendChild(groupDiv);
+            });
+        }
+
+        function updateTocActiveHighlight() {
+            const items = tocList.querySelectorAll('.toc-item');
+            items.forEach(el => {
+                const p = parseInt(el.dataset.page, 10);
+                if (isTwoPageMode) {
+                    if (p === currentPageNum || p === currentPageNum + 1) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                } else {
+                    if (p === currentPageNum) el.classList.add('active');
+                    else el.classList.remove('active');
+                }
+            });
+        }
+
+        function openTocDrawer() {
+            tocDrawer.classList.add('open');
+            tocBackdrop.classList.add('open');
+            tocSearchInput.focus();
+        }
+
+        function closeTocDrawer() {
+            tocDrawer.classList.remove('open');
+            tocBackdrop.classList.remove('open');
+        }
+
+        // --- GESTIONE NAVIGAZIONE & VIEW MODE ---
+        function updateNavState() {
+            if (pageInput) pageInput.value = currentPageNum;
+            const maxPage = hasEcosistemaAccess ? totalPages : PREVIEW_MAX_PAGE;
+            const hasPrev = currentPageNum > 1;
+            const step = isTwoPageMode ? 2 : 1;
+            const hasNext = (currentPageNum + step) <= maxPage;
+
+            if (btnPrev) btnPrev.disabled = !hasPrev;
+            if (stagePrev) {
+                stagePrev.disabled = !hasPrev;
+                stagePrev.setAttribute('data-tooltip', hasPrev ? 'Pagina Precedente (←)' : 'Prima Pagina (inizio)');
+            }
+            if (btnNext) btnNext.disabled = (!hasNext && hasEcosistemaAccess);
+            if (stageNext) {
+                if (!hasEcosistemaAccess && !hasNext) {
+                    stageNext.disabled = false;
+                    stageNext.setAttribute('data-tooltip', 'Edizione Completa 142 Pag. (Piano Ecosistema)');
+                } else {
+                    stageNext.disabled = !hasNext;
+                    stageNext.setAttribute('data-tooltip', hasNext ? 'Pagina Successiva (→)' : 'Ultima Pagina (fine)');
+                }
+            }
+        }
+
+        function goToPage(target) {
+            let p = parseInt(target, 10);
+            if (isNaN(p)) return;
+            const maxPage = hasEcosistemaAccess ? totalPages : PREVIEW_MAX_PAGE;
+            if (!hasEcosistemaAccess && p > maxPage) {
+                openEcosistemaUpgradeModal(p);
+                return;
+            }
+            p = Math.max(1, Math.min(maxPage, p));
+            if (isTwoPageMode && p > 1 && p % 2 === 0) {
+                p = p - 1; // Allinea a pagina sinistra
+            }
+            currentPageNum = p;
+            if (stage) stage.scrollTop = 0;
+            renderCurrentPages();
+        }
+
+        function goToPrevPage() {
+            if (currentPageNum <= 1) return;
+            const step = isTwoPageMode ? 2 : 1;
+            currentPageNum = Math.max(1, currentPageNum - step);
+            if (stage) stage.scrollTop = 0;
+            renderCurrentPages();
+        }
+
+        function goToNextPage() {
+            const step = isTwoPageMode ? 2 : 1;
+            const maxPage = hasEcosistemaAccess ? totalPages : PREVIEW_MAX_PAGE;
+            if (!hasEcosistemaAccess) {
+                const isAtEnd = isTwoPageMode ? (currentPageNum + 1 >= maxPage || currentPageNum >= maxPage) : (currentPageNum >= maxPage);
+                if (isAtEnd) {
+                    openEcosistemaUpgradeModal(currentPageNum + step);
+                    return;
+                }
+            }
+            if (currentPageNum + step > maxPage && !isTwoPageMode) return;
+            if (currentPageNum >= maxPage) return;
+            currentPageNum = Math.min(maxPage, currentPageNum + step);
+            if (stage) stage.scrollTop = 0;
+            renderCurrentPages();
+        }
+
+        function toggleViewMode() {
+            isTwoPageMode = !isTwoPageMode;
+            if (isTwoPageMode && currentPageNum % 2 === 0) {
+                currentPageNum = Math.max(1, currentPageNum - 1);
+            }
+            updateViewModeUI();
+            renderCurrentPages();
+        }
+
+        function updateViewModeUI() {
+            if (isTwoPageMode) {
+                if (btnToggleSpread) {
+                    btnToggleSpread.title = 'Passa a visualizzazione 1 pagina';
+                    btnToggleSpread.setAttribute('data-tooltip', '1 Pagina');
+                }
+            } else {
+                if (btnToggleSpread) {
+                    btnToggleSpread.title = 'Passa a visualizzazione 2 pagine (Libro)';
+                    btnToggleSpread.setAttribute('data-tooltip', 'Vista Libro');
+                }
+            }
+        }
+
+        function toggleDrawMode() {
+            if (!hasEcosistemaAccess) {
+                openEcosistemaUpgradeModal('draw');
+                return;
+            }
+            isDrawMode = !isDrawMode;
+            if (isDrawMode) {
+                btnToggleDrawMode.classList.add('active');
+                btnToggleDrawMode.setAttribute('data-tooltip', 'Torna a Lettura');
+                btnToggleDrawMode.title = 'Disattiva disegno e torna a sfogliare';
+                drawingToolbar.classList.add('visible');
+                canvasDrawLeft.classList.add('active');
+                canvasDrawRight.classList.add('active');
+                updateCanvasCursor(canvasDrawLeft);
+                updateCanvasCursor(canvasDrawRight);
+            } else {
+                btnToggleDrawMode.classList.remove('active');
+                btnToggleDrawMode.setAttribute('data-tooltip', 'Disegna e Scrivi');
+                btnToggleDrawMode.title = 'Attiva Penna, Evidenziatore e Scrittura';
+                drawingToolbar.classList.remove('visible');
+                canvasDrawLeft.classList.remove('active');
+                canvasDrawRight.classList.remove('active');
+            }
+        }
+
+        function showLoader(visible) {
+            if (loader) {
+                loader.style.opacity = visible ? '1' : '0';
+                loader.style.pointerEvents = visible ? 'auto' : 'none';
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.warn("Fullscreen error:", err);
+                });
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            const isFull = !!document.fullscreenElement;
+            if (btnFullscreen) {
+                btnFullscreen.innerHTML = isFull
+                    ? '<i class="ph ph-corners-in"></i>'
+                    : '<i class="ph ph-corners-out"></i>';
+                btnFullscreen.setAttribute('data-tooltip', isFull ? 'Esci Schermo Intero' : 'Schermo Intero LIM');
+                btnFullscreen.title = isFull ? 'Esci da schermo intero' : 'Schermo Intero (Ottimale per LIM)';
+            }
+            setTimeout(renderCurrentPages, 100);
+        });
+
+        // --- EVENT LISTENERS GENERALI ---
+        if (btnPrev) btnPrev.addEventListener('click', goToPrevPage);
+        if (stagePrev) stagePrev.addEventListener('click', goToPrevPage);
+        if (btnNext) btnNext.addEventListener('click', goToNextPage);
+        if (stageNext) stageNext.addEventListener('click', goToNextPage);
+        if (btnToggleSpread) btnToggleSpread.addEventListener('click', toggleViewMode);
+        if (btnToggleDrawMode) btnToggleDrawMode.addEventListener('click', toggleDrawMode);
+        if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
+
+        if (btnZoomIn) {
+            btnZoomIn.addEventListener('click', () => {
+                zoomLevel = Math.min(2.5, +(zoomLevel + 0.15).toFixed(2));
+                renderCurrentPages();
+            });
+        }
+
+        if (btnZoomOut) {
+            btnZoomOut.addEventListener('click', () => {
+                zoomLevel = Math.max(0.6, +(zoomLevel - 0.15).toFixed(2));
+                renderCurrentPages();
+            });
+        }
+
+        if (btnZoomFit) {
+            btnZoomFit.addEventListener('click', () => {
+                zoomLevel = 1.0;
+                if (stage) {
+                    stage.scrollTop = 0;
+                    stage.scrollLeft = 0;
+                }
+                renderCurrentPages();
+            });
+        }
+
+        if (pageInput) {
+            pageInput.addEventListener('change', () => {
+                goToPage(pageInput.value);
+            });
+        }
+
+        // Supporto Tooltip Interattivi per Dispositivi Touch / Schermi Ridotti
+        document.querySelectorAll('.dock-tool-btn, .stage-nav-arrow, .sync-badge').forEach(el => {
+            el.addEventListener('touchstart', () => {
+                el.classList.add('touch-active');
+                setTimeout(() => el.classList.remove('touch-active'), 1500);
+            }, { passive: true });
+        });
+
+        // TOC Listeners
+        if (btnToggleToc) btnToggleToc.addEventListener('click', openTocDrawer);
+        if (btnCloseToc) btnCloseToc.addEventListener('click', closeTocDrawer);
+        tocBackdrop.addEventListener('click', closeTocDrawer);
+        tocSearchInput.addEventListener('input', (e) => {
+            renderTocList(e.target.value);
+        });
+
+        // Drawing Toolbar Listeners
+        document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeTool = btn.dataset.tool;
+                updateCanvasCursor(canvasDrawLeft);
+                updateCanvasCursor(canvasDrawRight);
+            });
+        });
+
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+                swatch.classList.add('active');
+                activeColor = swatch.dataset.color;
+            });
+        });
+
+        document.querySelectorAll('.stroke-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                document.querySelectorAll('.stroke-dot').forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+                activeStrokeWidth = parseInt(dot.dataset.width, 10);
+            });
+        });
+
+        btnUndo.addEventListener('click', undoAction);
+        btnRedo.addEventListener('click', redoAction);
+        btnClearPage.addEventListener('click', clearCurrentPageAnnotations);
+
+        // Student Profile Modal Listeners
+        if (studentProfilePill) {
+            studentProfilePill.addEventListener('click', () => {
+                studentNameInput.value = currentStudentName;
+                studentModal.classList.add('open');
+                studentNameInput.focus();
+            });
+        }
+
+        window.openStudentModalFromDropdown = function () {
+            window.closeUserDropdown();
+            if (studentModal && studentNameInput) {
+                studentNameInput.value = currentStudentName;
+                studentModal.classList.add('open');
+                studentNameInput.focus();
+            }
+        };
+
+        btnCancelStudent.addEventListener('click', () => {
+            studentModal.classList.remove('open');
+        });
+
+        btnSaveStudent.addEventListener('click', () => {
+            const val = studentNameInput.value.trim();
+            if (val) {
+                currentStudentName = val;
+                currentStudentId = val.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                localStorage.setItem('pm_student_name', currentStudentName);
+                localStorage.setItem('pm_student_id', currentStudentId);
+                if (studentNameLabel) studentNameLabel.textContent = currentStudentName;
+                if (!localStorage.getItem('hub_user_name')) {
+                    const headerUserName = document.getElementById('header-user-name');
+                    if (headerUserName) headerUserName.textContent = currentStudentName.toUpperCase();
+                    const dropdownUserTitle = document.getElementById('dropdown-user-title');
+                    if (dropdownUserTitle) dropdownUserTitle.textContent = currentStudentName.toUpperCase();
+                }
+                loadAnnotationsFromStorage();
+                renderCurrentPages();
+            }
+            studentModal.classList.remove('open');
+        });
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (document.activeElement === pageInput || document.activeElement === tocSearchInput || document.activeElement.tagName === 'TEXTAREA') {
+                return;
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                goToPrevPage();
+            } else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                goToNextPage();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            } else if (e.key === 'Escape') {
+                closeTocDrawer();
+                studentModal.classList.remove('open');
+                closeEcosistemaModal();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+                e.preventDefault();
+                if (e.shiftKey) redoAction();
+                else undoAction();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
+                e.preventDefault();
+                redoAction();
+            }
+        });
+
+        // Resize Responsive
+        let resizeDebounce = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeDebounce);
+            resizeDebounce = setTimeout(() => {
+                if (window.innerWidth < 900 && isTwoPageMode) {
+                    isTwoPageMode = false;
+                    updateViewModeUI();
+                }
+                renderCurrentPages();
+            }, 150);
+        });
+
+        // Touch Swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+        stage.addEventListener('touchstart', (e) => {
+            if (isDrawMode) return; // In modalità disegno i tocchi disegnano
+            if (e.touches && e.touches[0]) touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        stage.addEventListener('touchend', (e) => {
+            if (isDrawMode) return;
+            if (e.changedTouches && e.changedTouches[0]) {
+                touchEndX = e.changedTouches[0].clientX;
+                const diffX = touchEndX - touchStartX;
+                if (Math.abs(diffX) > 60) {
+                    if (diffX < 0) goToNextPage();
+                    else goToPrevPage();
+                }
+            }
+        }, { passive: true });
+
+        // --- ECOSYSTEM USER MENU & AUTH ---
+        window.goToHubPortal = function () {
+            var isPrev = window.location.pathname.indexOf('/preview') !== -1;
+            var portalUrl = isPrev
+                ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/portal.html?redirect=quaderno-reader'
+                : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/portal.html?redirect=quaderno-reader';
+            window.location.href = portalUrl;
+        };
+
+        window.toggleUserDropdown = function (e) {
+            if (e) e.stopPropagation();
+            var dd = document.getElementById('header-user-dropdown');
+            if (dd) dd.classList.toggle('hidden');
+        };
+
+        window.closeUserDropdown = function () {
+            var dd = document.getElementById('header-user-dropdown');
+            if (dd) dd.classList.add('hidden');
+        };
+
+        window.logoutEcosistema = function () {
+            try {
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().signOut();
+                }
+            } catch (e) { }
+            localStorage.removeItem('hub_user_name');
+            localStorage.removeItem('hub_user_role');
+            localStorage.removeItem('hub_user_avatar');
+            localStorage.removeItem('hub_user_id');
+            localStorage.removeItem('hub_user_email');
+            window.location.reload();
+        };
+
+        document.addEventListener('click', function (e) {
+            var userCont = document.getElementById('header-user-container');
+            if (userCont && !userCont.contains(e.target)) {
+                window.closeUserDropdown();
+            }
+        });
+
+        // Anti-flicker immediate user sync (lettura sincrona istantanea da localStorage)
+        (function () {
+            try {
+                var av = localStorage.getItem('hub_user_avatar') || localStorage.getItem('pm_user_avatar') || localStorage.getItem('fanta_user_avatar');
+                if (av) {
+                    var elA = document.getElementById('header-user-avatar-img');
+                    if (elA) elA.src = av;
+                }
+                var nm = localStorage.getItem('hub_user_name') || localStorage.getItem('pm_user_name') || localStorage.getItem('fanta_user_name') || localStorage.getItem('pm_student_name');
+                var rl = localStorage.getItem('hub_user_role') || localStorage.getItem('pm_user_role') || localStorage.getItem('fanta_user_role');
+                if (nm) {
+                    var elN = document.getElementById('header-user-name');
+                    if (elN) elN.textContent = nm.toUpperCase();
+                    var elT = document.getElementById('dropdown-user-title');
+                    if (elT) elT.textContent = nm.toUpperCase();
+                }
+                if (rl) {
+                    var isAdm = (rl === 'admin' || rl === 'superadmin' || rl === 'AMMINISTRATORE');
+                    var isDoc = (rl === 'docente' || rl === 'teacher' || rl === 'DOCENTE');
+                    var isStu = (rl === 'studente' || rl === 'student' || rl === 'STUDENTE');
+                    var roleText = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE REGISTRATO' : (isStu ? 'STUDENTE' : 'OSPITE'));
+                    var elR = document.getElementById('header-user-role');
+                    if (elR) elR.textContent = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE' : (isStu ? 'STUDENTE' : 'OSPITE'));
+                    var elSub = document.getElementById('dropdown-user-subtitle');
+                    if (elSub) elSub.textContent = roleText;
+                    if (isAdm || isDoc || isStu) {
+                        var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                        if (btnLogin) btnLogin.style.display = 'none';
+                        var btnProf = document.getElementById('btn-profile-dropdown');
+                        if (btnProf) btnProf.style.display = 'flex';
+                        var btnLogout = document.getElementById('btn-logout-dropdown');
+                        if (btnLogout) btnLogout.style.display = 'flex';
+                    }
+                }
+            } catch (e) { }
+        })();
+
+        // Firebase live sync & Hub User Interception
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            try {
+                firebase.auth().onAuthStateChanged(async function (user) {
+                    if (user) {
+                        var db = firebase.firestore();
+                        var email = (user.email || '').toLowerCase();
+                        var isSuperAdmin = (email === "prof.memmo@gmail.com");
+                        var hubData = {};
+
+                        try {
+                            var hubDoc = await db.collection('hub_users').doc(user.uid).get();
+                            if (hubDoc.exists) {
+                                hubData = hubDoc.data();
+                            } else {
+                                var userDoc = await db.collection('users').doc(user.uid).get();
+                                if (userDoc.exists) hubData = userDoc.data();
+                            }
+                        } catch (err) {
+                            console.warn("Hub query fallback:", err);
+                        }
+
+                        var name = hubData.nome || hubData.name || hubData.displayName || user.displayName || (email ? email.split('@')[0] : 'Utente');
+                        var role = isSuperAdmin ? 'admin' : (hubData.role || hubData.ruolo || 'docente');
+                        var avatar = hubData.avatarUrl || hubData.photoURL || user.photoURL || 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png';
+
+                        localStorage.setItem('hub_user_name', name);
+                        localStorage.setItem('hub_user_role', role);
+                        localStorage.setItem('hub_user_avatar', avatar);
+                        localStorage.setItem('hub_user_id', user.uid);
+                        localStorage.setItem('hub_user_email', email);
+
+                        var elN = document.getElementById('header-user-name');
+                        if (elN) elN.textContent = name.toUpperCase();
+                        var isAdm = (role === 'admin' || isSuperAdmin);
+                        var isDoc = (role === 'docente' || role === 'teacher');
+                        var isStu = (role === 'studente' || role === 'student');
+                        var roleBadge = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE' : (isStu ? 'STUDENTE' : 'OSPITE'));
+
+                        var elR = document.getElementById('header-user-role');
+                        if (elR) elR.textContent = roleBadge;
+                        var elA = document.getElementById('header-user-avatar-img');
+                        if (elA) elA.src = avatar;
+                        var elT = document.getElementById('dropdown-user-title');
+                        if (elT) elT.textContent = name.toUpperCase();
+                        var elSub = document.getElementById('dropdown-user-subtitle');
+                        if (elSub) elSub.textContent = isAdm ? 'AMMINISTRATORE' : (isDoc ? 'DOCENTE REGISTRATO' : (isStu ? 'STUDENTE' : 'OSPITE'));
+
+                        var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                        if (btnLogin) btnLogin.style.display = 'none';
+                        var btnProf = document.getElementById('btn-profile-dropdown');
+                        if (btnProf) btnProf.style.display = 'flex';
+                        var btnLogout = document.getElementById('btn-logout-dropdown');
+                        if (btnLogout) btnLogout.style.display = 'flex';
+
+                        // Aggiorna stato abbonamento Piano Ecosistema
+                        var plan = (hubData.abbonamento || hubData.subscription || hubData.plan || 'base').toLowerCase();
+                        var isEcosistema = (isSuperAdmin || role === 'admin' || role === 'superadmin' || plan === 'ecosistema' || plan === 'docente_ecosistema');
+                        hasEcosistemaAccess = isEcosistema;
+                        localStorage.setItem('hub_user_plan', plan);
+                        localStorage.setItem('hub_user_subscription', plan);
+                        if (typeof updateAccessModeUI === 'function') updateAccessModeUI();
+
+                        // Sincronizza automaticamente il quaderno personale con l'identità autenticata
+                        if (!currentStudentName || currentStudentName === 'Studente') {
+                            currentStudentName = name;
+                            currentStudentId = 'user_' + user.uid;
+                            localStorage.setItem('pm_student_name', currentStudentName);
+                            localStorage.setItem('pm_student_id', currentStudentId);
+                            var actionBtn = document.getElementById('dropdown-student-action');
+                            if (actionBtn) actionBtn.textContent = 'Quaderno di ' + currentStudentName;
+                            if (typeof loadAnnotations === 'function') loadAnnotations();
+                        }
+                    } else {
+                        // Utente non loggato: reset a stato Ospite e Anteprima Read-Only
+                        hasEcosistemaAccess = false;
+                        if (typeof updateAccessModeUI === 'function') updateAccessModeUI();
+                        var btnLogin = document.getElementById('btn-login-hub-dropdown');
+                        if (btnLogin) btnLogin.style.display = 'flex';
+                        var btnProf = document.getElementById('btn-profile-dropdown');
+                        if (btnProf) btnProf.style.display = 'none';
+                        var btnLogout = document.getElementById('btn-logout-dropdown');
+                        if (btnLogout) btnLogout.style.display = 'none';
+                    }
+                });
+            } catch (e) {
+                console.warn("Firebase live auth init error:", e);
+            }
+        }
+
+        // Start
+        window.addEventListener('DOMContentLoaded', loadPdf);
+    </script>
+    <!-- Modali condivisi ecosistema Prof. Memmo -->
+    <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
+</body>
+
+</html>

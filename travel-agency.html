@@ -66,6 +66,20 @@
             align-items: center;
             gap: 0.5rem;
         }
+        .coming-soon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            background: var(--color-bg-alt);
+            border-radius: var(--border-radius-pill);
+            padding: 0.3rem 0.9rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
     </style>
 </head>
 <body>
@@ -109,10 +123,13 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 2.5rem;">
                 
                 <!-- Explore Europe -->
-                <div class="version-card" style="border-top: 8px solid #3b82f6;">
+                <div class="version-card" data-edition="europe" style="border-top: 8px solid #3b82f6;">
                     <div class="emoji-icon">🇪🇺</div>
                     <h3 class="version-title">Travel Agency<br><span style="color: #3b82f6;">Explore Europe</span></h3>
                     <div class="version-subtitle">Target: Seconda di Primo Grado</div>
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem; display: none;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
                     <p class="version-desc">
                         Focalizzato sui paesi e le capitali europee. Un viaggio educativo nel Vecchio Continente per scoprire culture e attrazioni, calcolando spese e organizzando gli spostamenti!
                     </p>
@@ -124,10 +141,13 @@
                 </div>
 
                 <!-- Around the World -->
-                <div class="version-card" style="border-top: 8px solid var(--color-primary);">
+                <div class="version-card" data-edition="world" style="border-top: 8px solid var(--color-primary);">
                     <div class="emoji-icon">🌍</div>
                     <h3 class="version-title">Travel Agency<br><span style="color: var(--color-primary);">Around the World</span></h3>
                     <div class="version-subtitle">Target: Terza di Primo Grado</div>
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem; display: none;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
                     <p class="version-desc">
                         Espandi i confini! Una sfida globale per organizzare viaggi intercontinentali, affrontando fusi orari, valute mondiali e destinazioni esotiche su misura per i tuoi viaggiatori.
                     </p>
@@ -139,10 +159,13 @@
                 </div>
 
                 <!-- For Friends -->
-                <div class="version-card" style="border-top: 8px solid #f59e0b;">
+                <div class="version-card" data-edition="friends" style="border-top: 8px solid #f59e0b;">
                     <div class="emoji-icon">💼</div>
                     <h3 class="version-title">Travel Agency<br><span style="color: #f59e0b;">For Friends</span></h3>
                     <div class="version-subtitle">Target: Adulti e Party</div>
+                    <div class="edition-badge-container" style="text-align:center; margin-bottom: 1rem; display: none;">
+                        <span class="coming-soon-badge"><i class="ph ph-clock"></i> In arrivo</span>
+                    </div>
                     <p class="version-desc">
                         La versione party game! Non palesemente didattica ma ricca di colpi di scena, richieste surreali dei clienti e imprevisti esilaranti perfetta per le serate tra amici.
                     </p>
@@ -177,12 +200,113 @@
             </div>
         </div>
     </footer>
+    <!-- Modal: Stiamo lavorando (WIP Modal) -->
+    <div class="wip-modal-overlay" id="wip-modal">
+        <div class="wip-modal">
+            <div style="margin-bottom: 1.25rem; display: flex; justify-content: center;">
+                <img src="assets/avatars/16.png" alt="Capibara al lavoro" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; box-shadow: 0 10px 25px rgba(0,0,0,0.15); background: #fef3c7; padding: 5px; border: 3px solid #f59e0b;">
+            </div>
+            <h3>Stiamo lavorando!</h3>
+            <p>Questa edizione è in fase di elaborazione — abbi un po' di pazienza! 😊<br>Tanti nuovi materiali stanno arrivando!<br><strong>Riprova più tardi.</strong></p>
+            <button class="btn btn-primary" id="wip-close">Ok, torno dopo!</button>
+        </div>
+    </div>
+
         <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="js/firebase-init.js"></script>
     <script src="js/services/database.js"></script>
     <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // WIP modal con Event Delegation
+            const wipModal = document.getElementById('wip-modal');
+            if (wipModal) {
+                document.addEventListener('click', (e) => {
+                    const wip = e.target.closest('.wip-link');
+                    if (wip) {
+                        e.preventDefault();
+                        wipModal.classList.add('active');
+                    }
+                });
+                const wipClose = document.getElementById('wip-close');
+                if (wipClose) {
+                    wipClose.addEventListener('click', () => {
+                        wipModal.classList.remove('active');
+                    });
+                }
+                wipModal.addEventListener('click', (e) => {
+                    if (e.target === wipModal) wipModal.classList.remove('active');
+                });
+            }
+
+            // Sincronizzazione dinamica stato edizioni da Firestore (Hub Admin)
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                const db = firebase.firestore();
+                db.collection('games_status').doc('travel-agency').onSnapshot(doc => {
+                    if (!doc.exists) return;
+                    const gameData = doc.data() || {};
+                    const editions = gameData.editions || {};
+
+                    const editionConfigs = {
+                        'europe': {
+                            color: '#3b82f6',
+                            activeBtns: `
+                                <a href="contenuti%20aggiuntivi/travel-agency/Carta%20agenzia.pdf" download="Carta agenzia.pdf" target="_blank" class="btn btn-primary btn-download" style="background-color: #3b82f6; border-color: #3b82f6;"><i class="ph ph-download-simple"></i> Carta agenzia</a>
+                                <a href="contenuti%20aggiuntivi/travel-agency/Itinerario%20di%20viaggio.pdf" download="Itinerario di viaggio.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #3b82f6; color: #3b82f6;"><i class="ph ph-download-simple"></i> Itinerario di viaggio</a>
+                                <a href="contenuti%20aggiuntivi/travel-agency/Scheda%20territorio.pdf" download="Scheda territorio.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #3b82f6; color: #3b82f6;"><i class="ph ph-download-simple"></i> Scheda territorio</a>
+                            `
+                        },
+                        'world': {
+                            color: 'var(--color-primary)',
+                            activeBtns: `
+                                <a href="contenuti%20aggiuntivi/travel-agency/Carta%20agenzia.pdf" download="Carta agenzia.pdf" target="_blank" class="btn btn-primary btn-download"><i class="ph ph-download-simple"></i> Carta agenzia</a>
+                                <a href="contenuti%20aggiuntivi/travel-agency/Itinerario%20di%20viaggio.pdf" download="Itinerario di viaggio.pdf" target="_blank" class="btn btn-outline btn-download"><i class="ph ph-download-simple"></i> Itinerario di viaggio</a>
+                                <a href="contenuti%20aggiuntivi/travel-agency/Scheda%20territorio.pdf" download="Scheda territorio.pdf" target="_blank" class="btn btn-outline btn-download"><i class="ph ph-download-simple"></i> Scheda territorio</a>
+                            `
+                        },
+                        'friends': {
+                            color: '#f59e0b',
+                            activeBtns: `
+                                <a href="contenuti%20aggiuntivi/travel-agency/Scheda%20budget.pdf" download="Scheda budget.pdf" target="_blank" class="btn btn-primary btn-download" style="background-color: #f59e0b; border-color: #f59e0b;"><i class="ph ph-download-simple"></i> Scheda budget</a>
+                                <a href="contenuti%20aggiuntivi/travel-agency/Taccuino%20del%20viaggiatore.pdf" download="Taccuino del viaggiatore.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #f59e0b; color: #f59e0b;"><i class="ph ph-download-simple"></i> Taccuino del viaggiatore</a>
+                                <a href="contenuti%20aggiuntivi/travel-agency/Itinerario%20di%20viaggio.pdf" download="Itinerario di viaggio.pdf" target="_blank" class="btn btn-outline btn-download" style="border-color: #f59e0b; color: #f59e0b;"><i class="ph ph-download-simple"></i> Itinerario di viaggio</a>
+                            `
+                        }
+                    };
+
+                    Object.keys(editionConfigs).forEach(editionKey => {
+                        const card = document.querySelector(`.version-card[data-edition="${editionKey}"]`);
+                        if (!card) return;
+
+                        const edData = editions[editionKey];
+                        // Default per travel agency: tutte e 3 attive se non specificato
+                        const isActive = edData ? edData.isActive !== false : true;
+
+                        const badgeCont = card.querySelector('.edition-badge-container');
+                        const btnCont = card.querySelector('.buttons-container');
+                        const cfg = editionConfigs[editionKey];
+
+                        if (isActive) {
+                            card.style.opacity = '1';
+                            if (badgeCont) badgeCont.style.display = 'none';
+                            if (btnCont) btnCont.innerHTML = cfg.activeBtns;
+                        } else {
+                            card.style.opacity = '0.85';
+                            if (badgeCont) badgeCont.style.display = 'block';
+                            if (btnCont) {
+                                btnCont.innerHTML = `<button class="btn btn-outline btn-download wip-link" style="border-color: ${cfg.color}; color: ${cfg.color}; width: 100%;"><i class="ph ph-clock"></i> Stiamo lavorando…</button>`;
+                            }
+                        }
+                    });
+                }, err => {
+                    console.warn("Notice listener travel-agency editions:", err.message);
+                });
+            }
+        });
+    </script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
 </body>

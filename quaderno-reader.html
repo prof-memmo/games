@@ -605,6 +605,24 @@
             box-shadow: 0 0 16px rgba(124, 58, 237, 0.65);
         }
 
+        .dock-btn-lock-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 17px;
+            height: 17px;
+            background: #d4af37;
+            color: #0f172a;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            border: 1.5px solid #0f172a;
+            pointer-events: none;
+        }
+
         /* Patamu Official Footer: Harmonized with other sites, Julius Sans One, Edge-to-Edge */
         .reader-patamu-footer {
             background: #0b1120;
@@ -2491,6 +2509,9 @@
             } else if (reason === 'cloud') {
                 if (titleEl) titleEl.textContent = "Salvataggio Cloud con Ecosistema";
                 if (descEl) descEl.innerHTML = "Il salvataggio e la sincronizzazione cloud di disegni e note su tutti i tuoi dispositivi sono inclusi nel <strong>Piano Ecosistema Completo</strong>.";
+            } else if (reason === 'profile' || reason === 'student') {
+                if (titleEl) titleEl.textContent = "Quaderno Personale con Ecosistema";
+                if (descEl) descEl.innerHTML = "La personalizzazione dell'identità dello studente e il salvataggio dei percorsi individuali nel Cloud sono inclusi nel <strong>Piano Ecosistema Completo</strong>.<br>Sblocca il piano per gestire le annotazioni dedicate a ciascun allievo!";
             } else if (typeof reason === 'number') {
                 if (titleEl) titleEl.textContent = `Pagina ${reason} • Edizione Completa`;
                 if (descEl) descEl.innerHTML = `Questa pagina fa parte dell'<strong>Edizione Completa di 142 pagine</strong>. Stai consultando l'anteprima gratuita (prime 15 pagine).<br>Passa al Piano Ecosistema Completo per sbloccare l'intero percorso didattico annuale!`;
@@ -2646,6 +2667,19 @@
                     syncStatusBadge.setAttribute('data-tooltip', 'Salvataggio Cloud attivo nel Piano Ecosistema');
                     syncStatusBadge.onclick = () => openEcosistemaUpgradeModal('cloud');
                 }
+
+                // Lucchetto su strumento Penna / Disegno
+                if (btnToggleDrawMode) {
+                    btnToggleDrawMode.innerHTML = '<i class="ph ph-pencil-simple"></i><span class="dock-btn-lock-badge"><i class="ph-fill ph-lock-key"></i></span>';
+                    btnToggleDrawMode.setAttribute('data-tooltip', 'Disegna su LIM (Piano Ecosistema)');
+                    btnToggleDrawMode.classList.add('is-ecosistema-locked');
+                }
+
+                // Indicatore Ecosistema su azione nome studente nel dropdown
+                const studentAction = document.getElementById('dropdown-student-action');
+                if (studentAction) {
+                    studentAction.innerHTML = 'Nome Quaderno <span style="font-size:0.75rem; color:#d4af37; font-weight:700;">(Ecosistema)</span>';
+                }
             } else {
                 if (pageCountTotal) pageCountTotal.textContent = totalPages;
                 if (pageInput) pageInput.max = totalPages;
@@ -2656,6 +2690,17 @@
                     syncStatusBadge.innerHTML = '<i class="ph ph-cloud-check"></i>';
                     syncStatusBadge.setAttribute('data-tooltip', 'Modifiche sincronizzate nel Cloud');
                     syncStatusBadge.onclick = null;
+                }
+
+                if (btnToggleDrawMode) {
+                    btnToggleDrawMode.innerHTML = '<i class="ph ph-pencil-simple"></i>';
+                    btnToggleDrawMode.setAttribute('data-tooltip', 'Disegna e Scrivi');
+                    btnToggleDrawMode.classList.remove('is-ecosistema-locked');
+                }
+
+                const studentAction = document.getElementById('dropdown-student-action');
+                if (studentAction) {
+                    studentAction.textContent = 'Nome Quaderno Personale';
                 }
             }
 
@@ -3574,6 +3619,10 @@
         // Student Profile Modal Listeners
         if (studentProfilePill) {
             studentProfilePill.addEventListener('click', () => {
+                if (!hasEcosistemaAccess) {
+                    openEcosistemaUpgradeModal('profile');
+                    return;
+                }
                 studentNameInput.value = currentStudentName;
                 studentModal.classList.add('open');
                 studentNameInput.focus();
@@ -3582,6 +3631,10 @@
 
         window.openStudentModalFromDropdown = function () {
             window.closeUserDropdown();
+            if (!hasEcosistemaAccess) {
+                openEcosistemaUpgradeModal('profile');
+                return;
+            }
             if (studentModal && studentNameInput) {
                 studentNameInput.value = currentStudentName;
                 studentModal.classList.add('open');

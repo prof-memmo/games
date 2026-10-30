@@ -353,30 +353,72 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            font-size: 1.05rem;
-            color: #10b981;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            transition: all 0.2s ease;
+            font-size: 1.15rem;
+            color: #34d399;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            cursor: help;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sync-badge:hover,
+        .sync-badge:focus-visible {
+            transform: scale(1.15);
+            background: rgba(16, 185, 129, 0.28);
+            border-color: #34d399;
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.45);
+            outline: none;
+        }
+
+        /* Tooltip a comparsa a DESTRA per la colonna di sinistra */
+        .sync-badge::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 10px);
+            transform: translateY(-50%) scale(0.92);
+            background: #090d16;
+            color: #ffffff;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding: 5px 11px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 100;
+        }
+
+        .sync-badge:hover::after,
+        .sync-badge:focus-visible::after,
+        .sync-badge.touch-active::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scale(1);
         }
 
         .sync-badge.saving {
             color: #f59e0b;
-            background: rgba(245, 158, 11, 0.12);
-            border-color: rgba(245, 158, 11, 0.35);
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.4);
         }
 
         /* Reader Pager Dock: In Basso a Sinistra (Colonna Verticale compatta) */
         .reader-page-dock {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 45;
+            bottom: 18px;
+            left: 18px;
+            z-index: 50;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -442,19 +484,19 @@
         /* Reader Tools Dock: In Basso a Destra (Colonna Verticale dall'alto in basso, Solo Icone con Tooltip a Sinistra) */
         .reader-tools-dock {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 45;
+            bottom: 18px;
+            right: 18px;
+            z-index: 50;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--reader-border);
             border-radius: 28px;
-            padding: 8px 6px;
+            padding: 7px 6px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             pointer-events: auto;
         }
@@ -464,25 +506,27 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #e2e8f0;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
         }
 
-        .dock-tool-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .dock-tool-btn:hover,
+        .dock-tool-btn:focus-visible {
+            background: rgba(255, 255, 255, 0.22);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: scale(1.22);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-            z-index: 10;
+            border-color: rgba(255, 255, 255, 0.45);
+            transform: scale(1.18);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            z-index: 25;
+            outline: none;
         }
 
         /* Tooltip a comparsa fluida a SINISTRA del pulsante per la colonna di destra */
@@ -490,29 +534,31 @@
             content: attr(data-tooltip);
             position: absolute;
             top: 50%;
-            right: calc(100% + 12px);
-            transform: translateY(-50%) translateX(4px);
-            background: #0f172a;
+            right: calc(100% + 10px);
+            transform: translateY(-50%) scale(0.92);
+            background: #090d16;
             color: #ffffff;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
             letter-spacing: 0.2px;
             padding: 5px 11px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
             white-space: nowrap;
             pointer-events: none;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
-            z-index: 60;
+            z-index: 100;
         }
 
-        .dock-tool-btn:hover::after {
+        .dock-tool-btn:hover::after,
+        .dock-tool-btn:focus-visible::after,
+        .dock-tool-btn.touch-active::after {
             opacity: 1;
             visibility: visible;
-            transform: translateY(-50%) translateX(0);
+            transform: translateY(-50%) scale(1);
         }
 
         .dock-tool-btn.active {
@@ -715,11 +761,11 @@
         /* Floating Nav Buttons on Stage Sides (Frecce Sinistra e Destra) */
         .stage-nav-arrow {
             position: absolute;
-            top: calc(50% + 5px);
+            top: 50%;
             transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(15, 23, 42, 0.88);
+            width: 48px;
+            height: 48px;
+            background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1.5px solid var(--reader-border);
@@ -728,25 +774,31 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             cursor: pointer;
-            z-index: 40;
+            z-index: 60;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.55);
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
         }
 
-        .stage-nav-arrow:hover:not(:disabled) {
+        .stage-nav-arrow:hover:not(:disabled),
+        .stage-nav-arrow:focus-visible:not(:disabled) {
             background: var(--reader-accent);
             border-color: #a78bfa;
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 0 24px rgba(124, 58, 237, 0.6);
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 0 24px rgba(124, 58, 237, 0.65);
+            outline: none;
         }
 
         .stage-nav-arrow:disabled {
-            opacity: 0.18;
+            opacity: 0.35;
             cursor: not-allowed;
+            background: rgba(15, 23, 42, 0.7);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.45);
             transform: translateY(-50%);
+            box-shadow: none;
         }
 
         .stage-nav-left {
@@ -755,6 +807,45 @@
 
         .stage-nav-right {
             right: 18px;
+        }
+
+        /* Tooltip per Frecce Laterali */
+        .stage-nav-arrow::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) scale(0.92);
+            background: #090d16;
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 100;
+        }
+
+        .stage-nav-left::after {
+            left: calc(100% + 12px);
+        }
+
+        .stage-nav-right::after {
+            right: calc(100% + 12px);
+        }
+
+        .stage-nav-arrow:hover::after,
+        .stage-nav-arrow:focus-visible::after,
+        .stage-nav-arrow.touch-active::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scale(1);
         }
 
         /* Draw Canvas Layer */
@@ -1331,6 +1422,38 @@
             border-color: var(--reader-accent);
         }
 
+        /* Protezione Anti-Sovrapposizione per Schermi Medi/Bassi (Laptop, 768p, 800p e schermi ridotti in altezza <= 820px) */
+        @media (max-height: 820px) {
+            .reader-tools-dock {
+                bottom: 12px;
+                right: 12px;
+                display: grid;
+                grid-template-columns: repeat(2, 34px);
+                gap: 5px;
+                padding: 5px;
+                border-radius: 16px;
+            }
+
+            .dock-tool-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1.05rem;
+            }
+
+            .dock-tool-btn::after {
+                font-size: 0.72rem;
+                padding: 4px 8px;
+            }
+
+            .reader-page-dock {
+                bottom: 12px;
+                left: 12px;
+                gap: 4px;
+                padding: 4px 6px;
+                border-radius: 16px;
+            }
+        }
+
         @media (max-width: 900px) {
             .header-quaderno-logo-wrap {
                 display: none;
@@ -1339,13 +1462,14 @@
             .reader-page-dock {
                 bottom: 12px;
                 left: 12px;
-                padding: 3px 8px;
+                padding: 4px 6px;
+                gap: 5px;
             }
 
             .reader-tools-dock {
                 bottom: 12px;
                 right: 12px;
-                padding: 3px 8px;
+                padding: 5px;
                 gap: 5px;
             }
 
@@ -1353,6 +1477,11 @@
                 width: 34px;
                 height: 34px;
                 font-size: 1.05rem;
+            }
+
+            .dock-tool-btn::after {
+                font-size: 0.72rem;
+                padding: 4px 8px;
             }
 
             .reader-patamu-footer {
@@ -1389,6 +1518,11 @@
                 right: 8px;
             }
 
+            .stage-nav-arrow::after {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+
             .reader-back-btn span.full-text {
                 display: none;
             }
@@ -1400,14 +1534,15 @@
             .reader-page-dock {
                 bottom: 8px;
                 left: 8px;
-                padding: 2px 6px;
+                padding: 3px 5px;
+                gap: 3px;
             }
 
             .reader-tools-dock {
                 bottom: 8px;
                 right: 8px;
                 gap: 4px;
-                padding: 2px 6px;
+                padding: 4px;
             }
 
             .dock-tool-btn {
@@ -1416,8 +1551,26 @@
                 font-size: 0.95rem;
             }
 
+            .dock-tool-btn::after {
+                font-size: 0.68rem;
+                padding: 3px 7px;
+            }
+
             .dock-pagination {
-                padding: 1px 4px;
+                padding: 2px 4px;
+            }
+
+            .dock-page-input {
+                width: 36px;
+                font-size: 0.78rem;
+                padding: 2px 0;
+            }
+
+            #sync-status-badge {
+                display: inline-flex !important;
+                width: 26px;
+                height: 26px;
+                font-size: 0.95rem;
             }
 
             .reader-patamu-footer {
@@ -1436,10 +1589,6 @@
             .footer-legal-links {
                 gap: 6px 12px;
                 font-size: 0.68rem;
-            }
-
-            #sync-status-badge {
-                display: none;
             }
 
             #drawing-toolbar {
@@ -1538,10 +1687,10 @@
         </header>
 
         <!-- Frecce Navigazione Laterali (Sinistra e Destra) -->
-        <button id="stage-prev" class="stage-nav-arrow stage-nav-left" title="Pagina Precedente (←)">
+        <button id="stage-prev" class="stage-nav-arrow stage-nav-left" data-tooltip="Pagina Precedente (←)" aria-label="Pagina Precedente">
             <i class="ph ph-caret-left"></i>
         </button>
-        <button id="stage-next" class="stage-nav-arrow stage-nav-right" title="Pagina Successiva (→)">
+        <button id="stage-next" class="stage-nav-arrow stage-nav-right" data-tooltip="Pagina Successiva (→)" aria-label="Pagina Successiva">
             <i class="ph ph-caret-right"></i>
         </button>
 
@@ -1573,13 +1722,13 @@
                 <div class="dock-pagination">
                     <div class="dock-page-box">
                         <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a78bfa;">Pagina</span>
-                        <input type="number" id="page-num-input" class="dock-page-input" min="1" max="1" value="1" title="Digita il numero di pagina e premi Invio">
+                        <input type="number" id="page-num-input" class="dock-page-input" min="1" max="1" value="1" title="Digita il numero di pagina e premi Invio" aria-label="Numero di pagina">
                         <span class="dock-page-total">di <span id="page-count-total">--</span></span>
                     </div>
                 </div>
 
                 <!-- Sync status badge (solo icona con tooltip) posizionata sotto -->
-                <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
+                <div id="sync-status-badge" class="sync-badge" data-tooltip="Modifiche sincronizzate nel Cloud" aria-label="Stato salvataggio Cloud">
                     <i class="ph ph-cloud-check"></i>
                 </div>
             </div>
@@ -1587,22 +1736,22 @@
             <!-- Floating Tools Dock: In Basso a Destra (Colonna Verticale: Disegna, LIM, Vista, Zoom +, Adatta, Zoom -) -->
             <div id="reader-tools-dock" class="reader-tools-dock">
                 <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn" data-tooltip="Disegna e Scrivi"
-                    title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                    aria-label="Disegna e Scrivi">
                     <i class="ph ph-pencil-simple"></i>
                 </button>
-                <button id="btn-fullscreen" class="dock-tool-btn" data-tooltip="Schermo Intero LIM" title="Schermo Intero (Ottimale per LIM)">
+                <button id="btn-fullscreen" class="dock-tool-btn" data-tooltip="Schermo Intero LIM" aria-label="Schermo Intero LIM">
                     <i class="ph ph-corners-out"></i>
                 </button>
-                <button id="btn-toggle-spread" class="dock-tool-btn" data-tooltip="Vista Libro / 1 Pag" title="Alterna Vista 1 Pagina / 2 Pagine">
+                <button id="btn-toggle-spread" class="dock-tool-btn" data-tooltip="Vista Libro / 1 Pag" aria-label="Vista Libro / 1 Pagina">
                     <i class="ph ph-book-open"></i>
                 </button>
-                <button id="btn-zoom-in" class="dock-tool-btn" data-tooltip="Aumenta Zoom (+)" title="Aumenta Zoom (+)">
+                <button id="btn-zoom-in" class="dock-tool-btn" data-tooltip="Aumenta Zoom (+)" aria-label="Aumenta Zoom">
                     <i class="ph ph-plus"></i>
                 </button>
-                <button id="btn-zoom-fit" class="dock-tool-btn" data-tooltip="Adatta allo Schermo" title="Adatta allo Schermo">
+                <button id="btn-zoom-fit" class="dock-tool-btn" data-tooltip="Adatta allo Schermo" aria-label="Adatta allo Schermo">
                     <i class="ph ph-arrows-in-simple"></i>
                 </button>
-                <button id="btn-zoom-out" class="dock-tool-btn" data-tooltip="Riduci Zoom (-)" title="Riduci Zoom (-)">
+                <button id="btn-zoom-out" class="dock-tool-btn" data-tooltip="Riduci Zoom (-)" aria-label="Riduci Zoom">
                     <i class="ph ph-minus"></i>
                 </button>
             </div>
@@ -2796,9 +2945,15 @@
             const hasNext = (currentPageNum + step) <= totalPages;
 
             if (btnPrev) btnPrev.disabled = !hasPrev;
-            if (stagePrev) stagePrev.disabled = !hasPrev;
+            if (stagePrev) {
+                stagePrev.disabled = !hasPrev;
+                stagePrev.setAttribute('data-tooltip', hasPrev ? 'Pagina Precedente (←)' : 'Prima Pagina (inizio)');
+            }
             if (btnNext) btnNext.disabled = !hasNext;
-            if (stageNext) stageNext.disabled = !hasNext;
+            if (stageNext) {
+                stageNext.disabled = !hasNext;
+                stageNext.setAttribute('data-tooltip', hasNext ? 'Pagina Successiva (→)' : 'Ultima Pagina (fine)');
+            }
         }
 
         function goToPage(target) {
@@ -2942,6 +3097,14 @@
                 goToPage(pageInput.value);
             });
         }
+
+        // Supporto Tooltip Interattivi per Dispositivi Touch / Schermi Ridotti
+        document.querySelectorAll('.dock-tool-btn, .stage-nav-arrow, .sync-badge').forEach(el => {
+            el.addEventListener('touchstart', () => {
+                el.classList.add('touch-active');
+                setTimeout(() => el.classList.remove('touch-active'), 1500);
+            }, { passive: true });
+        });
 
         // TOC Listeners
         if (btnToggleToc) btnToggleToc.addEventListener('click', openTocDrawer);

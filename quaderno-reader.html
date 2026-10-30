@@ -245,7 +245,7 @@
             position: absolute;
             top: calc(100% + 10px);
             right: 0;
-            width: 280px;
+            width: 290px;
             background: #0f172a;
             border: 1.8px solid var(--reader-accent);
             border-radius: 18px;
@@ -253,7 +253,7 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 9px;
             z-index: 3000;
             backdrop-filter: blur(15px);
         }
@@ -300,6 +300,7 @@
             transition: all 0.15s ease;
             text-decoration: none;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .dropdown-pill-btn:hover {
@@ -310,6 +311,31 @@
         .dropdown-bottom-row {
             display: flex;
             gap: 8px;
+            width: 100%;
+        }
+
+        .dropdown-bottom-row .dropdown-pill-btn {
+            flex: 1;
+        }
+
+        .btn-notifiche-pill {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        .btn-notifiche-pill:hover {
+            background: #334155;
+            border-color: #64748b;
+        }
+
+        .badge-notif-pill {
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
         }
 
         .btn-esci-pill {
@@ -579,11 +605,11 @@
             box-shadow: 0 0 16px rgba(124, 58, 237, 0.65);
         }
 
-        /* Patamu Official Footer: Harmonized with other sites, Julius Sans One, Never Disappears */
+        /* Patamu Official Footer: Harmonized with other sites, Julius Sans One, Edge-to-Edge */
         .reader-patamu-footer {
             background: #0b1120;
             border-top: 1px solid var(--reader-border);
-            padding: 12px 1.5rem;
+            padding: 10px 24px;
             z-index: 30;
             flex-shrink: 0;
             display: flex !important;
@@ -600,11 +626,12 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 12px 22px;
+            gap: 12px 24px;
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            width: 100%;
             font-family: 'Julius Sans One', sans-serif !important;
         }
 
@@ -622,27 +649,28 @@
         .footer-patamu-row {
             display: flex !important;
             align-items: center;
-            justify-content: center;
-            gap: 18px;
+            justify-content: flex-start;
+            gap: 20px;
             width: 100%;
-            max-width: 950px;
-            flex-wrap: wrap;
+            margin: 0;
+            box-sizing: border-box;
         }
 
         .patamu-logo-img {
-            height: 48px;
+            height: 52px;
+            width: auto;
             object-fit: contain;
             flex-shrink: 0;
         }
 
         .patamu-text {
             text-align: left;
-            font-size: 0.76rem;
+            font-size: 0.8rem;
             line-height: 1.45;
             color: #94a3b8;
             margin: 0;
             flex: 1;
-            min-width: 260px;
+            width: 100%;
             font-family: 'Julius Sans One', sans-serif !important;
             letter-spacing: 0.3px;
         }
@@ -1656,27 +1684,38 @@
                             <div class="dropdown-user-subtitle" id="dropdown-user-subtitle">NON AUTENTICATO</div>
                         </div>
 
-                        <!-- Golden Pill Login Button -->
+                        <!-- Golden Pill Login Button (visibile per ospiti) -->
                         <button class="dropdown-pill-btn" id="btn-login-hub-dropdown"
                             style="background: #d4af37; color: #0f172a; font-weight: 800;"
-                            onclick="window.goToHubPortal()">
+                            onclick="closeUserDropdown(); window.goToHubPortal();">
                             <i class="ph ph-sign-in"></i> Accedi tramite Hub
                         </button>
 
-                        <!-- Modifica nome studente per annotazioni -->
-                        <button class="dropdown-pill-btn" id="btn-student-name-dropdown"
-                            onclick="openStudentModalFromDropdown()">
-                            <i class="ph ph-identification-card"></i> <span id="dropdown-student-action">Nome Quaderno
-                                Personale</span>
-                        </button>
-
+                        <!-- Modifica Profilo Hub (visibile se autenticato) -->
                         <button class="dropdown-pill-btn" id="btn-profile-dropdown" style="display: none;"
                             onclick="closeUserDropdown(); window.open('https://prof-memmo.github.io/games/profilo.html', '_blank');">
-                            <i class="ph ph-user-gear"></i> Modifica Profilo Hub
+                            <i class="ph ph-user-gear"></i> Modifica Profilo
                         </button>
 
-                        <div class="dropdown-bottom-row" id="dropdown-bottom-row" style="display: none;">
-                            <button class="dropdown-pill-btn btn-esci-pill" id="btn-logout-dropdown"
+                        <!-- Invita un Collega (condiviso ecosistema) -->
+                        <button class="dropdown-pill-btn" id="btn-invite-dropdown"
+                            onclick="closeUserDropdown(); if(window.openSharedModal) window.openSharedModal('invita');">
+                            <i class="ph ph-paper-plane"></i> Invita un Collega
+                        </button>
+
+                        <!-- Modifica nome studente per annotazioni del Quaderno -->
+                        <button class="dropdown-pill-btn" id="btn-student-name-dropdown"
+                            onclick="openStudentModalFromDropdown()">
+                            <i class="ph ph-identification-card"></i> <span id="dropdown-student-action">Nome Quaderno Personale</span>
+                        </button>
+
+                        <!-- Riga inferiore: Notifiche e Logout -->
+                        <div class="dropdown-bottom-row" id="dropdown-bottom-row">
+                            <button class="dropdown-pill-btn btn-notifiche-pill" id="btn-notifiche-dropdown"
+                                onclick="closeUserDropdown(); if(window.openSharedModal) window.openSharedModal('notifiche');">
+                                <i class="ph ph-bell"></i> Notifiche <span id="dropdown-notif-badge" class="badge-notif-pill" style="display:none;">0</span>
+                            </button>
+                            <button class="dropdown-pill-btn btn-esci-pill" id="btn-logout-dropdown" style="display: none;"
                                 onclick="closeUserDropdown(); logoutEcosistema();">
                                 <i class="ph ph-power"></i> Esci
                             </button>
@@ -3317,8 +3356,8 @@
                         if (btnLogin) btnLogin.style.display = 'none';
                         var btnProf = document.getElementById('btn-profile-dropdown');
                         if (btnProf) btnProf.style.display = 'flex';
-                        var rowBot = document.getElementById('dropdown-bottom-row');
-                        if (rowBot) rowBot.style.display = 'flex';
+                        var btnLogout = document.getElementById('btn-logout-dropdown');
+                        if (btnLogout) btnLogout.style.display = 'flex';
                     }
                 }
             } catch (e) { }
@@ -3376,8 +3415,8 @@
                         if (btnLogin) btnLogin.style.display = 'none';
                         var btnProf = document.getElementById('btn-profile-dropdown');
                         if (btnProf) btnProf.style.display = 'flex';
-                        var rowBot = document.getElementById('dropdown-bottom-row');
-                        if (rowBot) rowBot.style.display = 'flex';
+                        var btnLogout = document.getElementById('btn-logout-dropdown');
+                        if (btnLogout) btnLogout.style.display = 'flex';
 
                         // Sincronizza automaticamente il quaderno personale con l'identità autenticata
                         if (!currentStudentName || currentStudentName === 'Studente') {
@@ -3395,8 +3434,8 @@
                         if (btnLogin) btnLogin.style.display = 'flex';
                         var btnProf = document.getElementById('btn-profile-dropdown');
                         if (btnProf) btnProf.style.display = 'none';
-                        var rowBot = document.getElementById('dropdown-bottom-row');
-                        if (rowBot) rowBot.style.display = 'none';
+                        var btnLogout = document.getElementById('btn-logout-dropdown');
+                        if (btnLogout) btnLogout.style.display = 'none';
                     }
                 });
             } catch (e) {

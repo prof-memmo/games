@@ -371,77 +371,90 @@
             border-color: rgba(245, 158, 11, 0.35);
         }
 
-        /* Reader Pager Dock: In Basso a Sinistra */
+        /* Reader Pager Dock: In Basso a Sinistra (Colonna Verticale compatta) */
         .reader-page-dock {
             position: absolute;
-            bottom: 18px;
+            bottom: 20px;
             left: 20px;
             z-index: 45;
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 8px;
             background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--reader-border);
-            border-radius: 30px;
-            padding: 4px 10px;
+            border-radius: 20px;
+            padding: 8px 8px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             pointer-events: auto;
         }
 
         .dock-pagination {
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 4px;
             background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2px 6px;
+            border-radius: 14px;
+            padding: 6px 8px;
         }
 
         .dock-page-box {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 5px;
-            font-size: 0.82rem;
-            font-weight: 600;
+            gap: 2px;
+            font-size: 0.75rem;
+            font-weight: 700;
             color: var(--reader-text-muted);
-            padding: 0 4px;
+            text-align: center;
         }
 
         .dock-page-input {
-            width: 42px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
+            width: 44px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
             text-align: center;
             border-radius: 6px;
-            padding: 2px 0;
-            font-size: 0.84rem;
-            font-weight: 700;
+            padding: 3px 0;
+            font-size: 0.88rem;
+            font-weight: 800;
+            transition: all 0.15s ease;
         }
 
         .dock-page-input:focus {
             outline: none;
             border-color: var(--reader-accent);
+            background: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
         }
 
-        /* Reader Tools Dock: In Basso a Destra (Solo Icone con Ingrandimento e Tooltip dinamico) */
+        .dock-page-total {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        /* Reader Tools Dock: In Basso a Destra (Colonna Verticale dall'alto in basso, Solo Icone con Tooltip a Sinistra) */
         .reader-tools-dock {
             position: absolute;
-            bottom: 18px;
+            bottom: 20px;
             right: 20px;
             z-index: 45;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--reader-border);
-            border-radius: 30px;
-            padding: 5px 10px;
+            border-radius: 28px;
+            padding: 8px 6px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             pointer-events: auto;
         }
@@ -451,43 +464,43 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #e2e8f0;
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
         }
 
         .dock-tool-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.35);
-            transform: scale(1.18);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.22);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
             z-index: 10;
         }
 
-        /* Tooltip a comparsa fluida sopra al pulsante al passaggio del mouse */
+        /* Tooltip a comparsa fluida a SINISTRA del pulsante per la colonna di destra */
         .dock-tool-btn::after {
             content: attr(data-tooltip);
             position: absolute;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%) translateY(4px);
+            top: 50%;
+            right: calc(100% + 12px);
+            transform: translateY(-50%) translateX(4px);
             background: #0f172a;
             color: #ffffff;
-            font-size: 0.76rem;
+            font-size: 0.78rem;
             font-weight: 700;
             letter-spacing: 0.2px;
-            padding: 5px 10px;
+            padding: 5px 11px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65);
             white-space: nowrap;
             pointer-events: none;
             opacity: 0;
@@ -499,7 +512,7 @@
         .dock-tool-btn:hover::after {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(-50%) translateX(0);
         }
 
         .dock-tool-btn.active {
@@ -1554,49 +1567,43 @@
                 </div>
             </div>
 
-            <!-- Floating Page Dock: In Basso a Sinistra -->
+            <!-- Floating Page Dock: In Basso a Sinistra (Colonna: Input Pagina in alto, Icona Cloud in basso) -->
             <div id="reader-page-dock" class="reader-page-dock">
-                <!-- Sync status badge (solo icona con tooltip) -->
+                <!-- Selettore Pagina (Senza frecce laterali nel dock) -->
+                <div class="dock-pagination">
+                    <div class="dock-page-box">
+                        <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; color: #a78bfa;">Pagina</span>
+                        <input type="number" id="page-num-input" class="dock-page-input" min="1" max="1" value="1" title="Digita il numero di pagina e premi Invio">
+                        <span class="dock-page-total">di <span id="page-count-total">--</span></span>
+                    </div>
+                </div>
+
+                <!-- Sync status badge (solo icona con tooltip) posizionata sotto -->
                 <div id="sync-status-badge" class="sync-badge" title="Tutti gli scritti e disegni sono salvati nel tuo profilo">
                     <i class="ph ph-cloud-check"></i>
                 </div>
-
-                <!-- Selettore Pagina -->
-                <div class="dock-pagination">
-                    <button id="btn-prev" class="dock-nav-btn" title="Pagina Precedente (←)">
-                        <i class="ph ph-caret-left"></i>
-                    </button>
-                    <div class="dock-page-box">
-                        <span>Pag.</span>
-                        <input type="number" id="page-num-input" class="dock-page-input" min="1" max="1" value="1">
-                        <span>/ <span id="page-count-total">--</span></span>
-                    </div>
-                    <button id="btn-next" class="dock-nav-btn" title="Pagina Successiva (→)">
-                        <i class="ph ph-caret-right"></i>
-                    </button>
-                </div>
             </div>
 
-            <!-- Floating Tools Dock: In Basso a Destra (Solo Icone che si ingrandiscono al passaggio del mouse con tooltip) -->
+            <!-- Floating Tools Dock: In Basso a Destra (Colonna Verticale: Disegna, LIM, Vista, Zoom +, Adatta, Zoom -) -->
             <div id="reader-tools-dock" class="reader-tools-dock">
-                <button id="btn-zoom-out" class="dock-tool-btn" data-tooltip="Riduci Zoom (-)" title="Riduci Zoom (-)">
-                    <i class="ph ph-minus"></i>
-                </button>
-                <button id="btn-zoom-fit" class="dock-tool-btn" data-tooltip="Adatta allo Schermo" title="Adatta allo Schermo">
-                    <i class="ph ph-arrows-in-simple"></i>
-                </button>
-                <button id="btn-zoom-in" class="dock-tool-btn" data-tooltip="Aumenta Zoom (+)" title="Aumenta Zoom (+)">
-                    <i class="ph ph-plus"></i>
-                </button>
-                <button id="btn-toggle-spread" class="dock-tool-btn" data-tooltip="Vista Libro / 1 Pag" title="Alterna Vista 1 Pagina / 2 Pagine">
-                    <i class="ph ph-book-open"></i>
+                <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn" data-tooltip="Disegna e Scrivi"
+                    title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
+                    <i class="ph ph-pencil-simple"></i>
                 </button>
                 <button id="btn-fullscreen" class="dock-tool-btn" data-tooltip="Schermo Intero LIM" title="Schermo Intero (Ottimale per LIM)">
                     <i class="ph ph-corners-out"></i>
                 </button>
-                <button id="btn-toggle-draw-mode" class="dock-tool-btn dock-draw-btn" data-tooltip="Disegna e Scrivi"
-                    title="Attiva/Disattiva Penna, Evidenziatore e Scrittura">
-                    <i class="ph ph-pencil-simple"></i>
+                <button id="btn-toggle-spread" class="dock-tool-btn" data-tooltip="Vista Libro / 1 Pag" title="Alterna Vista 1 Pagina / 2 Pagine">
+                    <i class="ph ph-book-open"></i>
+                </button>
+                <button id="btn-zoom-in" class="dock-tool-btn" data-tooltip="Aumenta Zoom (+)" title="Aumenta Zoom (+)">
+                    <i class="ph ph-plus"></i>
+                </button>
+                <button id="btn-zoom-fit" class="dock-tool-btn" data-tooltip="Adatta allo Schermo" title="Adatta allo Schermo">
+                    <i class="ph ph-arrows-in-simple"></i>
+                </button>
+                <button id="btn-zoom-out" class="dock-tool-btn" data-tooltip="Riduci Zoom (-)" title="Riduci Zoom (-)">
+                    <i class="ph ph-minus"></i>
                 </button>
             </div>
         </main>

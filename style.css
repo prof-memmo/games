@@ -1756,14 +1756,12 @@ input:focus, textarea:focus {
   color: #1e293b;
   transition: all 0.25s ease;
   max-width: 95%;
-  cursor: pointer;
+  cursor: default;
+  user-select: none;
 }
 
 .fanta-countdown-pill:hover {
-  border-color: rgba(217, 119, 6, 0.5);
-  background: rgba(254, 243, 199, 0.7);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
-  transform: translateY(-2px);
+  border-color: rgba(217, 119, 6, 0.35);
 }
 
 .fanta-pill-badge-wrap {

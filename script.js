@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 1b. Gestione Visibilità e Contatori Animati Community (Opzione B)
+            // 1b. Gestione Visibilità e Contatori Animati Community (Lista Verticale sotto la Hero)
             const sezioneNumeri = document.getElementById('sezione-numeri-community');
             if (sezioneNumeri) {
                 if (data.numeri_community) {
@@ -561,8 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (elViandanti) elViandanti.setAttribute('data-target', valViandanti);
                     if (elScuole) elScuole.setAttribute('data-target', valScuole);
 
-                    if (window.triggerCommunityStatsAnimation) {
-                        window.triggerCommunityStatsAnimation();
+                    if (window.setupCommunityStatsObserver) {
+                        window.setupCommunityStatsObserver();
                     }
                 } else {
                     sezioneNumeri.style.display = 'none';
@@ -654,10 +654,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================================================
-// Animazione Progressiva Contatori Community (Count-Up con Easing)
+// Animazione Progressiva Contatori Community (Count-Up con Easing per Lista Verticale)
 // ==========================================================================
 (function() {
     let hasAnimated = false;
+    let observerInstance = null;
 
     function animateCounter(el, target, duration = 1600) {
         if (!el) return;
@@ -692,6 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const numbers = section.querySelectorAll('.stat-number');
         if (!numbers || numbers.length === 0) return;
 
+        // Anima se non ancora animato o se forzato
         if (force || !hasAnimated) {
             numbers.forEach(el => {
                 const target = parseInt(el.getAttribute('data-target') || '0', 10);
@@ -701,21 +703,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
+    window.setupCommunityStatsObserver = function() {
         const section = document.getElementById('sezione-numeri-community');
-        if (!section) return;
+        if (!section || section.style.display === 'none') return;
+
+        // Se già animato, non serve re-osservare
+        if (hasAnimated) return;
+
+        // Se è già visibile nella finestra viewport attuale, avvia l'animazione direttamente
+        const rect = section.getBoundingClientRect();
+        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isInViewport) {
+            window.triggerCommunityStatsAnimation(true);
+            return;
+        }
 
         if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries, obs) => {
+            if (observerInstance) observerInstance.disconnect();
+
+            observerInstance = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting && !hasAnimated) {
                         window.triggerCommunityStatsAnimation(true);
                         obs.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.2 });
+            }, { threshold: 0.1 });
 
-            observer.observe(section);
+            observerInstance.observe(section);
+        } else {
+            // Fallback per browser datati
+            window.triggerCommunityStatsAnimation(true);
         }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        window.setupCommunityStatsObserver();
     });
 })();

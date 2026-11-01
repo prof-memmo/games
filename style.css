@@ -1882,6 +1882,78 @@ input:focus, textarea:focus {
   }
 }
 
+/* ==========================================================================
+   Sezione Numeri Community (Fluida, Senza Card, Testo sopra e Numero sotto)
+   ========================================================================== */
+.community-stats-section {
+    padding: 3.5rem 1rem;
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    text-align: center;
+}
+
+.community-stats-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.2rem;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.community-stat-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.community-stat-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: -0.01em;
+}
+
+.community-stat-val {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'Outfit', sans-serif;
+}
+
+.community-stat-val .stat-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.3rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.community-stat-val .stat-plus {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-left: 2px;
+}
+
+@media (max-width: 480px) {
+    .community-stats-section {
+        padding: 2.5rem 1rem;
+    }
+    .community-stats-flow {
+        gap: 1.75rem;
+    }
+    .community-stat-label {
+        font-size: 1.05rem;
+    }
+    .community-stat-val .stat-number {
+        font-size: 2rem;
+    }
+}
+
 
 
 

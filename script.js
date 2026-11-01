@@ -537,6 +537,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // 1b. Gestione Visibilità e Contatori Animati Community (Lista Verticale sotto la Hero)
+            const sezioneNumeri = document.getElementById('sezione-numeri-community');
+            if (sezioneNumeri) {
+                if (data.numeri_community) {
+                    sezioneNumeri.style.display = 'block';
+                    const stats = data.community_stats || {};
+                    const valStudenti = parseInt(stats.studenti, 10) || 0;
+                    const valDocenti = parseInt(stats.docenti, 10) || 0;
+                    const valViandanti = parseInt(stats.viandanti, 10) || 0;
+                    const valScuole = parseInt(stats.scuole, 10) || 0;
+                    const valTotale = stats.totale_community !== undefined ? parseInt(stats.totale_community, 10) : (valStudenti + valDocenti + valViandanti);
+
+                    const elTotale = document.getElementById('stat-totale');
+                    const elStudenti = document.getElementById('stat-studenti');
+                    const elDocenti = document.getElementById('stat-docenti');
+                    const elViandanti = document.getElementById('stat-viandanti');
+                    const elScuole = document.getElementById('stat-scuole');
+
+                    if (elTotale) elTotale.setAttribute('data-target', valTotale);
+                    if (elStudenti) elStudenti.setAttribute('data-target', valStudenti);
+                    if (elDocenti) elDocenti.setAttribute('data-target', valDocenti);
+                    if (elViandanti) elViandanti.setAttribute('data-target', valViandanti);
+                    if (elScuole) elScuole.setAttribute('data-target', valScuole);
+
+                    if (window.setupCommunityStatsObserver) {
+                        window.setupCommunityStatsObserver();
+                    }
+                    if (window.refreshCommunityStatsValues) {
+                        window.refreshCommunityStatsValues();
+                    }
+                } else {
+                    sezioneNumeri.style.display = 'none';
+                }
+            }
+
             // 2. Gestione Scegli il tuo Piano (univoca, pulita, senza cancellare elementi errati)
             const navUl = document.querySelector('.nav-links');
             if (navUl) {
@@ -620,3 +655,103 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================================================
+// Animazione Progressiva Contatori Community (Count-Up con Easing per Lista Verticale)
+// ==========================================================================
+(function() {
+    let hasAnimated = false;
+    let observerInstance = null;
+
+    function animateCounter(el, target, duration = 1600) {
+        if (!el) return;
+        const start = 0;
+        const startTime = performance.now();
+
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const currentVal = Math.floor(start + (target - start) * easeOutCubic(progress));
+            
+            el.textContent = currentVal.toLocaleString('it-IT');
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = target.toLocaleString('it-IT');
+            }
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    window.triggerCommunityStatsAnimation = function(force = false) {
+        const section = document.getElementById('sezione-numeri-community');
+        if (!section || section.style.display === 'none') return;
+
+        const numbers = section.querySelectorAll('.stat-number');
+        if (!numbers || numbers.length === 0) return;
+
+        // Anima se non ancora animato o se forzato
+        if (force || !hasAnimated) {
+            numbers.forEach(el => {
+                const target = parseInt(el.getAttribute('data-target') || '0', 10);
+                animateCounter(el, target, 1600);
+            });
+            hasAnimated = true;
+        }
+    };
+
+    window.refreshCommunityStatsValues = function() {
+        if (!hasAnimated) return;
+        const section = document.getElementById('sezione-numeri-community');
+        if (!section || section.style.display === 'none') return;
+        const numbers = section.querySelectorAll('.stat-number');
+        numbers.forEach(el => {
+            const target = parseInt(el.getAttribute('data-target') || '0', 10);
+            el.textContent = target.toLocaleString('it-IT');
+        });
+    };
+
+    window.setupCommunityStatsObserver = function() {
+        const section = document.getElementById('sezione-numeri-community');
+        if (!section || section.style.display === 'none') return;
+
+        // Se già animato, non serve re-osservare
+        if (hasAnimated) return;
+
+        // Se è già visibile nella finestra viewport attuale, avvia l'animazione direttamente
+        const rect = section.getBoundingClientRect();
+        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isInViewport) {
+            window.triggerCommunityStatsAnimation(true);
+            return;
+        }
+
+        if ('IntersectionObserver' in window) {
+            if (observerInstance) observerInstance.disconnect();
+
+            observerInstance = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !hasAnimated) {
+                        window.triggerCommunityStatsAnimation(true);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observerInstance.observe(section);
+        } else {
+            // Fallback per browser datati
+            window.triggerCommunityStatsAnimation(true);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        window.setupCommunityStatsObserver();
+    });
+})();

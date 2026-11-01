@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <!-- Favicon & Touch Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
@@ -7,14 +8,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prof. Memmo - Games&Co. | Imparare Giocando</title>
-    <meta name="description" content="Giochi didattici e di simulazione per trasformare la classe in un'esperienza attiva, coinvolgente e cooperativa.">
+    <meta name="description"
+        content="Giochi didattici e di simulazione per trasformare la classe in un'esperienza attiva, coinvolgente e cooperativa.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <!-- Icons (Phosphor) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=20261029_fanta_soft_yellow">
+    <link rel="stylesheet" href="style.css?v=20261101_stats_v4">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -24,12 +28,14 @@
 
     <!-- Icone per Safari e Dispositivi Mobili -->
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container navbar-container">
             <a href="index.html" class="logo">
-                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png" alt="Prof. Memmo Logo" class="main-logo-img">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/avatar.png"
+                    alt="Prof. Memmo Logo" class="main-logo-img">
                 <span>Prof. Memmo - Games&Co.</span>
             </a>
             <ul class="nav-links">
@@ -58,13 +64,16 @@
         </div>
         <div class="container hero-content">
             <h1 class="fade-in-up">Imparare giocando.</h1>
-            <p class="subtitle fade-in-up delay-1">Giochi didattici e di simulazione per trasformare la classe (e non solo) in un'esperienza attiva, coinvolgente e cooperativa.</p>
-            
+            <p class="subtitle fade-in-up delay-1">Giochi didattici e di simulazione per trasformare la classe (e non
+                solo) in un'esperienza attiva, coinvolgente e cooperativa.</p>
+
             <!-- FantaLetteratura Live Countdown Pill (Proposta 1 - Miele Soft) -->
             <div class="fanta-pill-container fade-in-up delay-1">
-                <div id="fanta-countdown-pill" class="fanta-countdown-pill" title="FantaLetteratura - Prossima Giornata">
+                <div id="fanta-countdown-pill" class="fanta-countdown-pill"
+                    title="FantaLetteratura - Prossima Giornata">
                     <div class="fanta-pill-badge-wrap">
-                        <img src="loghi/fantaletteratura-header.png" alt="FantaLetteratura Logo" class="fanta-pill-logo">
+                        <img src="loghi/fantaletteratura-header.png" alt="FantaLetteratura Logo"
+                            class="fanta-pill-logo">
                     </div>
                     <div class="fanta-pill-content">
                         <span class="fanta-pill-sep">·</span>
@@ -77,15 +86,20 @@
                     </div>
                 </div>
             </div>
-            <div id="vetrina-banner" class="fade-in-up delay-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
-                <img id="vetrina-img" src="assets/party-popper.png" alt="Cornucopia" style="width: 150px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
+            <div id="vetrina-banner" class="fade-in-up delay-1"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
+                <img id="vetrina-img" src="assets/party-popper.png" alt="Cornucopia"
+                    style="width: 150px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
                 <p style="margin: 0; font-size: 1.1rem; color: var(--color-text-light); line-height: 1.6;">
-                    <strong id="vetrina-title" style="color: var(--color-primary);">Prima Edizione 2026.</strong> <span id="vetrina-desc">Il progetto prende ufficialmente il via! Esplora le prime app didattiche disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</span>
+                    <strong id="vetrina-title" style="color: var(--color-primary);">Prima Edizione 2026.</strong> <span
+                        id="vetrina-desc">Il progetto prende ufficialmente il via! Esplora le prime app didattiche
+                        disponibili e preparati a vivere l'apprendimento come una grande avventura in classe.</span>
                 </p>
             </div>
             <div class="hero-buttons fade-in-up delay-2">
                 <a href="giochi.html" class="btn btn-primary">Scopri i giochi <i class="ph ph-arrow-right"></i></a>
-                <a href="metodo-filosofia.html#strumenti-didattici" class="btn btn-secondary">Scopri gli strumenti <i class="ph ph-arrow-right"></i></a>
+                <a href="metodo-filosofia.html#strumenti-didattici" class="btn btn-secondary">Scopri gli strumenti <i
+                        class="ph ph-arrow-right"></i></a>
             </div>
         </div>
     </header>
@@ -140,7 +154,9 @@
             <div class="unfair-header">
                 <span class="unfair-badge">L'Evoluzione Didattica</span>
                 <h2 class="unfair-title">Oltre le solite schede cartacee: la didattica che prende vita sulla LIM</h2>
-                <p class="unfair-subtitle">Basta fotocopie infinite ed esercizi individuali isolati. Con l'Ecosistema Prof. Memmo, ogni lezione si trasforma in un'avventura interattiva, cooperativa e memorabile per tutta la classe.</p>
+                <p class="unfair-subtitle">Basta fotocopie infinite ed esercizi individuali isolati. Con l'Ecosistema
+                    Prof. Memmo, ogni lezione si trasforma in un'avventura interattiva, cooperativa e memorabile per
+                    tutta la classe.</p>
             </div>
 
             <div class="unfair-comparison-grid">
@@ -179,26 +195,31 @@
                     <ul class="comparison-list">
                         <li class="comparison-item">
                             <span class="comparison-item-icon" aria-hidden="true">🚀</span>
-                            <span><strong>Pronto all'istante:</strong> basta un click sul browser e la lezione è avviata.</span>
+                            <span><strong>Pronto all'istante:</strong> basta un click sul browser e la lezione è
+                                avviata.</span>
                         </li>
                         <li class="comparison-item">
                             <span class="comparison-item-icon" aria-hidden="true">👥</span>
-                            <span><strong>Cooperazione e squadre:</strong> la classe collabora attivamente davanti alla LIM.</span>
+                            <span><strong>Cooperazione e squadre:</strong> la classe collabora attivamente davanti alla
+                                LIM.</span>
                         </li>
                         <li class="comparison-item">
                             <span class="comparison-item-icon" aria-hidden="true">💡</span>
-                            <span><strong>Dinamiche vive e riutilizzabili:</strong> scenari sempre nuovi e personalizzabili.</span>
+                            <span><strong>Dinamiche vive e riutilizzabili:</strong> scenari sempre nuovi e
+                                personalizzabili.</span>
                         </li>
                         <li class="comparison-item">
                             <span class="comparison-item-icon" aria-hidden="true">✨</span>
-                            <span><strong>Inclusione totale:</strong> partecipazione corale naturale anche per alunni BES e DSA.</span>
+                            <span><strong>Inclusione totale:</strong> partecipazione corale naturale anche per alunni
+                                BES e DSA.</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <div class="unfair-cta-wrapper">
-                <a href="giochi.html" class="btn btn-primary">Scopri tutte le app e i giochi didattici <i class="ph ph-arrow-right"></i></a>
+                <a href="giochi.html" class="btn btn-primary">Scopri tutte le app e i giochi didattici <i
+                        class="ph ph-arrow-right"></i></a>
             </div>
         </div>
     </section>
@@ -209,7 +230,8 @@
             <div class="faq-header">
                 <span class="faq-badge">Hai Domande?</span>
                 <h2 class="faq-title">Domande Frequenti</h2>
-                <p class="faq-subtitle">Tutto quello che c'è da sapere per portare la didattica interattiva di Prof. Memmo nella tua classe.</p>
+                <p class="faq-subtitle">Tutto quello che c'è da sapere per portare la didattica interattiva di Prof.
+                    Memmo nella tua classe.</p>
             </div>
 
             <div class="faq-list">
@@ -219,7 +241,9 @@
                         <i class="ph ph-caret-down faq-chevron" aria-hidden="true"></i>
                     </summary>
                     <div class="faq-content">
-                        No, non è richiesta alcuna installazione o configurazione. Tutte le web app di Prof. Memmo funzionano direttamente tramite qualsiasi comune browser web (Chrome, Edge, Safari, Firefox) su LIM, monitor touch, computer Windows/Mac o tablet.
+                        No, non è richiesta alcuna installazione o configurazione. Tutte le web app di Prof. Memmo
+                        funzionano direttamente tramite qualsiasi comune browser web (Chrome, Edge, Safari, Firefox) su
+                        LIM, monitor touch, computer Windows/Mac o tablet.
                     </div>
                 </details>
 
@@ -229,7 +253,9 @@
                         <i class="ph ph-caret-down faq-chevron" aria-hidden="true"></i>
                     </summary>
                     <div class="faq-content">
-                        Assolutamente no. Per la massima tutela della privacy e semplicità d'uso, gli studenti possono giocare a squadre direttamente alla LIM oppure collegarsi con i propri dispositivi tramite un semplice Codice Classe temporaneo, senza dover inserire email o dati sensibili.
+                        Assolutamente no. Per la massima tutela della privacy e semplicità d'uso, gli studenti possono
+                        giocare a squadre direttamente alla LIM oppure collegarsi con i propri dispositivi tramite un
+                        semplice Codice Classe temporaneo, senza dover inserire email o dati sensibili.
                     </div>
                 </details>
 
@@ -239,7 +265,10 @@
                         <i class="ph ph-caret-down faq-chevron" aria-hidden="true"></i>
                     </summary>
                     <div class="faq-content">
-                        Sì. Tutte le interfacce sono sviluppate con criteri di accessibilità visiva, font ad alta leggibilità, contrasti cromatici verificati e dinamiche basate sulla cooperazione e sul rinforzo positivo, pensate per valorizzare i punti di forza e i diversi stili di apprendimento di ciascun alunno.
+                        Sì. Tutte le interfacce sono sviluppate con criteri di accessibilità visiva, font ad alta
+                        leggibilità, contrasti cromatici verificati e dinamiche basate sulla cooperazione e sul rinforzo
+                        positivo, pensate per valorizzare i punti di forza e i diversi stili di apprendimento di ciascun
+                        alunno.
                     </div>
                 </details>
 
@@ -249,7 +278,9 @@
                         <i class="ph ph-caret-down faq-chevron" aria-hidden="true"></i>
                     </summary>
                     <div class="faq-content">
-                        I giochi e i materiali coprono principalmente Storia (dalla Preistoria al Novecento), Italiano e Riflessione Linguistica, Epica e Letteratura, oltre a competenze trasversali e geografiche, orientati alla Scuola Secondaria di I Grado e agli ultimi anni della Scuola Primaria.
+                        I giochi e i materiali coprono principalmente Storia (dalla Preistoria al Novecento), Italiano e
+                        Riflessione Linguistica, Epica e Letteratura, oltre a competenze trasversali e geografiche,
+                        orientati alla Scuola Secondaria di I Grado e agli ultimi anni della Scuola Primaria.
                     </div>
                 </details>
 
@@ -259,7 +290,8 @@
                         <i class="ph ph-caret-down faq-chevron" aria-hidden="true"></i>
                     </summary>
                     <div class="faq-content">
-                        Certamente. È possibile esplorare liberamente le versioni dimostrative e le attività di prova direttamente dal catalogo per sperimentarne l'efficacia sul campo insieme alla propria classe.
+                        Certamente. È possibile esplorare liberamente le versioni dimostrative e le attività di prova
+                        direttamente dal catalogo per sperimentarne l'efficacia sul campo insieme alla propria classe.
                     </div>
                 </details>
 
@@ -269,38 +301,84 @@
                         <i class="ph ph-caret-down faq-chevron" aria-hidden="true"></i>
                     </summary>
                     <div class="faq-content">
-                        Sì. Tutte le opere, le dinamiche di gioco e i testi sono creazioni originali del Prof. Guglielmo Piersanti, depositate e marcate temporalmente presso Patamu e protette con licenza Creative Commons CC BY-NC-ND 4.0.
+                        Sì. Tutte le opere, le dinamiche di gioco e i testi sono creazioni originali del Prof. Guglielmo
+                        Piersanti, depositate e marcate temporalmente presso Patamu e protette con licenza Creative
+                        Commons CC BY-NC-ND 4.0.
                     </div>
                 </details>
             </div>
         </div>
     </section>
 
-    <!-- Sezione Esperienze (Carosello Dinamico) -->
-    <section id="sezione-esperienze" class="experiences-preview" style="padding: 4rem 0; background-color: var(--color-bg-alt); text-align: center; display: none;">
+    <!-- Sezione Statistiche Community (Fluida, Senza Card, Testo sopra e Numero sotto) -->
+    <section id="sezione-numeri-community" class="community-stats-section" style="display: none;">
         <div class="container">
-            <h2 style="margin-bottom: 2rem; color: var(--color-primary);"><i class="ph-duotone ph-quotes"></i> Dicono dei giochi...</h2>
-            
-            <div id="experiences-carousel" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory;">
-                <div style="width: 100%; color: var(--color-text-light);"><i class="ph ph-spinner ph-spin"></i> Caricamento esperienze...</div>
+            <div class="community-stats-flow">
+                <div class="community-stat-unit">
+                    <span class="community-stat-label">Utenti</span>
+                    <div class="community-stat-val"><span class="stat-number" id="stat-totale" data-target="0">0</span><span class="stat-plus">+</span></div>
+                </div>
+                <div class="community-stat-unit">
+                    <span class="community-stat-label">Docenti</span>
+                    <div class="community-stat-val"><span class="stat-number" id="stat-docenti" data-target="0">0</span><span class="stat-plus">+</span></div>
+                </div>
+                <div class="community-stat-unit">
+                    <span class="community-stat-label">Studenti</span>
+                    <div class="community-stat-val"><span class="stat-number" id="stat-studenti" data-target="0">0</span><span class="stat-plus">+</span></div>
+                </div>
+                <div class="community-stat-unit">
+                    <span class="community-stat-label">Viandanti</span>
+                    <div class="community-stat-val"><span class="stat-number" id="stat-viandanti" data-target="0">0</span><span class="stat-plus">+</span></div>
+                </div>
+                <div class="community-stat-unit">
+                    <span class="community-stat-label">Scuole</span>
+                    <div class="community-stat-val"><span class="stat-number" id="stat-scuole" data-target="0">0</span><span class="stat-plus">+</span></div>
+                </div>
             </div>
-            
-            <a href="condividi-esperienza.html" class="btn btn-outline" style="margin-top: 1rem;"><i class="ph ph-pencil-simple"></i> Condividi la tua esperienza</a>
         </div>
     </section>
 
-        <!-- Footer -->
+    <!-- Sezione Esperienze (Carosello Dinamico) -->
+    <section id="sezione-esperienze" class="experiences-preview"
+        style="padding: 4rem 0; background-color: var(--color-bg-alt); text-align: center; display: none;">
+        <div class="container">
+            <h2 style="margin-bottom: 2rem; color: var(--color-primary);"><i class="ph-duotone ph-quotes"></i> Dicono
+                dei giochi...</h2>
+
+            <div id="experiences-carousel"
+                style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory;">
+                <div style="width: 100%; color: var(--color-text-light);"><i class="ph ph-spinner ph-spin"></i>
+                    Caricamento esperienze...</div>
+            </div>
+
+            <a href="condividi-esperienza.html" class="btn btn-outline" style="margin-top: 1rem;"><i
+                    class="ph ph-pencil-simple"></i> Condividi la tua esperienza</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content text-center">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 0 0 15px 0; width: 100%; flex-wrap: wrap;">
-                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png" alt="Patamu Logo" style="height: 52px; object-fit: contain; flex-shrink: 0;" onerror="this.src='assets/patamu.png'">
-                <p style="text-align: left; font-size: 0.8rem; line-height: 1.4; margin: 0; max-width: 750px; color: inherit;">
-                    &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0).
+            <div
+                style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 0 0 15px 0; width: 100%; flex-wrap: wrap;">
+                <img src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/legal/patamu-badge.png"
+                    alt="Patamu Logo" style="height: 52px; object-fit: contain; flex-shrink: 0;"
+                    onerror="this.src='assets/patamu.png'">
+                <p
+                    style="text-align: left; font-size: 0.8rem; line-height: 1.4; margin: 0; max-width: 750px; color: inherit;">
+                    &copy; 2026 Guglielmo Piersanti. Tutti i contenuti presenti su questo sito sono di proprietà
+                    dell'autore e sono protetti tramite deposito e marcatura temporale presso Patamu. I contenuti sono
+                    inoltre distribuiti con licenza Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+                    International (CC BY-NC-ND 4.0).
                 </p>
             </div>
-            <div class="footer-legal-links" style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
-                <a href="javascript:void(0)" onclick="openSharedModal('privacy')" data-legal="privacy" style="color: var(--color-text-light, #64748b); text-decoration: underline;">Privacy Policy</a>
-                <a href="javascript:void(0)" onclick="openSharedModal('termini')" data-legal="terms" style="color: var(--color-text-light, #64748b); text-decoration: underline;">Termini e Condizioni</a>
+            <div class="footer-legal-links"
+                style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; font-size: 0.9rem;">
+                <a href="javascript:void(0)" onclick="openSharedModal('privacy')" data-legal="privacy"
+                    style="color: var(--color-text-light, #64748b); text-decoration: underline;">Privacy Policy</a>
+                <a href="javascript:void(0)" onclick="openSharedModal('termini')" data-legal="terms"
+                    style="color: var(--color-text-light, #64748b); text-decoration: underline;">Termini e
+                    Condizioni</a>
             </div>
         </div>
     </footer>
@@ -310,38 +388,38 @@
 
     <!-- Caricamento Esperienze -->
     <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        if(typeof firebase !== 'undefined') {
-            try {
-                const db = firebase.firestore();
-                const snapshot = await db.collection("hub_esperienze")
-                                        .where("status", "==", "approved")
-                                        .get();
+        document.addEventListener("DOMContentLoaded", async () => {
+            if (typeof firebase !== 'undefined') {
+                try {
+                    const db = firebase.firestore();
+                    const snapshot = await db.collection("hub_esperienze")
+                        .where("status", "==", "approved")
+                        .get();
 
-                const carousel = document.getElementById("experiences-carousel");
-                carousel.innerHTML = "";
+                    const carousel = document.getElementById("experiences-carousel");
+                    carousel.innerHTML = "";
 
-                if (snapshot.empty) {
-                    carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    let authorText = data.nome || "Un docente";
-                    if(data.pubblicazione === "Sì in forma anonima") authorText = "Docente anonimo";
-                    if(data.pubblicazione === "No") return;
-
-                    const card = document.createElement("div");
-                    card.style.cssText = "min-width: 300px; max-width: 350px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); scroll-snap-align: center; text-align: left; flex: 0 0 auto;";
-
-                    let stars = "";
-                    const rating = parseInt(data.valutazione) || 5;
-                    for(let i=0; i<5; i++) {
-                        stars += i < rating ? '<i class="ph-fill ph-star" style="color:#f59e0b;"></i>' : '<i class="ph ph-star" style="color:#d1d5db;"></i>';
+                    if (snapshot.empty) {
+                        carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
+                        return;
                     }
 
-                    card.innerHTML = `
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        let authorText = data.nome || "Un docente";
+                        if (data.pubblicazione === "Sì in forma anonima") authorText = "Docente anonimo";
+                        if (data.pubblicazione === "No") return;
+
+                        const card = document.createElement("div");
+                        card.style.cssText = "min-width: 300px; max-width: 350px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); scroll-snap-align: center; text-align: left; flex: 0 0 auto;";
+
+                        let stars = "";
+                        const rating = parseInt(data.valutazione) || 5;
+                        for (let i = 0; i < 5; i++) {
+                            stars += i < rating ? '<i class="ph-fill ph-star" style="color:#f59e0b;"></i>' : '<i class="ph ph-star" style="color:#d1d5db;"></i>';
+                        }
+
+                        card.innerHTML = `
                         <div style="margin-bottom: 15px;">${stars}</div>
                         <p style="font-style: italic; color: var(--color-text); margin-bottom: 20px; font-size: 1rem;">"${data.esperienza}"</p>
                         <div style="display: flex; flex-direction: column; border-top: 1px solid #eee; padding-top: 15px;">
@@ -349,21 +427,22 @@
                             <span style="font-size: 0.85rem; color: var(--color-text-light);">${data.gioco || ''}</span>
                         </div>
                     `;
-                    carousel.appendChild(card);
-                });
-            } catch(e) {
-                console.warn("Esperienze momentaneamente non disponibili o permessi anonimi limitati:", e.message || e);
-                const carousel = document.getElementById("experiences-carousel");
-                if (carousel) carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
+                        carousel.appendChild(card);
+                    });
+                } catch (e) {
+                    console.warn("Esperienze momentaneamente non disponibili o permessi anonimi limitati:", e.message || e);
+                    const carousel = document.getElementById("experiences-carousel");
+                    if (carousel) carousel.innerHTML = '<p style="width:100%; color:var(--color-text-light);">Al momento non ci sono recensioni pubbliche.</p>';
+                }
             }
-        }
-      });
+        });
     </script>
 
     <!-- Script Menu Mobile & Ecosistema -->
-    <script src="script.js?v=20261101_pergamena"></script>
+    <script src="script.js?v=20261101_stats_v4"></script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
 </body>
+
 </html>
 <!-- v2026.08.29-release-test -->

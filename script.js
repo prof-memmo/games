@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function renderNotice(events) {
             if (!Array.isArray(events) || events.length === 0) {
-                bacheca.style.display = 'none';
+                bacheca.style.display = 'block';
                 return;
             }
             const todayStr = getTodayString();
@@ -244,7 +244,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (activeEvents.length === 0) {
-                bacheca.style.display = 'none';
+                bacheca.style.display = 'block';
+                if (titleEl) titleEl.textContent = 'La Quiete prima della Battaglia Letteraria';
+                if (loreEl) loreEl.textContent = '«Udite, udite, nobili docenti e valorosi studenti! Su questa pergamena del Regno verranno proclamati gli Imprevisti d’Epoca, i colpi di scena storici e le finestre straordinarie del Mercato. Gli scribi sono all\'opera: preparate le vostre rose!»';
+                if (badgeEl) {
+                    badgeEl.style.display = 'inline-block';
+                    badgeEl.style.background = '#4a2c0c';
+                    badgeEl.style.borderColor = '#7c511a';
+                    badgeEl.textContent = 'Bacheca Ufficiale';
+                }
                 return;
             }
 

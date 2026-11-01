@@ -212,6 +212,91 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initFantaCountdown();
+
+    // ----------------------------------------------------
+    // BACHECA IMPREVISTI & MERCATO FANTALETTERATURA (VETRINA)
+    // ----------------------------------------------------
+    function initFantaImprevistiNotice() {
+        const bacheca = document.getElementById('fanta-bacheca-pergamena');
+        if (!bacheca) return;
+
+        const badgeEl = document.getElementById('fanta-bacheca-badge');
+        const titleEl = document.getElementById('fanta-bacheca-title');
+        const loreEl = document.getElementById('fanta-bacheca-lore');
+
+        function getTodayString() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function renderNotice(events) {
+            if (!Array.isArray(events) || events.length === 0) {
+                bacheca.style.display = 'none';
+                return;
+            }
+            const todayStr = getTodayString();
+            const activeEvents = events.filter(ev => {
+                if (ev.isBlocked) return false;
+                return ev.isForcedActive || ev.date === todayStr;
+            });
+
+            if (activeEvents.length === 0) {
+                bacheca.style.display = 'none';
+                return;
+            }
+
+            const ev = activeEvents[0];
+            bacheca.style.display = 'block';
+            if (titleEl) titleEl.textContent = ev.title || 'Nuovo Bando della Gazzetta Letteraria';
+            if (loreEl) loreEl.textContent = ev.lore ? `"${ev.lore}"` : '';
+
+            if (badgeEl) {
+                if (ev.isMarket) {
+                    badgeEl.style.display = 'inline-block';
+                    badgeEl.style.background = '#0284c7';
+                    badgeEl.style.borderColor = '#0369a1';
+                    badgeEl.textContent = 'Mercato Straordinario Aperto';
+                } else if (ev.effectType === 'malus') {
+                    badgeEl.style.display = 'inline-block';
+                    badgeEl.style.background = '#b91c1c';
+                    badgeEl.style.borderColor = '#991b1b';
+                    badgeEl.textContent = `Malus: ${ev.points} Punti`;
+                } else if (ev.points > 0) {
+                    badgeEl.style.display = 'inline-block';
+                    badgeEl.style.background = '#15803d';
+                    badgeEl.style.borderColor = '#166534';
+                    badgeEl.textContent = `Bonus: +${ev.points} Punti`;
+                } else {
+                    badgeEl.style.display = 'none';
+                }
+            }
+        }
+
+        if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
+            try {
+                const db = firebase.firestore();
+                db.collection('fanta_imprevisti').doc('timeline_config').onSnapshot((doc) => {
+                    if (doc && doc.exists) {
+                        const data = doc.data() || {};
+                        renderNotice(data.events || []);
+                    } else {
+                        bacheca.style.display = 'none';
+                    }
+                }, (err) => {
+                    console.warn("Fanta imprevisti bacheca offline fallback:", err);
+                    bacheca.style.display = 'none';
+                });
+            } catch (e) {
+                console.warn("Firestore fanta imprevisti bacheca error:", e);
+                bacheca.style.display = 'none';
+            }
+        }
+    }
+
+    initFantaImprevistiNotice();
     
     // Legal Content Data
     const legalData = {

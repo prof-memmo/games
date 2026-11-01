@@ -18,7 +18,7 @@
         rel="stylesheet">
     <!-- Icons (Phosphor) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=20261101_stats_v2">
+    <link rel="stylesheet" href="style.css?v=20261101_stats_v3">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -103,6 +103,36 @@
             </div>
         </div>
     </header>
+
+    <!-- Sezione Statistiche Community (Lista Verticale Delicata e Centrata) -->
+    <section id="sezione-numeri-community" class="community-stats-section" style="display: none;">
+        <div class="container">
+            <div class="delicate-stats-container">
+                <div class="delicate-stats-list">
+                    <div class="delicate-stat-row">
+                        <span class="delicate-stat-label">Utenti</span>
+                        <span class="delicate-stat-val"><span class="stat-number" id="stat-totale" data-target="0">0</span><span class="stat-plus">+</span></span>
+                    </div>
+                    <div class="delicate-stat-row">
+                        <span class="delicate-stat-label">Docenti</span>
+                        <span class="delicate-stat-val"><span class="stat-number" id="stat-docenti" data-target="0">0</span><span class="stat-plus">+</span></span>
+                    </div>
+                    <div class="delicate-stat-row">
+                        <span class="delicate-stat-label">Studenti</span>
+                        <span class="delicate-stat-val"><span class="stat-number" id="stat-studenti" data-target="0">0</span><span class="stat-plus">+</span></span>
+                    </div>
+                    <div class="delicate-stat-row">
+                        <span class="delicate-stat-label">Viandanti</span>
+                        <span class="delicate-stat-val"><span class="stat-number" id="stat-viandanti" data-target="0">0</span><span class="stat-plus">+</span></span>
+                    </div>
+                    <div class="delicate-stat-row">
+                        <span class="delicate-stat-label">Scuole</span>
+                        <span class="delicate-stat-val"><span class="stat-number" id="stat-scuole" data-target="0">0</span><span class="stat-plus">+</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Punti di Forza Qualitativi Didattici (Blocco 1) -->
     <section class="features-highlights" id="punti-di-forza">
@@ -310,84 +340,6 @@
         </div>
     </section>
 
-    <!-- Sezione Statistiche e Numeri della Community (Opzione B: Dinamica e Animata) -->
-    <section id="sezione-numeri-community" class="community-stats-section" style="display: none;">
-        <div class="container">
-            <div class="community-stats-header">
-                <span class="community-stats-badge"><i class="ph-bold ph-trend-up"></i> L'Ecosistema in Numeri</span>
-                <h2 class="community-stats-title">Una Community Didattica in Continua Crescita</h2>
-                <p class="community-stats-subtitle">Docenti, studenti e appassionati che ogni giorno trasformano la scuola e il gioco in un'avventura condivisa.</p>
-            </div>
-            
-            <div class="community-stats-grid">
-                <!-- 1. Totale Community -->
-                <div class="community-stat-item community-stat-highlight">
-                    <div class="stat-icon-wrapper" style="color: #6366f1; background: #e0e7ff;">
-                        <i class="ph-duotone ph-users-three"></i>
-                    </div>
-                    <div class="stat-number-wrapper">
-                        <span class="stat-number" id="stat-totale" data-target="0">0</span>
-                        <span class="stat-plus">+</span>
-                    </div>
-                    <div class="stat-label">Partecipanti Totali</div>
-                    <div class="stat-desc">Studenti, docenti e viandanti attivi</div>
-                </div>
-
-                <!-- 2. Studenti -->
-                <div class="community-stat-item">
-                    <div class="stat-icon-wrapper" style="color: #0ea5e9; background: #e0f2fe;">
-                        <i class="ph-duotone ph-student"></i>
-                    </div>
-                    <div class="stat-number-wrapper">
-                        <span class="stat-number" id="stat-studenti" data-target="0">0</span>
-                        <span class="stat-plus">+</span>
-                    </div>
-                    <div class="stat-label">Studenti Coinvolti</div>
-                    <div class="stat-desc">Nelle aule e sui registri didattici</div>
-                </div>
-
-                <!-- 3. Docenti -->
-                <div class="community-stat-item">
-                    <div class="stat-icon-wrapper" style="color: #f59e0b; background: #fef3c7;">
-                        <i class="ph-duotone ph-chalkboard-teacher"></i>
-                    </div>
-                    <div class="stat-number-wrapper">
-                        <span class="stat-number" id="stat-docenti" data-target="0">0</span>
-                        <span class="stat-plus">+</span>
-                    </div>
-                    <div class="stat-label">Docenti ed Educatori</div>
-                    <div class="stat-desc">Che guidano le sfide in classe</div>
-                </div>
-
-                <!-- 4. Viandanti -->
-                <div class="community-stat-item">
-                    <div class="stat-icon-wrapper" style="color: #10b981; background: #d1fae5;">
-                        <i class="ph-duotone ph-compass"></i>
-                    </div>
-                    <div class="stat-number-wrapper">
-                        <span class="stat-number" id="stat-viandanti" data-target="0">0</span>
-                        <span class="stat-plus">+</span>
-                    </div>
-                    <div class="stat-label">Viandanti e Giocatori</div>
-                    <div class="stat-desc">In viaggio nei giochi narrativi</div>
-                </div>
-
-                <!-- 5. Scuole -->
-                <div class="community-stat-item">
-                    <div class="stat-icon-wrapper" style="color: #ec4899; background: #fce7f3;">
-                        <i class="ph-duotone ph-buildings"></i>
-                    </div>
-                    <div class="stat-number-wrapper">
-                        <span class="stat-number" id="stat-scuole" data-target="0">0</span>
-                        <span class="stat-plus">+</span>
-                    </div>
-                    <div class="stat-label">Scuole e Istituti</div>
-                    <div class="stat-desc">Sul territorio nazionale</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Sezione Esperienze (Carosello Dinamico) -->
     <section id="sezione-esperienze" class="experiences-preview"
         style="padding: 4rem 0; background-color: var(--color-bg-alt); text-align: center; display: none;">
@@ -489,7 +441,7 @@
     </script>
 
     <!-- Script Menu Mobile & Ecosistema -->
-    <script src="script.js?v=20261101_stats_v2"></script>
+    <script src="script.js?v=20261101_stats_v3"></script>
     <!-- Modali condivisi ecosistema Prof. Memmo -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20260817c"></script>
 </body>

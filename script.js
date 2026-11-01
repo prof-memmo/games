@@ -564,6 +564,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (window.setupCommunityStatsObserver) {
                         window.setupCommunityStatsObserver();
                     }
+                    if (window.refreshCommunityStatsValues) {
+                        window.refreshCommunityStatsValues();
+                    }
                 } else {
                     sezioneNumeri.style.display = 'none';
                 }
@@ -701,6 +704,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             hasAnimated = true;
         }
+    };
+
+    window.refreshCommunityStatsValues = function() {
+        if (!hasAnimated) return;
+        const section = document.getElementById('sezione-numeri-community');
+        if (!section || section.style.display === 'none') return;
+        const numbers = section.querySelectorAll('.stat-number');
+        numbers.forEach(el => {
+            const target = parseInt(el.getAttribute('data-target') || '0', 10);
+            el.textContent = target.toLocaleString('it-IT');
+        });
     };
 
     window.setupCommunityStatsObserver = function() {

@@ -245,21 +245,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (activeEvents.length === 0) {
                 bacheca.style.display = 'block';
-                if (titleEl) titleEl.textContent = 'La Quiete prima della Battaglia Letteraria';
-                if (loreEl) loreEl.textContent = '«Udite, udite, nobili docenti e valorosi studenti! Su questa pergamena del Regno verranno proclamati gli Imprevisti d’Epoca, i colpi di scena storici e le finestre straordinarie del Mercato. Gli scribi sono all\'opera: preparate le vostre rose!»';
-                if (badgeEl) {
-                    badgeEl.style.display = 'inline-block';
-                    badgeEl.style.background = '#4a2c0c';
-                    badgeEl.style.borderColor = '#7c511a';
-                    badgeEl.textContent = 'Bacheca Ufficiale';
-                }
+                if (titleEl) titleEl.textContent = 'Gli Imprevisti del Regno';
+                if (loreEl) loreEl.textContent = 'In questa bacheca appariranno gli Imprevisti Letterari e il Mercato durante il Campionato.';
                 return;
             }
 
             const ev = activeEvents[0];
             bacheca.style.display = 'block';
-            if (titleEl) titleEl.textContent = ev.title || 'Nuovo Bando della Gazzetta Letteraria';
-            if (loreEl) loreEl.textContent = ev.lore ? `"${ev.lore}"` : '';
+            if (titleEl) titleEl.textContent = ev.title || 'Nuovo Bando';
+            if (loreEl) {
+                let text = ev.lore || '';
+                if (text.length > 95) text = text.substring(0, 92) + '...';
+                loreEl.textContent = text;
+            }
 
             if (badgeEl) {
                 if (ev.isMarket) {

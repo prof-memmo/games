@@ -77,33 +77,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Bacheca Pergamena FantaLetteratura (Avviso Imprevisto / Mercato in corso) -->
-            <div id="fanta-bacheca-pergamena" class="fade-in-up delay-1" style="display: block; max-width: 800px; margin: 0 auto 2rem auto; width: 100%; pointer-events: none; user-select: none;">
-                <div class="fanta-bacheca-card" style="position: relative; overflow: hidden; padding: 20px 24px; border-radius: 14px; border: 2px solid #c5a059; background: linear-gradient(135deg, #fdfaf1 0%, #f6ebd0 50%, #eee0be 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 35px rgba(184, 151, 74, 0.2); color: #2c1a06; text-align: left;">
-                    <!-- Sfondo decorativo pergamena -->
-                    <img src="assets/pergamena-imprevisti.png" alt="Pergamena decorativa" style="position: absolute; right: -25px; bottom: -30px; width: 200px; height: auto; opacity: 0.18; pointer-events: none; filter: sepia(0.8) contrast(1.1);" aria-hidden="true">
-                    
-                    <div style="display: flex; align-items: center; gap: 18px; position: relative; z-index: 2;">
-                        <img src="assets/pergamena-imprevisti.png" alt="Pergamena" style="width: 75px; height: auto; flex-shrink: 0; filter: drop-shadow(0 4px 8px rgba(70,45,15,0.35));">
-                        <div style="flex: 1; min-width: 0;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
-                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                    <span style="background: #4a2c0c; color: #fbf3db; border: 1px solid #7c511a; font-weight: 700; font-size: 0.74rem; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.6px; display: inline-flex; align-items: center; gap: 5px;">
-                                        <i class="ph ph-scroll" style="color: #f1c40f;"></i> FantaLetteratura · Gazzetta Ufficiale
-                                    </span>
-                                    <span id="fanta-bacheca-badge" style="background: #4a2c0c; color: #ffffff; border: 1px solid #7c511a; font-weight: 700; font-size: 0.74rem; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Bacheca Ufficiale</span>
-                                </div>
-                                <span style="font-size: 0.8rem; font-weight: 600; color: #7c5a2e;">
-                                    <i class="ph ph-bell-ringing"></i> Notizia dal Regno
-                                </span>
-                            </div>
-                            <h4 id="fanta-bacheca-title" style="margin: 4px 0 6px 0; color: #2c1a06; font-size: 1.25rem; font-weight: 700; line-height: 1.3;">La Quiete prima della Battaglia Letteraria</h4>
-                            <p id="fanta-bacheca-lore" style="margin: 0; font-size: 0.95rem; color: #3f2710; line-height: 1.5; font-style: italic;">«Udite, udite, nobili docenti e valorosi studenti! Su questa pergamena del Regno verranno proclamati gli Imprevisti d’Epoca, i colpi di scena storici e le finestre straordinarie del Mercato. Gli scribi sono all'opera: preparate le vostre rose!»</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div id="vetrina-banner" class="fade-in-up delay-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: center; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
                 <img id="vetrina-img" src="assets/party-popper.png" alt="Cornucopia" style="width: 150px; height: auto; flex-shrink: 0; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));">
                 <p style="margin: 0; font-size: 1.1rem; color: var(--color-text-light); line-height: 1.6;">
@@ -113,6 +86,21 @@
             <div class="hero-buttons fade-in-up delay-2">
                 <a href="giochi.html" class="btn btn-primary">Scopri i giochi <i class="ph ph-arrow-right"></i></a>
                 <a href="metodo-filosofia.html#strumenti-didattici" class="btn btn-secondary">Scopri gli strumenti <i class="ph ph-arrow-right"></i></a>
+            </div>
+
+            <!-- Bacheca Pergamena Discreta (FantaLetteratura) -->
+            <div id="fanta-bacheca-pergamena" class="fade-in-up delay-2" style="margin: 2rem auto 0 auto; max-width: 380px; width: 100%; pointer-events: none; user-select: none;">
+                <div style="position: relative; width: 100%; aspect-ratio: 1524 / 1024; background: url('assets/pergamena-imprevisti.png') no-repeat center center; background-size: 100% 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14% 18%; box-sizing: border-box; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.45)); text-align: center;">
+                    <div style="font-size: 0.76rem; font-weight: 800; color: #4a2c0c; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px;">
+                        📜 Bando della Gazzetta
+                    </div>
+                    <div id="fanta-bacheca-title" style="font-size: 0.95rem; font-weight: 700; color: #2c1a06; line-height: 1.25; margin-bottom: 3px;">
+                        Gli Imprevisti del Regno
+                    </div>
+                    <p id="fanta-bacheca-lore" style="font-size: 0.78rem; font-style: italic; color: #3f2710; line-height: 1.35; margin: 0; max-width: 240px;">
+                        In questa bacheca appariranno gli Imprevisti Letterari e il Mercato durante il Campionato.
+                    </p>
+                </div>
             </div>
         </div>
     </header>

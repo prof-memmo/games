@@ -521,7 +521,14 @@
                         <span id="profile-plan-tag" style="font-size:0.8rem; background:#ede9fe; color:#6366f1; padding:3px 8px; border-radius:6px; font-weight:700; display:none;">Admin</span>
                     </div>
                     <div class="plan-expiry" id="profile-plan-expiry">
-                        Accesso gratuito ai contenuti base della piattaforma.
+                        Accesso garantito ai contenuti fondamentali della formula aperta.
+                    </div>
+                    <div id="profile-plan-features" class="profile-plan-features-list" style="margin-top: 1rem; border-top: 1px dashed #cbd5e1; padding-top: 0.85rem;">
+                        <!-- Voci dinamiche del piano -->
+                    </div>
+                    <div id="profile-plan-pedagogical-note" style="display: none; margin-top: 0.85rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; font-size: 0.85rem; color: #475569; line-height: 1.5;">
+                        <strong style="color: #0f172a; display: block; margin-bottom: 4px;"><i class="ph ph-info" style="color: #2563eb;"></i> Nota del Progetto:</strong>
+                        L'Ecosistema Prof. Memmo è attualmente in fase di lancio e sperimentazione didattica. Le prossime espansioni didattiche, giochi e materiali saranno introdotti gradualmente come evoluzione pedagogica della piattaforma.
                     </div>
                 </div>
 
@@ -735,19 +742,46 @@
                 if (stripeBanner) stripeBanner.style.display = 'flex';
             }
 
-            // 2. Controllo monetizzazione per il link navbar "Scegli il tuo Piano"
+            // 2. Controllo monetizzazione dinamico per navbar, pulsanti di piano e postilla pedagogica
+            function applicaStatoMonetizzazione(isMonetActive) {
+                const navPrezzi = document.getElementById('nav-prezzi');
+                if (navPrezzi) navPrezzi.style.display = isMonetActive ? 'list-item' : 'none';
+
+                const btnRenew = document.getElementById('btn-renew-plan');
+                if (btnRenew) btnRenew.style.display = isMonetActive ? 'inline-flex' : 'none';
+
+                const btnUpgradeLink = document.getElementById('btn-upgrade-plan-link');
+                if (btnUpgradeLink) btnUpgradeLink.style.display = isMonetActive ? 'inline-flex' : 'none';
+
+                const noteEl = document.getElementById('profile-plan-pedagogical-note');
+                if (noteEl) {
+                    noteEl.style.display = (!isMonetActive) ? 'block' : 'none';
+                }
+            }
+
+            // Anti-Flicker sincrono da cache locale (Art. 10.2)
+            try {
+                const cachedMonet = localStorage.getItem('pm_monetizzazione_active');
+                if (cachedMonet !== null) {
+                    applicaStatoMonetizzazione(cachedMonet === 'true');
+                }
+            } catch(e) {}
+
             db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                 const data = doc.data() || {};
                 window._ecosystemData = data;
-                const navPrezzi = document.getElementById('nav-prezzi');
-                if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
+                const isMonetActive = !!data.monetizzazione;
+                try {
+                    localStorage.setItem('pm_monetizzazione_active', isMonetActive ? 'true' : 'false');
+                } catch(e) {}
+                applicaStatoMonetizzazione(isMonetActive);
             });
 
         function gestisciClickCambiaPiano(e) {
             const isMonetActive = window._ecosystemData && !!window._ecosystemData.monetizzazione;
             if (!isMonetActive) {
                 if (e) e.preventDefault();
-                alert("ℹ️ Al momento le iscrizioni sono aperte con il Piano Base Gratuito.\n\nPuoi esplorare e utilizzare liberamente i giochi e le funzionalità dell'Ecosistema. I piani e le funzioni avanzate per docenti saranno disponibili prossimamente!");
+                alert("ℹ️ Al momento le iscrizioni sono aperte con la Formula Aperta.\n\nPuoi esplorare e utilizzare liberamente i giochi e le funzionalità dell'Ecosistema. I piani e le funzioni avanzate per docenti saranno disponibili prossimamente!");
                 return false;
             }
             return true;
@@ -893,7 +927,7 @@
 
             // Render Piano
             const planLabels = {
-                'base': 'Piano Base (Gratuito)',
+                'base': 'Piano Base (Formula Aperta)',
                 'viandante': 'Piano Viandante',
                 'docente_didattico': 'Docente Didattico',
                 'docente_ecosistema': 'Ecosistema Completo'
@@ -934,7 +968,50 @@
                     expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Abbonamento annuale valido per 12 mesi dalla data di iscrizione/sottoscrizione.</span>`;
                 }
             } else {
-                expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
+                expiryEl.innerHTML = '<strong>Scadenza:</strong> <span style="color:#059669; font-weight:700;">Nessuna scadenza (Accesso Garantito).</span>';
+            }
+
+            // Render Voci dinamiche "Cosa include il tuo piano"
+            const planFeaturesMap = {
+                'base': [
+                    'FantaLetteratura: Gestione classe e fino a 4 squadre per campionato',
+                    'Palestra di Riflessione: Analisi grammaticale e schede didattiche A1/A2',
+                    'Fuori Registro: Percorsi aperti di riflessione per il gruppo classe',
+                    'Accesso Studenti: Con Codice Classe riservato (zero dati/email richieste)'
+                ],
+                'viandante': [
+                    'Tutti i giochi narrativi e party game in modalità giocatore singolo',
+                    'FantaLetteratura e Palestra di Riflessione (Versione Base)',
+                    'Ops! Operazione Storia (1 Dispositivo e Party)',
+                    'La Ruota Geografica e futuri giochi di narrazione'
+                ],
+                'docente_didattico': [
+                    'Tutte le funzionalità della formula aperta per più classi contemporanee',
+                    'FantaLetteratura Completo: Tornei interni personalizzati per le tue classi',
+                    'Palestra di Riflessione Completa: Analisi logica e del periodo con schede avanzate',
+                    'Strumenti avanzati docente e gestione codici classe privati'
+                ],
+                'docente_ecosistema': [
+                    'Inclusione Totale dell\'Ecosistema Completo',
+                    'La Rotta degli Eroi e Travel Agency Completa',
+                    'L\'Oratore (LIM, Retorica & Debate A1-C2)',
+                    'Tutti i futuri giochi, aggiornamenti e materiali didattici completi'
+                ]
+            };
+
+            const featuresContainer = document.getElementById('profile-plan-features');
+            if (featuresContainer) {
+                const list = planFeaturesMap[plan] || planFeaturesMap['base'];
+                const guaranteeLine = (plan === 'base') 
+                    ? '<div style="margin-top: 10px; font-weight: 600; color: #059669; font-size: 0.85rem;"><i class="ph ph-shield-check"></i> ... e tutto ciò è sempre garantito in questo piano aperto.</div>'
+                    : '';
+                featuresContainer.innerHTML = `
+                    <div style="font-weight: 700; font-size: 0.82rem; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Cosa include il tuo piano:</div>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; color: #1e293b;">
+                        ${list.map(f => `<li style="display: flex; align-items: flex-start; gap: 8px;"><i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.1rem; flex-shrink: 0; margin-top: 1px;"></i> <span>${f}</span></li>`).join('')}
+                    </ul>
+                    ${guaranteeLine}
+                `;
             }
 
             // Controllo Visibilità Pulsante Rimborso (14 giorni)

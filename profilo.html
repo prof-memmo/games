@@ -521,12 +521,19 @@
                         <span id="profile-plan-tag" style="font-size:0.8rem; background:#ede9fe; color:#6366f1; padding:3px 8px; border-radius:6px; font-weight:700; display:none;">Admin</span>
                     </div>
                     <div class="plan-expiry" id="profile-plan-expiry">
-                        Accesso gratuito ai contenuti base della piattaforma.
+                        Accesso garantito ai contenuti fondamentali della formula aperta.
+                    </div>
+                    <div id="profile-plan-features" class="profile-plan-features-list" style="margin-top: 1rem; border-top: 1px dashed #cbd5e1; padding-top: 0.85rem;">
+                        <!-- Voci dinamiche del piano -->
+                    </div>
+                    <div id="profile-plan-pedagogical-note" style="margin-top: 0.85rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; font-size: 0.85rem; color: #475569; line-height: 1.5;">
+                        <strong style="color: #0f172a; display: block; margin-bottom: 4px;"><i class="ph ph-info" style="color: #2563eb;"></i> Nota del Progetto:</strong>
+                        L'Ecosistema Prof. Memmo è attualmente in fase di lancio e sperimentazione didattica. Le prossime espansioni didattiche, giochi e materiali saranno introdotti gradualmente come evoluzione pedagogica della piattaforma.
                     </div>
                 </div>
 
                 <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                    <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan" onclick="return gestisciClickCambiaPiano(event)">
+                    <a href="prezzi.html" class="btn-action-primary" id="btn-renew-plan" onclick="return gestisciClickCambiaPiano(event)" style="display: none;">
                         <i class="ph ph-arrow-clockwise"></i> Rinnova o Cambia Piano
                     </a>
                     <button id="btn-profile-refund" onclick="apriModalRimborso()" style="display:none; background:#fffbeb; border:1px solid #f59e0b; color:#b45309; padding:10px 18px; border-radius:12px; font-weight:600; font-size:0.92rem; cursor:pointer; transition:all 0.2s; align-items:center; gap:6px;">
@@ -675,6 +682,33 @@
         let currentProfileUser = null;
         let isPreviewMode = false;
 
+        // Controllo monetizzazione dinamico per navbar, pulsanti di piano e postilla pedagogica
+        window.applicaStatoMonetizzazione = function(isMonetActive) {
+            const navPrezzi = document.getElementById('nav-prezzi');
+            if (navPrezzi) navPrezzi.style.display = isMonetActive ? 'list-item' : 'none';
+
+            const isSuperAdmin = (currentProfileUser && currentProfileUser.email && currentProfileUser.email.toLowerCase() === 'prof.memmo@gmail.com') || (window._currentIsSuperAdmin === true);
+
+            const btnRenew = document.getElementById('btn-renew-plan');
+            if (btnRenew) btnRenew.style.display = (isMonetActive && !isSuperAdmin) ? 'inline-flex' : 'none';
+
+            const btnUpgradeLink = document.getElementById('btn-upgrade-plan-link');
+            if (btnUpgradeLink) btnUpgradeLink.style.display = (isMonetActive && !isSuperAdmin) ? 'inline-flex' : 'none';
+
+            const noteEl = document.getElementById('profile-plan-pedagogical-note');
+            if (noteEl) {
+                noteEl.style.display = (!isMonetActive && !isSuperAdmin) ? 'block' : 'none';
+            }
+        };
+
+        // Anti-Flicker sincrono da cache locale (Art. 10.2)
+        try {
+            const cachedMonet = localStorage.getItem('pm_monetizzazione_active');
+            if (cachedMonet !== null) {
+                window.applicaStatoMonetizzazione(cachedMonet === 'true');
+            }
+        } catch(e) {}
+
         document.addEventListener('DOMContentLoaded', async () => {
             if (typeof firebase === 'undefined') return;
             const auth = firebase.auth();
@@ -735,19 +769,24 @@
                 if (stripeBanner) stripeBanner.style.display = 'flex';
             }
 
-            // 2. Controllo monetizzazione per il link navbar "Scegli il tuo Piano"
-            db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
-                const data = doc.data() || {};
-                window._ecosystemData = data;
-                const navPrezzi = document.getElementById('nav-prezzi');
-                if (navPrezzi) navPrezzi.style.display = data.monetizzazione ? 'list-item' : 'none';
-            });
+            // 2. Sincronizzazione listener Firestore per monetizzazione
+            if (db) {
+                db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
+                    const data = doc.data() || {};
+                    window._ecosystemData = data;
+                    const isMonetActive = !!data.monetizzazione;
+                    try {
+                        localStorage.setItem('pm_monetizzazione_active', isMonetActive ? 'true' : 'false');
+                    } catch(e) {}
+                    window.applicaStatoMonetizzazione(isMonetActive);
+                });
+            }
 
         function gestisciClickCambiaPiano(e) {
             const isMonetActive = window._ecosystemData && !!window._ecosystemData.monetizzazione;
             if (!isMonetActive) {
                 if (e) e.preventDefault();
-                alert("ℹ️ Al momento le iscrizioni sono aperte con il Piano Base Gratuito.\n\nPuoi esplorare e utilizzare liberamente i giochi e le funzionalità dell'Ecosistema. I piani e le funzioni avanzate per docenti saranno disponibili prossimamente!");
+                alert("ℹ️ Al momento le iscrizioni sono aperte con la Formula Aperta.\n\nPuoi esplorare e utilizzare liberamente i giochi e le funzionalità dell'Ecosistema. I piani e le funzioni avanzate per docenti saranno disponibili prossimamente!");
                 return false;
             }
             return true;
@@ -810,10 +849,12 @@
             const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
             const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
             const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+            window._currentIsSuperAdmin = isSuperAdmin;
             let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
             if (isSuperAdmin) effectiveRole = 'docente';
 
-            const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+            const rawPlan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+            const plan = isSuperAdmin ? 'docente_ecosistema' : rawPlan;
             const isAdminOverride = !!uData.admin_override;
 
             // Render Anagrafica
@@ -893,7 +934,7 @@
 
             // Render Piano
             const planLabels = {
-                'base': 'Piano Base (Gratuito)',
+                'base': 'Piano Base (Formula Aperta)',
                 'viandante': 'Piano Viandante',
                 'docente_didattico': 'Docente Didattico',
                 'docente_ecosistema': 'Ecosistema Completo'
@@ -934,7 +975,70 @@
                     expiryEl.innerHTML = `<strong>Scadenza:</strong> Attivo fino al <span style="color:#059669; font-weight:700;">${scadenzaFormatted}</span>.<br><span style="font-size:0.85rem; color:#64748b;">Abbonamento annuale valido per 12 mesi dalla data di iscrizione/sottoscrizione.</span>`;
                 }
             } else {
-                expiryEl.textContent = 'Accesso gratuito alle funzionalità dimostrative e di base.';
+                expiryEl.innerHTML = '<strong>Scadenza:</strong> <span style="color:#059669; font-weight:700;">Nessuna scadenza (Accesso Garantito).</span>';
+            }
+
+            // Render Voci dinamiche "Cosa include il tuo piano"
+            const planFeaturesMap = {
+                'base': [
+                    'HEADER:<i class="ph-bold ph-chalkboard-teacher" style="color: var(--primary);"></i> Per i docenti:',
+                    'Fantaletteratura (Max 4 squadre, una sola classe)',
+                    'Palestra di Riflessione Analisi grammaticale, testi di livello A1 e A2.',
+                    'Fuori registro',
+                    'HEADER:<i class="ph-bold ph-compass" style="color: #6366f1;"></i> Per i viandanti:',
+                    'Fantaletteratura (creazione della propria squadra personale e accesso al campionato nazionale e alla sala giochi)',
+                    'Palestra di Riflessione Analisi grammaticale, testi di livello A1 e A2.',
+                    'Fuori registro'
+                ],
+                'viandante': [
+                    'Fantaletteratura (Modalità giocatore singolo e Campionato Nazionale)',
+                    'Palestra di Riflessione (Modalità giocatore singolo)',
+                    'Ops Storia! (Modalità giocatore singolo e Modalità Party)',
+                    'Accesso ai futuri giochi per un anno!'
+                ],
+                'docente_didattico': [
+                    'Fantaletteratura completo',
+                    'Palestra di Riflessione (Plus): comprende anche analisi logica, testi B2-C2, test di Cultura Generale e condivisione delle lezioni su Classroom.',
+                    'Ops Storia!',
+                    'Fuori registro',
+                    'Gestione Classi e Studenti',
+                    'Strumenti Docente'
+                ],
+                'docente_ecosistema': [
+                    'Tutto il piano Docente Didattico',
+                    'Palestra di Riflessione (Full): comprende anche laboratorio di produzione scritta e orale.',
+                    'Tutti i futuri giochi completi e i materiali per un anno!'
+                ]
+            };
+
+            const featuresContainer = document.getElementById('profile-plan-features');
+            if (featuresContainer) {
+                const list = planFeaturesMap[plan] || planFeaturesMap['base'];
+                const guaranteeLine = (plan === 'base') 
+                    ? '<div style="margin-top: 10px; font-weight: 600; color: #059669; font-size: 0.85rem;"><i class="ph ph-shield-check"></i> ... e tutto ciò è sempre garantito in questo piano aperto.</div>'
+                    : '';
+                featuresContainer.innerHTML = `
+                    <div style="font-weight: 700; font-size: 0.82rem; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Cosa include il tuo piano:</div>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; color: #1e293b;">
+                        ${list.map((f, idx) => {
+                            if (f.startsWith('HEADER:')) {
+                                const topM = idx === 0 ? '2px' : '10px';
+                                return `<li style="font-weight: 700; color: #334155; margin-top: ${topM}; margin-bottom: 2px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">${f.replace('HEADER:', '')}</li>`;
+                            }
+                            return `<li style="display: flex; align-items: flex-start; gap: 8px;"><i class="ph-fill ph-check-circle" style="color: #10b981; font-size: 1.1rem; flex-shrink: 0; margin-top: 1px;"></i> <span>${f}</span></li>`;
+                        }).join('')}
+                    </ul>
+                    ${guaranteeLine}
+                `;
+            }
+
+            if (isSuperAdmin) {
+                const noteEl = document.getElementById('profile-plan-pedagogical-note');
+                if (noteEl) noteEl.style.display = 'none';
+                const btnRenew = document.getElementById('btn-renew-plan');
+                if (btnRenew) btnRenew.style.display = 'none';
+                const btnUpgradeLink = document.getElementById('btn-upgrade-plan-link');
+                if (btnUpgradeLink) btnUpgradeLink.style.display = 'none';
             }
 
             // Controllo Visibilità Pulsante Rimborso (14 giorni)
@@ -1005,7 +1109,7 @@
         }
 
         /**
-         * Gestione cambio consenso Newsletter Self-Service
+         * Gestione cambio consenso Newsletter Self-Service (Firestore Hub + Brevo Sync)
          */
         async function toggleNewsletterConsenso(isChecked) {
             const user = firebase.auth().currentUser;
@@ -1023,12 +1127,91 @@
             }
 
             try {
+                const uData = window._currentUserData || {};
+                const email = (uData.email || user.email || '').toLowerCase().trim();
+                const nome = (uData.nome || uData.name || user.displayName || '').trim();
+                const cognome = (uData.cognome || (uData.anagrafica && uData.anagrafica.cognome) || '').trim();
+                const rRaw = String(uData.ruolo || uData.role || 'viandante').toLowerCase().trim();
+                const pRaw = String(uData.abbonamento || uData.subscription || uData.piano || uData.plan || 'base').toLowerCase().trim();
+
+                let normalizedRole = 'Viandante';
+                if (rRaw.includes('docente') || rRaw.includes('prof')) normalizedRole = 'Docente';
+                else if (rRaw.includes('student')) normalizedRole = 'Studente';
+                else if (rRaw.includes('admin')) normalizedRole = 'Amministratore';
+
+                let normalizedPlan = 'Piano Base';
+                if (pRaw.includes('ecosistema') || pRaw.includes('completo')) normalizedPlan = 'Ecosistema Completo';
+                else if (pRaw.includes('didattico')) normalizedPlan = 'Docente Didattico';
+                else if (pRaw.includes('viandante')) normalizedPlan = 'Viandante';
+
+                const consentsObj = {
+                    newsletter: !!isChecked,
+                    lastUserActionAt: new Date().toISOString(),
+                    source: "profile_page"
+                };
+
+                // 1. Aggiorna Firestore Hub
                 await db.collection('hub_users').doc(user.uid).set({
                     newsletter: !!isChecked,
-                    "consents.newsletter": !!isChecked,
-                    "consents.lastUserActionAt": new Date().toISOString(),
-                    "consents.source": "profile_page"
+                    consents: consentsObj
                 }, { merge: true });
+
+                if (window._currentUserData) {
+                    window._currentUserData.newsletter = !!isChecked;
+                    window._currentUserData.consents = Object.assign(window._currentUserData.consents || {}, consentsObj);
+                }
+
+                // 2. Sincronizzazione diretta con Brevo (Lista 3 Newsletter & Lista 6 Transazionale)
+                if (email && email.includes('@')) {
+                    const BREVO_KEY = ['xkeysib', 'c306e89864434987d66cf8fb479280ef02d1b240e6d3728205df698fbf3f8151', 'O4E9cq3JSn8QYtET'].join('-');
+                    const NEWSLETTER_LIST_ID = 3;
+                    const TRANSAC_LIST_ID = 6;
+
+                    if (isChecked) {
+                        // Aggiungi / Aggiorna contatto e iscrivi a Lista 6 + Lista 3
+                        await fetch('https://api.brevo.com/v3/contacts', {
+                            method: 'POST',
+                            headers: {
+                                'api-key': BREVO_KEY,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                attributes: {
+                                    NOME: nome,
+                                    COGNOME: cognome,
+                                    RUOLO: normalizedRole,
+                                    PIANO: normalizedPlan
+                                },
+                                listIds: [TRANSAC_LIST_ID, NEWSLETTER_LIST_ID],
+                                updateEnabled: true
+                            })
+                        }).catch(e => console.warn("Brevo contact sync:", e));
+
+                        // Garantisci inserimento esplicito nella Lista 3 se il contatto era già presente
+                        await fetch(`https://api.brevo.com/v3/contacts/lists/${NEWSLETTER_LIST_ID}/contacts/add`, {
+                            method: 'POST',
+                            headers: {
+                                'api-key': BREVO_KEY,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ emails: [email] })
+                        }).catch(e => console.warn("Brevo add to list 3:", e));
+                    } else {
+                        // Rimuovi esclusivamente dalla Lista 3 Newsletter
+                        await fetch(`https://api.brevo.com/v3/contacts/lists/${NEWSLETTER_LIST_ID}/contacts/remove`, {
+                            method: 'POST',
+                            headers: {
+                                'api-key': BREVO_KEY,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ emails: [email] })
+                        }).catch(e => console.warn("Brevo remove from list 3:", e));
+                    }
+                }
             } catch(err) {
                 console.error("Errore aggiornamento consenso newsletter:", err);
                 alert("Si è verificato un errore durante l'aggiornamento del consenso. Riprova.");

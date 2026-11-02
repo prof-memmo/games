@@ -2201,8 +2201,8 @@
                     </div>
                 </div>
                 <div class="upgrade-modal-actions">
-                    <a href="prezzi.html" class="reader-btn reader-btn-primary upgrade-cta-btn">
-                        <i class="ph-fill ph-crown"></i> Passa a Ecosistema Completo (€34.99/anno)
+                    <a href="profilo.html" class="reader-btn reader-btn-primary upgrade-cta-btn">
+                        <i class="ph-fill ph-user"></i> Consulta il tuo Profilo
                     </a>
                     <button class="reader-btn reader-btn-secondary" onclick="closeEcosistemaModal()">
                         Rimani nell'anteprima
@@ -2502,22 +2502,48 @@
             if (!modal) return;
             const titleEl = modal.querySelector('.upgrade-title');
             const descEl = modal.querySelector('.upgrade-desc');
+            const badgeEl = modal.querySelector('.upgrade-badge-pill');
 
-            if (reason === 'draw') {
-                if (titleEl) titleEl.textContent = "Disegno e LIM con Ecosistema";
-                if (descEl) descEl.innerHTML = "La modalità disegno, testo e annotazione su LIM è uno strumento didattico avanzato incluso nel <strong>Piano Ecosistema Completo</strong>.<br>Attiva il piano per annotare il quaderno durante le lezioni!";
-            } else if (reason === 'cloud') {
-                if (titleEl) titleEl.textContent = "Salvataggio Cloud con Ecosistema";
-                if (descEl) descEl.innerHTML = "Il salvataggio e la sincronizzazione cloud di disegni e note su tutti i tuoi dispositivi sono inclusi nel <strong>Piano Ecosistema Completo</strong>.";
-            } else if (reason === 'profile' || reason === 'student') {
-                if (titleEl) titleEl.textContent = "Quaderno Personale con Ecosistema";
-                if (descEl) descEl.innerHTML = "La personalizzazione dell'identità dello studente e il salvataggio dei percorsi individuali nel Cloud sono inclusi nel <strong>Piano Ecosistema Completo</strong>.<br>Sblocca il piano per gestire le annotazioni dedicate a ciascun allievo!";
-            } else if (typeof reason === 'number') {
-                if (titleEl) titleEl.textContent = `Pagina ${reason} • Edizione Completa`;
-                if (descEl) descEl.innerHTML = `Questa pagina fa parte dell'<strong>Edizione Completa di 142 pagine</strong>. Stai consultando l'anteprima gratuita (prime 15 pagine).<br>Passa al Piano Ecosistema Completo per sbloccare l'intero percorso didattico annuale!`;
+            const isMonet = window._isMonetActive !== undefined 
+                ? window._isMonetActive 
+                : (localStorage.getItem('pm_monetizzazione_active') === 'true');
+
+            if (!isMonet) {
+                if (badgeEl) badgeEl.textContent = "EVOLUZIONE PEDAGOGICA";
+                if (reason === 'draw') {
+                    if (titleEl) titleEl.textContent = "Disegno e LIM";
+                    if (descEl) descEl.innerHTML = "La modalità disegno, testo e annotazione su LIM è uno strumento didattico in sviluppo.<br>Sarà introdotta gradualmente come evoluzione pedagogica della piattaforma.";
+                } else if (reason === 'cloud') {
+                    if (titleEl) titleEl.textContent = "Salvataggio Cloud";
+                    if (descEl) descEl.innerHTML = "Il salvataggio e la sincronizzazione cloud di disegni e note sono strumenti in sviluppo.<br>Saranno introdotti gradualmente come evoluzione pedagogica della piattaforma.";
+                } else if (reason === 'profile' || reason === 'student') {
+                    if (titleEl) titleEl.textContent = "Quaderno Personale";
+                    if (descEl) descEl.innerHTML = "La personalizzazione dell'identità dello studente e il salvataggio dei percorsi individuali nel Cloud sono in sviluppo.<br>Saranno introdotti gradualmente come evoluzione pedagogica della piattaforma.";
+                } else if (typeof reason === 'number') {
+                    if (titleEl) titleEl.textContent = `Edizione Integrale • Pagina ${reason}`;
+                    if (descEl) descEl.innerHTML = `Questa pagina fa parte dell'<strong>Edizione Integrale di 142 pagine</strong>. Stai consultando l'anteprima aperta (prime 15 pagine).<br>Le prossime espansioni didattiche, giochi e materiali saranno introdotti gradualmente come evoluzione pedagogica della piattaforma.`;
+                } else {
+                    if (titleEl) titleEl.textContent = "Edizione Integrale (142 Pagine)";
+                    if (descEl) descEl.innerHTML = "Hai raggiunto il termine dell'<strong>anteprima aperta di 15 pagine</strong>.<br>Le prossime espansioni didattiche, giochi e materiali saranno introdotti gradualmente come evoluzione pedagogica della piattaforma.";
+                }
             } else {
-                if (titleEl) titleEl.textContent = "Edizione Completa (142 Pagine)";
-                if (descEl) descEl.innerHTML = "Hai raggiunto il termine dell'<strong>anteprima gratuita di 15 pagine</strong>.<br>Sblocca l'accesso illimitato a tutte le 142 pagine ad alta risoluzione del Quaderno per l'intero anno scolastico con il <strong>Piano Ecosistema Completo</strong>.";
+                if (badgeEl) badgeEl.textContent = "PIANO ECOSISTEMA COMPLETO";
+                if (reason === 'draw') {
+                    if (titleEl) titleEl.textContent = "Disegno e LIM con Ecosistema";
+                    if (descEl) descEl.innerHTML = "La modalità disegno, testo e annotazione su LIM è uno strumento didattico avanzato incluso nel <strong>Piano Ecosistema Completo</strong>.<br>Attiva il piano per annotare il quaderno durante le lezioni!";
+                } else if (reason === 'cloud') {
+                    if (titleEl) titleEl.textContent = "Salvataggio Cloud con Ecosistema";
+                    if (descEl) descEl.innerHTML = "Il salvataggio e la sincronizzazione cloud di disegni e note su tutti i tuoi dispositivi sono inclusi nel <strong>Piano Ecosistema Completo</strong>.";
+                } else if (reason === 'profile' || reason === 'student') {
+                    if (titleEl) titleEl.textContent = "Quaderno Personale con Ecosistema";
+                    if (descEl) descEl.innerHTML = "La personalizzazione dell'identità dello studente e il salvataggio dei percorsi individuali nel Cloud sono inclusi nel <strong>Piano Ecosistema Completo</strong>.<br>Sblocca il piano per gestire le annotazioni dedicate a ciascun allievo!";
+                } else if (typeof reason === 'number') {
+                    if (titleEl) titleEl.textContent = `Pagina ${reason} • Edizione Completa`;
+                    if (descEl) descEl.innerHTML = `Questa pagina fa parte dell'<strong>Edizione Completa di 142 pagine</strong>. Stai consultando l'anteprima gratuita (prime 15 pagine).<br>Passa al Piano Ecosistema Completo per sbloccare l'intero percorso didattico annuale!`;
+                } else {
+                    if (titleEl) titleEl.textContent = "Edizione Completa (142 Pagine)";
+                    if (descEl) descEl.innerHTML = "Hai raggiunto il termine dell'<strong>anteprima gratuita di 15 pagine</strong>.<br>Sblocca l'accesso illimitato a tutte le 142 pagine ad alta risoluzione del Quaderno per l'intero anno scolastico con il <strong>Piano Ecosistema Completo</strong>.";
+                }
             }
 
             modal.classList.add('open');
@@ -3892,6 +3918,35 @@
             } catch (e) {
                 console.warn("Firebase live auth init error:", e);
             }
+
+            // Sincronizzazione dinamica stato monetizzazione per paywall Quaderno
+            try {
+                // Anti-Flicker sincrono da cache locale (Art. 10.2)
+                var cachedMonet = localStorage.getItem('pm_monetizzazione_active');
+                var ctaBtnInitial = document.querySelector('.upgrade-cta-btn');
+                if (cachedMonet === 'false' && ctaBtnInitial) {
+                    ctaBtnInitial.href = 'profilo.html';
+                    ctaBtnInitial.innerHTML = '<i class="ph-fill ph-user"></i> Vai al tuo Profilo';
+                }
+
+                if (typeof firebase !== 'undefined' && firebase.firestore) {
+                    firebase.firestore().collection('hub_settings').doc('ecosistema').onSnapshot(function(doc) {
+                        if (!doc.exists) return;
+                        var ecoData = doc.data() || {};
+                        var isMonet = !!ecoData.monetizzazione;
+                        var ctaBtn = document.querySelector('.upgrade-cta-btn');
+                        if (ctaBtn) {
+                            if (isMonet) {
+                                ctaBtn.href = 'prezzi.html';
+                                ctaBtn.innerHTML = '<i class="ph-fill ph-crown"></i> Passa a Ecosistema Completo (€34.99/anno)';
+                            } else {
+                                ctaBtn.href = 'profilo.html';
+                                ctaBtn.innerHTML = '<i class="ph-fill ph-user"></i> Vai al tuo Profilo';
+                            }
+                        }
+                    });
+                }
+            } catch(e) {}
         }
 
         // Start

@@ -320,20 +320,134 @@
             background: linear-gradient(135deg, #4338ca, #6d28d9);
         }
 
-        /* Overlay "Non attivo" */
+        /* Overlay "Non attivo" con Capibara e Sfondo Sfocato */
         #coming-soon-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(10, 10, 11, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99999;
+            display: none;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 2rem;
-            display: none;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+        .coming-soon-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: csPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes csPopIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .coming-soon-avatar-wrap {
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .coming-soon-avatar {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #fef3c7;
+            padding: 6px;
+            border: 3px solid #f59e0b;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
+        }
+        .coming-soon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .coming-soon-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 0.75rem 0;
+            line-height: 1.2;
+        }
+        .coming-soon-desc {
+            font-size: 0.98rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0 0 2rem 0;
+            max-width: 460px;
+        }
+        .coming-soon-actions {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-cs-primary, .btn-cs-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            flex: 1 1 180px;
+            max-width: 220px;
+        }
+        .btn-cs-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+        .btn-cs-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+        }
+        .btn-cs-secondary {
+            background: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-cs-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 640px) {
+            .coming-soon-card {
+                padding: 2rem 1.25rem;
+            }
+            .coming-soon-title {
+                font-size: 1.6rem;
+            }
+            .btn-cs-primary, .btn-cs-secondary {
+                max-width: 100%;
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
@@ -341,9 +455,25 @@
 
     <!-- Overlay Nascosto se Monetizzazione è OFF -->
     <div id="coming-soon-overlay">
-        <h1 style="font-family: 'Outfit', sans-serif; font-size: 3rem; margin-bottom: 1rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">In arrivo ad Agosto 2027</h1>
-        <p style="font-size: 1.2rem; color: #a1a1aa; max-width: 500px; line-height: 1.6; margin-bottom: 2rem;">Il sistema di abbonamenti e l'accesso alle Versioni Complete non è ancora attivo. Sarà disponibile a breve!</p>
-        <a href="index.html" class="btn-subscribe" style="max-width: 200px;">Torna alla Home</a>
+        <div class="coming-soon-card">
+            <div class="coming-soon-avatar-wrap">
+                <img src="assets/avatars/16.png" alt="Capibara al lavoro" class="coming-soon-avatar" onerror="this.src='https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/avatars/16.png'">
+            </div>
+            <span class="coming-soon-badge"><i class="ph ph-sparkle"></i> Formula Aperta Attiva</span>
+            <h1 class="coming-soon-title">Piattaforma in Sperimentazione</h1>
+            <p class="coming-soon-desc">
+                L'Ecosistema Prof. Memmo è attualmente in fase di lancio e sperimentazione didattica con tutte le risorse accessibili nella <strong>Formula Aperta</strong>.<br>
+                Consulta il tuo profilo per maggiori dettagli sulle funzioni attive e sulle prossime evoluzioni pedagogiche!
+            </p>
+            <div class="coming-soon-actions">
+                <a href="index.html" class="btn-cs-secondary">
+                    <i class="ph ph-house"></i> Torna alla Home
+                </a>
+                <a href="profilo.html" class="btn-cs-primary">
+                    <i class="ph ph-user"></i> Consulta il tuo Profilo
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Navbar -->
@@ -423,7 +553,13 @@
                 </div>
                 
                 <ul class="plan-features">
+                    <li style="font-weight: 700; color: #475569; margin-top: 4px; list-style: none; display: flex; align-items: center; gap: 6px;"><i class="ph-bold ph-chalkboard-teacher" style="color: var(--primary);"></i> Per i docenti:</li>
                     <li><i class="ph-fill ph-check-circle"></i> Fantaletteratura (Max 4 squadre, una sola classe)</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione Analisi grammaticale, testi di livello A1 e A2.</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Fuori registro</li>
+                    <li class="negative"><i class="ph-fill ph-x-circle"></i> Strumenti docente</li>
+                    <li style="font-weight: 700; color: #475569; margin-top: 10px; list-style: none; display: flex; align-items: center; gap: 6px;"><i class="ph-bold ph-compass" style="color: #6366f1;"></i> Per i viandanti:</li>
+                    <li><i class="ph-fill ph-check-circle"></i> Fantaletteratura (creazione della propria squadra personale e accesso al campionato nazionale e alla sala giochi)</li>
                     <li><i class="ph-fill ph-check-circle"></i> Palestra di Riflessione Analisi grammaticale, testi di livello A1 e A2.</li>
                     <li><i class="ph-fill ph-check-circle"></i> Fuori registro</li>
                     <li class="negative"><i class="ph-fill ph-x-circle"></i> Strumenti docente</li>
@@ -613,6 +749,22 @@
     <!-- Script controllo visibilità e testi tramite Firebase -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Anti-Flicker sincrono pre-Firestore (Art. 10.2)
+            try {
+                const cachedMonet = localStorage.getItem('pm_monetizzazione_active');
+                if (cachedMonet === 'false') {
+                    const overlay = document.getElementById('coming-soon-overlay');
+                    const mainView = document.getElementById('view-monetizzazione-active');
+                    const pricingHeader = document.querySelector('.pricing-header');
+                    if (overlay) overlay.style.display = 'flex';
+                    if (mainView) {
+                        mainView.style.filter = 'blur(10px)';
+                        mainView.style.pointerEvents = 'none';
+                    }
+                    if (pricingHeader) pricingHeader.style.filter = 'blur(6px)';
+                }
+            } catch(e) {}
+
             if (typeof firebase !== 'undefined') {
                 const db = firebase.firestore();
                 
@@ -620,6 +772,34 @@
                 db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
                     if (!doc.exists) return;
                     const data = doc.data() || {};
+
+                    // Controllo Monetizzazione Attiva (Art. 10.2 Anti-Flicker & Visual Blur)
+                    const isMonetActive = !!data.monetizzazione;
+                    try {
+                        localStorage.setItem('pm_monetizzazione_active', isMonetActive ? 'true' : 'false');
+                    } catch(e) {}
+                    
+                    const overlay = document.getElementById('coming-soon-overlay');
+                    const mainView = document.getElementById('view-monetizzazione-active');
+                    const pricingHeader = document.querySelector('.pricing-header');
+                    
+                    if (!isMonetActive) {
+                        if (overlay) overlay.style.display = 'flex';
+                        if (mainView) {
+                            mainView.style.filter = 'blur(10px)';
+                            mainView.style.pointerEvents = 'none';
+                            mainView.style.userSelect = 'none';
+                        }
+                        if (pricingHeader) pricingHeader.style.filter = 'blur(6px)';
+                    } else {
+                        if (overlay) overlay.style.display = 'none';
+                        if (mainView) {
+                            mainView.style.filter = 'none';
+                            mainView.style.pointerEvents = '';
+                            mainView.style.userSelect = '';
+                        }
+                        if (pricingHeader) pricingHeader.style.filter = 'none';
+                    }
 
                     // Calcolo eventuale Promozione attiva da promozioni_config
                     const promoConfig = data.promozioni_config || {};

@@ -245,7 +245,7 @@
                 Attiva il tuo piano per sfogliare liberamente tutti i quaderni e le risorse didattiche dell'anno!
             </p>
             <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-                <a href="prezzi.html" class="btn btn-primary" style="background-color: #7c3aed; border-color: #7c3aed; padding: 0.6rem 1.2rem; font-size: 0.9rem;">Scopri i Piani</a>
+                <a href="prezzi.html" id="eco-plan-btn" class="btn btn-primary" style="background-color: #7c3aed; border-color: #7c3aed; padding: 0.6rem 1.2rem; font-size: 0.9rem;">Scopri i Piani</a>
                 <button class="btn btn-outline" id="eco-close" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Chiudi</button>
             </div>
         </div>
@@ -363,6 +363,25 @@
                     });
                 }, err => {
                     console.warn("Notice listener quaderno editions:", err.message);
+                });
+
+                // Sincronizzazione dinamica stato monetizzazione per modale sblocco piano
+                db.collection('hub_settings').doc('ecosistema').onSnapshot(doc => {
+                    if (!doc.exists) return;
+                    const ecoData = doc.data() || {};
+                    const isMonet = !!ecoData.monetizzazione;
+                    const btn = document.getElementById('eco-plan-btn');
+                    if (btn) {
+                        if (isMonet) {
+                            btn.href = 'prezzi.html';
+                            btn.textContent = 'Scopri i Piani';
+                        } else {
+                            btn.href = 'profilo.html';
+                            btn.textContent = 'Vai al tuo Profilo';
+                        }
+                    }
+                }, err => {
+                    console.warn("Notice listener ecosistema monetizzazione:", err.message);
                 });
             }
 

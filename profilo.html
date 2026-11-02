@@ -747,15 +747,17 @@
                 const navPrezzi = document.getElementById('nav-prezzi');
                 if (navPrezzi) navPrezzi.style.display = isMonetActive ? 'list-item' : 'none';
 
+                const isSuperAdmin = (currentProfileUser && currentProfileUser.email && currentProfileUser.email.toLowerCase() === 'prof.memmo@gmail.com') || (window._currentIsSuperAdmin === true);
+
                 const btnRenew = document.getElementById('btn-renew-plan');
-                if (btnRenew) btnRenew.style.display = isMonetActive ? 'inline-flex' : 'none';
+                if (btnRenew) btnRenew.style.display = (isMonetActive && !isSuperAdmin) ? 'inline-flex' : 'none';
 
                 const btnUpgradeLink = document.getElementById('btn-upgrade-plan-link');
-                if (btnUpgradeLink) btnUpgradeLink.style.display = isMonetActive ? 'inline-flex' : 'none';
+                if (btnUpgradeLink) btnUpgradeLink.style.display = (isMonetActive && !isSuperAdmin) ? 'inline-flex' : 'none';
 
                 const noteEl = document.getElementById('profile-plan-pedagogical-note');
                 if (noteEl) {
-                    noteEl.style.display = (!isMonetActive) ? 'block' : 'none';
+                    noteEl.style.display = (!isMonetActive && !isSuperAdmin) ? 'block' : 'none';
                 }
             }
 
@@ -844,10 +846,12 @@
             const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
             const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
             const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
+            window._currentIsSuperAdmin = isSuperAdmin;
             let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
             if (isSuperAdmin) effectiveRole = 'docente';
 
-            const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+            const rawPlan = uData.abbonamento || uData.subscription || uData.plan || 'base';
+            const plan = isSuperAdmin ? 'docente_ecosistema' : rawPlan;
             const isAdminOverride = !!uData.admin_override;
 
             // Render Anagrafica
@@ -1012,6 +1016,15 @@
                     </ul>
                     ${guaranteeLine}
                 `;
+            }
+
+            if (isSuperAdmin) {
+                const noteEl = document.getElementById('profile-plan-pedagogical-note');
+                if (noteEl) noteEl.style.display = 'none';
+                const btnRenew = document.getElementById('btn-renew-plan');
+                if (btnRenew) btnRenew.style.display = 'none';
+                const btnUpgradeLink = document.getElementById('btn-upgrade-plan-link');
+                if (btnUpgradeLink) btnUpgradeLink.style.display = 'none';
             }
 
             // Controllo Visibilità Pulsante Rimborso (14 giorni)

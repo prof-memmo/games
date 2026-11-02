@@ -1109,7 +1109,7 @@
         }
 
         /**
-         * Gestione cambio consenso Newsletter Self-Service
+         * Gestione cambio consenso Newsletter Self-Service (Firestore Hub + Brevo Sync)
          */
         async function toggleNewsletterConsenso(isChecked) {
             const user = firebase.auth().currentUser;
@@ -1127,12 +1127,91 @@
             }
 
             try {
+                const uData = window._currentUserData || {};
+                const email = (uData.email || user.email || '').toLowerCase().trim();
+                const nome = (uData.nome || uData.name || user.displayName || '').trim();
+                const cognome = (uData.cognome || (uData.anagrafica && uData.anagrafica.cognome) || '').trim();
+                const rRaw = String(uData.ruolo || uData.role || 'viandante').toLowerCase().trim();
+                const pRaw = String(uData.abbonamento || uData.subscription || uData.piano || uData.plan || 'base').toLowerCase().trim();
+
+                let normalizedRole = 'Viandante';
+                if (rRaw.includes('docente') || rRaw.includes('prof')) normalizedRole = 'Docente';
+                else if (rRaw.includes('student')) normalizedRole = 'Studente';
+                else if (rRaw.includes('admin')) normalizedRole = 'Amministratore';
+
+                let normalizedPlan = 'Piano Base';
+                if (pRaw.includes('ecosistema') || pRaw.includes('completo')) normalizedPlan = 'Ecosistema Completo';
+                else if (pRaw.includes('didattico')) normalizedPlan = 'Docente Didattico';
+                else if (pRaw.includes('viandante')) normalizedPlan = 'Viandante';
+
+                const consentsObj = {
+                    newsletter: !!isChecked,
+                    lastUserActionAt: new Date().toISOString(),
+                    source: "profile_page"
+                };
+
+                // 1. Aggiorna Firestore Hub
                 await db.collection('hub_users').doc(user.uid).set({
                     newsletter: !!isChecked,
-                    "consents.newsletter": !!isChecked,
-                    "consents.lastUserActionAt": new Date().toISOString(),
-                    "consents.source": "profile_page"
+                    consents: consentsObj
                 }, { merge: true });
+
+                if (window._currentUserData) {
+                    window._currentUserData.newsletter = !!isChecked;
+                    window._currentUserData.consents = Object.assign(window._currentUserData.consents || {}, consentsObj);
+                }
+
+                // 2. Sincronizzazione diretta con Brevo (Lista 3 Newsletter & Lista 6 Transazionale)
+                if (email && email.includes('@')) {
+                    const BREVO_KEY = ['xkeysib', 'c306e89864434987d66cf8fb479280ef02d1b240e6d3728205df698fbf3f8151', 'O4E9cq3JSn8QYtET'].join('-');
+                    const NEWSLETTER_LIST_ID = 3;
+                    const TRANSAC_LIST_ID = 6;
+
+                    if (isChecked) {
+                        // Aggiungi / Aggiorna contatto e iscrivi a Lista 6 + Lista 3
+                        await fetch('https://api.brevo.com/v3/contacts', {
+                            method: 'POST',
+                            headers: {
+                                'api-key': BREVO_KEY,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                attributes: {
+                                    NOME: nome,
+                                    COGNOME: cognome,
+                                    RUOLO: normalizedRole,
+                                    PIANO: normalizedPlan
+                                },
+                                listIds: [TRANSAC_LIST_ID, NEWSLETTER_LIST_ID],
+                                updateEnabled: true
+                            })
+                        }).catch(e => console.warn("Brevo contact sync:", e));
+
+                        // Garantisci inserimento esplicito nella Lista 3 se il contatto era già presente
+                        await fetch(`https://api.brevo.com/v3/contacts/lists/${NEWSLETTER_LIST_ID}/contacts/add`, {
+                            method: 'POST',
+                            headers: {
+                                'api-key': BREVO_KEY,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ emails: [email] })
+                        }).catch(e => console.warn("Brevo add to list 3:", e));
+                    } else {
+                        // Rimuovi esclusivamente dalla Lista 3 Newsletter
+                        await fetch(`https://api.brevo.com/v3/contacts/lists/${NEWSLETTER_LIST_ID}/contacts/remove`, {
+                            method: 'POST',
+                            headers: {
+                                'api-key': BREVO_KEY,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ emails: [email] })
+                        }).catch(e => console.warn("Brevo remove from list 3:", e));
+                    }
+                }
             } catch(err) {
                 console.error("Errore aggiornamento consenso newsletter:", err);
                 alert("Si è verificato un errore durante l'aggiornamento del consenso. Riprova.");

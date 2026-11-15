@@ -2047,10 +2047,31 @@ textarea:focus {
 }
 
 @media (max-width: 460px) {
-  .fanta-pill-title {
-    display: none;
+  .fanta-countdown-pill {
+    padding: 4px 8px 4px 6px;
+    gap: 5px;
+    max-width: 100%;
   }
 
+  .fanta-pill-logo {
+    height: 16px;
+    max-width: 80px;
+  }
+
+  .fanta-pill-content {
+    font-size: 0.76rem;
+    gap: 4px;
+  }
+
+  .fanta-pill-timer {
+    font-size: 0.72rem;
+    padding: 2px 5px;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 320px) {
+  .fanta-pill-title,
   .fanta-pill-sep {
     display: none;
   }

@@ -136,15 +136,46 @@
             box-shadow: 0 6px 18px rgba(0,0,0,0.12);
         }
         @media (max-width: 800px) {
+            .cf-header {
+                padding: 4.5rem 1rem 1rem;
+            }
+            .cf-header h1 {
+                font-size: 2.1rem;
+            }
+            .cf-content {
+                padding: 0 12px 4rem;
+            }
+            #scheda1-block {
+                padding: 1.25rem 1rem !important;
+                border-radius: 18px !important;
+                margin-bottom: 1.5rem !important;
+            }
+            #scheda1-titolo-el {
+                font-size: 1.35rem !important;
+                line-height: 1.3 !important;
+            }
             .role-horizontal-card {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 1.5rem;
-                padding: 1.7rem 1.4rem;
+                gap: 1.25rem;
+                padding: 1.25rem 1rem;
+                border-radius: 16px;
             }
             .role-btn-side {
                 width: 100%;
+                min-width: 0;
                 justify-content: stretch;
+            }
+            .role-btn-side button {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.85rem 1rem;
+                font-size: 0.95rem;
+                white-space: normal;
+                word-break: normal;
+                box-sizing: border-box;
             }
         }
     </style>

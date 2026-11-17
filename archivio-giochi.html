@@ -230,6 +230,28 @@
                     </div>
                 </div>
 
+                <!-- Parla con me -->
+                <div class="game-card item" data-materia="lingua" data-type="online" data-title="Parla con me">
+                    <div class="game-card-img"><img src="loghi/Logo Parla con me.png" alt="Parla con me Logo" onerror="this.onerror=null; this.src='loghi/Logo parla con me Header.png';"></div>
+                    <div class="game-card-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <div class="game-card-cat" style="margin-bottom: 0;">Italiano L2 & Inclusione</div>
+                            <span style="background: var(--color-primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Quaderno Digitale</span>
+                        </div>
+                        <h3>Parla con me</h3>
+                        <p>Il Quaderno Operativo Digitale di Italiano L2: ascolto e pronuncia con voce naturale, 362 schede con penna LIM e 6 canali tematici per Primaria e Secondaria.</p>
+                        <div class="game-meta-card">
+                            <div class="meta-item"><span>📚 Materia:</span> Italiano L2 / Inclusione</div>
+                            <div class="meta-item"><span>👥 Giocatori:</span> Singolo / Classe / LIM</div>
+                            <div class="meta-item"><span>⏱️ Durata:</span> Intero anno scolastico</div>
+                            <div class="meta-item"><span>🎯 Obiettivi:</span> Alfabetizzazione, lessico di studio</div>
+                            <div class="meta-item"><span>👶 Classe/Età:</span> Primaria e Sec. 1° grado</div>
+                            <div class="meta-item"><span>🏫 Uso:</span> Classe, Laboratorio L2, Casa</div>
+                        </div>
+                        <a href="parla-con-me.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block; box-sizing: border-box;">Apri Quaderno</a>
+                    </div>
+                </div>
+
                 <!-- Fantaletteratura -->
                 <div class="game-card item" data-materia="letteratura" data-type="online" data-title="Fantaletteratura">
                     <div class="game-card-img"><img src="loghi/fantaletteratura-badge.png?v=20261027_logo" alt="Fantaletteratura Logo"></div>
@@ -428,6 +450,7 @@
 
         // Integrazione Firebase per stato giochi
         const titleToIdMap = {
+            'parla con me': 'parla-con-me',
             'fantaletteratura': 'fantaletteratura',
             'la rotta degli eroi': 'la-rotta-degli-eroi',
             'palestra di riflessione': 'palestra-di-riflessione',
@@ -556,6 +579,7 @@
                         btn.classList.add('btn-primary');
                         // Ripristina l'href in base al titolo
                         const linkMap = {
+                            'parla con me': 'parla-con-me.html',
                             'fantaletteratura': 'fantaletteratura-dettagli.html',
                             'la rotta degli eroi': 'rotta-eroi-dettagli.html',
                             'palestra di riflessione': 'palestra-riflessione-dettagli.html',

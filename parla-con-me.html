@@ -19,6 +19,22 @@
     <!-- Shared Legal Modal Hub -->
     <script src="https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/legal-modal.js?v=20261020_legal"></script>
 
+    <!-- Firebase SDKs Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <!-- Configurazione Hub & Protezione Abbonamenti -->
+    <script>window.HUB_GAME_ID = "parla-con-me";</script>
+    <script>
+      (function() {
+        var isPrev = window.location.pathname.indexOf('/preview') !== -1;
+        var cdnBase = isPrev ? 'https://prof-memmo.github.io/prof-memmo-gestione-siti/preview/shared/' : 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/';
+        document.write('<script src="' + cdnBase + 'hub-subscription-guard.js?v=20261118_parla_guard"><\/script>');
+      })();
+    </script>
+
     <style>
         :root {
             --reader-bg: #ffffff;

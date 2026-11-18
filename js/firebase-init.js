@@ -8,6 +8,13 @@ const firebaseConfig = {
   appId: "1:839149485689:web:04ee4fa6237d94d0b71ea8"
 };
 
-if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+if (typeof firebase !== 'undefined') {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    if (typeof firebase.auth === 'function' && firebase.auth().setPersistence) {
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(err) {
+            console.warn("Auth persistence error:", err);
+        });
+    }
 }

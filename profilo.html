@@ -1147,9 +1147,11 @@
                 let uData = doc.exists ? doc.data() : {};
 
                 const authUser = firebase.auth().currentUser;
-                const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
+                const isStudentVirtual = (userId && userId.startsWith('stud_')) || (authUser && authUser.uid && authUser.uid.startsWith('stud_')) || (authUser && authUser.email && authUser.email.includes('@studente.profmemmo.it'));
+                const defaultRole = isStudentVirtual ? 'studente' : 'viandante';
+                const displayName = uData.nome || (authUser && authUser.displayName) || (isStudentVirtual ? 'Studente' : 'Utente Ecosistema');
                 const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
-                const role = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+                const role = (uData.ruolo || uData.role || defaultRole).toLowerCase();
                 const plan = uData.abbonamento || uData.subscription || uData.plan || 'base';
                 const isAdminOverride = !!uData.admin_override;
                 const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
@@ -1162,11 +1164,14 @@
 
         function renderUserData(doc, authUser, uDataOverride) {
             const uData = uDataOverride || (doc.exists ? doc.data() : {});
-            const displayName = uData.nome || (authUser && authUser.displayName) || 'Utente Ecosistema';
+            const authUserCurrent = authUser || (window.firebase && firebase.auth && firebase.auth().currentUser);
+            const isStudentVirtual = (authUserCurrent && authUserCurrent.uid && authUserCurrent.uid.startsWith('stud_')) || (authUserCurrent && authUserCurrent.email && authUserCurrent.email.includes('@studente.profmemmo.it'));
+            const defaultRole = isStudentVirtual ? 'studente' : 'viandante';
+            const displayName = uData.nome || (authUser && authUser.displayName) || (isStudentVirtual ? 'Studente' : 'Utente Ecosistema');
             const email = uData.email || (authUser && authUser.email) || 'Non disponibile';
             const isSuperAdmin = email.toLowerCase() === 'prof.memmo@gmail.com';
             window._currentIsSuperAdmin = isSuperAdmin;
-            let effectiveRole = (uData.ruolo || uData.role || 'viandante').toLowerCase();
+            let effectiveRole = (uData.ruolo || uData.role || defaultRole).toLowerCase();
             if (isSuperAdmin) effectiveRole = 'docente';
 
             const rawPlan = uData.abbonamento || uData.subscription || uData.plan || 'base';

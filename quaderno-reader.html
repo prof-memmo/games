@@ -3852,8 +3852,10 @@
                             console.warn("Hub query fallback:", err);
                         }
 
-                        var name = hubData.nome || hubData.name || hubData.displayName || user.displayName || (email ? email.split('@')[0] : 'Utente');
-                        var role = isSuperAdmin ? 'admin' : (hubData.role || hubData.ruolo || 'docente');
+                        var isStudentVirtual = (user.uid && user.uid.startsWith('stud_')) || (email && email.includes('@studente.profmemmo.it'));
+                        var defaultRole = isStudentVirtual ? 'studente' : 'docente';
+                        var name = hubData.nome || hubData.name || hubData.displayName || user.displayName || (email ? email.split('@')[0] : (isStudentVirtual ? 'Studente' : 'Utente'));
+                        var role = isSuperAdmin ? 'admin' : (hubData.role || hubData.ruolo || defaultRole);
                         var avatar = hubData.avatarUrl || hubData.photoURL || user.photoURL || 'https://prof-memmo.github.io/prof-memmo-gestione-siti/shared/assets/branding/prof-memmo/prof-memmo-avatar.png';
 
                         localStorage.setItem('hub_user_name', name);

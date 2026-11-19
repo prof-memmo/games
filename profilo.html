@@ -4,20 +4,27 @@
     <!-- Favicon & Touch Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=4">
+    <!-- PWA & Mobile Web App Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Prof. Memmo">
+    <meta name="theme-color" content="#2563eb">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Il mio Profilo - Prof. Memmo</title>
     <meta name="description" content="Gestisci il tuo profilo, visualizza il piano attivo, accedi ai giochi didattici e controlla le notifiche.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20261118_v33">
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-functions-compat.js"></script>
-    <script src="js/firebase-init.js"></script>
+    <script src="js/firebase-init.js?v=20261118_v33"></script>
     <script>
         // Zero-Flicker Guard (Art. 10.2): Pre-rilevamento sincrono sessione utente
         (function() {
@@ -365,6 +372,49 @@
         }
         .switch-toggle input:checked + .slider-toggle:before {
             transform: translateX(22px);
+        }
+
+        /* Banner PWA Responsive */
+        .pwa-banner-card {
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            border: 1.5px solid #bfdbfe;
+            box-shadow: 0 4px 15px -2px rgba(37, 99, 235, 0.08);
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+        }
+        .pwa-banner-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .pwa-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .pwa-banner-action {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        @media (max-width: 680px) {
+            .pwa-banner-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+            .pwa-banner-action {
+                width: 100%;
+            }
+            .pwa-banner-action button,
+            .pwa-banner-action div {
+                width: 100% !important;
+                justify-content: center !important;
+                text-align: center !important;
+                box-sizing: border-box !important;
+            }
         }
 
         .btn-outline-danger:hover {
@@ -718,19 +768,66 @@
                 </div>
             </div>
 
-            <!-- Card 2: Le mie Notifiche -->
-            <div class="glass-card">
-                <h2 class="card-title"><i class="ph ph-bell" style="color:#f59e0b;"></i> Le mie Notifiche</h2>
-                <ul class="notif-list" id="profile-notif-list">
-                    <li class="notif-item">
-                        <strong>🎉 Benvenuto nell'Ecosistema!</strong>
-                        Esplora i giochi disponibili e partecipa alle attività didattiche.
-                        <div class="notif-date">Oggi</div>
+            <!-- Card 2: Bacheca Notifiche & Aggiornamenti -->
+            <div class="glass-card" style="display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h2 class="card-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="ph ph-bell" style="color: #f59e0b;"></i> Bacheca Notifiche
+                    </h2>
+                    <span id="profile-notif-badge" style="display: none; font-size: 0.75rem; background: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 700;">
+                        Nuove
+                    </span>
+                </div>
+                
+                <ul class="notif-list" id="profile-notif-list" style="flex: 1; min-height: 140px; margin: 0;">
+                    <li class="notif-item" style="color: #64748b; font-style: italic;">
+                        <i class="ph ph-spinner ph-spin"></i> Caricamento notifiche in corso...
                     </li>
                 </ul>
+
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+                    <span style="color: #94a3b8; font-size: 0.78rem;">Aggiornamenti &amp; Imprevisti</span>
+                    <button type="button" onclick="apriArchivioNotifiche()" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 0;">
+                        <span>Archivio Annuale</span> <i class="ph ph-caret-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <!-- Fine Grid 2 Colonne -->
+
+        <!-- Card PWA & Mobile Web App: Porta Prof. Memmo sul tuo Telefono -->
+        <div class="pwa-banner-card" id="profile-pwa-install-card">
+            <div class="pwa-banner-row">
+                <div class="pwa-banner-text">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                        <span style="font-size: 1.25rem;">📱</span>
+                        <h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: #1e3a8a;">
+                            Porta Prof. Memmo sul tuo Telefono
+                        </h3>
+                        <span style="background: #dbeafe; color: #1e40af; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase;">Zero Spazio</span>
+                    </div>
+                    <p id="pwa-install-dynamic-desc" style="margin: 0; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                        Aggiungi l'applicazione alla tua schermata home per accedere sempre con 1 tocco, a schermo intero e senza distrazioni.
+                    </p>
+                </div>
+                <div id="pwa-action-box" class="pwa-banner-action">
+                    <!-- Popolato dinamicamente da JS: iOS, Android, Desktop/LIM -->
+                </div>
+            </div>
+            
+            <!-- Box Espandibile QR Code (per Desktop / LIM) -->
+            <div id="pwa-qr-box" style="display: none; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px dashed #93c5fd; text-align: center;">
+                <p style="font-size: 0.88rem; color: #1e40af; margin: 0 0 12px 0; font-weight: 600;">
+                    Inquadra con la fotocamera del tuo smartphone o tablet per aprire e salvare l'app:
+                </p>
+                <div style="display: inline-block; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #bfdbfe;">
+                    <img id="pwa-qr-img" alt="QR Code per installazione PWA" style="width: 160px; height: 160px; display: block; border-radius: 8px; margin: 0 auto;">
+                </div>
+                <p style="font-size: 0.78rem; color: #64748b; margin-top: 10px; line-height: 1.4;">
+                    Ideale per la LIM di classe: gli studenti e i colleghi possono scansionarlo direttamente dal proprio dispositivo.
+                </p>
+            </div>
+        </div>
 
         <!-- Card Gestione Classi e Roster Studenti (A Tutta Larghezza, Visibile solo per Docenti e Admin) -->
         <div class="glass-card" id="profile-teacher-classes-section" style="display: none; margin-bottom: 2rem;">
@@ -754,6 +851,19 @@
                     <i class="ph ph-spinner ph-spin" style="font-size: 2rem;"></i>
                     <p style="margin-top: 8px;">Caricamento delle tue classi in corso...</p>
                 </div>
+            </div>
+
+            <!-- Contenitore Cestino / Classi Eliminate (Visibile solo se ci sono classi nel cestino) -->
+            <div id="teacher-classes-trash-container" style="display: none; margin-top: 1.5rem; border-top: 1px dashed #cbd5e1; padding-top: 1.2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-size: 0.82rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                        <i class="ph ph-trash" style="font-size: 1rem;"></i> Cestino Classi Eliminate
+                    </span>
+                    <button onclick="toggleCestinoClassi()" id="btn-toggle-cestino" style="background: none; border: none; color: #6366f1; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                        Mostra Cestino (<span id="trash-classes-count">0</span>)
+                    </button>
+                </div>
+                <div id="trash-classes-list" style="display: none;"></div>
             </div>
         </div>
 
@@ -837,6 +947,33 @@
         </div>
     </footer>
 
+    <!-- Modal Archivio Notifiche Annuale (Settembre - Giugno) -->
+    <div id="modal-archivio-notifiche" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+        <div class="modal-box" style="max-width: 620px; width: 100%; max-height: 85vh; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; color: #0f172a;">
+                        <i class="ph ph-bell-ringing" style="color: #f59e0b;"></i> Archivio Notifiche &amp; Novità
+                    </h3>
+                    <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: #64748b;">
+                        Tutte le comunicazioni, le novità sui giochi e gli imprevisti dell'anno scolastico.
+                    </p>
+                </div>
+                <button type="button" onclick="chiudiArchivioNotifiche()" style="background: none; border: none; font-size: 1.4rem; color: #94a3b8; cursor: pointer; padding: 4px; line-height: 1;">&times;</button>
+            </div>
+            
+            <div id="modal-notifiche-full-list" style="flex: 1; overflow-y: auto; padding-right: 6px;">
+                <!-- Elenco completo delle notifiche dell'anno -->
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; margin-top: 1.2rem; border-top: 1px solid #e2e8f0; padding-top: 0.8rem;">
+                <button type="button" class="btn-action-primary" onclick="chiudiArchivioNotifiche()" style="padding: 8px 18px; font-size: 0.9rem;">
+                    Chiudi
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Conferma Eliminazione Dati -->
     <div id="delete-confirm-modal">
         <div class="modal-box">
@@ -853,7 +990,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=20260814_1700"></script>
+    <script src="script.js?v=20261118_v33"></script>
     <script>
         let currentProfileUser = null;
         let isPreviewMode = false;
@@ -936,6 +1073,8 @@
                     }
                 ];
                 renderClassiDocente(window._docenteClassi);
+                initPwaInstallCard();
+                caricaNotificheEcosistema();
                 return;
             }
 
@@ -997,6 +1136,7 @@
                 currentProfileUser = authUser;
                 caricaDatiProfilo(authUser.uid, false);
                 caricaNotificheEcosistema();
+                initPwaInstallCard();
             });
         });
 
@@ -1614,24 +1754,323 @@
             }
         }
 
+        // =========================================================================
+        // PWA INSTALL CARD (Tappa 2) & BACHECA NOTIFICHE CON ARCHIVIO (Tappa 3)
+        // =========================================================================
+        window.deferredPwaPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window.deferredPwaPrompt = e;
+            const btnAndroid = document.getElementById('btn-pwa-install-android');
+            if (btnAndroid) btnAndroid.style.display = 'inline-flex';
+        });
+
+        function initPwaInstallCard() {
+            const card = document.getElementById('profile-pwa-install-card');
+            const actionBox = document.getElementById('pwa-action-box');
+            const desc = document.getElementById('pwa-install-dynamic-desc');
+            const qrBox = document.getElementById('pwa-qr-box');
+            const qrImg = document.getElementById('pwa-qr-img');
+            if (!card || !actionBox) return;
+
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isStandalone) {
+                actionBox.innerHTML = `
+                    <span style="display:inline-flex; align-items:center; gap:6px; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-size:0.82rem; font-weight:700; padding:6px 12px; border-radius:8px;">
+                        <i class="ph ph-check-circle" style="font-size:1.1rem;"></i> App installata a schermo intero
+                    </span>
+                `;
+                if (desc) desc.textContent = "Stai già utilizzando l'applicazione ufficiale a schermo intero senza barre né distrazioni!";
+                return;
+            }
+
+            const ua = navigator.userAgent || '';
+            const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            const isAndroid = /Android/.test(ua);
+
+            if (isIOS) {
+                actionBox.innerHTML = `
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; font-size:0.85rem; color:#1e40af; line-height:1.4; display:flex; align-items:center; gap:8px;">
+                        <i class="ph ph-export" style="font-size:1.3rem; color:#2563eb; flex-shrink:0;"></i>
+                        <span><strong>Su iPhone/iPad:</strong> tocca <strong>Condividi</strong> (<i class="ph ph-export" style="vertical-align:middle;"></i>) in Safari e scegli <strong>"Aggiungi alla schermata Home"</strong>.</span>
+                    </div>
+                `;
+            } else if (isAndroid) {
+                actionBox.innerHTML = `
+                    <button id="btn-pwa-install-android" style="background:#2563eb; color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 2px 8px rgba(37,99,235,0.25);">
+                        <i class="ph ph-download-simple" style="font-size:1.1rem;"></i> Installa App sul Telefono
+                    </button>
+                `;
+                const btn = document.getElementById('btn-pwa-install-android');
+                if (btn) {
+                    btn.onclick = function() {
+                        if (window.deferredPwaPrompt) {
+                            window.deferredPwaPrompt.prompt();
+                            window.deferredPwaPrompt.userChoice.then(choice => {
+                                if (choice.outcome === 'accepted') card.style.display = 'none';
+                                window.deferredPwaPrompt = null;
+                            });
+                        } else {
+                            alert("Tocca i tre puntini ⋮ in alto a destra su Chrome e seleziona 'Aggiungi a schermata Home' o 'Installa app'.");
+                        }
+                    };
+                }
+            } else {
+                // Desktop / LIM
+                const currentUrl = window.location.origin + window.location.pathname;
+                const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(currentUrl);
+                actionBox.innerHTML = `
+                    <button id="btn-toggle-pwa-qr" type="button" style="background:#2563eb; color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 2px 8px rgba(37,99,235,0.25);">
+                        <i class="ph ph-qr-code" style="font-size:1.1rem;"></i> Inquadra QR Code
+                    </button>
+                `;
+                const btnToggle = document.getElementById('btn-toggle-pwa-qr');
+                if (btnToggle) {
+                    btnToggle.onclick = function() {
+                        const isHidden = (qrBox.style.display === 'none' || !qrBox.style.display);
+                        if (isHidden) {
+                            if (qrImg) qrImg.src = qrUrl;
+                            qrBox.style.display = 'block';
+                            btnToggle.innerHTML = '<i class="ph ph-x" style="font-size:1.1rem;"></i> Nascondi QR Code';
+                            btnToggle.style.background = '#475569';
+                        } else {
+                            qrBox.style.display = 'none';
+                            btnToggle.innerHTML = '<i class="ph ph-qr-code" style="font-size:1.1rem;"></i> Inquadra QR Code';
+                            btnToggle.style.background = '#2563eb';
+                        }
+                    };
+                }
+            }
+        }
+
+        window._allProfileNotifications = [];
+
         async function caricaNotificheEcosistema() {
-            const db = firebase.firestore();
+            const notifList = document.getElementById('profile-notif-list');
+            const notifBadge = document.getElementById('profile-notif-badge');
+            let items = [];
+
             try {
-                const snap = await db.collection('hub_notifications').orderBy('createdAt', 'desc').limit(5).get();
-                if (!snap.empty) {
-                    const notifList = document.getElementById('profile-notif-list');
-                    notifList.innerHTML = '';
-                    snap.forEach(doc => {
-                        const n = doc.data();
-                        const li = document.createElement('li');
-                        li.className = 'notif-item';
-                        li.innerHTML = `<strong>🔔 ${n.titolo || 'Notifica Ecosistema'}</strong>${n.messaggio || n.testo || ''}<div class="notif-date">${n.data || 'Recente'}</div>`;
-                        notifList.appendChild(li);
+                const db = firebase.firestore();
+                let userRole = 'viandante';
+                let userEmail = '';
+                if (currentProfileUser) {
+                    userEmail = (currentProfileUser.email || '').toLowerCase();
+                    userRole = (currentProfileUser.ruolo || currentProfileUser.role || 'viandante').toLowerCase();
+                }
+
+                // 1. Lettura da Firestore hub_notifications
+                try {
+                    const snap = await db.collection('hub_notifications').orderBy('createdAt', 'desc').limit(25).get();
+                    if (!snap.empty) {
+                        snap.forEach(doc => {
+                            const n = doc.data();
+                            let matches = false;
+                            const tg = (n.targetGroup || 'all').toLowerCase();
+                            if (tg === 'all') matches = true;
+                            else if (tg === 'docenti' && (userRole.includes('docente') || userRole.includes('teacher'))) matches = true;
+                            else if (tg === 'studenti' && (userRole.includes('student') || userRole.includes('studente'))) matches = true;
+                            else if (tg === 'viandanti' && (!userRole.includes('student') && !userRole.includes('studente') && !userRole.includes('teacher') && !userRole.includes('docente'))) matches = true;
+                            else if (tg === 'single' && n.targetEmail && n.targetEmail.toLowerCase() === userEmail) matches = true;
+
+                            if (matches) {
+                                let dtStr = 'Recente';
+                                if (n.createdAt && typeof n.createdAt.toDate === 'function') {
+                                    const d = n.createdAt.toDate();
+                                    dtStr = d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+                                }
+                                items.push({
+                                    id: doc.id,
+                                    title: n.title || n.titolo || 'Notifica Ecosistema',
+                                    body: n.body || n.messaggio || n.testo || '',
+                                    date: dtStr,
+                                    type: n.type || 'avviso',
+                                    badgeText: n.targetGames && n.targetGames.length ? n.targetGames.join(', ') : 'Avviso'
+                                });
+                            }
+                        });
+                    }
+                } catch(errSnap) {
+                    console.log("hub_notifications fetch info:", errSnap);
+                }
+
+                // 2. Lettura Imprevisti Fantaletteratura attivi da timeline_config (read-only)
+                try {
+                    const fantaDoc = await db.collection('fanta_imprevisti').doc('timeline_config').get();
+                    if (fantaDoc.exists) {
+                        const fData = fantaDoc.data();
+                        const evs = fData.events || [];
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        evs.forEach(ev => {
+                            if (ev.date && ev.date <= todayStr && (!ev.endDate || ev.endDate >= todayStr)) {
+                                items.unshift({
+                                    id: 'fanta_' + (ev.id || ev.title),
+                                    title: '📜 Fantaletteratura: ' + (ev.title || 'Nuovo Imprevisto'),
+                                    body: ev.lore ? (ev.lore.length > 95 ? ev.lore.substring(0, 92) + '...' : ev.lore) : 'Imprevisto letterario attivo nella pergamena del Campionato.',
+                                    date: 'Oggi',
+                                    type: 'fanta',
+                                    badgeText: ev.isMarket ? 'Mercato' : (ev.points ? (ev.points > 0 ? '+' + ev.points + ' pt' : ev.points + ' pt') : 'Imprevisto')
+                                });
+                            }
+                        });
+                    }
+                } catch(errFanta) {
+                    console.log("fanta_imprevisti fetch note:", errFanta);
+                }
+
+            } catch(e) {
+                console.log("Errore globale caricamento notifiche:", e);
+            }
+
+            // Fallback elegante se vuoto
+            if (!items.length) {
+                items.push({
+                    id: 'notif_welcome',
+                    title: '🎉 Benvenuto nell\'Ecosistema!',
+                    body: 'Esplora i giochi disponibili, consulta i materiali e partecipa alle attività didattiche.',
+                    date: 'Oggi',
+                    type: 'info',
+                    badgeText: 'Info'
+                });
+            }
+
+            window._allProfileNotifications = items;
+
+            // Calcolo non lette
+            let unreadCount = 0;
+            items.forEach(it => {
+                if (!localStorage.getItem('pm_notif_read_' + it.id)) unreadCount++;
+            });
+
+            if (notifBadge) {
+                if (unreadCount > 0) {
+                    notifBadge.style.display = 'inline-block';
+                    notifBadge.textContent = unreadCount + ' nuove';
+                } else {
+                    notifBadge.style.display = 'none';
+                }
+            }
+
+            // Render compatto (prime 2-3 notifiche per non allungare la card)
+            if (notifList) {
+                notifList.innerHTML = '';
+                const compactItems = items.slice(0, 3);
+                compactItems.forEach(it => {
+                    const isUnread = !localStorage.getItem('pm_notif_read_' + it.id);
+                    const li = document.createElement('li');
+                    li.className = 'notif-item';
+                    li.style.cursor = 'pointer';
+                    li.onclick = apriArchivioNotifiche;
+
+                    let icon = '🔔';
+                    let badgeBg = '#f1f5f9';
+                    let badgeColor = '#475569';
+                    if (it.type === 'fanta' || it.id.startsWith('fanta_')) {
+                        icon = '📜';
+                        badgeBg = '#fef3c7';
+                        badgeColor = '#b45309';
+                    } else if (it.type === 'game' || it.badgeText.toLowerCase().includes('gioco')) {
+                        icon = '🎮';
+                        badgeBg = '#ecfdf5';
+                        badgeColor = '#059669';
+                    } else if (it.type === 'update') {
+                        icon = '⚡';
+                        badgeBg = '#eff6ff';
+                        badgeColor = '#1e40af';
+                    }
+
+                    li.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; gap:8px;">
+                            <strong style="margin:0; font-size:0.9rem; color:#0f172a; flex:1;">${icon} ${it.title}</strong>
+                            <span style="font-size:0.72rem; font-weight:700; background:${badgeBg}; color:${badgeColor}; padding:2px 7px; border-radius:6px; flex-shrink:0;">
+                                ${it.badgeText}
+                            </span>
+                        </div>
+                        <div style="color:#475569; font-size:0.84rem; line-height:1.4; margin-bottom:5px;">
+                            ${it.body}
+                        </div>
+                        <div class="notif-date" style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
+                            <span>${it.date}</span>
+                            ${isUnread ? '<span style="color:#ef4444; font-weight:700;">● Non letta</span>' : ''}
+                        </div>
+                    `;
+                    notifList.appendChild(li);
+                });
+            }
+        }
+
+        function apriArchivioNotifiche() {
+            const modal = document.getElementById('modal-archivio-notifiche');
+            const fullList = document.getElementById('modal-notifiche-full-list');
+            const notifBadge = document.getElementById('profile-notif-badge');
+            if (!modal) return;
+
+            modal.style.display = 'flex';
+
+            const items = window._allProfileNotifications || [];
+            if (fullList) {
+                fullList.innerHTML = '';
+                if (!items.length) {
+                    fullList.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:2rem;">Nessuna notifica presente nell\'archivio.</p>';
+                } else {
+                    items.forEach(it => {
+                        let icon = '🔔';
+                        let badgeBg = '#f1f5f9';
+                        let badgeColor = '#475569';
+                        if (it.type === 'fanta' || it.id.startsWith('fanta_')) {
+                            icon = '📜';
+                            badgeBg = '#fef3c7';
+                            badgeColor = '#b45309';
+                        } else if (it.type === 'game' || it.badgeText.toLowerCase().includes('gioco')) {
+                            icon = '🎮';
+                            badgeBg = '#ecfdf5';
+                            badgeColor = '#059669';
+                        } else if (it.type === 'update') {
+                            icon = '⚡';
+                            badgeBg = '#eff6ff';
+                            badgeColor = '#1e40af';
+                        }
+
+                        const div = document.createElement('div');
+                        div.style.padding = '12px 14px';
+                        div.style.borderRadius = '12px';
+                        div.style.background = '#f8fafc';
+                        div.style.border = '1px solid #e2e8f0';
+                        div.style.marginBottom = '10px';
+                        div.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; gap:8px;">
+                                <strong style="font-size:0.92rem; color:#0f172a;">${icon} ${it.title}</strong>
+                                <span style="font-size:0.72rem; font-weight:700; background:${badgeBg}; color:${badgeColor}; padding:2px 7px; border-radius:6px; flex-shrink:0;">
+                                    ${it.badgeText}
+                                </span>
+                            </div>
+                            <div style="color:#475569; font-size:0.86rem; line-height:1.5; margin-bottom:6px;">
+                                ${it.body}
+                            </div>
+                            <div style="font-size:0.75rem; color:#94a3b8;">${it.date}</div>
+                        `;
+                        fullList.appendChild(div);
+
+                        // Segna come letta nel localStorage
+                        localStorage.setItem('pm_notif_read_' + it.id, '1');
                     });
                 }
-            } catch(e) {
-                console.log("Notifiche non caricate:", e);
             }
+
+            // Spegne il badge non lette
+            if (notifBadge) notifBadge.style.display = 'none';
+
+            // Rinfresca il pallino rosso nella vista compatta
+            const notifItems = document.querySelectorAll('#profile-notif-list .notif-item');
+            notifItems.forEach(el => {
+                const unreadDot = el.querySelector('span[style*="#ef4444"]');
+                if (unreadDot) unreadDot.remove();
+            });
+        }
+
+        function chiudiArchivioNotifiche() {
+            const modal = document.getElementById('modal-archivio-notifiche');
+            if (modal) modal.style.display = 'none';
         }
 
         async function eseguiLogout() {
@@ -1708,6 +2147,30 @@
 
             try {
                 const db = firebase.firestore();
+
+                // Passaggio di consegne delle classi con collaboratori per salvaguardare il lavoro degli studenti
+                try {
+                    const userEmail = (user.email || '').toLowerCase().trim();
+                    const ownedSnap = await db.collection('hub_classes').where('teacherId', '==', user.uid).get();
+                    for (const cDoc of ownedSnap.docs) {
+                        const cData = cDoc.data() || {};
+                        const collabs = Array.isArray(cData.collaboratori) ? cData.collaboratori : [];
+                        if (collabs.length > 0) {
+                            const newOwnerEmail = collabs[0];
+                            const remCollabs = collabs.slice(1);
+                            await cDoc.ref.update({
+                                teacherEmail: newOwnerEmail,
+                                teacherName: newOwnerEmail.split('@')[0],
+                                teacherId: '',
+                                collaboratori: remCollabs,
+                                lastUpdated: new Date().toISOString()
+                            });
+                        }
+                    }
+                } catch(handoverErr) {
+                    console.warn("Avviso passaggio consegne classi:", handoverErr);
+                }
+
                 await db.collection('hub_users').doc(user.uid).delete();
                 await user.delete();
                 alert("Il tuo account è stato eliminato con successo.");
@@ -1727,7 +2190,9 @@
         // GESTIONE CLASSI & ROSTER STUDENTE (DOCENTE)
         // ==========================================
         window._docenteClassi = [];
+        window._docenteClassiEliminate = [];
         window._activeRosterClassId = null;
+        window._isSuperAdmin = false;
 
         async function caricaClassiDocente(teacherUid, isSuperAdmin) {
             const container = document.getElementById('teacher-classes-container');
@@ -1739,25 +2204,50 @@
             }
 
             try {
+                window._isSuperAdmin = !!isSuperAdmin;
                 const db = firebase.firestore();
-                let snap;
+                const authUser = firebase.auth().currentUser;
+                const userEmail = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '');
+
+                let snapDocs = [];
                 if (isSuperAdmin) {
-                    snap = await db.collection('hub_classes').orderBy('createdAt', 'desc').get().catch(() => null);
-                    if (!snap || snap.empty) {
-                        snap = await db.collection('hub_classes').get();
-                    }
+                    let snap = await db.collection('hub_classes').orderBy('createdAt', 'desc').get().catch(() => null);
+                    if (!snap || snap.empty) snap = await db.collection('hub_classes').get();
+                    if (snap && !snap.empty) snapDocs = snap.docs;
                 } else {
-                    snap = await db.collection('hub_classes').where('teacherId', '==', teacherUid).get();
+                    const q1 = teacherUid ? db.collection('hub_classes').where('teacherId', '==', teacherUid).get().catch(() => ({ docs: [] })) : Promise.resolve({ docs: [] });
+                    const q2 = userEmail ? db.collection('hub_classes').where('teacherEmail', '==', userEmail).get().catch(() => ({ docs: [] })) : Promise.resolve({ docs: [] });
+                    const q3 = userEmail ? db.collection('hub_classes').where('collaboratori', 'array-contains', userEmail).get().catch(() => ({ docs: [] })) : Promise.resolve({ docs: [] });
+                    const q4 = teacherUid ? db.collection('hub_classes').where('teacherIds', 'array-contains', teacherUid).get().catch(() => ({ docs: [] })) : Promise.resolve({ docs: [] });
+
+                    const [res1, res2, res3, res4] = await Promise.all([q1, q2, q3, q4]);
+                    const docMap = new Map();
+                    [res1, res2, res3, res4].forEach(res => {
+                        if (res && res.docs) {
+                            res.docs.forEach(d => docMap.set(d.id, d));
+                        }
+                    });
+                    snapDocs = Array.from(docMap.values());
                 }
 
-                window._docenteClassi = [];
-                if (snap && !snap.empty) {
-                    snap.forEach(doc => {
-                        window._docenteClassi.push({ id: doc.id, ...doc.data() });
-                    });
-                }
+                const allFetched = snapDocs.map(doc => {
+                    const cData = doc.data() || {};
+                    // Auto-sync teacherIds per cloud functions autoritative se l'utente è un collaboratore registrato
+                    if (authUser && userEmail && Array.isArray(cData.collaboratori) && cData.collaboratori.includes(userEmail)) {
+                        if (!Array.isArray(cData.teacherIds) || !cData.teacherIds.includes(authUser.uid)) {
+                            db.collection('hub_classes').doc(doc.id).update({
+                                teacherIds: firebase.firestore.FieldValue.arrayUnion(authUser.uid)
+                            }).catch(() => {});
+                        }
+                    }
+                    return { id: doc.id, ...cData };
+                });
+
+                window._docenteClassi = allFetched.filter(c => c.eliminata !== true && c.isDeleted !== true);
+                window._docenteClassiEliminate = allFetched.filter(c => c.eliminata === true || c.isDeleted === true);
 
                 renderClassiDocente(window._docenteClassi);
+                renderCestinoClassi(window._docenteClassiEliminate);
             } catch (e) {
                 console.error("Errore caricamento classi docente:", e);
                 container.innerHTML = `<div style="padding:15px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:12px; font-size:0.9rem;">
@@ -1786,6 +2276,10 @@
                 return;
             }
 
+            const authUser = firebase.auth().currentUser;
+            const currentUid = authUser ? authUser.uid : null;
+            const currentEmail = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '');
+
             let html = `<div class="teacher-classes-grid">`;
 
             classi.forEach(cls => {
@@ -1795,24 +2289,57 @@
                 const code = cls.code || cls.id;
                 const school = cls.school || 'Scuola non indicata';
                 const city = cls.city || '';
+                const collabs = Array.isArray(cls.collaboratori) ? cls.collaboratori : [];
+                const richieste = Array.isArray(cls.richiesteCollaboratori) ? cls.richiesteCollaboratori : [];
+
+                const isOwner = window._isSuperAdmin || (cls.teacherId === currentUid) || (cls.teacherEmail && cls.teacherEmail.toLowerCase() === currentEmail);
 
                 html += `
                     <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.4rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between;">
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                                 <div>
-                                    ${cls.isTest ? '<div style="background: #fdf2f8; color: #db2777; font-weight: 800; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; border: 1px solid #fbcfe8; margin-bottom: 4px; display: inline-block;">🧪 SANDBOX / TEST</div>' : ''}
+                                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px;">
+                                        ${cls.isTest ? '<div style="background: #fdf2f8; color: #db2777; font-weight: 800; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; border: 1px solid #fbcfe8;">🧪 SANDBOX / TEST</div>' : ''}
+                                        ${isOwner 
+                                            ? '<span style="background: #eff6ff; color: #1d4ed8; font-weight: 800; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; border: 1px solid #bfdbfe;">🏷️ TITOLARE</span>' 
+                                            : '<span style="background: #f0fdf4; color: #15803d; font-weight: 800; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; border: 1px solid #bbf7d0;">🤝 COLLABORATORE</span>'
+                                        }
+                                    </div>
                                     <h3 style="margin: 0 0 3px 0; font-size: 1.25rem; font-family:'Outfit',sans-serif; color: var(--text-dark); font-weight: 700;">
                                         ${cls.name || 'Classe'}
                                     </h3>
                                     <div style="font-size: 0.82rem; color: var(--text-muted);">
                                         🏫 ${school} ${city ? '&bull; ' + city : ''}
                                     </div>
+                                    ${collabs.length > 0 ? `
+                                        <div style="font-size: 0.78rem; color: #64748b; margin-top: 4px;">
+                                            👥 ${collabs.length} ${collabs.length === 1 ? 'docente collaboratore' : 'docenti collaboratori'}
+                                        </div>
+                                    ` : ''}
                                 </div>
                                 <span style="background: #ede9fe; color: #4338ca; font-weight: 800; font-size: 0.82rem; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px;">
                                     ${code}
                                 </span>
                             </div>
+
+                            <!-- Notifica Richieste Collaboratori Pendenti (Visibile solo al Titolare) -->
+                            ${(isOwner && richieste.length > 0) ? `
+                                <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px;">
+                                    <div style="font-weight: 700; color: #92400e; font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                        <i class="ph ph-bell-ringing" style="font-size: 1rem; color: #d97706;"></i> Richiesta di Collaborazione (${richieste.length}):
+                                    </div>
+                                    ${richieste.map(reqEmail => `
+                                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; background: white; padding: 6px 10px; border-radius: 8px; border: 1px solid #fef3c7; margin-top: 4px;">
+                                            <span style="font-size: 0.82rem; font-weight: 600; color: #78350f; word-break: break-all;">${reqEmail}</span>
+                                            <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                                                <button onclick="accettaRichiestaCollaboratore('${cls.id}', '${reqEmail}')" style="background: #059669; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">Accetta</button>
+                                                <button onclick="rifiutaRichiestaCollaboratore('${cls.id}', '${reqEmail}')" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">Rifiuta</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
 
                             <!-- Codice Banner con Copia rapida -->
                             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
@@ -1842,12 +2369,15 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 12px;">
-                            <button onclick="apriModalModificaClasse('${cls.id}')" style="flex: 1; background: #4f46e5; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                                <i class="ph ph-pencil-simple"></i> Modifica
+                        <div style="display: flex; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 12px; align-items: center; flex-wrap: wrap;">
+                            <button onclick="apriModalModificaClasse('${cls.id}')" style="flex: 1; min-width: 140px; background: #4f46e5; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="ph ph-pencil-simple"></i> Gestisci &amp; Roster
                             </button>
-                            <button onclick="eliminaClasseDocente('${cls.id}', '${(cls.name || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Elimina Classe">
-                                <i class="ph ph-trash"></i>
+                            <button onclick="abbandonaClasseDocente('${cls.id}', '${(cls.name || '').replace(/'/g, "\\'")}')" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #475569; padding: 10px 12px; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Abbandona la classe">
+                                <i class="ph ph-sign-out"></i> Abbandona
+                            </button>
+                            <button onclick="eliminaClasseDocente('${cls.id}', '${(cls.name || '').replace(/'/g, "\\'")}')" style="background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 10px 12px; border-radius: 10px; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Sposta la classe nel Cestino">
+                                <i class="ph ph-trash"></i> Elimina
                             </button>
                         </div>
                     </div>
@@ -1868,11 +2398,28 @@
         }
 
         // --- Modale Creazione Classe ---
+        async function popolaScuoleSuggerite() {
+            const datalist = document.getElementById('lista-scuole-suggerite');
+            if (!datalist) return;
+            try {
+                const db = firebase.firestore();
+                const snap = await db.collection('hub_classes').limit(80).get();
+                const scuoleSet = new Set();
+                snap.forEach(d => {
+                    const sc = (d.data() && d.data().school ? d.data().school.trim() : '');
+                    if (sc && sc !== 'Scuola non indicata') scuoleSet.add(sc);
+                });
+                datalist.innerHTML = Array.from(scuoleSet).sort().map(s => `<option value="${s.replace(/"/g, '&quot;')}"></option>`).join('');
+            } catch(e) {
+                console.warn("Avviso caricamento scuole suggerite:", e);
+            }
+        }
+
         function apriModalCreaClasse() {
             const modal = document.getElementById('modal-crea-classe');
             if (!modal) return;
 
-            // Pre-compila scuola e città: suggerisce l'ultima scuola usata per le classi o quella anagrafica, e la città dell'utente
+            // Pre-compila scuola e città
             const uData = window._currentUserData || {};
             const lastSchool = (window._docenteClassi && window._docenteClassi.length > 0 && window._docenteClassi[0].school) || uData.scuola || uData.school || (uData.anagrafica && uData.anagrafica.scuola) || '';
             const uCitta = uData.citta || uData.city || (uData.anagrafica && uData.anagrafica.citta) || (document.getElementById('header-city-val')?.textContent !== 'Città non specificata' ? document.getElementById('header-city-val')?.textContent : '') || '';
@@ -1882,6 +2429,7 @@
             if (inScuola && lastSchool && lastSchool !== 'Scuola non indicata') inScuola.value = lastSchool;
             if (inCitta && uCitta && uCitta !== 'Città non specificata') inCitta.value = uCitta;
 
+            popolaScuoleSuggerite();
             modal.style.display = 'flex';
         }
 
@@ -1933,6 +2481,40 @@
                 if (!authUser) throw new Error("Utente non autenticato.");
 
                 const db = firebase.firestore();
+
+                // --- Controllo Antiduplicati & Richiesta di Collaborazione ---
+                const normNome = nome.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const normScuola = scuola.toLowerCase().trim();
+
+                if (normScuola) {
+                    try {
+                        const snapCheck = await db.collection('hub_classes').where('school', '==', scuola).get();
+                        let duplicatoDoc = null;
+                        snapCheck.forEach(d => {
+                            const data = d.data() || {};
+                            const dNorm = (data.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                            if (dNorm === normNome && data.teacherId !== authUser.uid && (!data.teacherEmail || data.teacherEmail.toLowerCase() !== authUser.email.toLowerCase())) {
+                                duplicatoDoc = { id: d.id, ...data };
+                            }
+                        });
+
+                        if (duplicatoDoc) {
+                            const tName = duplicatoDoc.teacherName || duplicatoDoc.teacherEmail || 'un collega';
+                            const askJoin = confirm(`⚠️ Attenzione: la classe "${duplicatoDoc.name}" presso "${scuola}" risulta già creata dal docente ${tName}.\n\nPer evitare di assegnare doppi codici d'accesso agli studenti, vuoi inviare una richiesta a ${tName} per unirti come collaboratore alla classe già esistente?`);
+                            if (askJoin) {
+                                await db.collection('hub_classes').doc(duplicatoDoc.id).update({
+                                    richiesteCollaboratori: firebase.firestore.FieldValue.arrayUnion(authUser.email.toLowerCase().trim())
+                                });
+                                chiudiModalCreaClasse();
+                                alert(`📨 Richiesta inviata a ${tName}!\n\nNon appena il collega confermerà l'accesso, troverai la classe pronta nella sezione "Le Mie Classi".`);
+                                return;
+                            }
+                        }
+                    } catch(chkErr) {
+                        console.warn("Avviso controllo duplicati classe:", chkErr);
+                    }
+                }
+
                 const code = generaCodiceClasse();
 
                 const students = rawNames.map((name, idx) => ({
@@ -1956,6 +2538,9 @@
                     teacherId: authUser.uid,
                     teacherName: teacherDisplayName,
                     teacherEmail: authUser.email || '',
+                    teacherIds: [authUser.uid],
+                    collaboratori: [],
+                    richiesteCollaboratori: [],
                     students: students,
                     createdAt: new Date().toISOString(),
                     lastUpdated: new Date().toISOString()
@@ -1983,7 +2568,207 @@
             }
         }
 
-        // --- Modale Modifica Classe & Studenti ---
+        // --- Modale Modifica Classe, Studenti & Collaboratori ---
+        function renderCollaboratoriSection(cls, isOwner) {
+            const box = document.getElementById('roster-collaboratori-box');
+            const roleBadge = document.getElementById('roster-my-role-badge');
+            if (!box) return;
+
+            if (roleBadge) {
+                roleBadge.innerHTML = isOwner
+                    ? '<span style="background:#eff6ff; color:#1d4ed8; font-weight:700; font-size:0.72rem; padding:2px 8px; border-radius:6px; border:1px solid #bfdbfe;">Sei il Titolare</span>'
+                    : '<span style="background:#f0fdf4; color:#15803d; font-weight:700; font-size:0.72rem; padding:2px 8px; border-radius:6px; border:1px solid #bbf7d0;">Sei Collaboratore</span>';
+            }
+
+            const ownerEmail = cls.teacherEmail || 'Docente Titolare';
+            const collabs = Array.isArray(cls.collaboratori) ? cls.collaboratori : [];
+            const richieste = Array.isArray(cls.richiesteCollaboratori) ? cls.richiesteCollaboratori : [];
+
+            let html = `
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span style="background:white; border:1px solid #cbd5e1; border-radius:8px; padding:4px 10px; font-size:0.82rem; font-weight:600; color:#1e293b; display:inline-flex; align-items:center; gap:6px;">
+                            👑 ${ownerEmail} <small style="color:#64748b;">(Titolare)</small>
+                        </span>
+                        ${collabs.map(em => `
+                            <span style="background:#f1f5f9; border:1px solid #e2e8f0; border-radius:8px; padding:4px 10px; font-size:0.82rem; color:#334155; display:inline-flex; align-items:center; gap:6px;">
+                                🤝 ${em}
+                                ${isOwner ? `<button type="button" onclick="rimuoviCollaboratoreEmail('${cls.id}', '${em}')" style="background:none; border:none; color:#dc2626; font-weight:bold; font-size:0.95rem; cursor:pointer; padding:0 2px; line-height:1;" title="Rimuovi collaboratore">&times;</button>` : ''}
+                            </span>
+                        `).join('')}
+                    </div>
+            `;
+
+            if (isOwner && richieste.length > 0) {
+                html += `
+                    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px 10px; margin-top:4px;">
+                        <span style="font-size:0.75rem; font-weight:700; color:#92400e; text-transform:uppercase;">Richieste di accesso pendenti:</span>
+                        ${richieste.map(em => `
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; font-size:0.82rem;">
+                                <span style="color:#78350f; font-weight:600;">${em}</span>
+                                <div style="display:flex; gap:4px;">
+                                    <button type="button" onclick="accettaRichiestaCollaboratore('${cls.id}', '${em}')" style="background:#059669; color:white; border:none; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.72rem; cursor:pointer;">Accetta</button>
+                                    <button type="button" onclick="rifiutaRichiestaCollaboratore('${cls.id}', '${em}')" style="background:#f1f5f9; color:#64748b; border:1px solid #cbd5e1; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.72rem; cursor:pointer;">Rifiuta</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            if (isOwner) {
+                html += `
+                    <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;">
+                        <input type="email" id="input-nuovo-collaboratore" placeholder="Aggiungi email collega (es. collega@scuola.it)..." style="flex:1; min-width:200px; padding:6px 10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.82rem; box-sizing:border-box;">
+                        <button type="button" onclick="aggiungiCollaboratoreEmail('${cls.id}')" style="background:#4f46e5; color:white; border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                            <i class="ph ph-user-plus"></i> Aggiungi Collega
+                        </button>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            box.innerHTML = html;
+        }
+
+        async function accettaRichiestaCollaboratore(classId, email) {
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_classes').doc(classId).update({
+                    collaboratori: firebase.firestore.FieldValue.arrayUnion(email.toLowerCase().trim()),
+                    richiesteCollaboratori: firebase.firestore.FieldValue.arrayRemove(email)
+                });
+                alert(`✅ Collega ${email} aggiunto come collaboratore alla classe!`);
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                const updatedCls = window._docenteClassi.find(c => c.id === classId);
+                if (updatedCls && window._activeRosterClassId === classId) {
+                    renderCollaboratoriSection(updatedCls, true);
+                }
+            } catch(e) {
+                console.error("Errore accetta collaboratore:", e);
+                alert("Errore: " + e.message);
+            }
+        }
+
+        async function rifiutaRichiestaCollaboratore(classId, email) {
+            if (!confirm(`Rifiutare la richiesta di collaborazione da parte di ${email}?`)) return;
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_classes').doc(classId).update({
+                    richiesteCollaboratori: firebase.firestore.FieldValue.arrayRemove(email)
+                });
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                const updatedCls = window._docenteClassi.find(c => c.id === classId);
+                if (updatedCls && window._activeRosterClassId === classId) {
+                    renderCollaboratoriSection(updatedCls, true);
+                }
+            } catch(e) {
+                console.error("Errore rifiuta collaboratore:", e);
+                alert("Errore: " + e.message);
+            }
+        }
+
+        async function aggiungiCollaboratoreEmail(classId) {
+            const input = document.getElementById('input-nuovo-collaboratore');
+            const email = (input ? input.value : '').toLowerCase().trim();
+            if (!email || !email.includes('@')) {
+                alert("Inserisci un indirizzo email valido.");
+                return;
+            }
+
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_classes').doc(classId).update({
+                    collaboratori: firebase.firestore.FieldValue.arrayUnion(email)
+                });
+                if (input) input.value = '';
+                alert(`✅ Docente ${email} aggiunto ai collaboratori di questa classe!`);
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                const updatedCls = window._docenteClassi.find(c => c.id === classId);
+                if (updatedCls) renderCollaboratoriSection(updatedCls, true);
+            } catch(e) {
+                console.error("Errore aggiunta collaboratore:", e);
+                alert("Errore durante l'aggiunta: " + e.message);
+            }
+        }
+
+        async function rimuoviCollaboratoreEmail(classId, email) {
+            if (!confirm(`Vuoi rimuovere ${email} dai docenti collaboratori di questa classe?`)) return;
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_classes').doc(classId).update({
+                    collaboratori: firebase.firestore.FieldValue.arrayRemove(email)
+                });
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                const updatedCls = window._docenteClassi.find(c => c.id === classId);
+                if (updatedCls) renderCollaboratoriSection(updatedCls, true);
+            } catch(e) {
+                console.error("Errore rimozione collaboratore:", e);
+                alert("Errore: " + e.message);
+            }
+        }
+
+        async function abbandonaClasseDocente(classId, className) {
+            const authUser = firebase.auth().currentUser;
+            const userEmail = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '');
+            if (!userEmail) {
+                alert("Email utente non disponibile.");
+                return;
+            }
+
+            const cls = (window._docenteClassi && window._docenteClassi.find(c => c.id === classId)) || (window._docenteClassiEliminate && window._docenteClassiEliminate.find(c => c.id === classId));
+            if (!cls) return;
+
+            const isOwner = window._isSuperAdmin || (cls.teacherId === (authUser ? authUser.uid : null)) || (cls.teacherEmail && cls.teacherEmail.toLowerCase() === userEmail);
+            const collabs = Array.isArray(cls.collaboratori) ? cls.collaboratori.filter(e => e.toLowerCase() !== userEmail) : [];
+
+            if (isOwner) {
+                if (collabs.length > 0) {
+                    const newOwnerEmail = collabs[0];
+                    const confirmLeave = confirm(`Sei il docente titolare di "${className}".\n\nVuoi cedere la titolarità della classe al collega ${newOwnerEmail}?\n\n• Il collega diventerà il nuovo titolare.\n• La classe rimarrà attiva per gli studenti e gli altri docenti.\n• Tu non vedrai più questa classe.`);
+                    if (!confirmLeave) return;
+
+                    try {
+                        const db = firebase.firestore();
+                        const remCollabs = collabs.slice(1);
+                        await db.collection('hub_classes').doc(classId).update({
+                            teacherEmail: newOwnerEmail,
+                            teacherName: newOwnerEmail.split('@')[0],
+                            teacherId: '',
+                            collaboratori: remCollabs,
+                            teacherIds: firebase.firestore.FieldValue.arrayRemove(authUser.uid),
+                            lastUpdated: new Date().toISOString()
+                        });
+                        alert(`Titolarità di "${className}" ceduta a ${newOwnerEmail}. Hai abbandonato la classe con successo.`);
+                        await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                    } catch(e) {
+                        console.error("Errore cessione classe:", e);
+                        alert("Errore durante l'abbandono: " + e.message);
+                    }
+                } else {
+                    alert(`Sei l'unico docente di questa classe.\n\nNon ci sono colleghi a cui cederla: se non desideri più usarla, puoi spostarla nel Cestino con il pulsante 🗑️ Elimina.`);
+                }
+            } else {
+                if (!confirm(`Sei sicuro di voler abbandonare la collaborazione per la classe "${className}"?\n\nLa classe rimarrà attiva per il titolare e per gli studenti.`)) return;
+                try {
+                    const db = firebase.firestore();
+                    await db.collection('hub_classes').doc(classId).update({
+                        collaboratori: firebase.firestore.FieldValue.arrayRemove(userEmail),
+                        teacherIds: firebase.firestore.FieldValue.arrayRemove(authUser.uid)
+                    });
+                    alert(`Hai abbandonato la collaborazione per la classe "${className}".`);
+                    await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+                } catch(e) {
+                    console.error("Errore abbandono classe:", e);
+                    alert("Errore durante l'abbandono: " + e.message);
+                }
+            }
+        }
+
         function apriModalModificaClasse(classId) {
             const modal = document.getElementById('modal-gestione-roster');
             if (!modal) return;
@@ -1991,6 +2776,11 @@
             window._activeRosterClassId = classId;
             const cls = window._docenteClassi.find(c => c.id === classId);
             if (!cls) return;
+
+            const authUser = firebase.auth().currentUser;
+            const currentUid = authUser ? authUser.uid : null;
+            const currentEmail = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '');
+            const isOwner = window._isSuperAdmin || (cls.teacherId === currentUid) || (cls.teacherEmail && cls.teacherEmail.toLowerCase() === currentEmail);
 
             document.getElementById('roster-modal-class-name').textContent = cls.name || 'Classe';
             document.getElementById('roster-modal-class-code').textContent = cls.code || cls.id;
@@ -2002,6 +2792,7 @@
             const cityInput = document.getElementById('modifica-classe-citta');
             if (cityInput) cityInput.value = cls.city || '';
 
+            renderCollaboratoriSection(cls, isOwner);
             renderRosterTable(cls);
             modal.style.display = 'flex';
         }
@@ -2165,20 +2956,106 @@
         }
 
         async function eliminaClasseDocente(classId, className) {
-            if (!confirm(`Sei sicuro di voler eliminare la classe "${className}"?\n\nQuesta azione cancellerà il codice d'accesso e tutti gli slot degli studenti associati a questa classe.`)) {
-                return;
+            const authUser = firebase.auth().currentUser;
+            const userEmail = (authUser && authUser.email ? authUser.email.toLowerCase().trim() : '');
+
+            const cls = (window._docenteClassi && window._docenteClassi.find(c => c.id === classId)) || {};
+            const collabs = Array.isArray(cls.collaboratori) ? cls.collaboratori.filter(e => e.toLowerCase() !== userEmail) : [];
+
+            if (collabs.length > 0) {
+                const msg = `⚠️ ATTENZIONE: La classe "${className}" è condivisa con: ${collabs.join(', ')}.\n\n` +
+                            `• Scegli "ANNULLA" e premi "🚪 Abbandona" se vuoi solo sfilarti tu lasciando la classe attiva per i tuoi colleghi.\n` +
+                            `• Premi "OK" se desideri spostare la classe nel CESTINO per tutti (potrai sempre ripristinarla in fondo alla pagina).`;
+                if (!confirm(msg)) return;
+            } else {
+                if (!confirm(`Vuoi spostare la classe "${className}" nel Cestino?\n\nI codici e gli accessi degli studenti verranno sospesi, ma potrai ripristinarla in qualsiasi momento dalla sezione Cestino in fondo alla pagina.`)) {
+                    return;
+                }
             }
 
             try {
                 const db = firebase.firestore();
-                await db.collection('hub_classes').doc(classId).delete();
-                alert(`Classe "${className}" eliminata.`);
+                await db.collection('hub_classes').doc(classId).update({
+                    eliminata: true,
+                    isDeleted: true,
+                    deletedAt: new Date().toISOString(),
+                    deletedBy: userEmail
+                });
+                alert(`🗑️ Classe "${className}" spostata nel Cestino. Puoi ripristinarla quando vuoi in fondo alla sezione "Le Mie Classi".`);
 
-                const authUser = firebase.auth().currentUser;
                 await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
             } catch (e) {
                 console.error("Errore eliminazione classe:", e);
-                alert("Errore durante l'eliminazione: " + e.message);
+                alert("Errore durante lo spostamento nel cestino: " + e.message);
+            }
+        }
+
+        async function ripristinaClasseDocente(classId, className) {
+            if (!confirm(`Vuoi ripristinare la classe "${className}"?\n\nLa classe tornerà immediatamente attiva tra le tue classi e gli studenti potranno accedere nuovamente con il codice.`)) return;
+
+            try {
+                const db = firebase.firestore();
+                await db.collection('hub_classes').doc(classId).update({
+                    eliminata: false,
+                    isDeleted: false,
+                    restoredAt: new Date().toISOString()
+                });
+                alert(`✅ Classe "${className}" ripristinata con successo!`);
+                const authUser = firebase.auth().currentUser;
+                await caricaClassiDocente(authUser.uid, authUser.email && authUser.email.toLowerCase() === 'prof.memmo@gmail.com');
+            } catch(e) {
+                console.error("Errore ripristino classe:", e);
+                alert("Errore durante il ripristino: " + e.message);
+            }
+        }
+
+        function renderCestinoClassi(trashList) {
+            const trashContainer = document.getElementById('teacher-classes-trash-container');
+            const trashCount = document.getElementById('trash-classes-count');
+            const trashBox = document.getElementById('trash-classes-list');
+            if (!trashContainer || !trashBox) return;
+
+            if (!trashList || trashList.length === 0) {
+                trashContainer.style.display = 'none';
+                return;
+            }
+
+            trashContainer.style.display = 'block';
+            if (trashCount) trashCount.textContent = trashList.length;
+
+            let html = `<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">`;
+            trashList.forEach(cls => {
+                const code = cls.code || cls.id;
+                const school = cls.school || 'Scuola non indicata';
+                const dateStr = cls.deletedAt ? new Date(cls.deletedAt).toLocaleDateString('it-IT') : '';
+
+                html += `
+                    <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <strong style="color: #475569; font-size: 0.95rem;">${cls.name || 'Classe'}</strong>
+                            <span style="font-size: 0.8rem; color: #94a3b8; margin-left: 8px;">(${code} &bull; ${school} ${dateStr ? '&bull; Spostata nel Cestino il ' + dateStr : ''})</span>
+                        </div>
+                        <button onclick="ripristinaClasseDocente('${cls.id}', '${(cls.name || '').replace(/'/g, "\\'")}')" style="background: #059669; color: white; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(5,150,105,0.2);">
+                            <i class="ph ph-arrow-counter-clockwise"></i> Ripristina
+                        </button>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            trashBox.innerHTML = html;
+        }
+
+        function toggleCestinoClassi() {
+            const box = document.getElementById('trash-classes-list');
+            const btn = document.getElementById('btn-toggle-cestino');
+            if (!box) return;
+            const isHidden = (box.style.display === 'none' || !box.style.display);
+            if (isHidden) {
+                box.style.display = 'block';
+                if (btn) btn.innerHTML = `Nascondi Cestino (<span id="trash-classes-count">${window._docenteClassiEliminate?.length || 0}</span>)`;
+            } else {
+                box.style.display = 'none';
+                if (btn) btn.innerHTML = `Mostra Cestino (<span id="trash-classes-count">${window._docenteClassiEliminate?.length || 0}</span>)`;
             }
         }
     </script>
@@ -2293,7 +3170,8 @@
             <div class="modal-grid-2col">
                 <div>
                     <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Scuola / Istituto</label>
-                    <input type="text" id="nuova-classe-scuola" placeholder="Es. I.C. Dante Alighieri" style="width:100%; padding:9px 12px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; box-sizing:border-box;">
+                    <input type="text" id="nuova-classe-scuola" list="lista-scuole-suggerite" placeholder="Es. I.C. Dante Alighieri" style="width:100%; padding:9px 12px; border-radius:10px; border:1px solid #cbd5e1; font-size:0.9rem; box-sizing:border-box;">
+                    <datalist id="lista-scuole-suggerite"></datalist>
                 </div>
                 <div>
                     <label style="font-weight:700; font-size:0.85rem; color:#475569; display:block; margin-bottom:6px;">Città</label>
@@ -2358,6 +3236,19 @@
                             <i class="ph ph-floppy-disk"></i> Salva
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Sezione Docenti & Collaboratori -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; margin-bottom:1.2rem; flex-shrink:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">
+                        👥 Docenti di questa classe
+                    </div>
+                    <span id="roster-my-role-badge"></span>
+                </div>
+                <div id="roster-collaboratori-box" style="font-size:0.85rem; color:#334155;">
+                    <!-- Popolato dinamicamente da renderCollaboratoriSection -->
                 </div>
             </div>
 

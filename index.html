@@ -23,7 +23,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
-    <!-- Icons (Phosphor) -->
+    <!-- FontAwesome & Icons (Phosphor) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css?v=20261118_v33">
 
@@ -358,8 +359,12 @@
                     Caricamento esperienze...</div>
             </div>
 
-            <a href="condividi-esperienza.html" class="btn btn-outline" style="margin-top: 1rem;"><i
-                    class="ph ph-pencil-simple"></i> Condividi la tua esperienza</a>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 1rem;">
+                <a href="condividi-esperienza.html" class="btn btn-outline"><i
+                        class="ph ph-pencil-simple"></i> Condividi la tua esperienza</a>
+                <button type="button" class="btn btn-primary" onclick="if(window.openSharedModal) window.openSharedModal('invita');" style="cursor: pointer;"><i
+                        class="ph ph-paper-plane-tilt"></i> Invita un amico o un collega</button>
+            </div>
         </div>
     </section>
 

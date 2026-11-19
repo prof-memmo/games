@@ -2221,7 +2221,13 @@
                         }
                     }
                     var ssoName = cached ? (cached.name || cached.displayName || (cached.anagrafica && cached.anagrafica.nome) || (cached.email && cached.email.split('@')[0])) : localStorage.getItem('hub_user_name');
-                    var ssoRole = (cached && (cached.role || cached.ruolo)) || localStorage.getItem('hub_user_role') || 'docente';
+                    var isStudentVirtual = (cached && ((cached.uid && cached.uid.startsWith('stud_')) || (cached.email && cached.email.includes('@studente.profmemmo.it')))) ||
+                                           (localStorage.getItem('hub_user_id') && localStorage.getItem('hub_user_id').startsWith('stud_')) ||
+                                           (localStorage.getItem('hub_user_email') && localStorage.getItem('hub_user_email').includes('@studente.profmemmo.it')) ||
+                                           localStorage.getItem('hub_user_role') === 'studente' ||
+                                           localStorage.getItem('fanta_user_role') === 'studente';
+                    var defaultRole = isStudentVirtual ? 'studente' : 'docente';
+                    var ssoRole = (cached && (cached.role || cached.ruolo)) || localStorage.getItem('hub_user_role') || defaultRole;
                     var isSuper = (cached && cached.email && cached.email.toLowerCase() === 'prof.memmo@gmail.com') || ssoRole === 'admin' || (ssoName && ssoName.toUpperCase().includes('MEMMO'));
                     if (ssoName) {
                         var rLbl = isSuper ? 'AMMINISTRATORE' : (ssoRole === 'studente' ? 'STUDENTE' : 'DOCENTE');

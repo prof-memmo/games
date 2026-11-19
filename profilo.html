@@ -374,6 +374,49 @@
             transform: translateX(22px);
         }
 
+        /* Banner PWA Responsive */
+        .pwa-banner-card {
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            border: 1.5px solid #bfdbfe;
+            box-shadow: 0 4px 15px -2px rgba(37, 99, 235, 0.08);
+            border-radius: 20px;
+            padding: 1.5rem 1.8rem;
+        }
+        .pwa-banner-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .pwa-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .pwa-banner-action {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        @media (max-width: 680px) {
+            .pwa-banner-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+            }
+            .pwa-banner-action {
+                width: 100%;
+            }
+            .pwa-banner-action button,
+            .pwa-banner-action div {
+                width: 100% !important;
+                justify-content: center !important;
+                text-align: center !important;
+                box-sizing: border-box !important;
+            }
+        }
+
         .btn-outline-danger:hover {
             background: #fee2e2;
         }
@@ -753,10 +796,10 @@
         <!-- Fine Grid 2 Colonne -->
 
         <!-- Card PWA & Mobile Web App: Porta Prof. Memmo sul tuo Telefono -->
-        <div class="glass-card" id="profile-pwa-install-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%); border: 1.5px solid #bfdbfe; box-shadow: 0 4px 15px -2px rgba(37, 99, 235, 0.08);">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-                <div style="flex: 1; min-width: 260px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <div class="pwa-banner-card" id="profile-pwa-install-card">
+            <div class="pwa-banner-row">
+                <div class="pwa-banner-text">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
                         <span style="font-size: 1.25rem;">📱</span>
                         <h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: #1e3a8a;">
                             Porta Prof. Memmo sul tuo Telefono
@@ -764,24 +807,24 @@
                         <span style="background: #dbeafe; color: #1e40af; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase;">Zero Spazio</span>
                     </div>
                     <p id="pwa-install-dynamic-desc" style="margin: 0; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                        Aggiungi l'applicazione alla tua schermata home per giocare a schermo intero senza barre e accedere sempre con 1 tocco.
+                        Aggiungi l'applicazione alla tua schermata home per accedere sempre con 1 tocco, a schermo intero e senza distrazioni.
                     </p>
                 </div>
-                <div id="pwa-action-box" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div id="pwa-action-box" class="pwa-banner-action">
                     <!-- Popolato dinamicamente da JS: iOS, Android, Desktop/LIM -->
                 </div>
             </div>
             
             <!-- Box Espandibile QR Code (per Desktop / LIM) -->
-            <div id="pwa-qr-box" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #93c5fd; text-align: center;">
-                <p style="font-size: 0.85rem; color: #1e40af; margin: 0 0 10px 0; font-weight: 600;">
+            <div id="pwa-qr-box" style="display: none; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px dashed #93c5fd; text-align: center;">
+                <p style="font-size: 0.88rem; color: #1e40af; margin: 0 0 12px 0; font-weight: 600;">
                     Inquadra con la fotocamera del tuo smartphone o tablet per aprire e salvare l'app:
                 </p>
-                <div style="display: inline-block; padding: 10px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #bfdbfe;">
-                    <img id="pwa-qr-img" src="" alt="QR Code per installazione PWA" style="width: 150px; height: 150px; display: block; border-radius: 8px;">
+                <div style="display: inline-block; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #bfdbfe;">
+                    <img id="pwa-qr-img" alt="QR Code per installazione PWA" style="width: 160px; height: 160px; display: block; border-radius: 8px; margin: 0 auto;">
                 </div>
-                <p style="font-size: 0.76rem; color: #64748b; margin-top: 8px;">
-                    Ideale per la LIM di classe: gli studenti e i colleghi possono scansionarlo direttamente dal proprio banco.
+                <p style="font-size: 0.78rem; color: #64748b; margin-top: 10px; line-height: 1.4;">
+                    Ideale per la LIM di classe: gli studenti e i colleghi possono scansionarlo direttamente dal proprio dispositivo.
                 </p>
             </div>
         </div>
@@ -1747,14 +1790,15 @@
 
             if (isIOS) {
                 actionBox.innerHTML = `
-                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:8px 12px; font-size:0.82rem; color:#1e40af; line-height:1.4;">
-                        <strong>Su iPhone/iPad:</strong> tocca <span style="font-weight:800; font-size:1.1rem; vertical-align:middle;">⎋</span> (Condividi) su Safari e scegli <strong>"Aggiungi a schermata Home"</strong>.
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:10px 14px; font-size:0.85rem; color:#1e40af; line-height:1.4; display:flex; align-items:center; gap:8px;">
+                        <i class="ph ph-export" style="font-size:1.3rem; color:#2563eb; flex-shrink:0;"></i>
+                        <span><strong>Su iPhone/iPad:</strong> tocca <strong>Condividi</strong> (<i class="ph ph-export" style="vertical-align:middle;"></i>) in Safari e scegli <strong>"Aggiungi alla schermata Home"</strong>.</span>
                     </div>
                 `;
             } else if (isAndroid) {
                 actionBox.innerHTML = `
-                    <button id="btn-pwa-install-android" style="background:#2563eb; color:white; border:none; padding:9px 16px; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(37,99,235,0.25);">
-                        <i class="ph ph-download-simple"></i> Installa App sul Telefono
+                    <button id="btn-pwa-install-android" style="background:#2563eb; color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 2px 8px rgba(37,99,235,0.25);">
+                        <i class="ph ph-download-simple" style="font-size:1.1rem;"></i> Installa App sul Telefono
                     </button>
                 `;
                 const btn = document.getElementById('btn-pwa-install-android');
@@ -1776,20 +1820,23 @@
                 const currentUrl = window.location.origin + window.location.pathname;
                 const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(currentUrl);
                 actionBox.innerHTML = `
-                    <button id="btn-toggle-pwa-qr" type="button" style="background:#2563eb; color:white; border:none; padding:9px 16px; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(37,99,235,0.25);">
-                        <i class="ph ph-qr-code"></i> Inquadra QR Code
+                    <button id="btn-toggle-pwa-qr" type="button" style="background:#2563eb; color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 2px 8px rgba(37,99,235,0.25);">
+                        <i class="ph ph-qr-code" style="font-size:1.1rem;"></i> Inquadra QR Code
                     </button>
                 `;
                 const btnToggle = document.getElementById('btn-toggle-pwa-qr');
                 if (btnToggle) {
                     btnToggle.onclick = function() {
-                        if (qrBox.style.display === 'none' || !qrBox.style.display) {
-                            if (qrImg && !qrImg.src) qrImg.src = qrUrl;
+                        const isHidden = (qrBox.style.display === 'none' || !qrBox.style.display);
+                        if (isHidden) {
+                            if (qrImg) qrImg.src = qrUrl;
                             qrBox.style.display = 'block';
-                            btnToggle.innerHTML = '<i class="ph ph-x"></i> Nascondi QR Code';
+                            btnToggle.innerHTML = '<i class="ph ph-x" style="font-size:1.1rem;"></i> Nascondi QR Code';
+                            btnToggle.style.background = '#475569';
                         } else {
                             qrBox.style.display = 'none';
-                            btnToggle.innerHTML = '<i class="ph ph-qr-code"></i> Inquadra QR Code';
+                            btnToggle.innerHTML = '<i class="ph ph-qr-code" style="font-size:1.1rem;"></i> Inquadra QR Code';
+                            btnToggle.style.background = '#2563eb';
                         }
                     };
                 }

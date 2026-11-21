@@ -1537,20 +1537,27 @@ textarea:focus {
   flex-direction: column;
   gap: 0.5rem;
   font-size: 0.85rem;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .meta-item {
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: baseline;
   color: var(--color-text-base);
   line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  gap: 0.2rem 0.4rem;
 }
 
 .meta-item span {
   font-weight: 700;
   color: var(--color-text-dark);
-  margin-right: 0.4rem;
+  margin-right: 0.2rem;
   min-width: 85px;
+  flex-shrink: 0;
 }
 
 .game-meta-card.two-cols {
@@ -1562,6 +1569,17 @@ textarea:focus {
 @media (min-width: 768px) {
   .game-meta-card.two-cols {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-meta-card {
+    padding: 0.85rem !important;
+    font-size: 0.85rem !important;
+  }
+  .game-meta-card.two-cols {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
   }
 }
 

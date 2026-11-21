@@ -153,7 +153,7 @@
         const doc = frame.contentDocument || frame.contentWindow.document;
         if (!doc) return;
 
-        // 1. Clic diretto sul logo o wrapper avatar Prof. Memmo
+        // 1. Clic diretto sul logo o wrapper avatar Prof. Memmo (ritorno nativo all'Hub)
         const profLogos = doc.querySelectorAll('.header-prof-logo-wrapper, .header-center-logo, .header-prof-logo');
         profLogos.forEach(function(el) {
           el.style.cursor = 'pointer';
@@ -164,35 +164,6 @@
             tornaAllHub();
           }, true);
         });
-
-        // 2. Inserimento pulsantino/etichetta "← Hub" a fianco dell'avatar Prof. Memmo se non già presente
-        const centerLogo = doc.querySelector('.header-center-logo');
-        if (centerLogo && !doc.getElementById('iframe-btn-hub')) {
-          const hubBtn = doc.createElement('button');
-          hubBtn.id = 'iframe-btn-hub';
-          hubBtn.type = 'button';
-          hubBtn.innerHTML = '<span style="font-size:0.75rem;margin-right:3px;">←</span> Hub';
-          hubBtn.title = "Torna all'Hub Giochi";
-          hubBtn.style.cssText = 'background: rgba(15, 23, 42, 0.85); color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; padding: 3px 8px; font-size: 0.72rem; font-weight: 700; cursor: pointer; margin-left: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); display: inline-flex; align-items: center; white-space: nowrap; line-height: 1; transition: background 0.2s, transform 0.15s; vertical-align: middle;';
-          hubBtn.addEventListener('mouseenter', function() {
-            hubBtn.style.background = 'rgba(30, 41, 59, 0.95)';
-            hubBtn.style.color = '#38bdf8';
-          });
-          hubBtn.addEventListener('mouseleave', function() {
-            hubBtn.style.background = 'rgba(15, 23, 42, 0.85)';
-            hubBtn.style.color = '#f8fafc';
-          });
-          hubBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            tornaAllHub();
-          });
-
-          // Assicura che centerLogo mantenga il layout orizzontale
-          centerLogo.style.display = 'flex';
-          centerLogo.style.alignItems = 'center';
-          centerLogo.appendChild(hubBtn);
-        }
       } catch (err) {
         console.warn("Iframe same-origin trigger note:", err);
       }

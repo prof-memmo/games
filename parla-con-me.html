@@ -2120,6 +2120,23 @@
     }
 }
 
+
+        .l2-word-trans-pill {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #0369a1;
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            padding: 1px 7px;
+            border-radius: 999px;
+            margin-top: 4px;
+            display: inline-block;
+            text-transform: none;
+            letter-spacing: normal;
+            line-height: 1.25;
+            user-select: none;
+            pointer-events: none;
+        }
 </style>
 </head>
 
@@ -3050,10 +3067,1589 @@
             return '';
         }
 
-        function applyDynamicHelpTranslations() {
+                var L2_WORD_DICTIONARY = {
+    "APE": {
+        "en": "bee",
+        "fr": "abeille",
+        "es": "abeja",
+        "ar": "نحلة",
+        "uk": "бджола",
+        "zh": "蜜蜂"
+    },
+    "ELEFANTE": {
+        "en": "elephant",
+        "fr": "éléphant",
+        "es": "elefante",
+        "ar": "فيل",
+        "uk": "слон",
+        "zh": "大象"
+    },
+    "ISOLA": {
+        "en": "island",
+        "fr": "île",
+        "es": "isla",
+        "ar": "جزيرة",
+        "uk": "острів",
+        "zh": "岛屿"
+    },
+    "ORSO": {
+        "en": "bear",
+        "fr": "ours",
+        "es": "oso",
+        "ar": "دب",
+        "uk": "ведмідь",
+        "zh": "熊"
+    },
+    "UVA": {
+        "en": "grapes",
+        "fr": "raisin",
+        "es": "uva",
+        "ar": "عنب",
+        "uk": "виноград",
+        "zh": "葡萄"
+    },
+    "MELA": {
+        "en": "apple",
+        "fr": "pomme",
+        "es": "manzana",
+        "ar": "تفاحة",
+        "uk": "яблуко",
+        "zh": "苹果"
+    },
+    "SOLE": {
+        "en": "sun",
+        "fr": "soleil",
+        "es": "sol",
+        "ar": "شمس",
+        "uk": "сонце",
+        "zh": "太阳"
+    },
+    "LUNA": {
+        "en": "moon",
+        "fr": "lune",
+        "es": "luna",
+        "ar": "قمر",
+        "uk": "місяць",
+        "zh": "月亮"
+    },
+    "MARE": {
+        "en": "sea",
+        "fr": "mer",
+        "es": "mar",
+        "ar": "بحر",
+        "uk": "море",
+        "zh": "大海"
+    },
+    "PANE": {
+        "en": "bread",
+        "fr": "pain",
+        "es": "pan",
+        "ar": "خبز",
+        "uk": "хліб",
+        "zh": "面包"
+    },
+    "CANE": {
+        "en": "dog",
+        "fr": "chien",
+        "es": "perro",
+        "ar": "كلب",
+        "uk": "собака",
+        "zh": "狗"
+    },
+    "GATTO": {
+        "en": "cat",
+        "fr": "chat",
+        "es": "gato",
+        "ar": "قط",
+        "uk": "кіт",
+        "zh": "猫"
+    },
+    "CASA": {
+        "en": "house",
+        "fr": "maison",
+        "es": "casa",
+        "ar": "منزل",
+        "uk": "дім",
+        "zh": "家"
+    },
+    "CUORE": {
+        "en": "heart",
+        "fr": "cœur",
+        "es": "corazón",
+        "ar": "قلب",
+        "uk": "серце",
+        "zh": "心"
+    },
+    "DADO": {
+        "en": "dice",
+        "fr": "dé",
+        "es": "dado",
+        "ar": "نرد",
+        "uk": "кубик",
+        "zh": "骰子"
+    },
+    "FATA": {
+        "en": "fairy",
+        "fr": "fée",
+        "es": "hada",
+        "ar": "جنية",
+        "uk": "фея",
+        "zh": "仙女"
+    },
+    "FOTO": {
+        "en": "photo",
+        "fr": "photo",
+        "es": "foto",
+        "ar": "صورة",
+        "uk": "фото",
+        "zh": "照片"
+    },
+    "ALBERO": {
+        "en": "tree",
+        "fr": "arbre",
+        "es": "árbol",
+        "ar": "شجرة",
+        "uk": "дерево",
+        "zh": "树"
+    },
+    "FIORE": {
+        "en": "flower",
+        "fr": "fleur",
+        "es": "flor",
+        "ar": "زهرة",
+        "uk": "квітка",
+        "zh": "花"
+    },
+    "STELLA": {
+        "en": "star",
+        "fr": "étoile",
+        "es": "estrella",
+        "ar": "نجمة",
+        "uk": "зірка",
+        "zh": "星星"
+    },
+    "NUVOLA": {
+        "en": "cloud",
+        "fr": "nuage",
+        "es": "nube",
+        "ar": "سحابة",
+        "uk": "хмара",
+        "zh": "云"
+    },
+    "PIOGGIA": {
+        "en": "rain",
+        "fr": "pluie",
+        "es": "lluvia",
+        "ar": "مطر",
+        "uk": "дощ",
+        "zh": "雨"
+    },
+    "NEVE": {
+        "en": "snow",
+        "fr": "neige",
+        "es": "nieve",
+        "ar": "ثلج",
+        "uk": "сніг",
+        "zh": "雪"
+    },
+    "VENTO": {
+        "en": "wind",
+        "fr": "vent",
+        "es": "viento",
+        "ar": "رياح",
+        "uk": "вітер",
+        "zh": "风"
+    },
+    "FUOCO": {
+        "en": "fire",
+        "fr": "feu",
+        "es": "fuego",
+        "ar": "نار",
+        "uk": "вогонь",
+        "zh": "火"
+    },
+    "ACQUA": {
+        "en": "water",
+        "fr": "eau",
+        "es": "agua",
+        "ar": "ماء",
+        "uk": "вода",
+        "zh": "水"
+    },
+    "TERRA": {
+        "en": "earth",
+        "fr": "terre",
+        "es": "tierra",
+        "ar": "أرض",
+        "uk": "земля",
+        "zh": "地球"
+    },
+    "CIAO": {
+        "en": "hello / hi",
+        "fr": "salut / bonjour",
+        "es": "hola",
+        "ar": "مرحبا",
+        "uk": "привіт",
+        "zh": "你好"
+    },
+    "BUONGIORNO": {
+        "en": "good morning",
+        "fr": "bonjour",
+        "es": "buenos días",
+        "ar": "صباح الخير",
+        "uk": "доброго ранку",
+        "zh": "早上好"
+    },
+    "BUONASERA": {
+        "en": "good evening",
+        "fr": "bonsoir",
+        "es": "buenas tardes",
+        "ar": "مساء الخير",
+        "uk": "добрий вечір",
+        "zh": "晚上好"
+    },
+    "BUONANOTTE": {
+        "en": "good night",
+        "fr": "bonne nuit",
+        "es": "buenas noches",
+        "ar": "تصبح على خير",
+        "uk": "на добраніч",
+        "zh": "晚安"
+    },
+    "ARRIVEDERCI": {
+        "en": "goodbye",
+        "fr": "au revoir",
+        "es": "adiós",
+        "ar": "إلى اللقاء",
+        "uk": "до побачення",
+        "zh": "再见"
+    },
+    "PER FAVORE": {
+        "en": "please",
+        "fr": "s'il vous plaît",
+        "es": "por favor",
+        "ar": "من فضلك",
+        "uk": "будь ласка",
+        "zh": "请"
+    },
+    "GRAZIE": {
+        "en": "thank you",
+        "fr": "merci",
+        "es": "gracias",
+        "ar": "شكرا",
+        "uk": "дякую",
+        "zh": "谢谢"
+    },
+    "PREGO": {
+        "en": "you're welcome",
+        "fr": "de rien",
+        "es": "de nada",
+        "ar": "عفوا",
+        "uk": "прошу",
+        "zh": "不客气"
+    },
+    "SCUSA": {
+        "en": "sorry / excuse me",
+        "fr": "pardon",
+        "es": "perdón",
+        "ar": "معذرة",
+        "uk": "вибачте",
+        "zh": "抱歉"
+    },
+    "ROSSO": {
+        "en": "red",
+        "fr": "rouge",
+        "es": "rojo",
+        "ar": "أحمر",
+        "uk": "червоний",
+        "zh": "红色"
+    },
+    "BLU": {
+        "en": "blue",
+        "fr": "bleu",
+        "es": "azul",
+        "ar": "أزرق",
+        "uk": "синій",
+        "zh": "蓝色"
+    },
+    "GIALLO": {
+        "en": "yellow",
+        "fr": "jaune",
+        "es": "amarillo",
+        "ar": "أصفر",
+        "uk": "жовтий",
+        "zh": "黄色"
+    },
+    "VERDE": {
+        "en": "green",
+        "fr": "vert",
+        "es": "verde",
+        "ar": "أخضر",
+        "uk": "зелений",
+        "zh": "绿色"
+    },
+    "ARANCIONE": {
+        "en": "orange",
+        "fr": "orange",
+        "es": "naranja",
+        "ar": "برتقالي",
+        "uk": "помаранчевий",
+        "zh": "橙色"
+    },
+    "VIOLA": {
+        "en": "purple",
+        "fr": "violet",
+        "es": "morado",
+        "ar": "بنفسجي",
+        "uk": "фіолетовий",
+        "zh": "紫色"
+    },
+    "ROSA": {
+        "en": "pink",
+        "fr": "rose",
+        "es": "rosa",
+        "ar": "وردي",
+        "uk": "рожевий",
+        "zh": "粉色"
+    },
+    "MARRONE": {
+        "en": "brown",
+        "fr": "marron",
+        "es": "marrón",
+        "ar": "بني",
+        "uk": "коричневий",
+        "zh": "棕色"
+    },
+    "NERO": {
+        "en": "black",
+        "fr": "noir",
+        "es": "negro",
+        "ar": "أسود",
+        "uk": "чорний",
+        "zh": "黑色"
+    },
+    "BIANCO": {
+        "en": "white",
+        "fr": "blanc",
+        "es": "blanco",
+        "ar": "أبيض",
+        "uk": "білий",
+        "zh": "白色"
+    },
+    "GRIGIO": {
+        "en": "grey",
+        "fr": "gris",
+        "es": "gris",
+        "ar": "رمادي",
+        "uk": "сірий",
+        "zh": "灰色"
+    },
+    "AZZURRO": {
+        "en": "light blue",
+        "fr": "bleu ciel",
+        "es": "azul claro",
+        "ar": "أزرق فاتح",
+        "uk": "блакитний",
+        "zh": "浅蓝色"
+    },
+    "ZERO": {
+        "en": "zero",
+        "fr": "zéro",
+        "es": "cero",
+        "ar": "صفر",
+        "uk": "нуль",
+        "zh": "零"
+    },
+    "UNO": {
+        "en": "one",
+        "fr": "un",
+        "es": "uno",
+        "ar": "واحد",
+        "uk": "один",
+        "zh": "一"
+    },
+    "DUE": {
+        "en": "two",
+        "fr": "deux",
+        "es": "dos",
+        "ar": "اثنان",
+        "uk": "два",
+        "zh": "二"
+    },
+    "TRE": {
+        "en": "three",
+        "fr": "trois",
+        "es": "tres",
+        "ar": "ثلاثة",
+        "uk": "три",
+        "zh": "三"
+    },
+    "QUATTRO": {
+        "en": "four",
+        "fr": "quatre",
+        "es": "cuatro",
+        "ar": "أربعة",
+        "uk": "чотири",
+        "zh": "四"
+    },
+    "CINQUE": {
+        "en": "five",
+        "fr": "cinq",
+        "es": "cinco",
+        "ar": "خمسة",
+        "uk": "п'ять",
+        "zh": "五"
+    },
+    "SEI": {
+        "en": "six",
+        "fr": "six",
+        "es": "seis",
+        "ar": "ستة",
+        "uk": "шість",
+        "zh": "六"
+    },
+    "SETTE": {
+        "en": "seven",
+        "fr": "sept",
+        "es": "siete",
+        "ar": "سبعة",
+        "uk": "сім",
+        "zh": "七"
+    },
+    "OTTO": {
+        "en": "eight",
+        "fr": "huit",
+        "es": "ocho",
+        "ar": "ثمانية",
+        "uk": "вісім",
+        "zh": "八"
+    },
+    "NOVE": {
+        "en": "nine",
+        "fr": "neuf",
+        "es": "nueve",
+        "ar": "تسعة",
+        "uk": "дев'ять",
+        "zh": "九"
+    },
+    "DIECI": {
+        "en": "ten",
+        "fr": "dix",
+        "es": "diez",
+        "ar": "عشرة",
+        "uk": "десять",
+        "zh": "十"
+    },
+    "FORBICI": {
+        "en": "scissors",
+        "fr": "ciseaux",
+        "es": "tijeras",
+        "ar": "مقص",
+        "uk": "ножиці",
+        "zh": "剪刀"
+    },
+    "COLLA": {
+        "en": "glue",
+        "fr": "colle",
+        "es": "pegamento",
+        "ar": "صمغ",
+        "uk": "клей",
+        "zh": "胶水"
+    },
+    "RIGHELLO": {
+        "en": "ruler",
+        "fr": "règle",
+        "es": "regla",
+        "ar": "مسطرة",
+        "uk": "лінійка",
+        "zh": "尺子"
+    },
+    "PENNA": {
+        "en": "pen",
+        "fr": "stylo",
+        "es": "bolígrafo",
+        "ar": "قلم",
+        "uk": "ручка",
+        "zh": "钢笔"
+    },
+    "MATITA": {
+        "en": "pencil",
+        "fr": "crayon",
+        "es": "lápiz",
+        "ar": "قلم رصاص",
+        "uk": "олівець",
+        "zh": "铅笔"
+    },
+    "GOMMA": {
+        "en": "eraser",
+        "fr": "gomme",
+        "es": "goma",
+        "ar": "ممحاة",
+        "uk": "гумка",
+        "zh": "橡皮"
+    },
+    "QUADERNO": {
+        "en": "notebook",
+        "fr": "cahier",
+        "es": "cuaderno",
+        "ar": "دفتر",
+        "uk": "зошит",
+        "zh": "笔记本"
+    },
+    "LIBRO": {
+        "en": "book",
+        "fr": "livre",
+        "es": "libro",
+        "ar": "كتاب",
+        "uk": "книга",
+        "zh": "书"
+    },
+    "ZAINO": {
+        "en": "backpack",
+        "fr": "sac à dos",
+        "es": "mochila",
+        "ar": "حقيبة ظهر",
+        "uk": "рюкзак",
+        "zh": "背包"
+    },
+    "ASTUCCIO": {
+        "en": "pencil case",
+        "fr": "trousse",
+        "es": "estuche",
+        "ar": "مقلمة",
+        "uk": "пенал",
+        "zh": "文具盒"
+    },
+    "BANCO": {
+        "en": "desk",
+        "fr": "bureau / pupitre",
+        "es": "pupitre",
+        "ar": "مقعد دراسي",
+        "uk": "парта",
+        "zh": "课桌"
+    },
+    "CATTEDRA": {
+        "en": "teacher's desk",
+        "fr": "bureau du maître",
+        "es": "mesa del profesor",
+        "ar": "مكتب المعلم",
+        "uk": "стіл вчителя",
+        "zh": "讲台"
+    },
+    "LAVAGNA": {
+        "en": "blackboard",
+        "fr": "tableau",
+        "es": "pizarra",
+        "ar": "سبورة",
+        "uk": "дошка",
+        "zh": "黑板"
+    },
+    "CESTINO": {
+        "en": "wastebasket",
+        "fr": "poubelle",
+        "es": "papelera",
+        "ar": "سلة مهملات",
+        "uk": "кошик",
+        "zh": "垃圾桶"
+    },
+    "FINESTRA": {
+        "en": "window",
+        "fr": "fenêtre",
+        "es": "ventana",
+        "ar": "نافذة",
+        "uk": "вікно",
+        "zh": "窗户"
+    },
+    "PORTA": {
+        "en": "door",
+        "fr": "porte",
+        "es": "puerta",
+        "ar": "باب",
+        "uk": "двері",
+        "zh": "门"
+    },
+    "OROLOGIO": {
+        "en": "clock / watch",
+        "fr": "horloge / montre",
+        "es": "reloj",
+        "ar": "ساعة",
+        "uk": "годинник",
+        "zh": "钟表"
+    },
+    "FOGLIO": {
+        "en": "sheet of paper",
+        "fr": "feuille",
+        "es": "hoja de papel",
+        "ar": "ورقة",
+        "uk": "аркуш",
+        "zh": "纸张"
+    },
+    "PENNARELLO": {
+        "en": "marker",
+        "fr": "feutre",
+        "es": "rotulador",
+        "ar": "قلم تلوين",
+        "uk": "фломастер",
+        "zh": "马克笔"
+    },
+    "MAESTRO": {
+        "en": "teacher (m)",
+        "fr": "maître / enseignant",
+        "es": "maestro",
+        "ar": "معلم",
+        "uk": "вчитель",
+        "zh": "男老师"
+    },
+    "MAESTRA": {
+        "en": "teacher (f)",
+        "fr": "maîtresse",
+        "es": "maestra",
+        "ar": "معلمة",
+        "uk": "вчителька",
+        "zh": "女老师"
+    },
+    "COMPAGNO": {
+        "en": "classmate",
+        "fr": "camarade",
+        "es": "compañero",
+        "ar": "زميل",
+        "uk": "однокласник",
+        "zh": "同伴"
+    },
+    "SCUOLA": {
+        "en": "school",
+        "fr": "école",
+        "es": "escuela",
+        "ar": "مدرسة",
+        "uk": "школа",
+        "zh": "学校"
+    },
+    "CLASSE": {
+        "en": "classroom / class",
+        "fr": "classe",
+        "es": "clase",
+        "ar": "فصل",
+        "uk": "клас",
+        "zh": "教室 / 班级"
+    },
+    "MAMMA": {
+        "en": "mom / mother",
+        "fr": "maman",
+        "es": "mamá",
+        "ar": "أم",
+        "uk": "мама",
+        "zh": "妈妈"
+    },
+    "PAPÀ": {
+        "en": "dad / father",
+        "fr": "papa",
+        "es": "papá",
+        "ar": "أب",
+        "uk": "тато",
+        "zh": "爸爸"
+    },
+    "BABBO": {
+        "en": "dad / father",
+        "fr": "papa",
+        "es": "papá",
+        "ar": "أب",
+        "uk": "тато",
+        "zh": "爸爸"
+    },
+    "GENITORI": {
+        "en": "parents",
+        "fr": "parents",
+        "es": "padres",
+        "ar": "والدان",
+        "uk": "батьки",
+        "zh": "父母"
+    },
+    "FRATELLO": {
+        "en": "brother",
+        "fr": "frère",
+        "es": "hermano",
+        "ar": "أخ",
+        "uk": "брат",
+        "zh": "兄弟"
+    },
+    "SORELLA": {
+        "en": "sister",
+        "fr": "sœur",
+        "es": "hermana",
+        "ar": "أخت",
+        "uk": "сестра",
+        "zh": "姐妹"
+    },
+    "NONNO": {
+        "en": "grandfather",
+        "fr": "grand-père",
+        "es": "abuelo",
+        "ar": "جد",
+        "uk": "дідусь",
+        "zh": "爷爷 / 外公"
+    },
+    "NONNA": {
+        "en": "grandmother",
+        "fr": "grand-mère",
+        "es": "abuela",
+        "ar": "جدة",
+        "uk": "бабуся",
+        "zh": "奶奶 / 外婆"
+    },
+    "ZIO": {
+        "en": "uncle",
+        "fr": "oncle",
+        "es": "tío",
+        "ar": "عم / خال",
+        "uk": "дядько",
+        "zh": "叔伯舅"
+    },
+    "ZIA": {
+        "en": "aunt",
+        "fr": "tante",
+        "es": "tía",
+        "ar": "عمة / خالة",
+        "uk": "тітка",
+        "zh": "姑母姨"
+    },
+    "CUGINO": {
+        "en": "cousin",
+        "fr": "cousin",
+        "es": "primo",
+        "ar": "ابن العم",
+        "uk": "двоюрідний брат",
+        "zh": "堂表兄弟"
+    },
+    "FAMIGLIA": {
+        "en": "family",
+        "fr": "famille",
+        "es": "familia",
+        "ar": "عائلة",
+        "uk": "сім'я",
+        "zh": "家庭"
+    },
+    "BAMBINO": {
+        "en": "child / boy",
+        "fr": "enfant / garçon",
+        "es": "niño",
+        "ar": "طفل",
+        "uk": "дитина",
+        "zh": "孩子"
+    },
+    "RAGAZZO": {
+        "en": "boy / teenager",
+        "fr": "garçon",
+        "es": "chico",
+        "ar": "فتى",
+        "uk": "хлопець",
+        "zh": "少年"
+    },
+    "BANANA": {
+        "en": "banana",
+        "fr": "banane",
+        "es": "plátano",
+        "ar": "موز",
+        "uk": "банан",
+        "zh": "香蕉"
+    },
+    "PERA": {
+        "en": "pear",
+        "fr": "poire",
+        "es": "pera",
+        "ar": "كمثرى",
+        "uk": "груша",
+        "zh": "梨"
+    },
+    "ARANCIA": {
+        "en": "orange (fruit)",
+        "fr": "orange",
+        "es": "naranja",
+        "ar": "برتقال",
+        "uk": "апельсин",
+        "zh": "橙子"
+    },
+    "CILIEGIA": {
+        "en": "cherry",
+        "fr": "cerise",
+        "es": "cereza",
+        "ar": "كرز",
+        "uk": "вишня",
+        "zh": "樱桃"
+    },
+    "PASTA": {
+        "en": "pasta",
+        "fr": "pâtes",
+        "es": "pasta",
+        "ar": "معكرونة",
+        "uk": "паста",
+        "zh": "意面"
+    },
+    "PIZZA": {
+        "en": "pizza",
+        "fr": "pizza",
+        "es": "pizza",
+        "ar": "بيتزا",
+        "uk": "піца",
+        "zh": "披萨"
+    },
+    "RISO": {
+        "en": "rice",
+        "fr": "riz",
+        "es": "arroz",
+        "ar": "أرز",
+        "uk": "рис",
+        "zh": "米饭"
+    },
+    "CARNE": {
+        "en": "meat",
+        "fr": "viande",
+        "es": "carne",
+        "ar": "لحم",
+        "uk": "м'ясо",
+        "zh": "肉"
+    },
+    "PESCE": {
+        "en": "fish",
+        "fr": "poisson",
+        "es": "pescado",
+        "ar": "سمك",
+        "uk": "риба",
+        "zh": "鱼"
+    },
+    "LATTE": {
+        "en": "milk",
+        "fr": "lait",
+        "es": "leche",
+        "ar": "حليب",
+        "uk": "молоко",
+        "zh": "牛奶"
+    },
+    "FORMAGGIO": {
+        "en": "cheese",
+        "fr": "fromage",
+        "es": "queso",
+        "ar": "جبن",
+        "uk": "сир",
+        "zh": "奶酪"
+    },
+    "POMODORO": {
+        "en": "tomato",
+        "fr": "tomate",
+        "es": "tomate",
+        "ar": "طماطم",
+        "uk": "помідор",
+        "zh": "西红柿"
+    },
+    "UOVO": {
+        "en": "egg",
+        "fr": "œuf",
+        "es": "huevo",
+        "ar": "بيض",
+        "uk": "яйце",
+        "zh": "鸡蛋"
+    },
+    "INSALATA": {
+        "en": "salad",
+        "fr": "salade",
+        "es": "ensalada",
+        "ar": "سلطة",
+        "uk": "салат",
+        "zh": "沙拉"
+    },
+    "FRUTTA": {
+        "en": "fruit",
+        "fr": "fruit",
+        "es": "fruta",
+        "ar": "فواكه",
+        "uk": "фрукти",
+        "zh": "水果"
+    },
+    "VERDURA": {
+        "en": "vegetables",
+        "fr": "légumes",
+        "es": "verdura",
+        "ar": "خضار",
+        "uk": "овочі",
+        "zh": "蔬菜"
+    },
+    "TORTA": {
+        "en": "cake",
+        "fr": "gâteau",
+        "es": "tarta",
+        "ar": "كعكة",
+        "uk": "торт",
+        "zh": "蛋糕"
+    },
+    "BISCOTTO": {
+        "en": "cookie / biscuit",
+        "fr": "biscuit",
+        "es": "galleta",
+        "ar": "بسكويت",
+        "uk": "печиво",
+        "zh": "饼干"
+    },
+    "TESTA": {
+        "en": "head",
+        "fr": "tête",
+        "es": "cabeza",
+        "ar": "رأس",
+        "uk": "голова",
+        "zh": "头"
+    },
+    "OCCHI": {
+        "en": "eyes",
+        "fr": "yeux",
+        "es": "ojos",
+        "ar": "عيون",
+        "uk": "очі",
+        "zh": "眼睛"
+    },
+    "OCCHIO": {
+        "en": "eye",
+        "fr": "œil",
+        "es": "ojo",
+        "ar": "عين",
+        "uk": "око",
+        "zh": "眼"
+    },
+    "NASO": {
+        "en": "nose",
+        "fr": "nez",
+        "es": "nariz",
+        "ar": "أنف",
+        "uk": "ніс",
+        "zh": "鼻子"
+    },
+    "BOCCA": {
+        "en": "mouth",
+        "fr": "bouche",
+        "es": "boca",
+        "ar": "فم",
+        "uk": "рот",
+        "zh": "嘴巴"
+    },
+    "ORECCHIE": {
+        "en": "ears",
+        "fr": "oreilles",
+        "es": "orejas",
+        "ar": "آذان",
+        "uk": "вуха",
+        "zh": "耳朵"
+    },
+    "CAPELLI": {
+        "en": "hair",
+        "fr": "cheveux",
+        "es": "pelo",
+        "ar": "شعر",
+        "uk": "волосся",
+        "zh": "头发"
+    },
+    "BRACCIO": {
+        "en": "arm",
+        "fr": "bras",
+        "es": "brazo",
+        "ar": "ذراع",
+        "uk": "рука",
+        "zh": "手臂"
+    },
+    "MANO": {
+        "en": "hand",
+        "fr": "main",
+        "es": "mano",
+        "ar": "يد",
+        "uk": "рука / долоня",
+        "zh": "手"
+    },
+    "MANI": {
+        "en": "hands",
+        "fr": "mains",
+        "es": "manos",
+        "ar": "أيدي",
+        "uk": "руки",
+        "zh": "双手"
+    },
+    "DITA": {
+        "en": "fingers",
+        "fr": "doigts",
+        "es": "dedos",
+        "ar": "أصابع",
+        "uk": "пальці",
+        "zh": "手指"
+    },
+    "DITO": {
+        "en": "finger",
+        "fr": "doigt",
+        "es": "dedo",
+        "ar": "إصبع",
+        "uk": "палець",
+        "zh": "手指"
+    },
+    "GAMBA": {
+        "en": "leg",
+        "fr": "jambe",
+        "es": "pierna",
+        "ar": "ساق",
+        "uk": "нога",
+        "zh": "腿"
+    },
+    "GAMBE": {
+        "en": "legs",
+        "fr": "jambes",
+        "es": "piernas",
+        "ar": "أرجل",
+        "uk": "ноги",
+        "zh": "双腿"
+    },
+    "PIEDE": {
+        "en": "foot",
+        "fr": "pied",
+        "es": "pie",
+        "ar": "قدم",
+        "uk": "стопа",
+        "zh": "脚"
+    },
+    "PIEDI": {
+        "en": "feet",
+        "fr": "pieds",
+        "es": "pies",
+        "ar": "أقدام",
+        "uk": "стопи",
+        "zh": "双脚"
+    },
+    "PANCIA": {
+        "en": "belly",
+        "fr": "ventre",
+        "es": "barriga",
+        "ar": "بطن",
+        "uk": "живіт",
+        "zh": "肚子"
+    },
+    "MAGLIETTA": {
+        "en": "t-shirt",
+        "fr": "t-shirt",
+        "es": "camiseta",
+        "ar": "قميص",
+        "uk": "футболка",
+        "zh": "T恤"
+    },
+    "PANTALONI": {
+        "en": "pants / trousers",
+        "fr": "pantalon",
+        "es": "pantalones",
+        "ar": "بنطال",
+        "uk": "штани",
+        "zh": "裤子"
+    },
+    "GIACCA": {
+        "en": "jacket",
+        "fr": "veste",
+        "es": "chaqueta",
+        "ar": "سترة",
+        "uk": "куртка",
+        "zh": "夹克"
+    },
+    "SCARPE": {
+        "en": "shoes",
+        "fr": "chaussures",
+        "es": "zapatos",
+        "ar": "أحذية",
+        "uk": "взуття",
+        "zh": "鞋子"
+    },
+    "CAPPELLO": {
+        "en": "hat",
+        "fr": "chapeau",
+        "es": "sombrero",
+        "ar": "قبعة",
+        "uk": "шапка",
+        "zh": "帽子"
+    },
+    "CALZE": {
+        "en": "socks",
+        "fr": "chaussettes",
+        "es": "calcetines",
+        "ar": "جوارب",
+        "uk": "шкарпетки",
+        "zh": "袜子"
+    },
+    "GONNA": {
+        "en": "skirt",
+        "fr": "jupe",
+        "es": "falda",
+        "ar": "تنورة",
+        "uk": "спідниця",
+        "zh": "裙子"
+    },
+    "MAGLIONE": {
+        "en": "sweater",
+        "fr": "pull",
+        "es": "jersey",
+        "ar": "كنزة",
+        "uk": "светр",
+        "zh": "毛衣"
+    },
+    "CAPPOTTO": {
+        "en": "coat",
+        "fr": "manteau",
+        "es": "abrigo",
+        "ar": "معطف",
+        "uk": "пальто",
+        "zh": "大衣"
+    },
+    "SCIARPA": {
+        "en": "scarf",
+        "fr": "écharpe",
+        "es": "bufanda",
+        "ar": "وشاح",
+        "uk": "шарф",
+        "zh": "围巾"
+    },
+    "GUANTI": {
+        "en": "gloves",
+        "fr": "gants",
+        "es": "guantes",
+        "ar": "قفازات",
+        "uk": "рукавички",
+        "zh": "手套"
+    },
+    "STIVALI": {
+        "en": "boots",
+        "fr": "bottes",
+        "es": "botas",
+        "ar": "أحذية طويلة",
+        "uk": "чоботи",
+        "zh": "靴子"
+    },
+    "PRIMAVERA": {
+        "en": "spring",
+        "fr": "printemps",
+        "es": "primavera",
+        "ar": "ربيع",
+        "uk": "весна",
+        "zh": "春天"
+    },
+    "ESTATE": {
+        "en": "summer",
+        "fr": "été",
+        "es": "verano",
+        "ar": "صيف",
+        "uk": "літо",
+        "zh": "夏天"
+    },
+    "AUTUNNO": {
+        "en": "autumn",
+        "fr": "automne",
+        "es": "otoño",
+        "ar": "خريف",
+        "uk": "осінь",
+        "zh": "秋天"
+    },
+    "INVERNO": {
+        "en": "winter",
+        "fr": "hiver",
+        "es": "invierno",
+        "ar": "شتاء",
+        "uk": "зима",
+        "zh": "冬天"
+    },
+    "FELICE": {
+        "en": "happy",
+        "fr": "heureux",
+        "es": "feliz",
+        "ar": "سعيد",
+        "uk": "щасливий",
+        "zh": "快乐"
+    },
+    "TRISTE": {
+        "en": "sad",
+        "fr": "triste",
+        "es": "triste",
+        "ar": "حزين",
+        "uk": "сумний",
+        "zh": "悲伤"
+    },
+    "ARRABBIATO": {
+        "en": "angry",
+        "fr": "en colère",
+        "es": "enfadado",
+        "ar": "غاضب",
+        "uk": "злий",
+        "zh": "生气"
+    },
+    "SORPRESO": {
+        "en": "surprised",
+        "fr": "surpris",
+        "es": "sorprendido",
+        "ar": "متفاجئ",
+        "uk": "здивований",
+        "zh": "惊讶"
+    },
+    "SPAVENTATO": {
+        "en": "scared",
+        "fr": "effrayé",
+        "es": "asustado",
+        "ar": "خائف",
+        "uk": "наляканий",
+        "zh": "害怕"
+    },
+    "CALMO": {
+        "en": "calm",
+        "fr": "calme",
+        "es": "tranquilo",
+        "ar": "هادئ",
+        "uk": "спокійний",
+        "zh": "平静"
+    },
+    "STANCO": {
+        "en": "tired",
+        "fr": "fatigué",
+        "es": "cansado",
+        "ar": "تعبان",
+        "uk": "втомлений",
+        "zh": "累"
+    },
+    "CORAGGIOSO": {
+        "en": "brave",
+        "fr": "courageux",
+        "es": "valiente",
+        "ar": "شجاع",
+        "uk": "хоробрий",
+        "zh": "勇敢"
+    },
+    "GENTILE": {
+        "en": "kind",
+        "fr": "gentil",
+        "es": "amable",
+        "ar": "لطيف",
+        "uk": "добрий",
+        "zh": "友善"
+    },
+    "LEONE": {
+        "en": "lion",
+        "fr": "lion",
+        "es": "león",
+        "ar": "أسد",
+        "uk": "лев",
+        "zh": "狮子"
+    },
+    "TIGRE": {
+        "en": "tiger",
+        "fr": "tigre",
+        "es": "tigre",
+        "ar": "نمر",
+        "uk": "тигр",
+        "zh": "老虎"
+    },
+    "GIRAFFA": {
+        "en": "giraffe",
+        "fr": "girafe",
+        "es": "jirafa",
+        "ar": "زرافة",
+        "uk": "жираф",
+        "zh": "长颈鹿"
+    },
+    "UCCELLO": {
+        "en": "bird",
+        "fr": "oiseau",
+        "es": "pájaro",
+        "ar": "طائر",
+        "uk": "птах",
+        "zh": "鸟"
+    },
+    "CAVALLO": {
+        "en": "horse",
+        "fr": "cheval",
+        "es": "caballo",
+        "ar": "حصان",
+        "uk": "кінь",
+        "zh": "马"
+    },
+    "MUCCA": {
+        "en": "cow",
+        "fr": "vache",
+        "es": "vaca",
+        "ar": "بقرة",
+        "uk": "корова",
+        "zh": "牛"
+    },
+    "PECORA": {
+        "en": "sheep",
+        "fr": "mouton",
+        "es": "oveja",
+        "ar": "خروف",
+        "uk": "вівця",
+        "zh": "羊"
+    },
+    "MAIALE": {
+        "en": "pig",
+        "fr": "cochon",
+        "es": "cerdo",
+        "ar": "خنزير",
+        "uk": "свиня",
+        "zh": "猪"
+    },
+    "CONIGLIO": {
+        "en": "rabbit",
+        "fr": "lapin",
+        "es": "conejo",
+        "ar": "أرنب",
+        "uk": "кролик",
+        "zh": "兔子"
+    },
+    "FARFALLA": {
+        "en": "butterfly",
+        "fr": "papillon",
+        "es": "mariposa",
+        "ar": "فراشة",
+        "uk": "метелик",
+        "zh": "蝴蝶"
+    },
+    "VOLPE": {
+        "en": "fox",
+        "fr": "renard",
+        "es": "zorro",
+        "ar": "ثعلب",
+        "uk": "лисиця",
+        "zh": "狐狸"
+    },
+    "LEPRE": {
+        "en": "hare",
+        "fr": "lièvre",
+        "es": "liebre",
+        "ar": "أرنب بري",
+        "uk": "заєць",
+        "zh": "野兔"
+    },
+    "LUPO": {
+        "en": "wolf",
+        "fr": "loup",
+        "es": "lobo",
+        "ar": "ذئب",
+        "uk": "вовк",
+        "zh": "狼"
+    },
+    "CUCINA": {
+        "en": "kitchen",
+        "fr": "cuisine",
+        "es": "cocina",
+        "ar": "مطبخ",
+        "uk": "кухня",
+        "zh": "厨房"
+    },
+    "CAMERA": {
+        "en": "bedroom",
+        "fr": "chambre",
+        "es": "dormitorio",
+        "ar": "غرفة نوم",
+        "uk": "спальня",
+        "zh": "卧室"
+    },
+    "BAGNO": {
+        "en": "bathroom",
+        "fr": "salle de bain",
+        "es": "baño",
+        "ar": "حمام",
+        "uk": "ванна",
+        "zh": "浴室"
+    },
+    "SALOTTO": {
+        "en": "living room",
+        "fr": "salon",
+        "es": "salón",
+        "ar": "غرفة جلوس",
+        "uk": "вітальня",
+        "zh": "客厅"
+    },
+    "TAVOLO": {
+        "en": "table",
+        "fr": "table",
+        "es": "mesa",
+        "ar": "طاولة",
+        "uk": "стіл",
+        "zh": "桌子"
+    },
+    "SEDIA": {
+        "en": "chair",
+        "fr": "chaise",
+        "es": "silla",
+        "ar": "كرسي",
+        "uk": "стілець",
+        "zh": "椅子"
+    },
+    "LETTO": {
+        "en": "bed",
+        "fr": "lit",
+        "es": "cama",
+        "ar": "سرير",
+        "uk": "ліжко",
+        "zh": "床"
+    },
+    "ARMADIO": {
+        "en": "wardrobe",
+        "fr": "armoire",
+        "es": "armario",
+        "ar": "خزانة",
+        "uk": "шафа",
+        "zh": "衣柜"
+    },
+    "DIVANO": {
+        "en": "sofa",
+        "fr": "canapé",
+        "es": "sofá",
+        "ar": "أريكة",
+        "uk": "диван",
+        "zh": "沙发"
+    },
+    "GIARDINO": {
+        "en": "garden",
+        "fr": "jardin",
+        "es": "jardín",
+        "ar": "حديقة",
+        "uk": "сад",
+        "zh": "花园"
+    },
+    "PIAZZA": {
+        "en": "town square",
+        "fr": "place",
+        "es": "plaza",
+        "ar": "ساحة",
+        "uk": "площа",
+        "zh": "广场"
+    },
+    "STAZIONE": {
+        "en": "station",
+        "fr": "gare",
+        "es": "estación",
+        "ar": "محطة",
+        "uk": "станція / вокзал",
+        "zh": "车站"
+    },
+    "OSPEDALE": {
+        "en": "hospital",
+        "fr": "hôpital",
+        "es": "hospital",
+        "ar": "مستشفى",
+        "uk": "лікарня",
+        "zh": "医院"
+    },
+    "PARCO": {
+        "en": "park",
+        "fr": "parc",
+        "es": "parque",
+        "ar": "حديقة عامة",
+        "uk": "парк",
+        "zh": "公园"
+    },
+    "SUPERMERCATO": {
+        "en": "supermarket",
+        "fr": "supermarché",
+        "es": "supermercado",
+        "ar": "سوبرماركت",
+        "uk": "супермаркет",
+        "zh": "超市"
+    },
+    "FARMACIA": {
+        "en": "pharmacy",
+        "fr": "pharmacie",
+        "es": "farmacia",
+        "ar": "صيدلية",
+        "uk": "аптека",
+        "zh": "药房"
+    },
+    "PANIFICIO": {
+        "en": "bakery",
+        "fr": "boulangerie",
+        "es": "panadería",
+        "ar": "مخبز",
+        "uk": "пекарня",
+        "zh": "面包店"
+    },
+    "LUNEDÌ": {
+        "en": "Monday",
+        "fr": "lundi",
+        "es": "lunes",
+        "ar": "الاثنين",
+        "uk": "понеділок",
+        "zh": "星期一"
+    },
+    "MARTEDÌ": {
+        "en": "Tuesday",
+        "fr": "mardi",
+        "es": "martes",
+        "ar": "الثلاثاء",
+        "uk": "вівторок",
+        "zh": "星期二"
+    },
+    "MERCOLEDÌ": {
+        "en": "Wednesday",
+        "fr": "mercredi",
+        "es": "miércoles",
+        "ar": "الأربعاء",
+        "uk": "середа",
+        "zh": "星期三"
+    },
+    "GIOVEDÌ": {
+        "en": "Thursday",
+        "fr": "jeudi",
+        "es": "jueves",
+        "ar": "الخميس",
+        "uk": "четвер",
+        "zh": "星期四"
+    },
+    "VENERDÌ": {
+        "en": "Friday",
+        "fr": "vendredi",
+        "es": "viernes",
+        "ar": "الجمعة",
+        "uk": "п'ятниця",
+        "zh": "星期五"
+    },
+    "SABATO": {
+        "en": "Saturday",
+        "fr": "samedi",
+        "es": "sábado",
+        "ar": "السبت",
+        "uk": "субота",
+        "zh": "星期六"
+    },
+    "DOMENICA": {
+        "en": "Sunday",
+        "fr": "dimanche",
+        "es": "domingo",
+        "ar": "الأحد",
+        "uk": "неділя",
+        "zh": "星期日"
+    }
+};
+
+        function getWordTranslation(rawText, lang) {
+            if (!rawText || !lang || lang === 'none') return null;
+            var clean = rawText.toUpperCase().trim();
+            clean = clean.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]|\uD83D[\uDE80-\uDEFF]/g, '').trim();
+            clean = clean.replace(/[«»!?:;,"'’._\(\)\-\/]/g, ' ').replace(/\s+/g, ' ').trim();
+            if (!clean) return null;
+
+            if (L2_WORD_DICTIONARY[clean] && L2_WORD_DICTIONARY[clean][lang]) {
+                return L2_WORD_DICTIONARY[clean][lang];
+            }
+            var withoutArticle = clean.replace(/^(IL|LO|LA|L|I|GLI|LE|UN|UNO|UNA|DUE|TRE)\s+/, '').trim();
+            if (L2_WORD_DICTIONARY[withoutArticle] && L2_WORD_DICTIONARY[withoutArticle][lang]) {
+                return L2_WORD_DICTIONARY[withoutArticle][lang];
+            }
+            var parts = clean.split(' ');
+            for (var i = 0; i < parts.length; i++) {
+                var p = parts[i].trim();
+                if (p.length > 2 && L2_WORD_DICTIONARY[p] && L2_WORD_DICTIONARY[p][lang]) {
+                    return L2_WORD_DICTIONARY[p][lang];
+                }
+            }
+            return null;
+        }
+function applyDynamicHelpTranslations() {
             // Rimuovi eventuali vecchi elementi dinamici
             document.querySelectorAll('.subheadline-trans-pill').forEach(function(el) { el.remove(); });
             document.querySelectorAll('.guideline-trans-line').forEach(function(el) { el.remove(); });
+            document.querySelectorAll('.l2-word-trans-pill').forEach(function(el) { el.remove(); });
 
             if (currentHelpLang === 'none') return;
             var isRtl = (currentHelpLang === 'ar');
@@ -3098,7 +4694,7 @@
                     var map = {
                         en: '👉 Look at the picture and tap the correct answer.',
                         fr: '👉 Regarde le dessin et touche la bonne réponse.',
-                        es: '👉 Mira el dibujo y toca la respuesta correcta.',
+                        es: '👉 Mira el dibujo y touche la bonne réponse.',
                         ar: '👉 انظر إلى الصورة والمس الإجابة الصحيحة.',
                         uk: '👉 Подивись на малюнок і вибери правильну відповідь.',
                         zh: '👉 看图并点击正确答案。'
@@ -3174,6 +4770,70 @@
                     if (isRtl) trans.setAttribute('dir', 'rtl');
                     trans.textContent = '🌐 ' + t;
                     promptEl.appendChild(trans);
+                }
+            });
+
+            // 3. Traduzione dinamica delle card lessicali e delle parole chiave
+            // A. Vocali
+            document.querySelectorAll('.vowel-unit').forEach(function(el) {
+                if (el.querySelector('.l2-word-trans-pill')) return;
+                var wordEl = el.querySelector('.vowel-word') || el;
+                var tr = getWordTranslation(wordEl.textContent, currentHelpLang);
+                if (tr) {
+                    var pill = document.createElement('span');
+                    pill.className = 'l2-word-trans-pill';
+                    if (isRtl) pill.setAttribute('dir', 'rtl');
+                    pill.textContent = '🌐 ' + tr;
+                    el.appendChild(pill);
+                }
+            });
+
+            // B. Colori
+            document.querySelectorAll('.color-swatch-box').forEach(function(el) {
+                if (el.querySelector('.l2-word-trans-pill')) return;
+                var label = el.querySelector('.color-label') || el;
+                var tr = getWordTranslation(label.textContent, currentHelpLang);
+                if (tr) {
+                    var pill = document.createElement('span');
+                    pill.className = 'l2-word-trans-pill';
+                    if (isRtl) pill.setAttribute('dir', 'rtl');
+                    pill.textContent = '🌐 ' + tr;
+                    el.appendChild(pill);
+                }
+            });
+
+            // C. Saluti e Carte Aperte
+            document.querySelectorAll('.greeting-card-open, .greeting-card').forEach(function(el) {
+                if (el.querySelector('.l2-word-trans-pill')) return;
+                var title = el.querySelector('.greeting-card-title, h3, strong, div[style*="font-weight: 800"]');
+                var txt = title ? title.textContent : el.textContent;
+                var tr = getWordTranslation(txt, currentHelpLang);
+                if (tr) {
+                    var pill = document.createElement('span');
+                    pill.className = 'l2-word-trans-pill';
+                    if (isRtl) pill.setAttribute('dir', 'rtl');
+                    pill.textContent = '🌐 ' + tr;
+                    el.appendChild(pill);
+                }
+            });
+
+            // D. Carte Esercizio e Opzioni Lessicali
+            document.querySelectorAll('.exercise-card').forEach(function(el) {
+                if (el.querySelector('.l2-word-trans-pill')) return;
+                var spans = el.querySelectorAll('span');
+                for (var i = 0; i < spans.length; i++) {
+                    var txt = spans[i].textContent.trim();
+                    if (txt.length >= 2 && !txt.startsWith('OPZIONE')) {
+                        var tr = getWordTranslation(txt, currentHelpLang);
+                        if (tr) {
+                            var pill = document.createElement('span');
+                            pill.className = 'l2-word-trans-pill';
+                            if (isRtl) pill.setAttribute('dir', 'rtl');
+                            pill.textContent = '🌐 ' + tr;
+                            el.appendChild(pill);
+                            break;
+                        }
+                    }
                 }
             });
         }
